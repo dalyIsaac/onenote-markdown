@@ -7,6 +7,7 @@
     "@types/node": "^10.12.5",
     "@types/react": "^16.7.3",
     "@types/react-dom": "^16.0.9",
+    "@types/react-redux": "^6.0.9",
     "react": "^16.6.1",
     "react-dom": "^16.6.1",
     "react-redux": "^5.1.1",
@@ -14,6 +15,12 @@
     "redux": "^4.0.1",
     "redux-saga": "^0.16.2",
     "typescript": "^3.1.6"
+  },
+  "devDependencies": {
+    "redux-devtools-extension": "^2.13.5",
+    "tslint-config-prettier": "^1.15.0",
+    "tslint": "^5.11.0",
+    "tslint-react": "^3.6.0"
   },
   "scripts": {
     "start": "react-scripts start",
