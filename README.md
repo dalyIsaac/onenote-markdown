@@ -23,7 +23,7 @@ Link to old project: [https://github.com/dalyIsaac/onenote-markdown](https://git
 Clone the repo
 
 ```shell
-git clone https://github.com/dalyIsaac/onenote-markdown.git
+git clone https://github.com/dalyIsaac/onenote-markdown-prototype.git
 ```
 
 ## Install the dependencies
