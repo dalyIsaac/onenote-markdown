@@ -35,9 +35,45 @@ export interface IBufferCursor {
  * Represents a "piece" inside the piece table.
  */
 export interface INode {
+  /**
+   * The index of the buffer which this node refers to.
+   */
   bufferIndex: number;
-  end: IBufferCursor;
+
+  /**
+   * The start cursor for this piece, within the buffer.
+   */
   start: IBufferCursor;
+
+  /**
+   * The end cursor for this piece, within the buffer.
+   */
+  end: IBufferCursor;
+
+  /**
+   * The count of the number of characters in the left subtree of this node.
+   */
+  leftCharCount: number;
+
+  /**
+   * The count of the number of line feeds in the left subtree of this node.
+   */
+  leftLFCount: number;
+
+  /**
+   * The index of the parent to this node, in the piece table's `nodes` array.
+   */
+  parent: number;
+
+  /**
+   * The index of the left child to this node, in the piece table's `nodes` array.
+   */
+  left: number;
+
+  /**
+   * The index of the right child to this node, in the piece table's `nodes` array.
+   */
+  right: number;
 }
 
 /**

@@ -11,6 +11,8 @@ import {
   NEWLINE,
 } from "./model";
 
+const SENTINEL_INDEX = -1;
+
 /**
  * Reducer for the slice of the state referring to the storage of a page.
  * @param state
@@ -54,8 +56,13 @@ export function createNewPage(receivedPage: OnenotePage): IPageContent {
 
   const node: INode = {
     bufferIndex: 0,
-    end,
     start,
+    end,
+    leftCharCount: 0,
+    leftLFCount: 0,
+    parent: SENTINEL_INDEX,
+    left: SENTINEL_INDEX,
+    right: SENTINEL_INDEX,
   };
 
   return {
@@ -136,4 +143,32 @@ function getLineStarts(content: string, newline: CharValues[]): number[] {
   }
 
   return lineStarts;
+}
+
+/**
+ * Updates the left child for this node.
+ * @param pieceTable The piece table for this page's contents.
+ * @param nodeIndex The index of the node in the `nodes` array for this page.
+ * @param newLeftNodeIndex The index of the new left child in the `nodes` array for this page.
+ */
+export function updateLeftChild(pieceTable: IPageContent, nodeIndex: number, newLeftNodeIndex: number) {
+  const node = pieceTable.nodes[nodeIndex];
+  node.left = newLeftNodeIndex;
+
+  const leftChild = pieceTable.nodes[newLeftNodeIndex];
+  leftChild.parent = nodeIndex;
+}
+
+/**
+ * Updates the right child for this node.
+ * @param pieceTable The piece table for this page's contents.
+ * @param nodeIndex The index of the node in the `nodes` array for this page.
+ * @param newRightNodeIndex The index of the new right child in the `nodes` array for this page.
+ */
+export function updateRightChild(pieceTable: IPageContent, nodeIndex: number, newRightNodeIndex: number) {
+  const node = pieceTable.nodes[nodeIndex];
+  node.left = newRightNodeIndex;
+
+  const rightChild = pieceTable.nodes[newRightNodeIndex];
+  rightChild.parent = nodeIndex;
 }
