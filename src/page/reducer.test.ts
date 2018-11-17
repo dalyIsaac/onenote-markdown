@@ -111,9 +111,15 @@ describe("page/reducer", () => {
         line: rowIndex,
       };
 
-      expect(storedPage.nodes[0].start).toEqual(expectedStart);
-      expect(storedPage.nodes[0].end).toEqual(expectedColumn);
-      expect(storedPage.nodes[0].bufferIndex).toBe(0);
+      const node = storedPage.nodes[0];
+      expect(node.start).toEqual(expectedStart);
+      expect(node.end).toEqual(expectedColumn);
+      expect(node.bufferIndex).toBe(0);
+      expect(node.leftCharCount).toBe(0);
+      expect(node.leftLFCount).toBe(0);
+      expect(node.parent).toBe(-1);
+      expect(node.left).toBe(-1);
+      expect(node.right).toBe(-1);
     };
 
     /**
