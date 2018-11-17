@@ -13,7 +13,6 @@
     "react-scripts": "2.1.1",
     "redux": "^4.0.1",
     "redux-saga": "^0.16.2",
-    "typescript": "^3.1.6"
   },
   "devDependencies": {
     "@microsoft/microsoft-graph-types": "^1.5.0",
@@ -22,7 +21,8 @@
     "redux-devtools-extension": "^2.13.5",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
-    "tslint-react": "^3.6.0"
+    "tslint-react": "^3.6.0",
+    "typescript": "^3.1.6"
   },
   "scripts": {
     "start": "react-scripts start",
