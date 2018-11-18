@@ -3,13 +3,22 @@ import { IAction } from "../common";
 import { IStoreReceivedPageAction, STORE_RECEIVED_PAGE } from "./actions";
 import {
   CharValues,
+  Color,
   IBuffer,
   IBufferCursor,
-  INode,
   IPageContent,
   IStatePages,
   NEWLINE,
 } from "./model";
+import {
+  getLeft,
+  getNode,
+  getRight,
+  INode,
+  updateLeftChild,
+  updateParent,
+  updateRightChild,
+} from "./node";
 
 const SENTINEL_INDEX = -1;
 
@@ -59,7 +68,10 @@ export function createNewPage(receivedPage: OnenotePage): IPageContent {
     start,
     end,
     leftCharCount: 0,
-    leftLFCount: 0,
+    leftLineFeedCount: 0,
+    length: receivedPage.content.length,
+    lineFeedCount: originalBuffer.lineStarts.length,
+    color: Color.Black,
     parent: SENTINEL_INDEX,
     left: SENTINEL_INDEX,
     right: SENTINEL_INDEX,
@@ -133,10 +145,7 @@ function getLineStarts(content: string, newline: CharValues[]): number[] {
     for (let j = 0; j < newline.length && match; j++) {
       if (content.charCodeAt(i + j) !== newline[j]) {
         match = false;
-      } else if (
-        j === newline.length - 1 &&
-        i + newline.length < content.length
-      ) {
+      } else if (j === newline.length - 1) {
         lineStarts.push(i + newline.length);
       }
     }
@@ -145,30 +154,56 @@ function getLineStarts(content: string, newline: CharValues[]): number[] {
   return lineStarts;
 }
 
-/**
- * Updates the left child for this node.
- * @param pieceTable The piece table for this page's contents.
- * @param nodeIndex The index of the node in the `nodes` array for this page.
- * @param newLeftNodeIndex The index of the new left child in the `nodes` array for this page.
- */
-export function updateLeftChild(pieceTable: IPageContent, nodeIndex: number, newLeftNodeIndex: number) {
-  const node = pieceTable.nodes[nodeIndex];
-  node.left = newLeftNodeIndex;
+export function leftRotate(pieceTable: IPageContent, nodeIndex: number) {
+  const xIndex = nodeIndex;
+  const x = getNode(xIndex, pieceTable);
+  const yIndex = x.right;
+  const y = getNode(yIndex, pieceTable);
 
-  const leftChild = pieceTable.nodes[newLeftNodeIndex];
-  leftChild.parent = nodeIndex;
+  // fix leftCharCount
+  y.leftCharCount += x.leftCharCount + x.length;
+  y.leftLineFeedCount += x.leftLineFeedCount + x.lineFeedCount;
+  x.right = y.left;
+
+  if (y.left !== SENTINEL_INDEX) {
+    updateParent(y.left, xIndex, pieceTable);
+  }
+  y.parent = x.parent;
+  if (x.parent === SENTINEL_INDEX) {
+    pieceTable.root = yIndex;
+  } else if (getLeft(x.parent, pieceTable) === x) {
+    updateLeftChild(x.parent, yIndex, pieceTable);
+  } else {
+    updateRightChild(x.parent, yIndex, pieceTable);
+  }
+  updateLeftChild(y.left, xIndex, pieceTable);
+  updateParent(x.parent, yIndex, pieceTable);
 }
 
-/**
- * Updates the right child for this node.
- * @param pieceTable The piece table for this page's contents.
- * @param nodeIndex The index of the node in the `nodes` array for this page.
- * @param newRightNodeIndex The index of the new right child in the `nodes` array for this page.
- */
-export function updateRightChild(pieceTable: IPageContent, nodeIndex: number, newRightNodeIndex: number) {
-  const node = pieceTable.nodes[nodeIndex];
-  node.left = newRightNodeIndex;
+export function rightRotate(pieceTable: IPageContent, nodeIndex: number) {
+  const yIndex = nodeIndex;
+  const y = getNode(yIndex, pieceTable);
+  const xIndex = y.left;
+  const x = getNode(xIndex, pieceTable);
 
-  const rightChild = pieceTable.nodes[newRightNodeIndex];
-  rightChild.parent = nodeIndex;
+  y.left = x.right;
+  if (x.right !== SENTINEL_INDEX) {
+    updateParent(x.right, yIndex, pieceTable);
+  }
+  x.parent = y.parent;
+
+  // fix leftCharCount
+  y.leftCharCount -= x.leftCharCount + x.length;
+  y.leftLineFeedCount -= x.leftLineFeedCount + x.lineFeedCount;
+
+  if (y.parent === SENTINEL_INDEX) {
+    pieceTable.root = xIndex;
+  } else if (y === getRight(y.parent, pieceTable)) {
+    updateRightChild(y.parent, xIndex, pieceTable);
+  } else {
+    updateLeftChild(y.parent, xIndex, pieceTable);
+  }
+
+  x.right = yIndex;
+  y.parent = xIndex;
 }

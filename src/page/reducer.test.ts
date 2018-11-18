@@ -1,6 +1,13 @@
 import { OnenotePage } from "@microsoft/microsoft-graph-types";
 import { IStoreReceivedPageAction, STORE_RECEIVED_PAGE } from "./actions";
-import { IBufferCursor, IPageContent } from "./model";
+import {
+  Color,
+  IBuffer,
+  IBufferCursor,
+  IPageContent,
+  IStatePages,
+} from "./model";
+import { INode } from "./node";
 import pageReducer, { createNewPage } from "./reducer";
 
 const LF_CONTENT = `<html lang="en-NZ">
@@ -70,7 +77,7 @@ describe("page/reducer", () => {
           lines[i].length +
           expectedLineStarts[expectedLineStarts.length - 1] +
           length;
-        if (value < content.length) {
+        if (value <= content.length) {
           expectedLineStarts.push(value);
         } else {
           stop = true;
@@ -80,19 +87,98 @@ describe("page/reducer", () => {
     };
 
     /**
+     * Fully constructs the expected page's piece table after receiving a new page.
+     * @param id The id of the page to store.
+     * @param content OnenotePage HTML content.
+     * @param newline The newline (EOF) format.
+     */
+    const constructExpectedNewPageState = (
+      id: string,
+      content: string,
+      newline: string,
+    ): IStatePages => {
+      const expectedState: IStatePages = {};
+      expectedState[id] = {
+        buffers: [constructExpectedNewPageBuffer(content, newline)],
+        newlineFormat: constructExpectedNewPageNewlineFormat(content, newline),
+        nodes: [constructExpectedNewPageNode(content, newline)],
+        root: constructExpectedNewPageRoot(),
+      };
+      return expectedState;
+    };
+
+    /**
+     * Constructs the expected buffer for the piece table after receiving a new page.
+     * @param content OnenotePage HTML content.
+     * @param newline The newline (EOF) format.
+     */
+    const constructExpectedNewPageBuffer = (
+      content: string,
+      newline: string,
+    ): IBuffer => ({
+      isReadOnly: true,
+      lineStarts: getExpectedLineStarts(content, newline),
+      value: content,
+    });
+
+    const pageReducerTest = (content: string, newline: string) => {
+      const { page } = variables(content);
+      const action: IStoreReceivedPageAction = {
+        receivedPage: page,
+        type: STORE_RECEIVED_PAGE,
+      };
+      const state = pageReducer({}, action);
+      const expectedState = constructExpectedNewPageState(
+        page.id as string,
+        content,
+        newline,
+      );
+      expect(state).toEqual(expectedState);
+    };
+
+    /**
      * Common test for the contents of the buffers.
      * @param content OnenotePage HTML content.
      * @param newline The newline (EOF) format.
      */
     const buffersTest = (content: string, newline: string) => {
       const { storedPage } = variables(content);
-
-      const expectedLineStarts = getExpectedLineStarts(content, newline);
-
+      const expectedBuffer = constructExpectedNewPageBuffer(content, newline);
       expect(storedPage.buffers.length).toBe(1);
-      expect(storedPage.buffers[0].isReadOnly).toBe(true);
-      expect(storedPage.buffers[0].lineStarts).toEqual(expectedLineStarts);
-      expect(storedPage.buffers[0].value).toBe(content);
+      expect(storedPage.buffers[0]).toEqual(expectedBuffer);
+    };
+
+    /**
+     * Constructs the expected new node for the piece table after receiving a new page.
+     * @param content OnenotePage HTML content.
+     * @param newline The newline (EOF) format.
+     */
+    const constructExpectedNewPageNode = (
+      content: string,
+      newline: string,
+    ): INode => {
+      const start: IBufferCursor = { column: 0, line: 0 };
+      const lines = content.split(newline);
+      const rowIndex = lines.length - 1;
+      const lastRow = lines[rowIndex];
+      const end: IBufferCursor = {
+        column: lastRow.length,
+        line: rowIndex,
+      };
+
+      return {
+        bufferIndex: 0,
+        start,
+        end,
+        leftCharCount: 0,
+        leftLineFeedCount: 0,
+        length: content.length,
+        lineFeedCount: lines.length,
+        color: Color.Black,
+        parent: -1,
+        left: -1,
+        right: -1,
+      };
     };
 
     /**
@@ -102,25 +188,15 @@ describe("page/reducer", () => {
      */
     const nodesTest = (content: string, newline: string) => {
       const { storedPage } = variables(content);
-      const expectedStart: IBufferCursor = { column: 0, line: 0 };
-      const lines = content.split(newline);
-      const rowIndex = lines.length - 2;
-      const lastRow = lines[rowIndex]; // the last "line" is empty - thus the last row is lines.length - 2
-      const expectedColumn: IBufferCursor = {
-        column: lastRow.length + newline.length,
-        line: rowIndex,
-      };
-
+      const expectedNode = constructExpectedNewPageNode(content, newline);
       const node = storedPage.nodes[0];
-      expect(node.start).toEqual(expectedStart);
-      expect(node.end).toEqual(expectedColumn);
-      expect(node.bufferIndex).toBe(0);
-      expect(node.leftCharCount).toBe(0);
-      expect(node.leftLFCount).toBe(0);
-      expect(node.parent).toBe(-1);
-      expect(node.left).toBe(-1);
-      expect(node.right).toBe(-1);
+      expect(node).toEqual(expectedNode);
     };
+
+    /**
+     * Constructs the expected root for the piece table after receiving a new page.
+     */
+    const constructExpectedNewPageRoot = (): number => 0;
 
     /**
      * Common test for the root of the piece table.
@@ -128,32 +204,43 @@ describe("page/reducer", () => {
      */
     const rootTest = (content: string) => {
       const { storedPage } = variables(content);
-      expect(storedPage.root).toBe(0);
+      const expectedRoot = constructExpectedNewPageRoot();
+      expect(storedPage.root).toBe(expectedRoot);
+    };
+
+    /**
+     * Constructs the expected newline format array for the piece table after receiving a new page.
+     * @param content OnenotePage HTML content.
+     * @param newline The newline (EOF) format.
+     */
+    const constructExpectedNewPageNewlineFormat = (
+      content: string,
+      newline: string,
+    ): number[] => {
+      const expectedFormatCharValues: number[] = [];
+      for (let i = 0; i < newline.length; i++) {
+        expectedFormatCharValues.push(newline.charCodeAt(i));
+      }
+      return expectedFormatCharValues;
     };
 
     /**
      * Common test for the newline (EOL) format for that page.
-     * @param expectedFormatString A string which represents the newline (EOL) format.
-     * @param receivedFormat The received format.
+     * @param content OnenotePage HTML content.
+     * @param newline The newline (EOF) format.
      */
-    const newlineTest = (content: string, expectedFormatString: string) => {
+    const newlineTest = (content: string, newline: string) => {
       const { storedPage } = variables(content);
-      const expectedFormatCharValues: number[] = [];
-      for (let i = 0; i < expectedFormatString.length; i++) {
-        expectedFormatCharValues.push(expectedFormatString.charCodeAt(i));
-      }
-
+      const expectedFormatCharValues = constructExpectedNewPageNewlineFormat(
+        content,
+        newline,
+      );
       expect(storedPage.newlineFormat).toEqual(expectedFormatCharValues);
     };
 
     describe("LF content", () => {
       test("Page reducer", () => {
-        const { page } = variables(LF_CONTENT);
-        const action: IStoreReceivedPageAction = {
-          receivedPage: page,
-          type: STORE_RECEIVED_PAGE,
-        };
-        const state = pageReducer({}, action);
+        pageReducerTest(LF_CONTENT, LF);
       });
 
       test("Buffers", () => {
@@ -175,12 +262,7 @@ describe("page/reducer", () => {
 
     describe("CRLF content", () => {
       test("Page reducer", () => {
-        const { page } = variables(CRLF_CONTENT);
-        const action: IStoreReceivedPageAction = {
-          receivedPage: page,
-          type: STORE_RECEIVED_PAGE,
-        };
-        const state = pageReducer({}, action);
+        pageReducerTest(CRLF_CONTENT, CRLF);
       });
 
       test("Buffers", () => {
