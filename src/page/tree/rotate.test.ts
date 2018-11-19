@@ -1,5 +1,4 @@
-import { Color, IPageContent, NEWLINE } from "../model";
-import { INode } from "../node";
+import { Color, INode, IPageContent, NEWLINE } from "../model";
 import { leftRotate, rightRotate } from "./rotate";
 
 describe("page/reducer", () => {

@@ -4,10 +4,10 @@ import {
   Color,
   IBuffer,
   IBufferCursor,
+  INode,
   IPageContent,
   IStatePages,
 } from "./model";
-import { INode } from "./node";
 import pageReducer, { createNewPage } from "./reducer";
 
 const LF_CONTENT = `<html lang="en-NZ">
