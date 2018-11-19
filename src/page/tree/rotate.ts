@@ -1,51 +1,45 @@
 import { IPageContent } from "../model";
-import {
-  getNode,
-  getParent,
-  getRight,
-  updateLeftChild,
-  updateParent,
-  updateRightChild,
-} from "../node";
 import { SENTINEL_INDEX } from "../reducer";
 
 export function leftRotate(pieceTable: IPageContent, nodeIndex: number) {
+  const nodes = pieceTable.nodes;
   const xIndex = nodeIndex;
-  const x = getNode(xIndex, pieceTable);
+  const x = nodes[xIndex];
   const yIndex = x.right;
-  const y = getNode(yIndex, pieceTable);
+  const y = nodes[yIndex];
 
   // fix leftCharCount
   y.leftCharCount += x.leftCharCount + x.length;
   y.leftLineFeedCount += x.leftLineFeedCount + x.lineFeedCount;
 
-  updateRightChild(xIndex, y.left, pieceTable);
+  x.right = y.left;
   if (y.left !== SENTINEL_INDEX) {
-    updateParent(y.left, xIndex, pieceTable);
+    nodes[y.left].parent = xIndex;
   }
-  updateParent(yIndex, x.parent, pieceTable);
+  y.parent = x.parent;
   if (x.parent === SENTINEL_INDEX) {
     pieceTable.root = yIndex;
-  } else if (xIndex === getParent(xIndex, pieceTable).left) {
-    updateLeftChild(x.parent, yIndex, pieceTable);
+  } else if (xIndex === nodes[x.parent].left) {
+    nodes[x.parent].left = yIndex;
   } else {
-    updateRightChild(x.parent, yIndex, pieceTable);
+    nodes[x.parent].right = yIndex;
   }
-  updateLeftChild(yIndex, xIndex, pieceTable);
-  updateParent(xIndex, yIndex, pieceTable);
+  y.left = xIndex;
+  x.parent = yIndex;
 }
 
 export function rightRotate(pieceTable: IPageContent, nodeIndex: number) {
+  const nodes = pieceTable.nodes;
   const yIndex = nodeIndex;
-  const y = getNode(yIndex, pieceTable);
+  const y = nodes[yIndex];
   const xIndex = y.left;
-  const x = getNode(xIndex, pieceTable);
+  const x = nodes[xIndex];
 
   y.left = x.right;
   if (x.right !== SENTINEL_INDEX) {
-    updateParent(x.right, yIndex, pieceTable);
+    nodes[x.right].parent = yIndex;
   }
-  updateParent(xIndex, y.parent, pieceTable);
+  x.parent = y.parent;
 
   // fix leftCharCount
   y.leftCharCount -= x.leftCharCount + x.length;
@@ -53,11 +47,11 @@ export function rightRotate(pieceTable: IPageContent, nodeIndex: number) {
 
   if (y.parent === SENTINEL_INDEX) {
     pieceTable.root = xIndex;
-  } else if (y === getRight(y.parent, pieceTable)) {
-    updateRightChild(y.parent, xIndex, pieceTable);
+  } else if (yIndex === nodes[y.parent].right) {
+    nodes[y.parent].right = xIndex;
   } else {
-    updateLeftChild(y.parent, xIndex, pieceTable);
+    nodes[y.parent].left = xIndex;
   }
-  updateRightChild(xIndex, yIndex, pieceTable);
-  updateParent(yIndex, xIndex, pieceTable);
+  x.right = yIndex;
+  y.parent = xIndex;
 }
