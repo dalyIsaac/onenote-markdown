@@ -4,7 +4,7 @@ import { leftRotate, rightRotate } from "./treeRotate";
 
 describe("page/reducer", () => {
   const constructSimplePieceTableBeforeLeftRotate = (): IPageContent => {
-    const simpleNodesBeforeLeftRotate: INode[] = [
+    const nodes: INode[] = [
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -71,18 +71,18 @@ describe("page/reducer", () => {
         right: -1,
       },
     ];
-    const simplePieceTableBeforeLeftRotate: IPageContent = {
+    const pieceTable: IPageContent = {
       buffers: [],
       newlineFormat: NEWLINE.LF,
-      nodes: simpleNodesBeforeLeftRotate,
+      nodes,
       root: 1,
     };
-    return simplePieceTableBeforeLeftRotate;
+    return pieceTable;
   };
   const constructSimplePieceTableAfterRightRotate = constructSimplePieceTableBeforeLeftRotate;
 
   const constructSimplePieceTableAfterLeftRotate = (): IPageContent => {
-    const simpleNodesAfterLeftRotate: INode[] = [
+    const nodes: INode[] = [
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -149,21 +149,417 @@ describe("page/reducer", () => {
         right: -1,
       },
     ];
-    const simplePieceTableAfterLeftRotate: IPageContent = {
+    const pieceTable: IPageContent = {
       buffers: [],
       newlineFormat: NEWLINE.LF,
-      nodes: simpleNodesAfterLeftRotate,
+      nodes,
       root: 3,
     };
-    return simplePieceTableAfterLeftRotate;
+    return pieceTable;
   };
   const constructSimplePieceTableBeforeRightRotate = constructSimplePieceTableAfterLeftRotate;
+
+  const constructComplexPieceTableBeforeLeftRotate = (): IPageContent => {
+    const nodes: INode[] = [
+      {
+        bufferIndex: 0,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 0,
+        leftCharCount: 0,
+        color: Color.Black,
+        parent: 1,
+        left: -1,
+        right: -1,
+      },
+      {
+        bufferIndex: 1,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 2,
+        leftCharCount: 30,
+        color: Color.Black,
+        parent: 2,
+        left: 0,
+        right: -1,
+      },
+      {
+        bufferIndex: 2,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 4,
+        leftCharCount: 60,
+        color: Color.Black,
+        parent: 4,
+        left: 1,
+        right: 3,
+      },
+      {
+        bufferIndex: 3,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 0,
+        leftCharCount: 0,
+        color: Color.Black,
+        parent: 2,
+        left: -1,
+        right: -1,
+      },
+      {
+        bufferIndex: 4,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 8,
+        leftCharCount: 120,
+        color: Color.Black,
+        parent: -1,
+        left: 2,
+        right: 6,
+      },
+      {
+        bufferIndex: 5,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 0,
+        leftCharCount: 0,
+        color: Color.Black,
+        parent: 6,
+        left: -1,
+        right: -1,
+      },
+      {
+        bufferIndex: 6,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 2,
+        leftCharCount: 30,
+        color: Color.Black,
+        parent: 4,
+        left: 5,
+        right: 10,
+      },
+      {
+        bufferIndex: 7,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 0,
+        leftCharCount: 0,
+        color: Color.Black,
+        parent: 8,
+        left: -1,
+        right: -1,
+      },
+      {
+        bufferIndex: 8,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 2,
+        leftCharCount: 30,
+        color: Color.Black,
+        parent: 10,
+        left: 7,
+        right: 9,
+      },
+      {
+        bufferIndex: 9,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 0,
+        leftCharCount: 0,
+        color: Color.Black,
+        parent: 8,
+        left: -1,
+        right: -1,
+      },
+      {
+        bufferIndex: 10,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 6,
+        leftCharCount: 90,
+        color: Color.Black,
+        parent: 6,
+        left: 8,
+        right: 11,
+      },
+      {
+        bufferIndex: 11,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 0,
+        leftCharCount: 0,
+        color: Color.Black,
+        parent: 10,
+        left: -1,
+        right: 13,
+      },
+      {
+        bufferIndex: 12,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 0,
+        leftCharCount: 0,
+        color: Color.Black,
+        parent: 13,
+        left: -1,
+        right: -1,
+      },
+      {
+        bufferIndex: 13,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 2,
+        leftCharCount: 30,
+        color: Color.Black,
+        parent: 11,
+        left: 12,
+        right: -1,
+      },
+    ];
+    const pieceTable: IPageContent = {
+      buffers: [],
+      newlineFormat: NEWLINE.LF,
+      nodes,
+      root: 4,
+    };
+    return pieceTable;
+  };
+  const constructComplexPieceTableAfterRightRotate = constructComplexPieceTableBeforeLeftRotate;
+
+  const constructComplexPieceTableAfterLeftRotate = (): IPageContent => {
+    const nodes: INode[] = [
+      {
+        bufferIndex: 0,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 0,
+        leftCharCount: 0,
+        color: Color.Black,
+        parent: 1,
+        left: -1,
+        right: -1,
+      },
+      {
+        bufferIndex: 1,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 2,
+        leftCharCount: 30,
+        color: Color.Black,
+        parent: 2,
+        left: 0,
+        right: -1,
+      },
+      {
+        bufferIndex: 2,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 4,
+        leftCharCount: 60,
+        color: Color.Black,
+        parent: 4,
+        left: 1,
+        right: 3,
+      },
+      {
+        bufferIndex: 3,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 0,
+        leftCharCount: 0,
+        color: Color.Black,
+        parent: 2,
+        left: -1,
+        right: -1,
+      },
+      {
+        bufferIndex: 4,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 8,
+        leftCharCount: 120,
+        color: Color.Black,
+        parent: -1,
+        left: 2,
+        right: 10,
+      },
+      {
+        bufferIndex: 5,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 0,
+        leftCharCount: 0,
+        color: Color.Black,
+        parent: 6,
+        left: -1,
+        right: -1,
+      },
+      {
+        bufferIndex: 6,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 2,
+        leftCharCount: 30,
+        color: Color.Black,
+        parent: 10,
+        left: 5,
+        right: 8,
+      },
+      {
+        bufferIndex: 7,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 0,
+        leftCharCount: 0,
+        color: Color.Black,
+        parent: 8,
+        left: -1,
+        right: -1,
+      },
+      {
+        bufferIndex: 8,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 2,
+        leftCharCount: 30,
+        color: Color.Black,
+        parent: 6,
+        left: 7,
+        right: 9,
+      },
+      {
+        bufferIndex: 9,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 0,
+        leftCharCount: 0,
+        color: Color.Black,
+        parent: 8,
+        left: -1,
+        right: -1,
+      },
+      {
+        bufferIndex: 10,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 10,
+        leftCharCount: 150,
+        color: Color.Black,
+        parent: 4,
+        left: 6,
+        right: 11,
+      },
+      {
+        bufferIndex: 11,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 0,
+        leftCharCount: 0,
+        color: Color.Black,
+        parent: 10,
+        left: -1,
+        right: 13,
+      },
+      {
+        bufferIndex: 12,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 0,
+        leftCharCount: 0,
+        color: Color.Black,
+        parent: 13,
+        left: -1,
+        right: -1,
+      },
+      {
+        bufferIndex: 13,
+        start: { column: 0, line: 0 },
+        end: { column: 10, line: 2 },
+        length: 30,
+        lineFeedCount: 2,
+        leftLineFeedCount: 2,
+        leftCharCount: 30,
+        color: Color.Black,
+        parent: 11,
+        left: 12,
+        right: -1,
+      },
+    ];
+    const pieceTable: IPageContent = {
+      buffers: [],
+      newlineFormat: NEWLINE.LF,
+      nodes,
+      root: 4,
+    };
+    return pieceTable;
+  };
+  const constructComplexPieceTableBeforeRightRotate = constructComplexPieceTableAfterLeftRotate;
 
   describe("left rotate", () => {
     test("Simple case", () => {
       const pieceTable = constructSimplePieceTableBeforeLeftRotate();
       leftRotate(pieceTable, 1);
       expect(pieceTable).toEqual(constructSimplePieceTableAfterLeftRotate());
+    });
+
+    test("Complex case", () => {
+      const piecetable = constructComplexPieceTableBeforeLeftRotate();
+      leftRotate(piecetable, 6);
+      expect(piecetable).toEqual(constructComplexPieceTableAfterLeftRotate());
     });
   });
 
@@ -172,6 +568,12 @@ describe("page/reducer", () => {
       const pieceTable = constructSimplePieceTableBeforeRightRotate();
       rightRotate(pieceTable, 3);
       expect(pieceTable).toEqual(constructSimplePieceTableAfterRightRotate());
+    });
+
+    test("Complex case", () => {
+      const piecetable = constructComplexPieceTableBeforeRightRotate();
+      rightRotate(piecetable, 10);
+      expect(piecetable).toEqual(constructComplexPieceTableAfterRightRotate());
     });
   });
 });
