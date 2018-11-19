@@ -1,4 +1,4 @@
-import { IPageContent } from "./model";
+import { IPageContent } from "../model";
 import {
   getNode,
   getParent,
@@ -6,8 +6,8 @@ import {
   updateLeftChild,
   updateParent,
   updateRightChild,
-} from "./node";
-import { SENTINEL_INDEX } from "./reducer";
+} from "../node";
+import { SENTINEL_INDEX } from "../reducer";
 
 export function leftRotate(pieceTable: IPageContent, nodeIndex: number) {
   const xIndex = nodeIndex;
