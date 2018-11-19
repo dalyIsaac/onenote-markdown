@@ -2,6 +2,7 @@ import { IPageContent } from "./model";
 import {
   getLeft,
   getNode,
+  getParent,
   getRight,
   updateLeftChild,
   updateParent,
@@ -19,20 +20,20 @@ export function leftRotate(pieceTable: IPageContent, nodeIndex: number) {
   y.leftCharCount += x.leftCharCount + x.length;
   y.leftLineFeedCount += x.leftLineFeedCount + x.lineFeedCount;
 
-  x.right = y.left;
+  updateRightChild(xIndex, y.left, pieceTable);
   if (y.left !== SENTINEL_INDEX) {
     updateParent(y.left, xIndex, pieceTable);
   }
-  y.parent = x.parent;
+  updateParent(yIndex, x.parent, pieceTable);
   if (x.parent === SENTINEL_INDEX) {
     pieceTable.root = yIndex;
-  } else if (getLeft(x.parent, pieceTable) === x) {
+  } else if (xIndex === getParent(xIndex, pieceTable).left) {
     updateLeftChild(x.parent, yIndex, pieceTable);
   } else {
     updateRightChild(x.parent, yIndex, pieceTable);
   }
-  updateLeftChild(y.left, xIndex, pieceTable);
-  updateParent(x.parent, yIndex, pieceTable);
+  updateLeftChild(yIndex, xIndex, pieceTable);
+  updateParent(xIndex, yIndex, pieceTable);
 }
 
 export function rightRotate(pieceTable: IPageContent, nodeIndex: number) {
@@ -45,7 +46,7 @@ export function rightRotate(pieceTable: IPageContent, nodeIndex: number) {
   if (x.right !== SENTINEL_INDEX) {
     updateParent(x.right, yIndex, pieceTable);
   }
-  x.parent = y.parent;
+  updateParent(xIndex, y.parent, pieceTable);
 
   // fix leftCharCount
   y.leftCharCount -= x.leftCharCount + x.length;
@@ -58,6 +59,6 @@ export function rightRotate(pieceTable: IPageContent, nodeIndex: number) {
   } else {
     updateLeftChild(y.parent, xIndex, pieceTable);
   }
-  x.right = yIndex;
-  y.parent = xIndex;
+  updateRightChild(xIndex, yIndex, pieceTable);
+  updateParent(yIndex, xIndex, pieceTable);
 }

@@ -1,4 +1,5 @@
 import { Color, IBufferCursor, IPageContent } from "./model";
+import { SENTINEL_INDEX } from "./reducer";
 
 /**
  * Represents a "piece" inside the piece table.
@@ -114,7 +115,9 @@ export function updateParent(
   newParentNodeIndex: number,
   pieceTable: IPageContent,
 ) {
-  pieceTable.nodes[nodeIndex].parent = newParentNodeIndex;
+  if (nodeIndex !== SENTINEL_INDEX) {
+    pieceTable.nodes[nodeIndex].parent = newParentNodeIndex;
+  }
 }
 
 /**
@@ -129,7 +132,9 @@ export function updateLeftChild(
   newLeftNodeIndex: number,
   pieceTable: IPageContent,
 ) {
-  pieceTable.nodes[nodeIndex].left = newLeftNodeIndex;
+  if (nodeIndex !== SENTINEL_INDEX) {
+    pieceTable.nodes[nodeIndex].left = newLeftNodeIndex;
+  }
 }
 
 /**
@@ -144,5 +149,7 @@ export function updateRightChild(
   newRightNodeIndex: number,
   pieceTable: IPageContent,
 ) {
-  pieceTable.nodes[nodeIndex].right = newRightNodeIndex;
+  if (nodeIndex !== SENTINEL_INDEX) {
+    pieceTable.nodes[nodeIndex].right = newRightNodeIndex;
+  }
 }
