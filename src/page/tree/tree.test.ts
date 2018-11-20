@@ -216,9 +216,9 @@ describe("page/tree/tree", () => {
     });
 
     expect(findNodeAtOffset(121, nodes, root)).toEqual({
-      node: SENTINEL,
-      nodeIndex: Infinity,
-      remainder: 0,
+      node: nodes[6],
+      nodeIndex: 6,
+      remainder: 41,
       nodeStartOffset: 121,
     });
   });

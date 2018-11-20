@@ -71,15 +71,17 @@ export function findNodeAtOffset(
     } else {
       offset -= x.leftCharCount + x.length;
       nodeStartOffset += x.leftCharCount + x.length;
+
+      const oldXIndex = xIndex;
       xIndex = x.right;
       if (nodes[xIndex]) {
         x = nodes[xIndex];
       } else {
         // to the right of the tree
         return {
-          node: SENTINEL,
-          nodeIndex: Infinity,
-          remainder: 0,
+          node: x,
+          nodeIndex: oldXIndex,
+          remainder: x.length,
           nodeStartOffset,
         };
       }
