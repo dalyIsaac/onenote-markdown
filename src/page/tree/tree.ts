@@ -5,6 +5,8 @@
 import { CharValues, IBufferCursor, INode, NEWLINE } from "../model";
 import { SENTINEL } from "../reducer";
 
+export const MAX_BUFFER_LENGTH = 65535;
+
 export interface INodePosition {
   /**
    * Piece Index

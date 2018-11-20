@@ -18,8 +18,19 @@ export const NEWLINE = {
  * Represents a buffer for a piece table.
  */
 export interface IBuffer {
+  /**
+   * Indicates whether this buffer is an **original content** or an **added content** buffer.
+   */
   isReadOnly: boolean;
+
+  /**
+   * The characters at which there is a line start.
+   */
   lineStarts: number[];
+
+  /**
+   * The content of the buffer.
+   */
   content: string;
 }
 
