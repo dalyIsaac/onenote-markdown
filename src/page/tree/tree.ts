@@ -45,7 +45,18 @@ export function findNodeAtOffset(
   while (x !== SENTINEL) {
     if (x.leftCharCount > offset) {
       xIndex = x.left;
-      x = nodes[xIndex];
+      if (nodes[xIndex]) {
+        x = nodes[xIndex];
+      } else {
+        // to the left of the tree
+        return {
+          node: SENTINEL,
+          nodeIndex: -Infinity,
+          remainder: 0,
+          nodeStartOffset,
+        };
+      }
+      x = nodes[xIndex] ? nodes[xIndex] : SENTINEL;
     } else if (x.leftCharCount + x.length > offset) {
       // note, the vscode nodeAt function uses >= instead of >
       nodeStartOffset += x.leftCharCount;
@@ -59,7 +70,17 @@ export function findNodeAtOffset(
       offset -= x.leftCharCount + x.length;
       nodeStartOffset += x.leftCharCount + x.length;
       xIndex = x.right;
-      x = nodes[xIndex];
+      if (nodes[xIndex]) {
+        x = nodes[xIndex];
+      } else {
+        // to the right of the tree
+        return {
+          node: SENTINEL,
+          nodeIndex: Infinity,
+          remainder: 0,
+          nodeStartOffset,
+        };
+      }
     }
   }
 

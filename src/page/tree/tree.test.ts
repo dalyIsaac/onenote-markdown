@@ -1,5 +1,5 @@
 import { Color, INode } from "../model";
-import { SENTINEL_INDEX } from "../reducer";
+import { SENTINEL_INDEX, SENTINEL } from "../reducer";
 import { findNodeAtOffset } from "./tree";
 
 describe("page/tree/tree", () => {
@@ -100,8 +100,15 @@ describe("page/tree/tree", () => {
     root: 1,
   });
 
-  test("findNodeAttOffset", () => {
+  test("findNodeAtOffset", () => {
     const { nodes, root } = getFinalTree();
+
+    expect(findNodeAtOffset(-1, nodes, root)).toEqual({
+      node: SENTINEL,
+      nodeIndex: -Infinity,
+      remainder: 0,
+      nodeStartOffset: 0,
+    });
 
     expect(findNodeAtOffset(0, nodes, root)).toEqual({
       node: nodes[0],
@@ -206,6 +213,13 @@ describe("page/tree/tree", () => {
       nodeIndex: 6,
       remainder: 40,
       nodeStartOffset: 80,
+    });
+
+    expect(findNodeAtOffset(121, nodes, root)).toEqual({
+      node: SENTINEL,
+      nodeIndex: Infinity,
+      remainder: 0,
+      nodeStartOffset: 121,
     });
   });
 });
