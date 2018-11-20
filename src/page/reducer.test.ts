@@ -8,7 +8,7 @@ import {
   IPageContent,
   IStatePages,
 } from "./model";
-import pageReducer, { createNewPage } from "./reducer";
+import pageReducer, { createNewPage, SENTINEL_INDEX } from "./reducer";
 
 const LF_CONTENT = `<html lang="en-NZ">
     <head>
@@ -175,9 +175,9 @@ describe("page/reducer", () => {
         length: content.length,
         lineFeedCount: lines.length,
         color: Color.Black,
-        parent: -1,
-        left: -1,
-        right: -1,
+        parent: SENTINEL_INDEX,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       };
     };
 

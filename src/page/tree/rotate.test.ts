@@ -1,4 +1,5 @@
 import { Color, INode, IPageContent, NEWLINE } from "../model";
+import { SENTINEL_INDEX } from "../reducer";
 import { leftRotate, rightRotate } from "./rotate";
 
 describe("page/tree/rotate", () => {
@@ -14,8 +15,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 1,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 1,
@@ -26,7 +27,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 2,
         leftCharCount: 30,
         color: Color.Black,
-        parent: -1,
+        parent: SENTINEL_INDEX,
         left: 0,
         right: 3,
       },
@@ -40,8 +41,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 3,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 3,
@@ -66,8 +67,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Red,
         parent: 3,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
     ];
     const pieceTable: IPageContent = {
@@ -92,8 +93,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 1,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 1,
@@ -118,8 +119,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 1,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 3,
@@ -130,7 +131,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 5,
         leftCharCount: 90,
         color: Color.Black,
-        parent: -1,
+        parent: SENTINEL_INDEX,
         left: 1,
         right: 4,
       },
@@ -144,8 +145,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Red,
         parent: 3,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
     ];
     const pieceTable: IPageContent = {
@@ -170,8 +171,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 1,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 1,
@@ -184,7 +185,7 @@ describe("page/tree/rotate", () => {
         color: Color.Black,
         parent: 2,
         left: 0,
-        right: -1,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 2,
@@ -209,8 +210,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 2,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 4,
@@ -221,7 +222,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 8,
         leftCharCount: 120,
         color: Color.Black,
-        parent: -1,
+        parent: SENTINEL_INDEX,
         left: 2,
         right: 6,
       },
@@ -235,8 +236,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 6,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 6,
@@ -261,8 +262,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 8,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 8,
@@ -287,8 +288,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 8,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 10,
@@ -313,7 +314,7 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 10,
-        left: -1,
+        left: SENTINEL_INDEX,
         right: 13,
       },
       {
@@ -326,8 +327,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 13,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 13,
@@ -340,7 +341,7 @@ describe("page/tree/rotate", () => {
         color: Color.Black,
         parent: 11,
         left: 12,
-        right: -1,
+        right: SENTINEL_INDEX,
       },
     ];
     const pieceTable: IPageContent = {
@@ -365,8 +366,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 1,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 1,
@@ -379,7 +380,7 @@ describe("page/tree/rotate", () => {
         color: Color.Black,
         parent: 2,
         left: 0,
-        right: -1,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 2,
@@ -404,8 +405,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 2,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 4,
@@ -416,7 +417,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 8,
         leftCharCount: 120,
         color: Color.Black,
-        parent: -1,
+        parent: SENTINEL_INDEX,
         left: 2,
         right: 10,
       },
@@ -430,8 +431,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 6,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 6,
@@ -456,8 +457,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 8,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 8,
@@ -482,8 +483,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 8,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 10,
@@ -508,7 +509,7 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 10,
-        left: -1,
+        left: SENTINEL_INDEX,
         right: 13,
       },
       {
@@ -521,8 +522,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 0,
         color: Color.Black,
         parent: 13,
-        left: -1,
-        right: -1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
       },
       {
         bufferIndex: 13,
@@ -535,7 +536,7 @@ describe("page/tree/rotate", () => {
         color: Color.Black,
         parent: 11,
         left: 12,
-        right: -1,
+        right: SENTINEL_INDEX,
       },
     ];
     const pieceTable: IPageContent = {
