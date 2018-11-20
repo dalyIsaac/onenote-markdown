@@ -118,7 +118,7 @@ describe("page/reducer", () => {
     ): IBuffer => ({
       isReadOnly: true,
       lineStarts: getExpectedLineStarts(content, newline),
-      value: content,
+      content,
     });
 
     const pageReducerTest = (content: string, newline: string) => {

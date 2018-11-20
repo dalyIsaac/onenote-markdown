@@ -53,7 +53,7 @@ export function createNewPage(receivedPage: OnenotePage): IPageContent {
   const originalBuffer: IBuffer = {
     isReadOnly: true,
     lineStarts: getLineStarts(receivedPage.content, newlineFormat),
-    value: receivedPage.content,
+    content: receivedPage.content,
   };
 
   const finalLine = originalBuffer.lineStarts.length - 1;

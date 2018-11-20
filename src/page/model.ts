@@ -20,7 +20,7 @@ export const NEWLINE = {
 export interface IBuffer {
   isReadOnly: boolean;
   lineStarts: number[];
-  value: string;
+  content: string;
 }
 
 /**
