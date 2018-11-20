@@ -1,5 +1,5 @@
 import { Color, INode } from "../model";
-import { SENTINEL_INDEX, SENTINEL } from "../reducer";
+import { SENTINEL, SENTINEL_INDEX } from "../reducer";
 import { findNodeAtOffset } from "./tree";
 
 describe("page/tree/tree", () => {
