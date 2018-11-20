@@ -1,7 +1,7 @@
 import { Color, INode, IPageContent, NEWLINE } from "../model";
 import { leftRotate, rightRotate } from "./rotate";
 
-describe("page/reducer", () => {
+describe("page/tree/rotate", () => {
   const constructSimplePieceTableBeforeLeftRotate = (): IPageContent => {
     const nodes: INode[] = [
       {
