@@ -6,13 +6,11 @@ import {
   Color,
   IBuffer,
   IBufferCursor,
+  INode,
   IPageContent,
   IStatePages,
   NEWLINE,
 } from "./model";
-import {
-  INode,
-} from "./node";
 
 export const SENTINEL_INDEX = -1;
 
