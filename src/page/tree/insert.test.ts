@@ -46,8 +46,8 @@ describe("page/tree/insert", () => {
   const constructAddition2 = (): IPageContent => {
     const page = constructAddition1();
     const buffer = page.buffers.pop()!;
-    buffer.content += "\n\nThough wise men at their end know dark is right,";
-    buffer.lineStarts = [...buffer!.lineStarts, 44, 45];
+    buffer.content += "\n\nThough wise men by their end know dark is right,";
+    buffer.lineStarts = [...buffer.lineStarts, 44, 45];
     page.buffers.push(buffer);
     const node = page.nodes.pop()!;
     page.nodes.push({
@@ -58,7 +58,41 @@ describe("page/tree/insert", () => {
     return page;
   };
 
-  test("Insert content at the end of the original content", () => {
+  /**
+   * Adds content to the start of the original content.
+   */
+  const constructAddition3 = (): IPageContent => {
+    const page = constructAddition2();
+    let buffer = page.buffers.pop()!;
+    buffer = {
+      isReadOnly: false,
+      lineStarts: buffer.lineStarts.concat(
+        [53, 54].map((x: number) => x + buffer.content.length),
+      ),
+      content:
+        buffer.content +
+        "Do not go gentle into that good night - Dylan Thomas\n\n",
+    };
+    page.buffers.push(buffer);
+    const node = {
+      bufferIndex: 1,
+      start: { line: 3, column: 48 },
+      end: { line: 5, column: 1 },
+      leftCharCount: 0,
+      leftLineFeedCount: 0,
+      length: 54,
+      lineFeedCount: 2,
+      color: Color.Red,
+      parent: 0,
+      left: SENTINEL_INDEX,
+      right: SENTINEL_INDEX,
+    };
+    page.nodes.push(node);
+    page.nodes[0].left = 2;
+    return page;
+  };
+
+  test("1. Insert content at the end of the original content (poem L3)", () => {
     const expectedPage = constructAddition1();
     const page = constructOriginalPage();
     const insertedContent: IContentInsert = {
@@ -69,14 +103,33 @@ describe("page/tree/insert", () => {
     expect(acquiredPage).toEqual(expectedPage);
   });
 
-  test("Insert content at the end of the content", () => {
+  test("2. Insert content at the end of the content (poem L4)", () => {
     const expectedPage = constructAddition2();
     const page = constructAddition1();
     const insertedContent: IContentInsert = {
-      content: "\n\nThough wise men at their end know dark is right,",
+      content: "\n\nThough wise men by their end know dark is right,",
       offset: 127,
     };
     const acquiredPage = insertContent(insertedContent, page);
     expect(acquiredPage).toEqual(expectedPage);
   });
+
+  test("3. Insert content at the start of the original content (title and author)", () => {
+    const expectedPage = constructAddition3();
+    const page = constructAddition2();
+    const insertedContent: IContentInsert = {
+      content: "Do not go gentle into that good night - Dylan Thomas\n\n",
+      offset: 0,
+    };
+    const acquiredPage = insertContent(insertedContent, page);
+    expect(acquiredPage).toEqual(expectedPage);
+  });
+
+  // test("4. Insert content at the end of the title (year published)", () => {
+  //   // do stuff
+  // });
+
+  // test("5. Insert corrected text (poem L4: 'by their end' => 'at their end')", () => {
+  //   // do stuff
+  // });
 });

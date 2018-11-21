@@ -14,36 +14,29 @@ export interface IContentInsert {
 
 /**
  * Inserts new content into the piece table.
- * @param newContent The content to insert, and the desired offset.
- * @param pieceTable The piece table for the OneNote page.
+ * @param contentToInsert The content to insert, and the desired offset.
+ * @param page The piece table for the OneNote page.
  */
 export function insertContent(
-  newContent: IContentInsert,
-  pieceTable: IPageContent,
+  contentToInsert: IContentInsert,
+  page: IPageContent,
 ): IPageContent {
-  let buffers = [...pieceTable.buffers];
-  let nodes = [...pieceTable.nodes];
-  let newPieceTable = { ...pieceTable };
-  const { content, offset } = newContent;
+  let newPieceTable = { ...page };
 
-  const position = findNodeAtOffset(offset, nodes, pieceTable.root);
+  const position = findNodeAtOffset(
+    contentToInsert.offset,
+    page.nodes,
+    page.root,
+  );
 
-  // insert at the end of a piece
   if (position.remainder === position.node.length) {
-    ({ buffers, nodes } = insertContentAtEnd(
-      position,
-      content,
-      buffers,
-      nodes,
-      pieceTable.newlineFormat,
-    ));
+    // insert at the end of a piece
+    newPieceTable = insertContentAtEnd(position, contentToInsert, page);
+  } else if (position.remainder === 0) {
+    // insert at the start of a piece
+    newPieceTable = insertContentAtStart(position, contentToInsert, page);
   }
 
-  newPieceTable = {
-    ...newPieceTable,
-    buffers,
-    nodes,
-  };
   // TODO: insert at the start of a piece
   // TODO: insert inside a piece
 
@@ -52,31 +45,30 @@ export function insertContent(
 }
 
 /**
- *
+ * Inserts new content at the end of a piece.
  * @param position The positional information about the offset to insert at.
- * @param content The new content to insert.
- * @param buffers Array of the buffers for the piece table.
- * @param nodes The nodes of the piece table.
- * @param newlineFormat The newline format.
+ * @param contentToInsert The new content to insert.
+ * @param page The old piece table for the page.
  */
 function insertContentAtEnd(
   position: INodePosition,
-  content: string,
-  buffers: IBuffer[],
-  nodes: INode[],
-  newlineFormat: CharValues[],
-): { buffers: IBuffer[]; nodes: INode[] } {
-  const buffer = buffers[position.node.bufferIndex];
+  contentToInsert: IContentInsert,
+  page: IPageContent,
+): IPageContent {
+  const buffer = page.buffers[position.node.bufferIndex];
   if (
-    buffer.content.length + content.length <= MAX_BUFFER_LENGTH &&
+    buffer.content.length + contentToInsert.content.length <=
+      MAX_BUFFER_LENGTH &&
     buffer.isReadOnly === false
   ) {
-    const newContent = buffer.content + content;
+    const nodes = [...page.nodes];
+    const buffers = [...page.buffers];
+    const newContent = buffer.content + contentToInsert.content;
     // extend the buffer and node
     const newBuffer: IBuffer = {
       ...buffer,
       content: newContent,
-      lineStarts: getLineStarts(newContent, newlineFormat),
+      lineStarts: getLineStarts(newContent, page.newlineFormat),
     };
     buffers[position.node.bufferIndex] = newBuffer;
     nodes[position.nodeIndex] = {
@@ -89,42 +81,139 @@ function insertContentAtEnd(
       },
       length: newContent.length,
     };
+    return {
+      ...page,
+      buffers,
+      nodes,
+    };
   } else {
     // create a new buffer and node
-    const newBuffer: IBuffer = {
-      isReadOnly: false,
-      lineStarts: getLineStarts(content, newlineFormat),
-      content,
-    };
-    buffers.push(newBuffer);
-
-    const parentNode: INode = {
-      ...position.node,
-      right: nodes.length,
-    };
-    nodes[position.nodeIndex] = parentNode;
-
-    const newNode: INode = {
-      bufferIndex: buffers.length - 1,
-      start: { line: 0, column: 0 },
-      end: {
-        line: newBuffer.lineStarts.length - 1,
-        column:
-          newBuffer.content.length -
-          newBuffer.lineStarts[newBuffer.lineStarts.length - 1],
-      },
-      leftCharCount: 0,
-      leftLineFeedCount: 0,
-      length: newBuffer.content.length,
-      lineFeedCount: newBuffer.lineStarts.length - 1,
-      color: Color.Red,
-      parent: position.nodeIndex,
-      left: SENTINEL_INDEX,
-      right: SENTINEL_INDEX,
-    };
-    nodes.push(newNode);
+    return createNewBufferNewNode(position, contentToInsert, page);
   }
+}
+
+/**
+ * Inserts new content at the start of a piece.
+ * @param position The positional information about the offset to insert at.
+ * @param contentToInsert The new content to insert.
+ * @param page The old piece table for the page.
+ */
+function insertContentAtStart(
+  position: INodePosition,
+  contentToInsert: IContentInsert,
+  page: IPageContent,
+): IPageContent {
+  // check if it can be inserted at the end of a prior node
+  const previousPosition = findNodeAtOffset(
+    contentToInsert.offset - 1,
+    page.nodes,
+    page.root,
+  );
+  if (previousPosition.node !== position.node) {
+    // the content can be inserted at the end of the prior node
+    return insertContentAtEnd(previousPosition, contentToInsert, page);
+  } else {
+    // the content cannot be inserted at the end of the prior node, thus insert a new node
+    const nodes = [...page.nodes];
+    const buffers = [...page.buffers];
+    const buffer = buffers[buffers.length - 1];
+    if (
+      buffer.content.length + contentToInsert.content.length <=
+      MAX_BUFFER_LENGTH
+    ) {
+      // extend the buffer and create a new node
+      const newContent = buffer.content + contentToInsert.content;
+      const newBuffer: IBuffer = {
+        ...buffer,
+        content: newContent,
+        lineStarts: getLineStarts(newContent, page.newlineFormat),
+      };
+      buffers[buffers.length - 1] = newBuffer;
+      const newNode: INode = {
+        bufferIndex: buffers.length - 1,
+        start: {
+          line: buffer.lineStarts.length - 1,
+          column:
+            buffer.content.length -
+            buffer.lineStarts[buffer.lineStarts.length - 1],
+        },
+        end: {
+          line: newBuffer.lineStarts.length - 1,
+          column:
+            newBuffer.content.length -
+            newBuffer.lineStarts[newBuffer.lineStarts.length - 1] +
+            1,
+        },
+        leftCharCount: 0,
+        leftLineFeedCount: 0,
+        length: contentToInsert.content.length,
+        lineFeedCount: newBuffer.lineStarts.length - buffer.lineStarts.length,
+        color: Color.Red,
+        parent: position.nodeIndex,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
+      };
+      nodes.push(newNode);
+      nodes[position.nodeIndex].left = nodes.length - 1;
+      return {
+        ...page,
+        buffers,
+        nodes,
+      };
+    } else {
+      // create a new buffer and a new node
+      return createNewBufferNewNode(previousPosition, contentToInsert, page);
+    }
+  }
+}
+
+/**
+ * Creates a new buffer and a new node to the right of the node specified in `position`.
+ * @param position The positional information about the offset to insert at.
+ * @param contentToInsert The new content to insert.
+ * @param page The old piece table for the page.
+ */
+function createNewBufferNewNode(
+  position: INodePosition,
+  contentToInsert: IContentInsert,
+  page: IPageContent,
+): IPageContent {
+  const nodes = [...page.nodes];
+  const buffers = [...page.buffers];
+  const newBuffer: IBuffer = {
+    isReadOnly: false,
+    lineStarts: getLineStarts(contentToInsert.content, page.newlineFormat),
+    content: contentToInsert.content,
+  };
+  buffers.push(newBuffer);
+
+  const parentNode: INode = {
+    ...position.node,
+    right: nodes.length,
+  };
+  nodes[position.nodeIndex] = parentNode;
+
+  const newNode: INode = {
+    bufferIndex: buffers.length - 1,
+    start: { line: 0, column: 0 },
+    end: {
+      line: newBuffer.lineStarts.length - 1,
+      column:
+        newBuffer.content.length -
+        newBuffer.lineStarts[newBuffer.lineStarts.length - 1],
+    },
+    leftCharCount: 0,
+    leftLineFeedCount: 0,
+    length: newBuffer.content.length,
+    lineFeedCount: newBuffer.lineStarts.length - 1,
+    color: Color.Red,
+    parent: position.nodeIndex,
+    left: SENTINEL_INDEX,
+    right: SENTINEL_INDEX,
+  };
+  nodes.push(newNode);
   return {
+    ...page,
     buffers,
     nodes,
   };
