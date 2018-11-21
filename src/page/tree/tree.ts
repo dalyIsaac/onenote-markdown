@@ -46,14 +46,15 @@ export function findNodeAtOffset(
 
   while (x !== SENTINEL) {
     if (x.leftCharCount > offset) {
+      const oldXIndex = xIndex;
       xIndex = x.left;
       if (nodes[xIndex]) {
         x = nodes[xIndex];
       } else {
         // to the left of the tree
         return {
-          node: SENTINEL,
-          nodeIndex: -Infinity,
+          node: x,
+          nodeIndex: oldXIndex,
           remainder: 0,
           nodeStartOffset,
         };

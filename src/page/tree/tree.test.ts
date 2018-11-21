@@ -104,8 +104,8 @@ describe("page/tree/tree", () => {
     const { nodes, root } = getFinalTree();
 
     expect(findNodeAtOffset(-1, nodes, root)).toEqual({
-      node: SENTINEL,
-      nodeIndex: -Infinity,
+      node: nodes[0],
+      nodeIndex: 0,
       remainder: 0,
       nodeStartOffset: 0,
     });
