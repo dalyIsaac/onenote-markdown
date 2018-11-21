@@ -14,7 +14,7 @@ export interface IContentInsert {
 
 /**
  * Inserts new content into the piece table.
- * @param newContent Tbe content to insert, and the desired offset.
+ * @param newContent The content to insert, and the desired offset.
  * @param pieceTable The piece table for the OneNote page.
  */
 export function insertContent(
