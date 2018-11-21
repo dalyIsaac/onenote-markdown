@@ -42,34 +42,12 @@ export interface IBufferCursor {
   line: number;
 }
 
+/**
+ * Possible node colors, inside the red and black tree.
+ */
 export enum Color {
   Red,
   Black,
-}
-
-/**
- * Represents the piece table for a single Onenote page.
- */
-export interface IPageContent {
-  /**
-   * Array of the buffers for the piece table.
-   */
-  buffers: IBuffer[];
-
-  /**
-   * The newline format, which is determined by the received content from the Microsoft Graph.
-   */
-  newlineFormat: CharValues[];
-
-  /**
-   * The nodes of the piece table.
-   */
-  nodes: INode[];
-
-  /**
-   * The index of the root node for the piece table for this page.
-   */
-  root: number;
 }
 
 /**
@@ -130,6 +108,31 @@ export interface INode {
    * The index of the right child to this node, in the piece table's `nodes` array.
    */
   right: number;
+}
+
+/**
+ * Represents the piece table for a single Onenote page.
+ */
+export interface IPageContent {
+  /**
+   * Array of the buffers for the piece table.
+   */
+  buffers: IBuffer[];
+
+  /**
+   * The newline format, which is determined by the received content from the Microsoft Graph.
+   */
+  newlineFormat: CharValues[];
+
+  /**
+   * The nodes of the piece table.
+   */
+  nodes: INode[];
+
+  /**
+   * The index of the root node for the piece table for this page.
+   */
+  root: number;
 }
 
 /**
