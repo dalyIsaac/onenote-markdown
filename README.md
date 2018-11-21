@@ -6,7 +6,7 @@ This is a new prototype for building a markdown editor for OneNote, starting wit
 
 The main reason is that the previous attempt wasn't written with full code coverage, and going back to rectify that was painful. There were also some fundamentally bad architectural decisions - like sending multitudes of unnecessary requests to the Microsoft Graph at once.
 
-This attempt starts with building the editor first, instead of the Microsoft Graph interface. The editor is the most complex component, and thus a fresh start is a nice place to start.
+This attempt starts with building the editor first, instead of the Microsoft Graph interface. The editor is the most complex component, and thus should be a good starting point.
 
 However, starting from scratch doesn't mean that the old project will be completely ignored - bits and pieces will provide "inspiration" when needed.
 
