@@ -154,7 +154,14 @@ function insertContentAtStart(
         right: SENTINEL_INDEX,
       };
       nodes.push(newNode);
-      nodes[position.nodeIndex].left = nodes.length - 1;
+
+      const parentNode: INode = {
+        ...nodes[position.nodeIndex],
+        left: nodes.length - 1,
+        leftCharCount: newNode.length,
+        leftLineFeedCount: newNode.lineFeedCount,
+      };
+      nodes[position.nodeIndex] = parentNode;
       return {
         ...page,
         buffers,

@@ -89,6 +89,8 @@ describe("page/tree/insert", () => {
     };
     page.nodes.push(node);
     page.nodes[0].left = 2;
+    page.nodes[0].leftCharCount = node.length;
+    page.nodes[0].leftLineFeedCount = node.lineFeedCount;
     return page;
   };
 
@@ -126,7 +128,6 @@ describe("page/tree/insert", () => {
   });
 
   // test("4. Insert content at the end of the title (year published)", () => {
-  //   // do stuff
   // });
 
   // test("5. Insert corrected text (poem L4: 'by their end' => 'at their end')", () => {
