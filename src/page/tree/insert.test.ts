@@ -3,6 +3,7 @@ import { SENTINEL_INDEX } from "../reducer";
 import {
   calculateCharCount,
   calculateLineFeedCount,
+  fixInsert,
   IContentInsert,
   insertContent,
   recomputeTreeMetadata,
@@ -195,6 +196,229 @@ describe("page/tree/insert", () => {
       expect(receivedPage).toEqual(expectedPage);
     });
 
-    // TODO: fix insert
+    describe("fixInsert tests", () => {
+      test("Scenario 1: Left left case", () => {
+        const page: IPageContent = {
+          buffers: [],
+          root: 0,
+          newlineFormat: NEWLINE.LF,
+          previouslyInsertedNodeIndex: null,
+          previouslyInsertedNodeOffset: null,
+          nodes: [
+            {
+              // g
+              bufferIndex: 0,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 20,
+              leftLineFeedCount: 4,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Black,
+              parent: SENTINEL_INDEX,
+              left: 1,
+              right: 2,
+            },
+            {
+              // p,
+              bufferIndex: 1,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Red,
+              parent: 0,
+              left: 3,
+              right: 4,
+            },
+            {
+              // u
+              bufferIndex: 2,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Black,
+              parent: 0,
+              left: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+            },
+            {
+              // x
+              bufferIndex: 3,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Red,
+              parent: 1,
+              left: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+            },
+            {
+              // T3
+              bufferIndex: 4,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Black,
+              parent: 1,
+              left: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+            },
+          ],
+        };
+        const expectedPage: IPageContent = {
+          buffers: [],
+          root: 1,
+          newlineFormat: NEWLINE.LF,
+          previouslyInsertedNodeIndex: null,
+          previouslyInsertedNodeOffset: null,
+          nodes: [
+            {
+              // g
+              bufferIndex: 0,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 10,
+              leftLineFeedCount: 2,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Red,
+              parent: 1,
+              left: 4,
+              right: 2,
+            },
+            {
+              // p
+              bufferIndex: 1,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 10,
+              leftLineFeedCount: 2,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Black,
+              parent: SENTINEL_INDEX,
+              left: 3,
+              right: 0,
+            },
+            {
+              // u
+              bufferIndex: 2,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Black,
+              parent: 0,
+              left: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+            },
+            {
+              // x
+              bufferIndex: 3,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Red,
+              parent: 1,
+              left: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+            },
+            {
+              // T3
+              bufferIndex: 4,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Black,
+              parent: 0,
+              left: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+            },
+          ],
+        };
+        const acquiredPage = fixInsert(page, 3);
+        expect(acquiredPage).toEqual(expectedPage);
+      });
+    });
   });
 });

@@ -36,10 +36,15 @@ export function fixInsert(page: IPageContent, xIndex: number): IPageContent {
   page = { ...page };
   page = recomputeTreeMetadata(page, xIndex);
   let nodes = [...page.nodes];
+  page.nodes = nodes;
   let x = { ...nodes[xIndex] };
   nodes[xIndex] = x;
 
-  while (xIndex !== page.root && nodes[x.parent].color === Color.Red) {
+  while (
+    nodes[nodes[x.parent].parent] &&
+    xIndex !== page.root &&
+    nodes[x.parent].color === Color.Red
+  ) {
     if (x.parent === nodes[nodes[x.parent].parent].left) {
       const yIndex = nodes[nodes[x.parent].parent].right;
       const y = { ...nodes[yIndex] };
@@ -66,7 +71,6 @@ export function fixInsert(page: IPageContent, xIndex: number): IPageContent {
           page = leftRotate(page, xIndex);
           nodes = page.nodes;
         }
-
         nodes[x.parent] = {
           ...nodes[x.parent],
           color: Color.Black,
@@ -124,6 +128,11 @@ export function fixInsert(page: IPageContent, xIndex: number): IPageContent {
   return page;
 }
 
+/**
+ * Recomputes the metadata for the tree based on the newly inserted node.
+ * @param page The page/piece table
+ * @param index The index of the node in the `node` array, which is the basis for updating the tree.
+ */
 export function recomputeTreeMetadata(
   page: IPageContent,
   xIndex: number,
