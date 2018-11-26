@@ -46,8 +46,8 @@ export interface IBufferCursor {
  * Possible node colors, inside the red and black tree.
  */
 export enum Color {
-  Red,
-  Black,
+  Red = 0,
+  Black = 1,
 }
 
 /**
