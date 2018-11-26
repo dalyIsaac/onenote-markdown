@@ -642,6 +642,229 @@ describe("page/tree/insert", () => {
         const acquiredPage = fixInsert(page, 4);
         expect(acquiredPage).toEqual(expectedPage);
       });
+
+      test("Scenario 3: Right right case", () => {
+        const page: IPageContent = {
+          buffers: [],
+          previouslyInsertedNodeIndex: null,
+          previouslyInsertedNodeOffset: null,
+          newlineFormat: NEWLINE.LF,
+          root: 0,
+          nodes: [
+            {
+              // g
+              bufferIndex: 0,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 10,
+              leftLineFeedCount: 2,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Black,
+              parent: SENTINEL_INDEX,
+              left: 1,
+              right: 2,
+            },
+            {
+              // u
+              bufferIndex: 1,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Black,
+              parent: 0,
+              left: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+            },
+            {
+              // p
+              bufferIndex: 2,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 10,
+              leftLineFeedCount: 2,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Red,
+              parent: 0,
+              left: 3,
+              right: 4,
+            },
+            {
+              // T3
+              bufferIndex: 3,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Black,
+              parent: 2,
+              left: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+            },
+            {
+              // x
+              bufferIndex: 4,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Red,
+              parent: 2,
+              left: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+            },
+          ],
+        };
+        const expectedPage: IPageContent = {
+          buffers: [],
+          previouslyInsertedNodeIndex: null,
+          previouslyInsertedNodeOffset: null,
+          newlineFormat: NEWLINE.LF,
+          root: 2,
+          nodes: [
+            {
+              // g
+              bufferIndex: 0,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 10,
+              leftLineFeedCount: 2,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Red,
+              parent: 2,
+              left: 1,
+              right: 3,
+            },
+            {
+              // u
+              bufferIndex: 1,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Black,
+              parent: 0,
+              left: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+            },
+            {
+              // p
+              bufferIndex: 2,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 30,
+              leftLineFeedCount: 6,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Black,
+              parent: SENTINEL_INDEX,
+              left: 0,
+              right: 4,
+            },
+            {
+              // T3
+              bufferIndex: 3,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Black,
+              parent: 0,
+              left: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+            },
+            {
+              // x
+              bufferIndex: 4,
+              start: {
+                line: 0,
+                column: 0,
+              },
+              end: {
+                line: 0,
+                column: 0,
+              },
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              color: Color.Red,
+              parent: 2,
+              left: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+            },
+          ],
+        };
+        const acquiredPage = fixInsert(page, 4);
+        expect(acquiredPage).toEqual(expectedPage);
+      });
     });
   });
 });
