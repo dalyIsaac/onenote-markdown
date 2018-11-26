@@ -70,6 +70,7 @@ export function fixInsert(page: IPageContent, xIndex: number): IPageContent {
           nodes[xIndex] = x;
           page = leftRotate(page, xIndex);
           nodes = page.nodes;
+          x = nodes[xIndex];
         }
         nodes[x.parent] = {
           ...nodes[x.parent],
@@ -106,6 +107,7 @@ export function fixInsert(page: IPageContent, xIndex: number): IPageContent {
           nodes[xIndex] = x;
           page = rightRotate(page, xIndex);
           nodes = page.nodes;
+          x = nodes[xIndex];
         }
         nodes[x.parent] = {
           ...nodes[x.parent],
