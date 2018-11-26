@@ -32,6 +32,11 @@ export function insertContent(
   return newPage ? newPage : page;
 }
 
+/**
+ * Restores the properties of a red-black tree after the insertion of a node.
+ * @param page The page/piece table.
+ * @param xIndex The index of the node in the `node` array, which is the basis for fixing the tree.
+ */
 export function fixInsert(page: IPageContent, xIndex: number): IPageContent {
   page = { ...page };
   page = recomputeTreeMetadata(page, xIndex);
@@ -132,7 +137,7 @@ export function fixInsert(page: IPageContent, xIndex: number): IPageContent {
 
 /**
  * Recomputes the metadata for the tree based on the newly inserted node.
- * @param page The page/piece table
+ * @param page The page/piece table.
  * @param index The index of the node in the `node` array, which is the basis for updating the tree.
  */
 export function recomputeTreeMetadata(
