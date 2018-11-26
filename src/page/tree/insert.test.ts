@@ -35,7 +35,7 @@ describe("page/tree/insert", () => {
           leftLineFeedCount: 0,
           length: 1,
           lineFeedCount: 0,
-          color: Color.Red,
+          color: Color.Black,
           parent: SENTINEL_INDEX,
           left: SENTINEL_INDEX,
           right: SENTINEL_INDEX,
@@ -1088,6 +1088,49 @@ describe("page/tree/insert", () => {
         };
         const acquiredPage = fixInsert(page, 3);
         expect(acquiredPage).toEqual(expectedPage);
+      });
+
+      const getScenario5Page = (): IPageContent => ({
+        buffers: [
+          {
+            isReadOnly: false,
+            lineStarts: [0],
+            content: "a",
+          },
+        ],
+        newlineFormat: NEWLINE.LF,
+        nodes: [
+          {
+            bufferIndex: 0,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 1,
+            },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 1,
+            lineFeedCount: 0,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+        root: 0,
+        previouslyInsertedNodeIndex: 0,
+        previouslyInsertedNodeOffset: 0,
+      });
+
+      test("Scenario 5: Inserted node is root", () => {
+        const expectedPage = getScenario5Page();
+        expectedPage.nodes[0].color = Color.Black;
+        const page = getScenario5Page();
+        const receivedPage = fixInsert(page, 0);
+        expect(receivedPage).toEqual(expectedPage);
       });
     });
   });
