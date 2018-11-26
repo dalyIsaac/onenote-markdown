@@ -14,6 +14,8 @@ export function insertContent(
 ): IPageContent {
   let previouslyInsertedNode: INode | undefined;
   let newPage: IPageContent | undefined;
+  let xIndex: number | undefined;
+
   if (
     page.previouslyInsertedNodeIndex != null &&
     page.previouslyInsertedNodeOffset != null
@@ -26,10 +28,15 @@ export function insertContent(
     content.offset ===
       page.previouslyInsertedNodeOffset! + previouslyInsertedNode.length
   ) {
-    newPage = insertIntoEndPreviouslyInsertedNode(content, page);
+    const result = insertIntoEndPreviouslyInsertedNode(content, page);
+    newPage = result.newPage;
+    xIndex = result.xIndex;
   }
 
-  return newPage ? newPage : page;
+  if (newPage && xIndex !== undefined) {
+    return fixInsert(newPage, xIndex);
+  }
+  return page;
 }
 
 /**
@@ -44,6 +51,11 @@ export function fixInsert(page: IPageContent, xIndex: number): IPageContent {
   page.nodes = nodes;
   let x = { ...nodes[xIndex] };
   nodes[xIndex] = x;
+
+  if (xIndex === page.root) {
+    x.color = Color.Black;
+    return page;
+  }
 
   while (
     nodes[nodes[x.parent].parent] &&
@@ -236,7 +248,7 @@ export function calculateLineFeedCount(
 function insertIntoEndPreviouslyInsertedNode(
   content: IContentInsert,
   page: IPageContent,
-): IPageContent {
+): { newPage: IPageContent; xIndex: number } {
   // check buffer size
   if (
     content.content.length +
@@ -269,7 +281,7 @@ function insertIntoEndPreviouslyInsertedNode(
     };
     newPage.buffers[newPage.buffers.length - 1] = buffer;
     newPage.nodes[newPage.nodes.length - 1] = node;
-    return newPage;
+    return { newPage, xIndex: newPage.nodes.length - 1 };
   } else {
     // scenario 2: cannot fit inside the previous buffer
     // creates a new node

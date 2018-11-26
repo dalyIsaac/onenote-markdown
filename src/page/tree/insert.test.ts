@@ -56,6 +56,7 @@ describe("page/tree/insert", () => {
           column: 2,
         },
         length: 2,
+        color: Color.Black,
       };
       const page = getScenarioOneInitialPage();
       const content: IContentInsert = {
