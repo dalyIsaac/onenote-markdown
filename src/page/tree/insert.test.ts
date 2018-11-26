@@ -1114,7 +1114,7 @@ describe("page/tree/insert", () => {
             leftLineFeedCount: 0,
             length: 1,
             lineFeedCount: 0,
-            color: Color.Black,
+            color: Color.Red,
             parent: SENTINEL_INDEX,
             left: SENTINEL_INDEX,
             right: SENTINEL_INDEX,
