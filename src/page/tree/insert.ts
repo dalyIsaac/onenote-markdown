@@ -1,7 +1,7 @@
 import { Color, IBuffer, INode, IPageContent } from "../model";
-import { SENTINEL_INDEX, SENTINEL } from "../reducer";
+import { SENTINEL_INDEX } from "../reducer";
 import { leftRotate, rightRotate } from "./rotate";
-import { findNodeAtOffset, getLineStarts, INodePosition } from "./tree";
+import { findNodeAtOffset, getLineStarts } from "./tree";
 
 export interface IContentInsert {
   content: string;
@@ -15,7 +15,6 @@ export function insertContent(
 ): IPageContent {
   let previouslyInsertedNode: INode | undefined;
   let newPage: IPageContent | undefined;
-  let xIndex: number | undefined;
 
   if (
     page.previouslyInsertedNodeIndex != null &&
@@ -29,13 +28,7 @@ export function insertContent(
     content.offset ===
       page.previouslyInsertedNodeOffset! + previouslyInsertedNode.length
   ) {
-    const result = insertAtEndPreviouslyInsertedNode(
-      content,
-      page,
-      maxBufferLength,
-    );
-    newPage = result.newPage;
-    xIndex = result.xIndex;
+    newPage = insertAtEndPreviouslyInsertedNode(content, page, maxBufferLength);
   } else {
     const nodePosition = findNodeAtOffset(
       content.offset - 1,
@@ -45,21 +38,14 @@ export function insertContent(
 
     if (
       content.offset ===
-      nodePosition.nodeStartOffset + nodePosition.node.length + 1
+      nodePosition.nodeStartOffset + nodePosition.node.length
     ) {
-      const result = insertAtEndOfANode(
-        content,
-        page,
-        maxBufferLength,
-        nodePosition,
-      );
-      newPage = result.newPage;
-      xIndex = result.xIndex;
+      newPage = insertAtEndOfANode(content, page, maxBufferLength);
     }
   }
 
-  if (newPage && xIndex !== undefined) {
-    return fixInsert(newPage, xIndex);
+  if (newPage) {
+    return fixInsert(newPage, newPage.nodes.length - 1);
   }
   return page;
 }
@@ -70,9 +56,7 @@ export function insertContent(
  * @param xIndex The index of the node in the `node` array, which is the basis for fixing the tree.
  */
 export function fixInsert(page: IPageContent, xIndex: number): IPageContent {
-  page = { ...page };
-  page = recomputeTreeMetadata(page, xIndex);
-  page.nodes = [...page.nodes];
+  page = recomputeTreeMetadata({ ...page }, xIndex);
   let x = { ...page.nodes[xIndex] };
   page.nodes[xIndex] = x;
 
@@ -82,7 +66,8 @@ export function fixInsert(page: IPageContent, xIndex: number): IPageContent {
   }
 
   while (
-    page.nodes[page.nodes[x.parent].parent] &&
+    x.parent !== SENTINEL_INDEX &&
+    page.nodes[x.parent].parent !== SENTINEL_INDEX &&
     xIndex !== page.root &&
     page.nodes[x.parent].color === Color.Red
   ) {
@@ -261,16 +246,11 @@ export function calculateLineFeedCount(
   );
 }
 
-interface IResultInsert {
-  newPage: IPageContent;
-  xIndex: number;
-}
-
 function insertAtEndPreviouslyInsertedNode(
   content: IContentInsert,
   page: IPageContent,
   maxBufferLength: number,
-): IResultInsert {
+): IPageContent {
   // check buffer size
   if (
     content.content.length +
@@ -304,7 +284,7 @@ function insertAtEndPreviouslyInsertedNode(
     };
     newPage.buffers[newPage.buffers.length - 1] = buffer;
     newPage.nodes[newPage.nodes.length - 1] = node;
-    return { newPage, xIndex: newPage.nodes.length - 1 };
+    return newPage;
   } else {
     // scenario 2: cannot fit inside the previous buffer
     // creates a new node
@@ -336,13 +316,71 @@ function insertAtEndPreviouslyInsertedNode(
 
     let newPage: IPageContent = {
       ...page,
+      nodes: [...page.nodes],
     };
 
     newPage.buffers.push(buffer);
     newPage.nodes.push(node);
 
     newPage = insertNode(newPage, node, content.offset);
-    return { newPage, xIndex: newPage.nodes.length - 1 };
+    return newPage;
+  }
+}
+
+function insertAtEndOfANode(
+  content: IContentInsert,
+  page: IPageContent,
+  maxBufferLength: number,
+): IPageContent {
+  // check buffer size
+  if (
+    content.content.length +
+      page.buffers[page.buffers.length - 1].content.length <=
+    maxBufferLength
+  ) {
+    // scenario 3: it can fit inside the previous buffer
+    // creates a new node
+    // appends to the previous buffer
+    const oldBuffer = page.buffers[page.buffers.length - 1];
+    const newContent = oldBuffer.content + content.content;
+    const updatedBuffer: IBuffer = {
+      ...oldBuffer,
+      content: newContent,
+      lineStarts: getLineStarts(newContent, page.newlineFormat),
+    };
+    const newNode: INode = {
+      bufferIndex: page.buffers.length - 1,
+      start: { ...page.nodes[page.buffers.length - 1].end },
+      end: {
+        line: updatedBuffer.lineStarts.length - 1,
+        column:
+          updatedBuffer.content.length -
+          updatedBuffer.lineStarts[updatedBuffer.lineStarts.length - 1],
+      },
+      leftCharCount: 0,
+      leftLineFeedCount: 0,
+      length: content.content.length,
+      lineFeedCount:
+        updatedBuffer.lineStarts.length - oldBuffer.lineStarts.length,
+      color: Color.Red,
+      parent: SENTINEL_INDEX,
+      left: SENTINEL_INDEX,
+      right: SENTINEL_INDEX,
+    };
+
+    let newPage: IPageContent = {
+      ...page,
+      nodes: [...page.nodes],
+    };
+    newPage.buffers[page.buffers.length - 1] = updatedBuffer;
+    newPage.nodes.push(newNode);
+
+    newPage = insertNode(newPage, newNode, content.offset);
+    return newPage;
+  } else {
+    // scenario 4: it cannot fit inside the previous buffer
+    // creates a new node
+    // creates a new buffer
   }
 }
 
