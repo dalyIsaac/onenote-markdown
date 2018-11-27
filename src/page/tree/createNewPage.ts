@@ -42,5 +42,7 @@ export function createNewPage(receivedPage: OnenotePage): IPageContent {
     newlineFormat,
     nodes: [node],
     root: 0,
+    previouslyInsertedNodeIndex: null,
+    previouslyInsertedNodeOffset: null,
   };
 }
