@@ -329,21 +329,78 @@ function insertAtEndPreviouslyInsertedNode(
       length: content.content.length,
       lineFeedCount: buffer.lineStarts.length - 1,
       color: Color.Red,
-      parent: page.nodes.length - 1,
+      parent: SENTINEL_INDEX,
       left: SENTINEL_INDEX,
       right: SENTINEL_INDEX,
     };
 
-    const newPage: IPageContent = {
+    let newPage: IPageContent = {
       ...page,
     };
 
     newPage.buffers.push(buffer);
     newPage.nodes.push(node);
-    newPage.nodes[newPage.nodes.length - 2] = {
-      ...newPage.nodes[newPage.nodes.length - 2],
-      right: newPage.nodes.length - 1,
-    };
+
+    newPage = insertNode(newPage, node, content.offset);
     return { newPage, xIndex: newPage.nodes.length - 1 };
   }
+}
+
+/**
+ * Inserts a node at the given offset.
+ * @param page The page/piece table.
+ * @param newNode Reference to the newly created node. The node already exists inside `page.nodes`.
+ * @param offset The offset of the new node.
+ */
+function insertNode(
+  page: IPageContent,
+  newNode: INode,
+  offset: number,
+): IPageContent {
+  let prevIndex = SENTINEL_INDEX;
+
+  let currentIndex = page.root;
+  let currentNode = page.nodes[currentIndex];
+
+  let nodeStartOffset = 0;
+  const nodeIndex = page.nodes.length - 1; // the index of the new node
+
+  while (currentIndex !== SENTINEL_INDEX) {
+    prevIndex = currentIndex;
+    if (offset <= nodeStartOffset + currentNode.leftCharCount) {
+      // left
+      prevIndex = currentIndex;
+      currentIndex = currentNode.left;
+      if (currentIndex === SENTINEL_INDEX) {
+        page.nodes[prevIndex] = {
+          ...page.nodes[prevIndex],
+          left: nodeIndex,
+        };
+        newNode.parent = prevIndex; // can mutate the node since it's new
+        return page;
+      }
+      currentNode = page.nodes[currentIndex];
+    } else if (
+      offset >=
+      nodeStartOffset + currentNode.leftCharCount + currentNode.length
+    ) {
+      // right
+      nodeStartOffset += currentNode.leftCharCount + currentNode.length;
+      prevIndex = currentIndex;
+      currentIndex = currentNode.right;
+      if (currentIndex === SENTINEL_INDEX) {
+        page.nodes[prevIndex] = {
+          ...page.nodes[prevIndex],
+          right: nodeIndex,
+        };
+        newNode.parent = prevIndex; // can mutate the node since it's new
+        return page;
+      }
+      currentNode = page.nodes[currentIndex];
+    } else {
+      // middle
+      // TODO
+    }
+  }
+  return null!; // never going to be hit
 }

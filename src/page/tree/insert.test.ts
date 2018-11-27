@@ -1,4 +1,4 @@
-import { Color, IPageContent, NEWLINE } from "../model";
+import { Color, INode, IPageContent, NEWLINE } from "../model";
 import { SENTINEL_INDEX } from "../reducer";
 import {
   calculateCharCount,
@@ -73,7 +73,7 @@ describe("page/tree/insert", () => {
     buffers: [
       {
         isReadOnly: false,
-        lineStarts: [0, 5],
+        lineStarts: [0, 4],
         content: "abc\nd",
       },
     ],
@@ -87,7 +87,7 @@ describe("page/tree/insert", () => {
         },
         end: {
           line: 1,
-          column: 2,
+          column: 1,
         },
         leftCharCount: 0,
         leftLineFeedCount: 0,
@@ -136,7 +136,8 @@ describe("page/tree/insert", () => {
       content: "ef",
       offset: 5,
     };
-    const receivedPage = insertContent(content, page, 4);
+    const maxBufferLength = 5;
+    const receivedPage = insertContent(content, page, maxBufferLength);
     expect(receivedPage).toEqual(expectedPage);
   });
 
