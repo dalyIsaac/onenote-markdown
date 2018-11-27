@@ -59,7 +59,6 @@ export function findNodeAtOffset(
           nodeStartOffset,
         };
       }
-      x = nodes[xIndex] ? nodes[xIndex] : SENTINEL;
     } else if (x.leftCharCount + x.length > offset) {
       // note, the vscode nodeAt function uses >= instead of >
       nodeStartOffset += x.leftCharCount;
