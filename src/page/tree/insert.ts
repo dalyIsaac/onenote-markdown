@@ -1,7 +1,7 @@
 import { Color, IBuffer, INode, IPageContent } from "../model";
 import { SENTINEL_INDEX } from "../reducer";
 import { leftRotate, rightRotate } from "./rotate";
-import { getLineStarts, MAX_BUFFER_LENGTH } from "./tree";
+import { getLineStarts } from "./tree";
 
 export interface IContentInsert {
   content: string;
@@ -11,6 +11,7 @@ export interface IContentInsert {
 export function insertContent(
   content: IContentInsert,
   page: IPageContent,
+  maxBufferLength: number,
 ): IPageContent {
   let previouslyInsertedNode: INode | undefined;
   let newPage: IPageContent | undefined;
@@ -28,7 +29,11 @@ export function insertContent(
     content.offset ===
       page.previouslyInsertedNodeOffset! + previouslyInsertedNode.length
   ) {
-    const result = insertIntoEndPreviouslyInsertedNode(content, page);
+    const result = insertIntoEndPreviouslyInsertedNode(
+      content,
+      page,
+      maxBufferLength,
+    );
     newPage = result.newPage;
     xIndex = result.xIndex;
   }
@@ -248,12 +253,13 @@ export function calculateLineFeedCount(
 function insertIntoEndPreviouslyInsertedNode(
   content: IContentInsert,
   page: IPageContent,
+  maxBufferLength: number,
 ): { newPage: IPageContent; xIndex: number } {
   // check buffer size
   if (
     content.content.length +
       page.buffers[page.buffers.length - 1].content.length <=
-    MAX_BUFFER_LENGTH
+    maxBufferLength
   ) {
     // scenario 1: can fit inside the previous buffer
     // appends to the previous node
@@ -273,6 +279,7 @@ function insertIntoEndPreviouslyInsertedNode(
           buffer.content.length -
           buffer.lineStarts[buffer.lineStarts.length - 1],
       },
+      lineFeedCount: buffer.lineStarts.length - 1,
     };
     node.length += content.content.length;
 
@@ -286,5 +293,41 @@ function insertIntoEndPreviouslyInsertedNode(
     // scenario 2: cannot fit inside the previous buffer
     // creates a new node
     // creates a new buffer
+    const buffer: IBuffer = {
+      isReadOnly: false,
+      lineStarts: getLineStarts(content.content, page.newlineFormat),
+      content: content.content,
+    };
+
+    const node: INode = {
+      bufferIndex: page.nodes.length,
+      start: { line: 0, column: 0 },
+      end: {
+        line: buffer.lineStarts.length - 1,
+        column:
+          buffer.content.length -
+          buffer.lineStarts[buffer.lineStarts.length - 1],
+      },
+      leftCharCount: 0,
+      leftLineFeedCount: 0,
+      length: content.content.length,
+      lineFeedCount: buffer.lineStarts.length - 1,
+      color: Color.Red,
+      parent: page.nodes.length - 1,
+      left: SENTINEL_INDEX,
+      right: SENTINEL_INDEX,
+    };
+
+    const newPage: IPageContent = {
+      ...page,
+    };
+
+    newPage.buffers.push(buffer);
+    newPage.nodes.push(node);
+    newPage.nodes[newPage.nodes.length - 2] = {
+      ...newPage.nodes[newPage.nodes.length - 2],
+      right: newPage.nodes.length - 1,
+    };
+    return { newPage, xIndex: newPage.nodes.length - 1 };
   }
 }

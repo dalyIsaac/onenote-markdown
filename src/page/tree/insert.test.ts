@@ -8,6 +8,7 @@ import {
   insertContent,
   recomputeTreeMetadata,
 } from "./insert";
+import { MAX_BUFFER_LENGTH } from "./tree";
 
 describe("page/tree/insert", () => {
   describe("insert functions", () => {
@@ -63,9 +64,80 @@ describe("page/tree/insert", () => {
         content: "b",
         offset: 1,
       };
-      const receivedPage = insertContent(content, page);
+      const receivedPage = insertContent(content, page, MAX_BUFFER_LENGTH);
       expect(receivedPage).toEqual(expectedPage);
     });
+  });
+
+  const getScenarioTwoInitialPage = (): IPageContent => ({
+    buffers: [
+      {
+        isReadOnly: false,
+        lineStarts: [0, 5],
+        content: "abc\nd",
+      },
+    ],
+    newlineFormat: NEWLINE.LF,
+    nodes: [
+      {
+        bufferIndex: 0,
+        start: {
+          line: 0,
+          column: 0,
+        },
+        end: {
+          line: 1,
+          column: 2,
+        },
+        leftCharCount: 0,
+        leftLineFeedCount: 0,
+        length: 5,
+        lineFeedCount: 1,
+        color: Color.Black,
+        parent: SENTINEL_INDEX,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
+      },
+    ],
+    root: 0,
+    previouslyInsertedNodeIndex: 0,
+    previouslyInsertedNodeOffset: 0,
+  });
+
+  test("Scenario 2: insert at the end of the previously inserted node", () => {
+    const expectedPage = getScenarioTwoInitialPage();
+    expectedPage.buffers.push({
+      isReadOnly: false,
+      lineStarts: [0],
+      content: "ef",
+    });
+    expectedPage.nodes[0].right = 1;
+    expectedPage.nodes.push({
+      bufferIndex: 1,
+      start: {
+        line: 0,
+        column: 0,
+      },
+      end: {
+        line: 0,
+        column: 2,
+      },
+      leftCharCount: 0,
+      leftLineFeedCount: 0,
+      lineFeedCount: 0,
+      length: 2,
+      color: Color.Red,
+      parent: 0,
+      left: SENTINEL_INDEX,
+      right: SENTINEL_INDEX,
+    });
+    const page = getScenarioTwoInitialPage();
+    const content: IContentInsert = {
+      content: "ef",
+      offset: 5,
+    };
+    const receivedPage = insertContent(content, page, 4);
+    expect(receivedPage).toEqual(expectedPage);
   });
 
   describe("fix insert functions", () => {
