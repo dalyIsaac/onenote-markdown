@@ -1,7 +1,7 @@
 import { Color, IBuffer, INode, IPageContent } from "../model";
-import { SENTINEL_INDEX } from "../reducer";
+import { SENTINEL_INDEX, SENTINEL } from "../reducer";
 import { leftRotate, rightRotate } from "./rotate";
-import { getLineStarts } from "./tree";
+import { findNodeAtOffset, getLineStarts, INodePosition } from "./tree";
 
 export interface IContentInsert {
   content: string;
@@ -29,13 +29,33 @@ export function insertContent(
     content.offset ===
       page.previouslyInsertedNodeOffset! + previouslyInsertedNode.length
   ) {
-    const result = insertIntoEndPreviouslyInsertedNode(
+    const result = insertAtEndPreviouslyInsertedNode(
       content,
       page,
       maxBufferLength,
     );
     newPage = result.newPage;
     xIndex = result.xIndex;
+  } else {
+    const nodePosition = findNodeAtOffset(
+      content.offset - 1,
+      page.nodes,
+      page.root,
+    );
+
+    if (
+      content.offset ===
+      nodePosition.nodeStartOffset + nodePosition.node.length + 1
+    ) {
+      const result = insertAtEndOfANode(
+        content,
+        page,
+        maxBufferLength,
+        nodePosition,
+      );
+      newPage = result.newPage;
+      xIndex = result.xIndex;
+    }
   }
 
   if (newPage && xIndex !== undefined) {
@@ -52,10 +72,9 @@ export function insertContent(
 export function fixInsert(page: IPageContent, xIndex: number): IPageContent {
   page = { ...page };
   page = recomputeTreeMetadata(page, xIndex);
-  let nodes = [...page.nodes];
-  page.nodes = nodes;
-  let x = { ...nodes[xIndex] };
-  nodes[xIndex] = x;
+  page.nodes = [...page.nodes];
+  let x = { ...page.nodes[xIndex] };
+  page.nodes[xIndex] = x;
 
   if (xIndex === page.root) {
     x.color = Color.Black;
@@ -63,89 +82,86 @@ export function fixInsert(page: IPageContent, xIndex: number): IPageContent {
   }
 
   while (
-    nodes[nodes[x.parent].parent] &&
+    page.nodes[page.nodes[x.parent].parent] &&
     xIndex !== page.root &&
-    nodes[x.parent].color === Color.Red
+    page.nodes[x.parent].color === Color.Red
   ) {
-    if (x.parent === nodes[nodes[x.parent].parent].left) {
-      const yIndex = nodes[nodes[x.parent].parent].right;
-      const y = { ...nodes[yIndex] };
-      nodes[yIndex] = y;
+    if (x.parent === page.nodes[page.nodes[x.parent].parent].left) {
+      const yIndex = page.nodes[page.nodes[x.parent].parent].right;
+      const y = { ...page.nodes[yIndex] };
+      page.nodes[yIndex] = y;
 
       if (y.color === Color.Red) {
-        nodes[x.parent] = {
-          ...nodes[x.parent],
+        page.nodes[x.parent] = {
+          ...page.nodes[x.parent],
           color: Color.Black,
         };
         y.color = Color.Black;
-        nodes[nodes[x.parent].parent] = {
-          ...nodes[nodes[x.parent].parent],
+        page.nodes[page.nodes[x.parent].parent] = {
+          ...page.nodes[page.nodes[x.parent].parent],
           color: Color.Red,
         };
-        xIndex = nodes[x.parent].parent;
-        x = { ...nodes[xIndex] };
-        nodes[xIndex] = x;
+        xIndex = page.nodes[x.parent].parent;
+        x = { ...page.nodes[xIndex] };
+        page.nodes[xIndex] = x;
       } else {
-        if (xIndex === nodes[x.parent].right) {
+        if (xIndex === page.nodes[x.parent].right) {
           xIndex = x.parent;
-          x = { ...nodes[xIndex] };
-          nodes[xIndex] = x;
+          x = { ...page.nodes[xIndex] };
+          page.nodes[xIndex] = x;
           page = leftRotate(page, xIndex);
-          nodes = page.nodes;
-          x = nodes[xIndex];
+          page.nodes = page.nodes;
+          x = page.nodes[xIndex];
         }
-        nodes[x.parent] = {
-          ...nodes[x.parent],
+        page.nodes[x.parent] = {
+          ...page.nodes[x.parent],
           color: Color.Black,
         };
-        nodes[nodes[x.parent].parent] = {
-          ...nodes[nodes[x.parent].parent],
+        page.nodes[page.nodes[x.parent].parent] = {
+          ...page.nodes[page.nodes[x.parent].parent],
           color: Color.Red,
         };
-        page = rightRotate(page, nodes[x.parent].parent);
-        nodes = page.nodes;
+        page = rightRotate(page, page.nodes[x.parent].parent);
       }
     } else {
-      const y = { ...nodes[nodes[nodes[x.parent].parent].left] };
-      nodes[nodes[nodes[x.parent].parent].left] = y;
+      const y = { ...page.nodes[page.nodes[page.nodes[x.parent].parent].left] };
+      page.nodes[page.nodes[page.nodes[x.parent].parent].left] = y;
 
       if (y.color === Color.Red) {
-        nodes[x.parent] = {
-          ...nodes[x.parent],
+        page.nodes[x.parent] = {
+          ...page.nodes[x.parent],
           color: Color.Black,
         };
         y.color = Color.Black;
-        nodes[nodes[x.parent].parent] = {
-          ...nodes[nodes[x.parent].parent],
+        page.nodes[page.nodes[x.parent].parent] = {
+          ...page.nodes[page.nodes[x.parent].parent],
           color: Color.Red,
         };
-        xIndex = nodes[x.parent].parent;
-        x = { ...nodes[xIndex] };
-        nodes[xIndex] = x;
+        xIndex = page.nodes[x.parent].parent;
+        x = { ...page.nodes[xIndex] };
+        page.nodes[xIndex] = x;
       } else {
-        if (x === nodes[nodes[x.parent].left]) {
+        if (x === page.nodes[page.nodes[x.parent].left]) {
           xIndex = x.parent;
-          x = { ...nodes[xIndex] };
-          nodes[xIndex] = x;
+          x = { ...page.nodes[xIndex] };
+          page.nodes[xIndex] = x;
           page = rightRotate(page, xIndex);
-          nodes = page.nodes;
-          x = nodes[xIndex];
+          x = page.nodes[xIndex];
         }
-        nodes[x.parent] = {
-          ...nodes[x.parent],
+        page.nodes[x.parent] = {
+          ...page.nodes[x.parent],
           color: Color.Black,
         };
-        nodes[nodes[x.parent].parent] = {
-          ...nodes[nodes[x.parent].parent],
+        page.nodes[page.nodes[x.parent].parent] = {
+          ...page.nodes[page.nodes[x.parent].parent],
           color: Color.Red,
         };
-        page = leftRotate(page, nodes[x.parent].parent);
-        nodes = page.nodes;
+        page = leftRotate(page, page.nodes[x.parent].parent);
       }
     }
   }
-  nodes[page.root] = {
-    ...nodes[page.root],
+  page.nodes[page.root] = {
+    ...page.nodes[page.root],
     color: Color.Black,
   };
 
@@ -167,16 +183,14 @@ export function recomputeTreeMetadata(
     return page;
   }
 
-  const nodes = [...page.nodes];
-  let x = { ...nodes[xIndex] };
-  nodes[xIndex] = x;
+  page.nodes = [...page.nodes];
+  let x = { ...page.nodes[xIndex] };
+  page.nodes[xIndex] = x;
 
   // go upwards till the node whose left subtree is changed.
-  while (xIndex !== page.root && xIndex === nodes[x.parent].right) {
+  while (xIndex !== page.root && xIndex === page.nodes[x.parent].right) {
     xIndex = x.parent;
-    x = nodes[xIndex];
-    // x = { ...nodes[xIndex] };
-    // nodes[xIndex] = x;
+    x = page.nodes[xIndex];
   }
 
   if (xIndex === page.root) {
@@ -186,8 +200,8 @@ export function recomputeTreeMetadata(
 
   // x is the node whose right subtree is changed.
   xIndex = x.parent;
-  x = { ...nodes[xIndex] };
-  nodes[xIndex] = x;
+  x = { ...page.nodes[xIndex] };
+  page.nodes[xIndex] = x;
 
   lengthDelta = calculateCharCount(page, x.left) - x.leftCharCount;
   lineFeedDelta = calculateLineFeedCount(page, x.left) - x.leftLineFeedCount;
@@ -196,23 +210,20 @@ export function recomputeTreeMetadata(
 
   // go upwards till root. O(logN)
   while (xIndex !== page.root && (lengthDelta !== 0 || lineFeedDelta !== 0)) {
-    if (nodes[x.parent].left === xIndex) {
-      nodes[x.parent] = {
-        ...nodes[x.parent],
+    if (page.nodes[x.parent].left === xIndex) {
+      page.nodes[x.parent] = {
+        ...page.nodes[x.parent],
       };
-      nodes[x.parent].leftCharCount += lengthDelta;
-      nodes[x.parent].leftLineFeedCount += lineFeedDelta;
+      page.nodes[x.parent].leftCharCount += lengthDelta;
+      page.nodes[x.parent].leftLineFeedCount += lineFeedDelta;
     }
 
     xIndex = x.parent;
-    x = { ...nodes[xIndex] };
-    nodes[xIndex] = x;
+    x = { ...page.nodes[xIndex] };
+    page.nodes[xIndex] = x;
   }
 
-  return {
-    ...page,
-    nodes,
-  };
+  return page;
 }
 
 /**
@@ -250,11 +261,16 @@ export function calculateLineFeedCount(
   );
 }
 
-function insertIntoEndPreviouslyInsertedNode(
+interface IResultInsert {
+  newPage: IPageContent;
+  xIndex: number;
+}
+
+function insertAtEndPreviouslyInsertedNode(
   content: IContentInsert,
   page: IPageContent,
   maxBufferLength: number,
-): { newPage: IPageContent; xIndex: number } {
+): IResultInsert {
   // check buffer size
   if (
     content.content.length +
