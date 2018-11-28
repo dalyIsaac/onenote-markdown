@@ -1,4 +1,4 @@
-import { Color, INode, IPageContent, NEWLINE } from "../model";
+import { Color, IPageContent, NEWLINE } from "../model";
 import { SENTINEL_INDEX } from "../reducer";
 import {
   calculateCharCount,
