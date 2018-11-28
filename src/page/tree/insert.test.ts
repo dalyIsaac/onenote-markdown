@@ -128,6 +128,8 @@ describe("page/tree/insert", () => {
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       });
+      expectedPage.previouslyInsertedNodeIndex = 1;
+      expectedPage.previouslyInsertedNodeOffset = 5;
       const page = getPage();
       const content: IContentInsert = {
         content: "ef",

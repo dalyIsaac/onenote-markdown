@@ -30,20 +30,7 @@ export function insertContent(
   ) {
     newPage = insertAtEndPreviouslyInsertedNode(content, page, maxBufferLength);
   } else {
-    const nodePosition = findNodeAtOffset(
-      content.offset - 1,
-      page.nodes,
-      page.root,
-    );
-
-    if (
-      content.offset ===
-      nodePosition.nodeStartOffset + nodePosition.node.length
-    ) {
-      newPage = insertAtEndOfANode(content, page, maxBufferLength);
-    } else {
-      newPage = insertAtStartOfContent(content, page, maxBufferLength);
-    }
+    newPage = insertAtNodeExtremity(content, page, maxBufferLength);
   }
 
   if (newPage) {
@@ -292,45 +279,11 @@ function insertAtEndPreviouslyInsertedNode(
     // scenario 2: cannot fit inside the previous buffer
     // creates a new node
     // creates a new buffer
-    const buffer: IBuffer = {
-      isReadOnly: false,
-      lineStarts: getLineStarts(content.content, page.newlineFormat),
-      content: content.content,
-    };
-
-    const node: INode = {
-      bufferIndex: page.nodes.length,
-      start: { line: 0, column: 0 },
-      end: {
-        line: buffer.lineStarts.length - 1,
-        column:
-          buffer.content.length -
-          buffer.lineStarts[buffer.lineStarts.length - 1],
-      },
-      leftCharCount: 0,
-      leftLineFeedCount: 0,
-      length: content.content.length,
-      lineFeedCount: buffer.lineStarts.length - 1,
-      color: Color.Red,
-      parent: SENTINEL_INDEX,
-      left: SENTINEL_INDEX,
-      right: SENTINEL_INDEX,
-    };
-
-    let newPage: IPageContent = {
-      ...page,
-      nodes: [...page.nodes],
-    };
-
-    newPage.buffers.push(buffer);
-    newPage.nodes.push(node);
-
-    newPage = insertNode(newPage, node, content.offset);
-    return newPage;
+    return createNodeCreateBuffer(content, page);
   }
 }
 
-function insertAtEndOfANode(
+function insertAtNodeExtremity(
   content: IContentInsert,
   page: IPageContent,
   maxBufferLength: number,
@@ -342,181 +295,95 @@ function insertAtEndOfANode(
       maxBufferLength &&
     page.buffers[page.buffers.length - 1].isReadOnly === false
   ) {
-    // scenario 3: it can fit inside the previous buffer
+    // scenario 3 and 5: it can fit inside the previous buffer
     // creates a new node
     // appends to the previous buffer
-    const oldBuffer = page.buffers[page.buffers.length - 1];
-    const newContent = oldBuffer.content + content.content;
-    const updatedBuffer: IBuffer = {
-      isReadOnly: oldBuffer.isReadOnly,
-      content: newContent,
-      lineStarts: getLineStarts(newContent, page.newlineFormat),
-    };
-    const newNode: INode = {
-      bufferIndex: page.buffers.length - 1,
-      start: { ...page.nodes[page.buffers.length - 1].end },
-      end: {
-        line: updatedBuffer.lineStarts.length - 1,
-        column:
-          updatedBuffer.content.length -
-          updatedBuffer.lineStarts[updatedBuffer.lineStarts.length - 1],
-      },
-      leftCharCount: 0,
-      leftLineFeedCount: 0,
-      length: content.content.length,
-      lineFeedCount:
-        updatedBuffer.lineStarts.length - oldBuffer.lineStarts.length,
-      color: Color.Red,
-      parent: SENTINEL_INDEX,
-      left: SENTINEL_INDEX,
-      right: SENTINEL_INDEX,
-    };
-
-    let newPage: IPageContent = {
-      ...page,
-      nodes: [...page.nodes],
-      previouslyInsertedNodeIndex: page.nodes.length,
-      previouslyInsertedNodeOffset: content.offset,
-    };
-    newPage.buffers[page.buffers.length - 1] = updatedBuffer;
-    newPage.nodes.push(newNode);
-
-    newPage = insertNode(newPage, newNode, content.offset);
-    return newPage;
+    return createNodeAppendToBuffer(content, page);
   } else {
-    // scenario 4: it cannot fit inside the previous buffer
+    // scenario 4 and 6: it cannot fit inside the previous buffer
     // creates a new node
     // creates a new buffer
-    const newBuffer: IBuffer = {
-      isReadOnly: false,
-      lineStarts: getLineStarts(content.content, page.newlineFormat),
-      content: content.content,
-    };
-    const newNode: INode = {
-      bufferIndex: page.buffers.length,
-      start: { line: 0, column: 0 },
-      end: {
-        line: newBuffer.lineStarts.length - 1,
-        column:
-          newBuffer.content.length -
-          newBuffer.lineStarts[newBuffer.lineStarts.length - 1],
-      },
-      leftCharCount: 0,
-      leftLineFeedCount: 0,
-      length: content.content.length,
-      lineFeedCount: newBuffer.lineStarts.length - 1,
-      color: Color.Red,
-      parent: SENTINEL_INDEX,
-      left: SENTINEL_INDEX,
-      right: SENTINEL_INDEX,
-    };
-    let newPage: IPageContent = {
-      ...page,
-      nodes: [...page.nodes],
-      buffers: [...page.buffers],
-      previouslyInsertedNodeIndex: page.nodes.length,
-      previouslyInsertedNodeOffset: content.offset,
-    };
-    newPage.buffers.push(newBuffer);
-    newPage.nodes.push(newNode);
-
-    newPage = insertNode(newPage, newNode, content.offset);
-    return newPage;
+    return createNodeCreateBuffer(content, page);
   }
 }
 
-function insertAtStartOfContent(
-  content: IContentInsert,
-  page: IPageContent,
-  maxBufferLength: number,
-): IPageContent {
-  if (
-    content.content.length +
-      page.buffers[page.buffers.length - 1].content.length <=
-      maxBufferLength &&
-    page.buffers[page.buffers.length - 1].isReadOnly === false
-  ) {
-    // scenario 5: it can fit inside the previous buffer
-    // creates a new node
-    // appends to the previous buffer
-    const oldBuffer = page.buffers[page.buffers.length - 1];
-    const newContent = oldBuffer.content + content.content;
-    const updatedBuffer: IBuffer = {
-      isReadOnly: oldBuffer.isReadOnly,
-      content: newContent,
-      lineStarts: getLineStarts(newContent, page.newlineFormat),
-    };
-    const newNode: INode = {
-      bufferIndex: page.buffers.length - 1,
-      start: { ...page.nodes[page.buffers.length - 1].end },
-      end: {
-        line: updatedBuffer.lineStarts.length - 1,
-        column:
-          updatedBuffer.content.length -
-          updatedBuffer.lineStarts[updatedBuffer.lineStarts.length - 1],
-      },
-      leftCharCount: 0,
-      leftLineFeedCount: 0,
-      length: content.content.length,
-      lineFeedCount:
-        updatedBuffer.lineStarts.length - oldBuffer.lineStarts.length,
-      color: Color.Red,
-      parent: SENTINEL_INDEX,
-      left: SENTINEL_INDEX,
-      right: SENTINEL_INDEX,
-    };
+function createNodeAppendToBuffer(content: IContentInsert, page: IPageContent) {
+  const oldBuffer = page.buffers[page.buffers.length - 1];
+  const newContent = oldBuffer.content + content.content;
+  const updatedBuffer: IBuffer = {
+    isReadOnly: oldBuffer.isReadOnly,
+    content: newContent,
+    lineStarts: getLineStarts(newContent, page.newlineFormat),
+  };
+  const newNode: INode = {
+    bufferIndex: page.buffers.length - 1,
+    start: { ...page.nodes[page.buffers.length - 1].end },
+    end: {
+      line: updatedBuffer.lineStarts.length - 1,
+      column:
+        updatedBuffer.content.length -
+        updatedBuffer.lineStarts[updatedBuffer.lineStarts.length - 1],
+    },
+    leftCharCount: 0,
+    leftLineFeedCount: 0,
+    length: content.content.length,
+    lineFeedCount:
+      updatedBuffer.lineStarts.length - oldBuffer.lineStarts.length,
+    color: Color.Red,
+    parent: SENTINEL_INDEX,
+    left: SENTINEL_INDEX,
+    right: SENTINEL_INDEX,
+  };
 
-    let newPage: IPageContent = {
-      ...page,
-      nodes: [...page.nodes],
-      previouslyInsertedNodeIndex: page.nodes.length,
-      previouslyInsertedNodeOffset: content.offset,
-    };
-    newPage.buffers[page.buffers.length - 1] = updatedBuffer;
-    newPage.nodes.push(newNode);
+  let newPage: IPageContent = {
+    ...page,
+    nodes: [...page.nodes],
+    previouslyInsertedNodeIndex: page.nodes.length,
+    previouslyInsertedNodeOffset: content.offset,
+  };
+  newPage.buffers[page.buffers.length - 1] = updatedBuffer;
+  newPage.nodes.push(newNode);
 
-    newPage = insertNode(newPage, newNode, content.offset);
-    return newPage;
-  } else {
-    // scenario 6: it cannot fit inside the previous buffer
-    // creates a new node
-    // creates a new node
-    const newBuffer: IBuffer = {
-      isReadOnly: false,
-      lineStarts: getLineStarts(content.content, page.newlineFormat),
-      content: content.content,
-    };
-    const newNode: INode = {
-      bufferIndex: page.buffers.length,
-      start: { line: 0, column: 0 },
-      end: {
-        line: newBuffer.lineStarts.length - 1,
-        column:
-          newBuffer.content.length -
-          newBuffer.lineStarts[newBuffer.lineStarts.length - 1],
-      },
-      leftCharCount: 0,
-      leftLineFeedCount: 0,
-      length: content.content.length,
-      lineFeedCount: newBuffer.lineStarts.length - 1,
-      color: Color.Red,
-      parent: SENTINEL_INDEX,
-      left: SENTINEL_INDEX,
-      right: SENTINEL_INDEX,
-    };
-    let newPage: IPageContent = {
-      ...page,
-      nodes: [...page.nodes],
-      buffers: [...page.buffers],
-      previouslyInsertedNodeIndex: page.nodes.length,
-      previouslyInsertedNodeOffset: content.offset,
-    };
-    newPage.buffers.push(newBuffer);
-    newPage.nodes.push(newNode);
+  newPage = insertNode(newPage, newNode, content.offset);
+  return newPage;
+}
 
-    newPage = insertNode(newPage, newNode, content.offset);
-    return newPage;
-  }
+function createNodeCreateBuffer(content: IContentInsert, page: IPageContent) {
+  const newBuffer: IBuffer = {
+    isReadOnly: false,
+    lineStarts: getLineStarts(content.content, page.newlineFormat),
+    content: content.content,
+  };
+  const newNode: INode = {
+    bufferIndex: page.buffers.length,
+    start: { line: 0, column: 0 },
+    end: {
+      line: newBuffer.lineStarts.length - 1,
+      column:
+        newBuffer.content.length -
+        newBuffer.lineStarts[newBuffer.lineStarts.length - 1],
+    },
+    leftCharCount: 0,
+    leftLineFeedCount: 0,
+    length: content.content.length,
+    lineFeedCount: newBuffer.lineStarts.length - 1,
+    color: Color.Red,
+    parent: SENTINEL_INDEX,
+    left: SENTINEL_INDEX,
+    right: SENTINEL_INDEX,
+  };
+  let newPage: IPageContent = {
+    ...page,
+    nodes: [...page.nodes],
+    buffers: [...page.buffers],
+    previouslyInsertedNodeIndex: page.nodes.length,
+    previouslyInsertedNodeOffset: content.offset,
+  };
+  newPage.buffers.push(newBuffer);
+  newPage.nodes.push(newNode);
+
+  newPage = insertNode(newPage, newNode, content.offset);
+  return newPage;
 }
 
 /**
