@@ -260,12 +260,13 @@ function insertAtEndPreviouslyInsertedNode(
     // scenario 1: can fit inside the previous buffer
     // appends to the previous node
     // appends to the previous buffer
+    const oldBuffer = page.buffers[page.buffers.length - 1];
+    const newContent = oldBuffer.content + content.content;
     const buffer: IBuffer = {
-      ...page.buffers[page.buffers.length - 1],
+      isReadOnly: oldBuffer.isReadOnly,
+      content: newContent,
+      lineStarts: getLineStarts(newContent, page.newlineFormat),
     };
-    const newContent = buffer.content + content.content;
-    buffer.content = newContent;
-    buffer.lineStarts = getLineStarts(newContent, page.newlineFormat);
 
     const node: INode = {
       ...page.nodes[page.nodes.length - 1],
@@ -345,7 +346,7 @@ function insertAtEndOfANode(
     const oldBuffer = page.buffers[page.buffers.length - 1];
     const newContent = oldBuffer.content + content.content;
     const updatedBuffer: IBuffer = {
-      ...oldBuffer,
+      isReadOnly: oldBuffer.isReadOnly,
       content: newContent,
       lineStarts: getLineStarts(newContent, page.newlineFormat),
     };
