@@ -336,7 +336,8 @@ function insertAtEndOfANode(
   if (
     content.content.length +
       page.buffers[page.buffers.length - 1].content.length <=
-    maxBufferLength
+      maxBufferLength &&
+    page.buffers[page.buffers.length - 1].isReadOnly === false
   ) {
     // scenario 3: it can fit inside the previous buffer
     // creates a new node
@@ -381,6 +382,39 @@ function insertAtEndOfANode(
     // scenario 4: it cannot fit inside the previous buffer
     // creates a new node
     // creates a new buffer
+    const newBuffer: IBuffer = {
+      isReadOnly: false,
+      lineStarts: getLineStarts(content.content, page.newlineFormat),
+      content: content.content,
+    };
+    const newNode: INode = {
+      bufferIndex: page.buffers.length,
+      start: { line: 0, column: 0 },
+      end: {
+        line: newBuffer.lineStarts.length - 1,
+        column:
+          newBuffer.content.length -
+          newBuffer.lineStarts[newBuffer.lineStarts.length - 1],
+      },
+      leftCharCount: 0,
+      leftLineFeedCount: 0,
+      length: content.content.length,
+      lineFeedCount: newBuffer.lineStarts.length - 1,
+      color: Color.Red,
+      parent: SENTINEL_INDEX,
+      left: SENTINEL_INDEX,
+      right: SENTINEL_INDEX,
+    };
+    let newPage: IPageContent = {
+      ...page,
+      nodes: [...page.nodes],
+      buffers: [...page.buffers],
+    };
+    newPage.buffers.push(newBuffer);
+    newPage.nodes.push(newNode);
+
+    newPage = insertNode(newPage, newNode, content.offset);
+    return newPage;
   }
 }
 
