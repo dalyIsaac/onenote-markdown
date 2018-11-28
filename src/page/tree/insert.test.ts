@@ -12,43 +12,42 @@ import { MAX_BUFFER_LENGTH } from "./tree";
 
 describe("page/tree/insert", () => {
   describe("insert functions", () => {
-    const getScenarioOneInitialPage = (): IPageContent => ({
-      buffers: [
-        {
-          isReadOnly: false,
-          lineStarts: [0],
-          content: "a",
-        },
-      ],
-      newlineFormat: NEWLINE.LF,
-      nodes: [
-        {
-          bufferIndex: 0,
-          start: {
-            line: 0,
-            column: 0,
-          },
-          end: {
-            line: 0,
-            column: 1,
-          },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 1,
-          lineFeedCount: 0,
-          color: Color.Black,
-          parent: SENTINEL_INDEX,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-      ],
-      root: 0,
-      previouslyInsertedNodeIndex: 0,
-      previouslyInsertedNodeOffset: 0,
-    });
-
     test("Scenario 1: insert at the end of the previously inserted node", () => {
-      const expectedPage = getScenarioOneInitialPage();
+      const getPage = (): IPageContent => ({
+        buffers: [
+          {
+            isReadOnly: false,
+            lineStarts: [0],
+            content: "a",
+          },
+        ],
+        newlineFormat: NEWLINE.LF,
+        nodes: [
+          {
+            bufferIndex: 0,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 1,
+            },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 1,
+            lineFeedCount: 0,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+        root: 0,
+        previouslyInsertedNodeIndex: 0,
+        previouslyInsertedNodeOffset: 0,
+      });
+      const expectedPage = getPage();
       expectedPage.buffers[0].content += "b";
       expectedPage.nodes[0] = {
         ...expectedPage.nodes[0],
@@ -59,7 +58,7 @@ describe("page/tree/insert", () => {
         length: 2,
         color: Color.Black,
       };
-      const page = getScenarioOneInitialPage();
+      const page = getPage();
       const content: IContentInsert = {
         content: "b",
         offset: 1,
@@ -68,43 +67,42 @@ describe("page/tree/insert", () => {
       expect(receivedPage).toEqual(expectedPage);
     });
 
-    const getScenarioTwoInitialPage = (): IPageContent => ({
-      buffers: [
-        {
-          isReadOnly: false,
-          lineStarts: [0, 4],
-          content: "abc\nd",
-        },
-      ],
-      newlineFormat: NEWLINE.LF,
-      nodes: [
-        {
-          bufferIndex: 0,
-          start: {
-            line: 0,
-            column: 0,
-          },
-          end: {
-            line: 1,
-            column: 1,
-          },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 5,
-          lineFeedCount: 1,
-          color: Color.Black,
-          parent: SENTINEL_INDEX,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-      ],
-      root: 0,
-      previouslyInsertedNodeIndex: 0,
-      previouslyInsertedNodeOffset: 0,
-    });
-
     test("Scenario 2: insert at the end of the previously inserted node", () => {
-      const expectedPage = getScenarioTwoInitialPage();
+      const getPage = (): IPageContent => ({
+        buffers: [
+          {
+            isReadOnly: false,
+            lineStarts: [0, 4],
+            content: "abc\nd",
+          },
+        ],
+        newlineFormat: NEWLINE.LF,
+        nodes: [
+          {
+            bufferIndex: 0,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 1,
+              column: 1,
+            },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 5,
+            lineFeedCount: 1,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+        root: 0,
+        previouslyInsertedNodeIndex: 0,
+        previouslyInsertedNodeOffset: 0,
+      });
+      const expectedPage = getPage();
       expectedPage.buffers.push({
         isReadOnly: false,
         lineStarts: [0],
@@ -130,7 +128,7 @@ describe("page/tree/insert", () => {
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       });
-      const page = getScenarioTwoInitialPage();
+      const page = getPage();
       const content: IContentInsert = {
         content: "ef",
         offset: 5,
@@ -228,6 +226,8 @@ describe("page/tree/insert", () => {
       expectedPage.nodes[1].right = 3;
       expectedPage.nodes[1].color = Color.Black;
       expectedPage.nodes[2].color = Color.Black;
+      expectedPage.previouslyInsertedNodeIndex = 3;
+      expectedPage.previouslyInsertedNodeOffset = 2;
       const content: IContentInsert = {
         content: "ij\nk",
         offset: 2,
@@ -323,6 +323,8 @@ describe("page/tree/insert", () => {
       expectedPage.nodes[1].right = 3;
       expectedPage.nodes[1].color = Color.Black;
       expectedPage.nodes[2].color = Color.Black;
+      expectedPage.previouslyInsertedNodeIndex = 3;
+      expectedPage.previouslyInsertedNodeOffset = 9;
       const content: IContentInsert = {
         content: "ij\nk",
         offset: 9,
@@ -423,6 +425,8 @@ describe("page/tree/insert", () => {
       expectedPage.nodes[1].right = 3;
       expectedPage.nodes[1].color = Color.Black;
       expectedPage.nodes[2].color = Color.Black;
+      expectedPage.previouslyInsertedNodeIndex = 3;
+      expectedPage.previouslyInsertedNodeOffset = 2;
       const content: IContentInsert = {
         content: "ij\nkl",
         offset: 2,
@@ -492,6 +496,8 @@ describe("page/tree/insert", () => {
         content: "ef",
         offset: 5,
       };
+      expectedPage.previouslyInsertedNodeIndex = 1;
+      expectedPage.previouslyInsertedNodeOffset = 5;
       const maxBufferLength = 8;
       const receivedPage = insertContent(content, page, maxBufferLength);
       expect(receivedPage).toEqual(expectedPage);
@@ -612,7 +618,7 @@ describe("page/tree/insert", () => {
         ],
         newlineFormat: NEWLINE.LF,
         root: 1,
-        previouslyInsertedNodeIndex: 1,
+        previouslyInsertedNodeIndex: 2,
         previouslyInsertedNodeOffset: 0,
       });
       const expectedPage = getExpectedPage();

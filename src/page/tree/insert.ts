@@ -375,6 +375,8 @@ function insertAtEndOfANode(
     let newPage: IPageContent = {
       ...page,
       nodes: [...page.nodes],
+      previouslyInsertedNodeIndex: page.nodes.length,
+      previouslyInsertedNodeOffset: content.offset,
     };
     newPage.buffers[page.buffers.length - 1] = updatedBuffer;
     newPage.nodes.push(newNode);
@@ -412,6 +414,8 @@ function insertAtEndOfANode(
       ...page,
       nodes: [...page.nodes],
       buffers: [...page.buffers],
+      previouslyInsertedNodeIndex: page.nodes.length,
+      previouslyInsertedNodeOffset: content.offset,
     };
     newPage.buffers.push(newBuffer);
     newPage.nodes.push(newNode);
@@ -465,6 +469,8 @@ function insertAtStartOfContent(
     let newPage: IPageContent = {
       ...page,
       nodes: [...page.nodes],
+      previouslyInsertedNodeIndex: page.nodes.length,
+      previouslyInsertedNodeOffset: content.offset,
     };
     newPage.buffers[page.buffers.length - 1] = updatedBuffer;
     newPage.nodes.push(newNode);
