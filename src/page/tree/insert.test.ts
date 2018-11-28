@@ -496,6 +496,135 @@ describe("page/tree/insert", () => {
       const receivedPage = insertContent(content, page, maxBufferLength);
       expect(receivedPage).toEqual(expectedPage);
     });
+
+    test("Scenario 5: insert at the start of the content", () => {
+      const getPage = (): IPageContent => ({
+        buffers: [
+          {
+            isReadOnly: true,
+            lineStarts: [0, 4],
+            content: "abc\nd",
+          },
+          {
+            isReadOnly: false,
+            lineStarts: [0],
+            content: "ef",
+          },
+        ],
+        nodes: [
+          {
+            bufferIndex: 0,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 1,
+              column: 1,
+            },
+            leftCharCount: 2,
+            leftLineFeedCount: 0,
+            length: 5,
+            lineFeedCount: 1,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: 1,
+            right: SENTINEL_INDEX,
+          },
+          {
+            bufferIndex: 1,
+            start: { line: 0, column: 0 },
+            end: { line: 0, column: 2 },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 0,
+            color: Color.Red,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+        newlineFormat: NEWLINE.LF,
+        root: 0,
+        previouslyInsertedNodeIndex: 1,
+        previouslyInsertedNodeOffset: 0,
+      });
+      const getExpectedPage = (): IPageContent => ({
+        buffers: [
+          {
+            isReadOnly: true,
+            lineStarts: [0, 4],
+            content: "abc\nd",
+          },
+          {
+            isReadOnly: false,
+            lineStarts: [0, 5],
+            content: "efgh\nij",
+          },
+        ],
+        nodes: [
+          {
+            bufferIndex: 0,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 1,
+              column: 1,
+            },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 5,
+            lineFeedCount: 1,
+            color: Color.Red,
+            parent: 1,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            bufferIndex: 1,
+            start: { line: 0, column: 0 },
+            end: { line: 0, column: 2 },
+            leftCharCount: 5,
+            leftLineFeedCount: 1,
+            length: 2,
+            lineFeedCount: 0,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: 2,
+            right: 0,
+          },
+          {
+            bufferIndex: 1,
+            start: { line: 0, column: 2 },
+            end: { line: 1, column: 2 },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 5,
+            lineFeedCount: 1,
+            color: Color.Red,
+            parent: 1,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+        newlineFormat: NEWLINE.LF,
+        root: 1,
+        previouslyInsertedNodeIndex: 1,
+        previouslyInsertedNodeOffset: 0,
+      });
+      const expectedPage = getExpectedPage();
+      const page = getPage();
+      const content: IContentInsert = {
+        content: "gh\nij",
+        offset: 0,
+      };
+      const maxBufferLength = 8;
+      const receivedPage = insertContent(content, page, maxBufferLength);
+      expect(receivedPage).toEqual(expectedPage);
+    });
   });
 
   describe("fix insert functions", () => {

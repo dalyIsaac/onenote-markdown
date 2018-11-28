@@ -41,6 +41,8 @@ export function insertContent(
       nodePosition.nodeStartOffset + nodePosition.node.length
     ) {
       newPage = insertAtEndOfANode(content, page, maxBufferLength);
+    } else {
+      newPage = insertAtStartOfContent(content, page, maxBufferLength);
     }
   }
 
@@ -416,6 +418,63 @@ function insertAtEndOfANode(
 
     newPage = insertNode(newPage, newNode, content.offset);
     return newPage;
+  }
+}
+
+function insertAtStartOfContent(
+  content: IContentInsert,
+  page: IPageContent,
+  maxBufferLength: number,
+): IPageContent {
+  if (
+    content.content.length +
+      page.buffers[page.buffers.length - 1].content.length <=
+      maxBufferLength &&
+    page.buffers[page.buffers.length - 1].isReadOnly === false
+  ) {
+    // scenario 5: it can fit inside the previous buffer
+    // creates a new node
+    // appends to the previous buffer
+    const oldBuffer = page.buffers[page.buffers.length - 1];
+    const newContent = oldBuffer.content + content.content;
+    const updatedBuffer: IBuffer = {
+      isReadOnly: oldBuffer.isReadOnly,
+      content: newContent,
+      lineStarts: getLineStarts(newContent, page.newlineFormat),
+    };
+    const newNode: INode = {
+      bufferIndex: page.buffers.length - 1,
+      start: { ...page.nodes[page.buffers.length - 1].end },
+      end: {
+        line: updatedBuffer.lineStarts.length - 1,
+        column:
+          updatedBuffer.content.length -
+          updatedBuffer.lineStarts[updatedBuffer.lineStarts.length - 1],
+      },
+      leftCharCount: 0,
+      leftLineFeedCount: 0,
+      length: content.content.length,
+      lineFeedCount:
+        updatedBuffer.lineStarts.length - oldBuffer.lineStarts.length,
+      color: Color.Red,
+      parent: SENTINEL_INDEX,
+      left: SENTINEL_INDEX,
+      right: SENTINEL_INDEX,
+    };
+
+    let newPage: IPageContent = {
+      ...page,
+      nodes: [...page.nodes],
+    };
+    newPage.buffers[page.buffers.length - 1] = updatedBuffer;
+    newPage.nodes.push(newNode);
+
+    newPage = insertNode(newPage, newNode, content.offset);
+    return newPage;
+  } else {
+    // scenario 6: it cannot fit inside the previous buffer
+    // creates a new node
+    // creates a new node
   }
 }
 
