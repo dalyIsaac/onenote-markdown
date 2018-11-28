@@ -67,270 +67,270 @@ describe("page/tree/insert", () => {
       const receivedPage = insertContent(content, page, MAX_BUFFER_LENGTH);
       expect(receivedPage).toEqual(expectedPage);
     });
-  });
 
-  const getScenarioTwoInitialPage = (): IPageContent => ({
-    buffers: [
-      {
+    const getScenarioTwoInitialPage = (): IPageContent => ({
+      buffers: [
+        {
+          isReadOnly: false,
+          lineStarts: [0, 4],
+          content: "abc\nd",
+        },
+      ],
+      newlineFormat: NEWLINE.LF,
+      nodes: [
+        {
+          bufferIndex: 0,
+          start: {
+            line: 0,
+            column: 0,
+          },
+          end: {
+            line: 1,
+            column: 1,
+          },
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          length: 5,
+          lineFeedCount: 1,
+          color: Color.Black,
+          parent: SENTINEL_INDEX,
+          left: SENTINEL_INDEX,
+          right: SENTINEL_INDEX,
+        },
+      ],
+      root: 0,
+      previouslyInsertedNodeIndex: 0,
+      previouslyInsertedNodeOffset: 0,
+    });
+
+    test("Scenario 2: insert at the end of the previously inserted node", () => {
+      const expectedPage = getScenarioTwoInitialPage();
+      expectedPage.buffers.push({
         isReadOnly: false,
-        lineStarts: [0, 4],
-        content: "abc\nd",
-      },
-    ],
-    newlineFormat: NEWLINE.LF,
-    nodes: [
-      {
-        bufferIndex: 0,
+        lineStarts: [0],
+        content: "ef",
+      });
+      expectedPage.nodes[0].right = 1;
+      expectedPage.nodes.push({
+        bufferIndex: 1,
         start: {
           line: 0,
           column: 0,
         },
         end: {
-          line: 1,
-          column: 1,
+          line: 0,
+          column: 2,
         },
         leftCharCount: 0,
         leftLineFeedCount: 0,
-        length: 5,
-        lineFeedCount: 1,
-        color: Color.Black,
-        parent: SENTINEL_INDEX,
+        lineFeedCount: 0,
+        length: 2,
+        color: Color.Red,
+        parent: 0,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
-      },
-    ],
-    root: 0,
-    previouslyInsertedNodeIndex: 0,
-    previouslyInsertedNodeOffset: 0,
-  });
+      });
+      const page = getScenarioTwoInitialPage();
+      const content: IContentInsert = {
+        content: "ef",
+        offset: 5,
+      };
+      const maxBufferLength = 5;
+      const receivedPage = insertContent(content, page, maxBufferLength);
+      expect(receivedPage).toEqual(expectedPage);
+    });
 
-  test("Scenario 2: insert at the end of the previously inserted node", () => {
-    const expectedPage = getScenarioTwoInitialPage();
-    expectedPage.buffers.push({
-      isReadOnly: false,
-      lineStarts: [0],
-      content: "ef",
+    test("Scenario 3: insert at the end of a node (test 1)", () => {
+      const getPage = (): IPageContent => ({
+        buffers: [
+          {
+            isReadOnly: true,
+            lineStarts: [0, 4],
+            content: "abc\nd",
+          },
+          {
+            isReadOnly: false,
+            lineStarts: [0],
+            content: "efgh",
+          },
+        ],
+        nodes: [
+          {
+            bufferIndex: 0,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 1,
+              column: 1,
+            },
+            leftCharCount: 2,
+            leftLineFeedCount: 0,
+            length: 5,
+            lineFeedCount: 1,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: 1,
+            right: 2,
+          },
+          {
+            bufferIndex: 1,
+            start: { line: 0, column: 0 },
+            end: { line: 0, column: 2 },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 0,
+            color: Color.Red,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            bufferIndex: 1,
+            start: { line: 0, column: 2 },
+            end: { line: 0, column: 4 },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 1,
+            color: Color.Red,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+        newlineFormat: NEWLINE.LF,
+        root: 0,
+        previouslyInsertedNodeIndex: 2,
+        previouslyInsertedNodeOffset: 5,
+      });
+      const page = getPage();
+      const expectedPage = getPage();
+      expectedPage.buffers[1].content += "ij\nk";
+      expectedPage.buffers[1].lineStarts.push(7);
+      expectedPage.nodes[0].leftCharCount = 6;
+      expectedPage.nodes[0].leftLineFeedCount = 1;
+      expectedPage.nodes.push({
+        bufferIndex: 1,
+        start: { line: 0, column: 2 },
+        end: { line: 1, column: 1 },
+        leftCharCount: 0,
+        leftLineFeedCount: 0,
+        length: 4,
+        lineFeedCount: 1,
+        color: Color.Red,
+        parent: 1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
+      });
+      expectedPage.nodes[1].right = 3;
+      expectedPage.nodes[1].color = Color.Black;
+      expectedPage.nodes[2].color = Color.Black;
+      const content: IContentInsert = {
+        content: "ij\nk",
+        offset: 2,
+      };
+      const maxBufferLength = 8;
+      const receivedPage = insertContent(content, page, maxBufferLength);
+      expect(receivedPage).toEqual(expectedPage);
     });
-    expectedPage.nodes[0].right = 1;
-    expectedPage.nodes.push({
-      bufferIndex: 1,
-      start: {
-        line: 0,
-        column: 0,
-      },
-      end: {
-        line: 0,
-        column: 2,
-      },
-      leftCharCount: 0,
-      leftLineFeedCount: 0,
-      lineFeedCount: 0,
-      length: 2,
-      color: Color.Red,
-      parent: 0,
-      left: SENTINEL_INDEX,
-      right: SENTINEL_INDEX,
-    });
-    const page = getScenarioTwoInitialPage();
-    const content: IContentInsert = {
-      content: "ef",
-      offset: 5,
-    };
-    const maxBufferLength = 5;
-    const receivedPage = insertContent(content, page, maxBufferLength);
-    expect(receivedPage).toEqual(expectedPage);
-  });
 
-  test("Scenario 3: insert at the end of a node (test 1)", () => {
-    const getPage = (): IPageContent => ({
-      buffers: [
-        {
-          isReadOnly: true,
-          lineStarts: [0, 4],
-          content: "abc\nd",
-        },
-        {
-          isReadOnly: false,
-          lineStarts: [0],
-          content: "efgh",
-        },
-      ],
-      nodes: [
-        {
-          bufferIndex: 0,
-          start: {
-            line: 0,
-            column: 0,
+    test("Scenario 3: insert at the end of a node (test 2)", () => {
+      const getPage = (): IPageContent => ({
+        buffers: [
+          {
+            isReadOnly: true,
+            lineStarts: [0, 4],
+            content: "abc\nd",
           },
-          end: {
-            line: 1,
-            column: 1,
+          {
+            isReadOnly: false,
+            lineStarts: [0],
+            content: "efgh",
           },
-          leftCharCount: 2,
-          leftLineFeedCount: 0,
-          length: 5,
-          lineFeedCount: 1,
-          color: Color.Black,
-          parent: SENTINEL_INDEX,
-          left: 1,
-          right: 2,
-        },
-        {
-          bufferIndex: 1,
-          start: { line: 0, column: 0 },
-          end: { line: 0, column: 2 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 2,
-          lineFeedCount: 0,
-          color: Color.Red,
-          parent: 0,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          bufferIndex: 1,
-          start: { line: 0, column: 2 },
-          end: { line: 0, column: 4 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 2,
-          lineFeedCount: 1,
-          color: Color.Red,
-          parent: 0,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-      ],
-      newlineFormat: NEWLINE.LF,
-      root: 0,
-      previouslyInsertedNodeIndex: 2,
-      previouslyInsertedNodeOffset: 5,
-    });
-    const page = getPage();
-    const expectedPage = getPage();
-    expectedPage.buffers[1].content += "ij\nk";
-    expectedPage.buffers[1].lineStarts.push(7);
-    expectedPage.nodes[0].leftCharCount = 6;
-    expectedPage.nodes[0].leftLineFeedCount = 1;
-    expectedPage.nodes.push({
-      bufferIndex: 1,
-      start: { line: 0, column: 2 },
-      end: { line: 1, column: 1 },
-      leftCharCount: 0,
-      leftLineFeedCount: 0,
-      length: 4,
-      lineFeedCount: 1,
-      color: Color.Red,
-      parent: 1,
-      left: SENTINEL_INDEX,
-      right: SENTINEL_INDEX,
-    });
-    expectedPage.nodes[1].right = 3;
-    expectedPage.nodes[1].color = Color.Black;
-    expectedPage.nodes[2].color = Color.Black;
-    const content: IContentInsert = {
-      content: "ij\nk",
-      offset: 2,
-    };
-    const maxBufferLength = 8;
-    const receivedPage = insertContent(content, page, maxBufferLength);
-    expect(receivedPage).toEqual(expectedPage);
-  });
-
-  test("Scenario 3: insert at the end of a node (test 2)", () => {
-    const getPage = (): IPageContent => ({
-      buffers: [
-        {
-          isReadOnly: true,
-          lineStarts: [0, 4],
-          content: "abc\nd",
-        },
-        {
-          isReadOnly: false,
-          lineStarts: [0],
-          content: "efgh",
-        },
-      ],
-      nodes: [
-        {
-          bufferIndex: 0,
-          start: {
-            line: 0,
-            column: 0,
+        ],
+        nodes: [
+          {
+            bufferIndex: 0,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 1,
+              column: 1,
+            },
+            leftCharCount: 2,
+            leftLineFeedCount: 0,
+            length: 5,
+            lineFeedCount: 1,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: 2,
+            right: 1,
           },
-          end: {
-            line: 1,
-            column: 1,
+          {
+            bufferIndex: 1,
+            start: { line: 0, column: 0 },
+            end: { line: 0, column: 2 },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 0,
+            color: Color.Red,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
           },
-          leftCharCount: 2,
-          leftLineFeedCount: 0,
-          length: 5,
-          lineFeedCount: 1,
-          color: Color.Black,
-          parent: SENTINEL_INDEX,
-          left: 2,
-          right: 1,
-        },
-        {
-          bufferIndex: 1,
-          start: { line: 0, column: 0 },
-          end: { line: 0, column: 2 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 2,
-          lineFeedCount: 0,
-          color: Color.Red,
-          parent: 0,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          bufferIndex: 1,
-          start: { line: 0, column: 2 },
-          end: { line: 0, column: 4 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 2,
-          lineFeedCount: 0,
-          color: Color.Red,
-          parent: 0,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-      ],
-      newlineFormat: NEWLINE.LF,
-      root: 0,
-      previouslyInsertedNodeIndex: 1,
-      previouslyInsertedNodeOffset: 0,
+          {
+            bufferIndex: 1,
+            start: { line: 0, column: 2 },
+            end: { line: 0, column: 4 },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 0,
+            color: Color.Red,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+        newlineFormat: NEWLINE.LF,
+        root: 0,
+        previouslyInsertedNodeIndex: 1,
+        previouslyInsertedNodeOffset: 0,
+      });
+      const page = getPage();
+      const expectedPage = getPage();
+      expectedPage.buffers[1].content += "ij\nk";
+      expectedPage.buffers[1].lineStarts.push(7);
+      expectedPage.nodes.push({
+        bufferIndex: 1,
+        start: { line: 0, column: 2 },
+        end: { line: 1, column: 1 },
+        leftCharCount: 0,
+        leftLineFeedCount: 0,
+        length: 4,
+        lineFeedCount: 1,
+        color: Color.Red,
+        parent: 1,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
+      });
+      expectedPage.nodes[1].right = 3;
+      expectedPage.nodes[1].color = Color.Black;
+      expectedPage.nodes[2].color = Color.Black;
+      const content: IContentInsert = {
+        content: "ij\nk",
+        offset: 9,
+      };
+      const maxBufferLength = 8;
+      const receivedPage = insertContent(content, page, maxBufferLength);
+      expect(receivedPage).toEqual(expectedPage);
     });
-    const page = getPage();
-    const expectedPage = getPage();
-    expectedPage.buffers[1].content += "ij\nk";
-    expectedPage.buffers[1].lineStarts.push(7);
-    expectedPage.nodes.push({
-      bufferIndex: 1,
-      start: { line: 0, column: 2 },
-      end: { line: 1, column: 1 },
-      leftCharCount: 0,
-      leftLineFeedCount: 0,
-      length: 4,
-      lineFeedCount: 1,
-      color: Color.Red,
-      parent: 1,
-      left: SENTINEL_INDEX,
-      right: SENTINEL_INDEX,
-    });
-    expectedPage.nodes[1].right = 3;
-    expectedPage.nodes[1].color = Color.Black;
-    expectedPage.nodes[2].color = Color.Black;
-    const content: IContentInsert = {
-      content: "ij\nk",
-      offset: 9,
-    };
-    const maxBufferLength = 8;
-    const receivedPage = insertContent(content, page, maxBufferLength);
-    expect(receivedPage).toEqual(expectedPage);
   });
 
   describe("fix insert functions", () => {
