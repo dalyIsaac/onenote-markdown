@@ -103,6 +103,8 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
       newlineFormat: constructExpectedNewPageNewlineFormat(content, newline),
       nodes: [constructExpectedNewPageNode(content, newline)],
       root: constructExpectedNewPageRoot(),
+      previouslyInsertedNodeIndex: null,
+      previouslyInsertedNodeOffset: null,
     };
     return expectedState;
   };

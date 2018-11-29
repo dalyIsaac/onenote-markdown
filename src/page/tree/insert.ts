@@ -1,10 +1,11 @@
-import { CharValues, Color, IBuffer, INode, IPageContent } from "../model";
+import { Color, IBuffer, INode, IPageContent } from "../model";
 import { SENTINEL_INDEX } from "../reducer";
+import { leftRotate, rightRotate } from "./rotate";
 import {
   findNodeAtOffset,
   getLineStarts,
+  getNodeContent,
   INodePosition,
-  MAX_BUFFER_LENGTH,
 } from "./tree";
 
 export interface IContentInsert {
@@ -12,196 +13,426 @@ export interface IContentInsert {
   offset: number;
 }
 
-/**
- * Inserts new content into the piece table.
- * @param contentToInsert The content to insert, and the desired offset.
- * @param page The piece table for the OneNote page.
- */
 export function insertContent(
-  contentToInsert: IContentInsert,
+  content: IContentInsert,
   page: IPageContent,
+  maxBufferLength: number,
 ): IPageContent {
-  let newPieceTable = { ...page };
+  let previouslyInsertedNode: INode | undefined;
+  let newPage: IPageContent | undefined;
 
-  const position = findNodeAtOffset(
-    contentToInsert.offset,
-    page.nodes,
-    page.root,
-  );
-
-  if (position.remainder === position.node.length) {
-    // insert at the end of a piece
-    newPieceTable = insertContentAtEnd(position, contentToInsert, page);
-  } else if (position.remainder === 0) {
-    // insert at the start of a piece
-    newPieceTable = insertContentAtStart(position, contentToInsert, page);
+  if (
+    page.previouslyInsertedNodeIndex != null &&
+    page.previouslyInsertedNodeOffset != null
+  ) {
+    previouslyInsertedNode = page.nodes[page.previouslyInsertedNodeIndex];
   }
 
-  // TODO: insert at the start of a piece
-  // TODO: insert inside a piece
+  if (
+    previouslyInsertedNode !== undefined &&
+    content.offset ===
+      page.previouslyInsertedNodeOffset! + previouslyInsertedNode.length
+  ) {
+    newPage = insertAtEndPreviouslyInsertedNode(content, page, maxBufferLength);
+  } else {
+    const nodePosition = findNodeAtOffset(
+      content.offset,
+      page.nodes,
+      page.root,
+    );
+    newPage =
+      nodePosition.nodeStartOffset < content.offset &&
+      content.offset < nodePosition.nodeStartOffset + nodePosition.node.length
+        ? (newPage = insertInsideNode(
+            content,
+            page,
+            maxBufferLength,
+            nodePosition,
+          ))
+        : (newPage = insertAtNodeExtremity(content, page, maxBufferLength));
+  }
 
-  // TODO: fix insert function
-  return newPieceTable;
+  if (newPage) {
+    return fixInsert(newPage, newPage.nodes.length - 1);
+  }
+  return page;
 }
 
 /**
- * Inserts new content at the end of a piece.
- * @param position The positional information about the offset to insert at.
- * @param contentToInsert The new content to insert.
- * @param page The old piece table for the page.
+ * Restores the properties of a red-black tree after the insertion of a node.
+ * @param page The page/piece table.
+ * @param xIndex The index of the node in the `node` array, which is the basis for fixing the tree.
  */
-function insertContentAtEnd(
-  position: INodePosition,
-  contentToInsert: IContentInsert,
-  page: IPageContent,
-): IPageContent {
-  const buffer = page.buffers[position.node.bufferIndex];
-  if (
-    buffer.content.length + contentToInsert.content.length <=
-      MAX_BUFFER_LENGTH &&
-    buffer.isReadOnly === false
+export function fixInsert(page: IPageContent, xIndex: number): IPageContent {
+  page = recomputeTreeMetadata({ ...page }, xIndex);
+  let x = { ...page.nodes[xIndex] };
+  page.nodes[xIndex] = x;
+
+  if (xIndex === page.root) {
+    x.color = Color.Black;
+    return page;
+  }
+
+  while (
+    x.parent !== SENTINEL_INDEX &&
+    page.nodes[x.parent].parent !== SENTINEL_INDEX &&
+    xIndex !== page.root &&
+    page.nodes[x.parent].color === Color.Red
   ) {
-    const nodes = [...page.nodes];
-    const buffers = [...page.buffers];
-    const newContent = buffer.content + contentToInsert.content;
-    // extend the buffer and node
-    const newBuffer: IBuffer = {
-      ...buffer,
+    if (x.parent === page.nodes[page.nodes[x.parent].parent].left) {
+      const yIndex = page.nodes[page.nodes[x.parent].parent].right;
+      const y = { ...page.nodes[yIndex] };
+      page.nodes[yIndex] = y;
+
+      if (y.color === Color.Red) {
+        page.nodes[x.parent] = {
+          ...page.nodes[x.parent],
+          color: Color.Black,
+        };
+        y.color = Color.Black;
+        page.nodes[page.nodes[x.parent].parent] = {
+          ...page.nodes[page.nodes[x.parent].parent],
+          color: Color.Red,
+        };
+        xIndex = page.nodes[x.parent].parent;
+        x = { ...page.nodes[xIndex] };
+        page.nodes[xIndex] = x;
+      } else {
+        if (xIndex === page.nodes[x.parent].right) {
+          xIndex = x.parent;
+          x = { ...page.nodes[xIndex] };
+          page.nodes[xIndex] = x;
+          page = leftRotate(page, xIndex);
+          page.nodes = page.nodes;
+          x = page.nodes[xIndex];
+        }
+        page.nodes[x.parent] = {
+          ...page.nodes[x.parent],
+          color: Color.Black,
+        };
+        page.nodes[page.nodes[x.parent].parent] = {
+          ...page.nodes[page.nodes[x.parent].parent],
+          color: Color.Red,
+        };
+        page = rightRotate(page, page.nodes[x.parent].parent);
+      }
+    } else {
+      const y = { ...page.nodes[page.nodes[page.nodes[x.parent].parent].left] };
+      page.nodes[page.nodes[page.nodes[x.parent].parent].left] = y;
+
+      if (y.color === Color.Red) {
+        page.nodes[x.parent] = {
+          ...page.nodes[x.parent],
+          color: Color.Black,
+        };
+        y.color = Color.Black;
+        page.nodes[page.nodes[x.parent].parent] = {
+          ...page.nodes[page.nodes[x.parent].parent],
+          color: Color.Red,
+        };
+        xIndex = page.nodes[x.parent].parent;
+        x = { ...page.nodes[xIndex] };
+        page.nodes[xIndex] = x;
+      } else {
+        if (x === page.nodes[page.nodes[x.parent].left]) {
+          xIndex = x.parent;
+          x = { ...page.nodes[xIndex] };
+          page.nodes[xIndex] = x;
+          page = rightRotate(page, xIndex);
+          x = page.nodes[xIndex];
+        }
+        page.nodes[x.parent] = {
+          ...page.nodes[x.parent],
+          color: Color.Black,
+        };
+        page.nodes[page.nodes[x.parent].parent] = {
+          ...page.nodes[page.nodes[x.parent].parent],
+          color: Color.Red,
+        };
+        page = leftRotate(page, page.nodes[x.parent].parent);
+      }
+    }
+  }
+  page.nodes[page.root] = {
+    ...page.nodes[page.root],
+    color: Color.Black,
+  };
+
+  return page;
+}
+
+/**
+ * Recomputes the metadata for the tree based on the newly inserted node.
+ * @param page The page/piece table.
+ * @param index The index of the node in the `node` array, which is the basis for updating the tree.
+ */
+export function recomputeTreeMetadata(
+  page: IPageContent,
+  xIndex: number,
+): IPageContent {
+  let lengthDelta = 0;
+  let lineFeedDelta = 0;
+  if (xIndex === page.root) {
+    return page;
+  }
+
+  page.nodes = [...page.nodes];
+  let x = { ...page.nodes[xIndex] };
+  page.nodes[xIndex] = x;
+
+  // go upwards till the node whose left subtree is changed.
+  while (xIndex !== page.root && xIndex === page.nodes[x.parent].right) {
+    xIndex = x.parent;
+    x = page.nodes[xIndex];
+  }
+
+  if (xIndex === page.root) {
+    // well, it means we add a node to the end (inorder)
+    return page;
+  }
+
+  // x is the node whose right subtree is changed.
+  xIndex = x.parent;
+  x = { ...page.nodes[xIndex] };
+  page.nodes[xIndex] = x;
+
+  lengthDelta = calculateCharCount(page, x.left) - x.leftCharCount;
+  lineFeedDelta = calculateLineFeedCount(page, x.left) - x.leftLineFeedCount;
+  x.leftCharCount += lengthDelta;
+  x.leftLineFeedCount += lineFeedDelta;
+
+  // go upwards till root. O(logN)
+  while (xIndex !== page.root && (lengthDelta !== 0 || lineFeedDelta !== 0)) {
+    if (page.nodes[x.parent].left === xIndex) {
+      page.nodes[x.parent] = {
+        ...page.nodes[x.parent],
+      };
+      page.nodes[x.parent].leftCharCount += lengthDelta;
+      page.nodes[x.parent].leftLineFeedCount += lineFeedDelta;
+    }
+
+    xIndex = x.parent;
+    x = { ...page.nodes[xIndex] };
+    page.nodes[xIndex] = x;
+  }
+
+  return page;
+}
+
+/**
+ * Calculates the character count for the node and its subtree.
+ * @param page The page/piece table
+ * @param index The index of the node in the `node` array of the page/piece table to find the character count for.
+ */
+export function calculateCharCount(page: IPageContent, index: number): number {
+  if (index === SENTINEL_INDEX) {
+    return 0;
+  }
+  const node = page.nodes[index];
+  return (
+    node.leftCharCount + node.length + calculateCharCount(page, node.right)
+  );
+}
+
+/**
+ * Calculates the line feed count for the node and its subtree.
+ * @param page The page/piece table
+ * @param index The index of the node in the `node` array of the page/piece table to find the line feed count for.
+ */
+export function calculateLineFeedCount(
+  page: IPageContent,
+  index: number,
+): number {
+  if (index === SENTINEL_INDEX) {
+    return 0;
+  }
+  const node = page.nodes[index];
+  return (
+    node.leftLineFeedCount +
+    node.lineFeedCount +
+    calculateLineFeedCount(page, node.right)
+  );
+}
+
+function insertAtEndPreviouslyInsertedNode(
+  content: IContentInsert,
+  page: IPageContent,
+  maxBufferLength: number,
+): IPageContent {
+  // check buffer size
+  if (
+    content.content.length +
+      page.buffers[page.buffers.length - 1].content.length <=
+    maxBufferLength
+  ) {
+    // scenario 1: can fit inside the previous buffer
+    // appends to the previous node
+    // appends to the previous buffer
+    const oldBuffer = page.buffers[page.buffers.length - 1];
+    const newContent = oldBuffer.content + content.content;
+    const buffer: IBuffer = {
+      isReadOnly: oldBuffer.isReadOnly,
       content: newContent,
       lineStarts: getLineStarts(newContent, page.newlineFormat),
     };
-    buffers[position.node.bufferIndex] = newBuffer;
-    nodes[position.nodeIndex] = {
-      ...position.node,
+
+    const node: INode = {
+      ...page.nodes[page.nodes.length - 1],
       end: {
-        line: newBuffer.lineStarts.length - 1,
+        line: buffer.lineStarts.length - 1,
         column:
-          newBuffer.content.length -
-          newBuffer.lineStarts[newBuffer.lineStarts.length - 1],
+          buffer.content.length -
+          buffer.lineStarts[buffer.lineStarts.length - 1],
       },
-      length: newContent.length,
+      lineFeedCount: buffer.lineStarts.length - 1,
     };
-    return {
+    node.length += content.content.length;
+
+    const newPage: IPageContent = {
       ...page,
-      buffers,
-      nodes,
     };
+    newPage.buffers[newPage.buffers.length - 1] = buffer;
+    newPage.nodes[newPage.nodes.length - 1] = node;
+    return newPage;
   } else {
-    // create a new buffer and node
-    return createNewBufferNewNode(position, contentToInsert, page);
+    // scenario 2: cannot fit inside the previous buffer
+    // creates a new node
+    // creates a new buffer
+    return createNodeCreateBuffer(content, page);
   }
 }
 
-/**
- * Inserts new content at the start of a piece.
- * @param position The positional information about the offset to insert at.
- * @param contentToInsert The new content to insert.
- * @param page The old piece table for the page.
- */
-function insertContentAtStart(
-  position: INodePosition,
-  contentToInsert: IContentInsert,
+function insertInsideNode(
+  content: IContentInsert,
   page: IPageContent,
+  maxBufferLength: number,
+  nodePosition: INodePosition,
 ): IPageContent {
-  // check if it can be inserted at the end of a prior node
-  const previousPosition = findNodeAtOffset(
-    contentToInsert.offset - 1,
-    page.nodes,
-    page.root,
+  const oldNode = nodePosition.node;
+  const nodeContent = getNodeContent(nodePosition.nodeIndex, page);
+  const firstPartContent = nodeContent.slice(0, nodePosition.remainder);
+  const firstPartLineStarts = getLineStarts(
+    firstPartContent,
+    page.newlineFormat,
   );
-  if (previousPosition.node !== position.node) {
-    // the content can be inserted at the end of the prior node
-    return insertContentAtEnd(previousPosition, contentToInsert, page);
-  } else {
-    // the content cannot be inserted at the end of the prior node, thus insert a new node
-    const nodes = [...page.nodes];
-    const buffers = [...page.buffers];
-    const buffer = buffers[buffers.length - 1];
-    if (
-      buffer.content.length + contentToInsert.content.length <=
-      MAX_BUFFER_LENGTH
-    ) {
-      // extend the buffer and create a new node
-      const newContent = buffer.content + contentToInsert.content;
-      const newBuffer: IBuffer = {
-        ...buffer,
-        content: newContent,
-        lineStarts: getLineStarts(newContent, page.newlineFormat),
-      };
-      buffers[buffers.length - 1] = newBuffer;
-      const newNode: INode = {
-        bufferIndex: buffers.length - 1,
-        start: {
-          line: buffer.lineStarts.length - 1,
-          column:
-            buffer.content.length -
-            buffer.lineStarts[buffer.lineStarts.length - 1],
-        },
-        end: {
-          line: newBuffer.lineStarts.length - 1,
-          column:
-            newBuffer.content.length -
-            newBuffer.lineStarts[newBuffer.lineStarts.length - 1] +
-            1,
-        },
-        leftCharCount: 0,
-        leftLineFeedCount: 0,
-        length: contentToInsert.content.length,
-        lineFeedCount: newBuffer.lineStarts.length - buffer.lineStarts.length,
-        color: Color.Red,
-        parent: position.nodeIndex,
-        left: SENTINEL_INDEX,
-        right: SENTINEL_INDEX,
-      };
-      nodes.push(newNode);
 
-      const parentNode: INode = {
-        ...nodes[position.nodeIndex],
-        left: nodes.length - 1,
-        leftCharCount: newNode.length,
-        leftLineFeedCount: newNode.lineFeedCount,
-      };
-      nodes[position.nodeIndex] = parentNode;
-      return {
-        ...page,
-        buffers,
-        nodes,
-      };
-    } else {
-      // create a new buffer and a new node
-      return createNewBufferNewNode(previousPosition, contentToInsert, page);
-    }
+  const firstPartNode: INode = {
+    ...oldNode,
+    end: {
+      line: firstPartLineStarts.length - 1 + oldNode.start.line,
+      column:
+        firstPartContent.length -
+        firstPartLineStarts[firstPartLineStarts.length - 1] +
+        oldNode.start.column,
+    },
+    length: firstPartContent.length,
+    lineFeedCount: firstPartLineStarts.length - 1,
+  };
+
+  let newPage: IPageContent = { ...page, nodes: [...page.nodes] };
+  newPage.nodes[nodePosition.nodeIndex] = firstPartNode;
+
+  const secondPartNode: INode = {
+    bufferIndex: oldNode.bufferIndex,
+    start: firstPartNode.end,
+    end: oldNode.end,
+    leftCharCount: 0,
+    leftLineFeedCount: 0,
+    length: oldNode.length - firstPartNode.length,
+    lineFeedCount: oldNode.lineFeedCount - firstPartNode.lineFeedCount,
+    color: Color.Red,
+    parent: SENTINEL_INDEX,
+    left: SENTINEL_INDEX,
+    right: SENTINEL_INDEX,
+  };
+
+  newPage.nodes.push(secondPartNode);
+  newPage = insertNode(newPage, secondPartNode, content.offset);
+  newPage = fixInsert(newPage, newPage.nodes.length - 1);
+  newPage = insertAtNodeExtremity(content, newPage, maxBufferLength);
+  newPage.previouslyInsertedNodeIndex = newPage.nodes.length - 1;
+  newPage.previouslyInsertedNodeOffset = content.offset;
+  return newPage;
+}
+
+function insertAtNodeExtremity(
+  content: IContentInsert,
+  page: IPageContent,
+  maxBufferLength: number,
+): IPageContent {
+  // check buffer size
+  if (
+    content.content.length +
+      page.buffers[page.buffers.length - 1].content.length <=
+      maxBufferLength &&
+    page.buffers[page.buffers.length - 1].isReadOnly === false
+  ) {
+    // scenario 3 and 5: it can fit inside the previous buffer
+    // creates a new node
+    // appends to the previous buffer
+    return createNodeAppendToBuffer(content, page);
+  } else {
+    // scenario 4 and 6: it cannot fit inside the previous buffer
+    // creates a new node
+    // creates a new buffer
+    return createNodeCreateBuffer(content, page);
   }
 }
 
-/**
- * Creates a new buffer and a new node to the right of the node specified in `position`.
- * @param position The positional information about the offset to insert at.
- * @param contentToInsert The new content to insert.
- * @param page The old piece table for the page.
- */
-function createNewBufferNewNode(
-  position: INodePosition,
-  contentToInsert: IContentInsert,
-  page: IPageContent,
-): IPageContent {
-  const nodes = [...page.nodes];
-  const buffers = [...page.buffers];
+function createNodeAppendToBuffer(content: IContentInsert, page: IPageContent) {
+  const oldBuffer = page.buffers[page.buffers.length - 1];
+  const newContent = oldBuffer.content + content.content;
+  const updatedBuffer: IBuffer = {
+    isReadOnly: oldBuffer.isReadOnly,
+    content: newContent,
+    lineStarts: getLineStarts(newContent, page.newlineFormat),
+  };
+  const newNode: INode = {
+    bufferIndex: page.buffers.length - 1,
+    start: {
+      line: oldBuffer.lineStarts.length - 1,
+      column:
+        oldBuffer.content.length -
+        oldBuffer.lineStarts[oldBuffer.lineStarts.length - 1],
+    },
+    end: {
+      line: updatedBuffer.lineStarts.length - 1,
+      column:
+        updatedBuffer.content.length -
+        updatedBuffer.lineStarts[updatedBuffer.lineStarts.length - 1],
+    },
+    leftCharCount: 0,
+    leftLineFeedCount: 0,
+    length: content.content.length,
+    lineFeedCount:
+      updatedBuffer.lineStarts.length - oldBuffer.lineStarts.length,
+    color: Color.Red,
+    parent: SENTINEL_INDEX,
+    left: SENTINEL_INDEX,
+    right: SENTINEL_INDEX,
+  };
+
+  let newPage: IPageContent = {
+    ...page,
+    nodes: [...page.nodes],
+    previouslyInsertedNodeIndex: page.nodes.length,
+    previouslyInsertedNodeOffset: content.offset,
+  };
+  newPage.buffers[page.buffers.length - 1] = updatedBuffer;
+  newPage.nodes.push(newNode);
+
+  newPage = insertNode(newPage, newNode, content.offset);
+  return newPage;
+}
+
+function createNodeCreateBuffer(content: IContentInsert, page: IPageContent) {
   const newBuffer: IBuffer = {
     isReadOnly: false,
-    lineStarts: getLineStarts(contentToInsert.content, page.newlineFormat),
-    content: contentToInsert.content,
+    lineStarts: getLineStarts(content.content, page.newlineFormat),
+    content: content.content,
   };
-  buffers.push(newBuffer);
-
-  const parentNode: INode = {
-    ...position.node,
-    right: nodes.length,
-  };
-  nodes[position.nodeIndex] = parentNode;
-
   const newNode: INode = {
-    bufferIndex: buffers.length - 1,
+    bufferIndex: page.buffers.length,
     start: { line: 0, column: 0 },
     end: {
       line: newBuffer.lineStarts.length - 1,
@@ -211,17 +442,86 @@ function createNewBufferNewNode(
     },
     leftCharCount: 0,
     leftLineFeedCount: 0,
-    length: newBuffer.content.length,
+    length: content.content.length,
     lineFeedCount: newBuffer.lineStarts.length - 1,
     color: Color.Red,
-    parent: position.nodeIndex,
+    parent: SENTINEL_INDEX,
     left: SENTINEL_INDEX,
     right: SENTINEL_INDEX,
   };
-  nodes.push(newNode);
-  return {
+  let newPage: IPageContent = {
     ...page,
-    buffers,
-    nodes,
+    nodes: [...page.nodes],
+    buffers: [...page.buffers],
+    previouslyInsertedNodeIndex: page.nodes.length,
+    previouslyInsertedNodeOffset: content.offset,
   };
+  newPage.buffers.push(newBuffer);
+  newPage.nodes.push(newNode);
+
+  newPage = insertNode(newPage, newNode, content.offset);
+  return newPage;
+}
+
+/**
+ * Inserts a node at the given offset.
+ * @param page The page/piece table.
+ * @param newNode Reference to the newly created node. The node already exists inside `page.nodes`.
+ * @param offset The offset of the new node.
+ */
+function insertNode(
+  page: IPageContent,
+  newNode: INode,
+  offset: number,
+): IPageContent {
+  let prevIndex = SENTINEL_INDEX;
+
+  let currentIndex = page.root;
+  let currentNode = page.nodes[currentIndex];
+
+  let nodeStartOffset = 0;
+  const nodeIndex = page.nodes.length - 1; // the index of the new node
+
+  while (currentIndex !== SENTINEL_INDEX) {
+    prevIndex = currentIndex;
+    if (offset <= nodeStartOffset + currentNode.leftCharCount) {
+      // left
+      prevIndex = currentIndex;
+      currentIndex = currentNode.left;
+      if (currentIndex === SENTINEL_INDEX) {
+        page.nodes[prevIndex] = {
+          ...page.nodes[prevIndex],
+          left: nodeIndex,
+        };
+        newNode.parent = prevIndex; // can mutate the node since it's new
+        return page;
+      }
+      currentNode = page.nodes[currentIndex];
+    } else if (
+      offset >=
+      nodeStartOffset + currentNode.leftCharCount + currentNode.length
+    ) {
+      // right
+      nodeStartOffset += currentNode.leftCharCount + currentNode.length;
+      prevIndex = currentIndex;
+      currentIndex = currentNode.right;
+      if (currentIndex === SENTINEL_INDEX) {
+        page.nodes[prevIndex] = {
+          ...page.nodes[prevIndex],
+          right: nodeIndex,
+        };
+        newNode.parent = prevIndex; // can mutate the node since it's new
+        return page;
+      }
+      currentNode = page.nodes[currentIndex];
+    } else {
+      // middle
+      throw RangeError(
+        "Looking for the place to insert a node should never result in looking in the middle of another node.",
+      );
+    }
+  }
+  throw RangeError(
+    "The currentIndex has reached a Sentinel node before locating a suitable insertion location.",
+  );
 }

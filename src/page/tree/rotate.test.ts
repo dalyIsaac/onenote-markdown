@@ -76,6 +76,8 @@ describe("page/tree/rotate", () => {
       newlineFormat: NEWLINE.LF,
       nodes,
       root: 1,
+      previouslyInsertedNodeIndex: null,
+      previouslyInsertedNodeOffset: null,
     };
     return pieceTable;
   };
@@ -154,6 +156,8 @@ describe("page/tree/rotate", () => {
       newlineFormat: NEWLINE.LF,
       nodes,
       root: 3,
+      previouslyInsertedNodeIndex: null,
+      previouslyInsertedNodeOffset: null,
     };
     return pieceTable;
   };
@@ -349,6 +353,8 @@ describe("page/tree/rotate", () => {
       newlineFormat: NEWLINE.LF,
       nodes,
       root: 4,
+      previouslyInsertedNodeIndex: null,
+      previouslyInsertedNodeOffset: null,
     };
     return pieceTable;
   };
@@ -544,36 +550,109 @@ describe("page/tree/rotate", () => {
       newlineFormat: NEWLINE.LF,
       nodes,
       root: 4,
+      previouslyInsertedNodeIndex: null,
+      previouslyInsertedNodeOffset: null,
     };
     return pieceTable;
   };
   const constructComplexPieceTableBeforeRightRotate = constructComplexPieceTableAfterLeftRotate;
 
+  const constructOneNodePieceTable = (): IPageContent => ({
+    buffers: [],
+    nodes: [
+      {
+        bufferIndex: 0,
+        start: { column: 0, line: 0 },
+        end: { column: 0, line: 0 },
+        length: 0,
+        lineFeedCount: 0,
+        leftCharCount: 0,
+        leftLineFeedCount: 0,
+        color: Color.Black,
+        parent: SENTINEL_INDEX,
+        left: SENTINEL_INDEX,
+        right: SENTINEL_INDEX,
+      },
+    ],
+    root: 0,
+    newlineFormat: NEWLINE.LF,
+    previouslyInsertedNodeIndex: 0,
+    previouslyInsertedNodeOffset: 0,
+  });
+
+  /**
+   * Returns the number of different references between the nodes, after a rotation.
+   * A rotate function should update no more than four references.
+   * @param oldTable The table passed into the rotate function
+   * @param newTable The table passed out of the rotate function
+   */
+  const getDiffCount = (
+    oldTable: IPageContent,
+    newTable: IPageContent,
+  ): number => {
+    const diff = [];
+    for (let i = 0; i < oldTable.nodes.length; i++) {
+      const element = oldTable.nodes[i];
+      diff.push(element === newTable.nodes[i]);
+    }
+    const diffCount = diff.reduce((acc, curr) => {
+      if (curr === false) {
+        acc += 1;
+      }
+      return acc;
+    }, 0);
+    return diffCount;
+  };
+
   describe("left rotate", () => {
+    test("One node case", () => {
+      const pieceTable = constructOneNodePieceTable();
+      const newPieceTable = leftRotate(pieceTable, 0);
+      expect(newPieceTable).toEqual(constructOneNodePieceTable());
+      expect(getDiffCount(pieceTable, newPieceTable)).toBe(0);
+    });
+
     test("Simple case", () => {
       const pieceTable = constructSimplePieceTableBeforeLeftRotate();
-      leftRotate(pieceTable, 1);
-      expect(pieceTable).toEqual(constructSimplePieceTableAfterLeftRotate());
+      const newPieceTable = leftRotate(pieceTable, 1);
+      expect(newPieceTable).toEqual(constructSimplePieceTableAfterLeftRotate());
+      expect(getDiffCount(pieceTable, newPieceTable)).toBeLessThanOrEqual(4);
     });
 
     test("Complex case", () => {
-      const piecetable = constructComplexPieceTableBeforeLeftRotate();
-      leftRotate(piecetable, 6);
-      expect(piecetable).toEqual(constructComplexPieceTableAfterLeftRotate());
+      const pieceTable = constructComplexPieceTableBeforeLeftRotate();
+      const newPieceTable = leftRotate(pieceTable, 6);
+      expect(newPieceTable).toEqual(
+        constructComplexPieceTableAfterLeftRotate(),
+      );
+      expect(getDiffCount(pieceTable, newPieceTable)).toBeLessThanOrEqual(4);
     });
   });
 
   describe("right rotate", () => {
+    test("One node case", () => {
+      const pieceTable = constructOneNodePieceTable();
+      const newPieceTable = rightRotate(pieceTable, 0);
+      expect(newPieceTable).toEqual(constructOneNodePieceTable());
+      expect(getDiffCount(pieceTable, newPieceTable)).toBe(0);
+    });
+
     test("Simple case", () => {
       const pieceTable = constructSimplePieceTableBeforeRightRotate();
-      rightRotate(pieceTable, 3);
-      expect(pieceTable).toEqual(constructSimplePieceTableAfterRightRotate());
+      const newPieceTable = rightRotate(pieceTable, 3);
+      expect(newPieceTable).toEqual(
+        constructSimplePieceTableAfterRightRotate(),
+      );
+      expect(getDiffCount(pieceTable, newPieceTable)).toBeLessThanOrEqual(4);
     });
 
     test("Complex case", () => {
-      const piecetable = constructComplexPieceTableBeforeRightRotate();
-      rightRotate(piecetable, 10);
-      expect(piecetable).toEqual(constructComplexPieceTableAfterRightRotate());
+      const pieceTable = constructComplexPieceTableBeforeRightRotate();
+      const newPieceTable = rightRotate(pieceTable, 10);
+      expect(newPieceTable).toEqual(
+        constructComplexPieceTableAfterRightRotate(),
+      );
+      expect(getDiffCount(pieceTable, newPieceTable)).toBeLessThanOrEqual(4);
     });
   });
 });

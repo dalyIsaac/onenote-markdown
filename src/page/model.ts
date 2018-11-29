@@ -46,8 +46,8 @@ export interface IBufferCursor {
  * Possible node colors, inside the red and black tree.
  */
 export enum Color {
-  Red,
-  Black,
+  Red = 0,
+  Black = 1,
 }
 
 /**
@@ -133,6 +133,14 @@ export interface IPageContent {
    * The index of the root node for the piece table for this page.
    */
   root: number;
+
+  previouslyInsertedNodeIndex: number | null;
+
+  /**
+   * The logical offset of the last node which had content inserted into it.
+   * `null` if another operation which wasn't an insert was performed.
+   */
+  previouslyInsertedNodeOffset: number | null;
 }
 
 /**
