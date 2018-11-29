@@ -319,10 +319,11 @@ function insertInsideNode(
   const firstPartNode: INode = {
     ...oldNode,
     end: {
-      line: firstPartLineStarts.length - 1,
+      line: firstPartLineStarts.length - 1 + oldNode.start.line,
       column:
         firstPartContent.length -
-        firstPartLineStarts[firstPartLineStarts.length - 1],
+        firstPartLineStarts[firstPartLineStarts.length - 1] +
+        oldNode.start.column,
     },
     length: firstPartContent.length,
     lineFeedCount: firstPartLineStarts.length - 1,
@@ -349,7 +350,7 @@ function insertInsideNode(
   newPage = insertNode(newPage, secondPartNode, content.offset);
   newPage = fixInsert(newPage, newPage.nodes.length - 1);
   newPage = insertAtNodeExtremity(content, newPage, maxBufferLength);
-  newPage.previouslyInsertedNodeIndex = page.nodes.length - 1;
+  newPage.previouslyInsertedNodeIndex = newPage.nodes.length - 1;
   newPage.previouslyInsertedNodeOffset = content.offset;
   return newPage;
 }
