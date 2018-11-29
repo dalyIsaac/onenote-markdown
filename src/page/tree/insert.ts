@@ -523,5 +523,4 @@ function insertNode(
   throw RangeError(
     "The currentIndex has reached a Sentinel node before locating a suitable insertion location.",
   );
-  return null!; // never going to be hit
 }
