@@ -2,8 +2,14 @@
  * Contains common items.
  */
 
-import { CharValues, IBufferCursor, INode, NEWLINE } from "../model";
-import { SENTINEL } from "../reducer";
+import {
+  CharValues,
+  IBufferCursor,
+  INode,
+  IPageContent,
+  NEWLINE,
+} from "../model";
+import { SENTINEL, SENTINEL_INDEX } from "../reducer";
 
 export const MAX_BUFFER_LENGTH = 65535;
 
@@ -162,4 +168,36 @@ export function getLineStarts(
     }
   }
   return lineStarts;
+}
+
+/**
+ * Gets the contents of a node.
+ * @param nodeIndex The index of the node in `page.nodes`.
+ * @param page The page/piece table.
+ */
+export function getNodeContent(nodeIndex: number, page: IPageContent): string {
+  if (nodeIndex === SENTINEL_INDEX) {
+    return "";
+  }
+  const node = page.nodes[nodeIndex];
+  const buffer = page.buffers[node.bufferIndex];
+  const startOffset = getOffsetInBuffer(node.bufferIndex, node.start, page);
+  const endOffset = getOffsetInBuffer(node.bufferIndex, node.end, page);
+  const currentContent = buffer.content.slice(startOffset, endOffset);
+  return currentContent;
+}
+
+/**
+ * Gets the offset of a cursor inside a buffer.
+ * @param bufferIndex The buffer for which the cursor is located in.
+ * @param cursor The cursor for which the offset is desired.
+ * @param page The page/piece table.
+ */
+export function getOffsetInBuffer(
+  bufferIndex: number,
+  cursor: IBufferCursor,
+  page: IPageContent,
+) {
+  const lineStarts = page.buffers[bufferIndex].lineStarts;
+  return lineStarts[cursor.line] + cursor.column;
 }

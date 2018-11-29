@@ -214,7 +214,7 @@ describe("page/tree/insert", () => {
       expectedPage.nodes[0].leftLineFeedCount = 1;
       expectedPage.nodes.push({
         bufferIndex: 1,
-        start: { line: 0, column: 2 },
+        start: { line: 0, column: 4 },
         end: { line: 1, column: 1 },
         leftCharCount: 0,
         leftLineFeedCount: 0,
@@ -311,7 +311,7 @@ describe("page/tree/insert", () => {
       expectedPage.buffers[1].lineStarts.push(7);
       expectedPage.nodes.push({
         bufferIndex: 1,
-        start: { line: 0, column: 2 },
+        start: { line: 0, column: 4 },
         end: { line: 1, column: 1 },
         leftCharCount: 0,
         leftLineFeedCount: 0,
@@ -846,6 +846,150 @@ describe("page/tree/insert", () => {
         offset: 0,
       };
       const maxBufferLength = 8;
+      const receivedPage = insertContent(content, page, maxBufferLength);
+      expect(receivedPage).toEqual(expectedPage);
+    });
+
+    test("Scenario 7: insert inside a node's content", () => {
+      const page: IPageContent = {
+        buffers: [
+          {
+            isReadOnly: false,
+            lineStarts: [0, 4],
+            content: "abc\ndefgh",
+          },
+        ],
+        nodes: [
+          {
+            bufferIndex: 0,
+            start: { line: 0, column: 0 },
+            end: { line: 1, column: 1 },
+            leftCharCount: 2,
+            leftLineFeedCount: 0,
+            length: 5,
+            lineFeedCount: 1,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: 1,
+            right: 2,
+          },
+          {
+            bufferIndex: 0,
+            start: { line: 1, column: 1 },
+            end: { line: 1, column: 3 },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 0,
+            color: Color.Red,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            bufferIndex: 0,
+            start: { line: 1, column: 3 },
+            end: { line: 1, column: 5 },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 0,
+            color: Color.Red,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+        root: 0,
+        newlineFormat: NEWLINE.LF,
+        previouslyInsertedNodeIndex: 2,
+        previouslyInsertedNodeOffset: 7,
+      };
+      const expectedPage: IPageContent = {
+        buffers: [
+          {
+            isReadOnly: false,
+            lineStarts: [0, 4, 12],
+            content: "abc\ndefghij\nkl",
+          },
+        ],
+        nodes: [
+          {
+            bufferIndex: 0,
+            start: { line: 0, column: 0 },
+            end: { line: 0, column: 3 },
+            leftCharCount: 2,
+            leftLineFeedCount: 0,
+            length: 3,
+            lineFeedCount: 0,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: 1,
+            right: 3,
+          },
+          {
+            bufferIndex: 0,
+            start: { line: 1, column: 1 },
+            end: { line: 1, column: 3 },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 0,
+            color: Color.Black,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            bufferIndex: 0,
+            start: { line: 1, column: 3 },
+            end: { line: 1, column: 5 },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 0,
+            color: Color.Red,
+            parent: 3,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            bufferIndex: 0,
+            start: { line: 0, column: 3 },
+            end: { line: 1, column: 1 },
+            leftCharCount: 5,
+            leftLineFeedCount: 1,
+            length: 2,
+            lineFeedCount: 1,
+            color: Color.Black,
+            parent: 0,
+            left: 4,
+            right: 2,
+          },
+          {
+            bufferIndex: 0,
+            start: { line: 1, column: 5 },
+            end: { line: 2, column: 2 },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 5,
+            lineFeedCount: 1,
+            color: Color.Red,
+            parent: 3,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+        root: 0,
+        newlineFormat: NEWLINE.LF,
+        previouslyInsertedNodeIndex: 2,
+        previouslyInsertedNodeOffset: 5,
+      };
+      const content: IContentInsert = {
+        content: "ij\nkl",
+        offset: 5,
+      };
+      const maxBufferLength = 16;
       const receivedPage = insertContent(content, page, maxBufferLength);
       expect(receivedPage).toEqual(expectedPage);
     });

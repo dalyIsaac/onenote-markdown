@@ -1,7 +1,12 @@
 import { Color, IBuffer, INode, IPageContent } from "../model";
 import { SENTINEL_INDEX } from "../reducer";
 import { leftRotate, rightRotate } from "./rotate";
-import { findNodeAtOffset, getLineStarts } from "./tree";
+import {
+  findNodeAtOffset,
+  getLineStarts,
+  getNodeContent,
+  INodePosition,
+} from "./tree";
 
 export interface IContentInsert {
   content: string;
@@ -30,7 +35,21 @@ export function insertContent(
   ) {
     newPage = insertAtEndPreviouslyInsertedNode(content, page, maxBufferLength);
   } else {
-    newPage = insertAtNodeExtremity(content, page, maxBufferLength);
+    const nodePosition = findNodeAtOffset(
+      content.offset,
+      page.nodes,
+      page.root,
+    );
+    newPage =
+      nodePosition.nodeStartOffset < content.offset &&
+      content.offset < nodePosition.nodeStartOffset + nodePosition.node.length
+        ? (newPage = insertInsideNode(
+            content,
+            page,
+            maxBufferLength,
+            nodePosition,
+          ))
+        : (newPage = insertAtNodeExtremity(content, page, maxBufferLength));
   }
 
   if (newPage) {
@@ -283,6 +302,58 @@ function insertAtEndPreviouslyInsertedNode(
   }
 }
 
+function insertInsideNode(
+  content: IContentInsert,
+  page: IPageContent,
+  maxBufferLength: number,
+  nodePosition: INodePosition,
+): IPageContent {
+  const oldNode = nodePosition.node;
+  const nodeContent = getNodeContent(nodePosition.nodeIndex, page);
+  const firstPartContent = nodeContent.slice(0, nodePosition.remainder);
+  const firstPartLineStarts = getLineStarts(
+    firstPartContent,
+    page.newlineFormat,
+  );
+
+  const firstPartNode: INode = {
+    ...oldNode,
+    end: {
+      line: firstPartLineStarts.length - 1,
+      column:
+        firstPartContent.length -
+        firstPartLineStarts[firstPartLineStarts.length - 1],
+    },
+    length: firstPartContent.length,
+    lineFeedCount: firstPartLineStarts.length - 1,
+  };
+
+  let newPage: IPageContent = { ...page, nodes: [...page.nodes] };
+  newPage.nodes[nodePosition.nodeIndex] = firstPartNode;
+
+  const secondPartNode: INode = {
+    bufferIndex: oldNode.bufferIndex,
+    start: firstPartNode.end,
+    end: oldNode.end,
+    leftCharCount: 0,
+    leftLineFeedCount: 0,
+    length: oldNode.length - firstPartNode.length,
+    lineFeedCount: oldNode.lineFeedCount - firstPartNode.lineFeedCount,
+    color: Color.Red,
+    parent: SENTINEL_INDEX,
+    left: SENTINEL_INDEX,
+    right: SENTINEL_INDEX,
+  };
+
+  newPage.nodes.push(secondPartNode);
+  newPage = insertNode(newPage, secondPartNode, content.offset);
+  newPage = fixInsert(newPage, newPage.nodes.length - 1);
+  newPage = insertAtNodeExtremity(content, newPage, maxBufferLength);
+  newPage.previouslyInsertedNodeIndex = page.nodes.length - 1;
+  newPage.previouslyInsertedNodeOffset = content.offset;
+  return newPage;
+}
+
 function insertAtNodeExtremity(
   content: IContentInsert,
   page: IPageContent,
@@ -317,7 +388,12 @@ function createNodeAppendToBuffer(content: IContentInsert, page: IPageContent) {
   };
   const newNode: INode = {
     bufferIndex: page.buffers.length - 1,
-    start: { ...page.nodes[page.buffers.length - 1].end },
+    start: {
+      line: oldBuffer.lineStarts.length - 1,
+      column:
+        oldBuffer.content.length -
+        oldBuffer.lineStarts[oldBuffer.lineStarts.length - 1],
+    },
     end: {
       line: updatedBuffer.lineStarts.length - 1,
       column:
