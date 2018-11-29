@@ -9,10 +9,16 @@ import {
   IPageContent,
   NEWLINE,
 } from "../model";
-import { SENTINEL, SENTINEL_INDEX } from "../reducer";
+import { SENTINEL_INDEX } from "../reducer";
 
+/**
+ * The maximum length of a buffer string.
+ */
 export const MAX_BUFFER_LENGTH = 65535;
 
+/**
+ * The returned object from `findNodeAtOffset`.
+ */
 export interface INodePosition {
   /**
    * Piece Index
@@ -50,7 +56,7 @@ export function findNodeAtOffset(
   let x: INode = nodes[xIndex];
   let nodeStartOffset = 0;
 
-  while (x !== SENTINEL) {
+  while (xIndex !== SENTINEL_INDEX) {
     if (x.leftCharCount > offset) {
       const oldXIndex = xIndex;
       xIndex = x.left;
@@ -93,37 +99,9 @@ export function findNodeAtOffset(
       }
     }
   }
-
-  return null!; // this will never be reached - it's just here to make the compiler happy.
-}
-
-/**
- * Creates the start and end buffer cursors.
- * @param startColumn The column of the start buffer.
- * @param startLine The line of the start buffer.
- * @param endColumn The column of the end buffer.
- * @param endLine The line of the end buffer.
- */
-export function createNewBufferCursors(
-  startColumn: number,
-  startLine: number,
-  endColumn: number,
-  endLine: number,
-): {
-  end: IBufferCursor;
-  start: IBufferCursor;
-} {
-  return {
-    start: {
-      column: startColumn,
-      line: startLine,
-    },
-    // tslint:disable-next-line:object-literal-sort-keys
-    end: {
-      column: endColumn,
-      line: endLine,
-    },
-  };
+  throw RangeError(
+    `Reaching here means that \`x\` is a SENTINEL node, and stored inside the piece table's \`nodes\` array.`,
+  );
 }
 
 /**
@@ -131,7 +109,7 @@ export function createNewBufferCursors(
  * format is used within the first 100 lines, it assumes that LF is used.
  * @param content The HTML content of a OneNote page.
  */
-export function getNewline(content: string): CharValues[] {
+export function getNewlineFormat(content: string): CharValues[] {
   for (let i = 0; i < 100; i++) {
     if (content.charCodeAt(i) === CharValues.LF) {
       return NEWLINE.LF;

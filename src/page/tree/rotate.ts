@@ -1,6 +1,11 @@
 import { IPageContent } from "../model";
 import { SENTINEL_INDEX } from "../reducer";
 
+/**
+ * Performs a left rotation on the red-black tree, on the given node.
+ * @param pieceTable The page/piece table.
+ * @param nodeIndex The index of the node in the array for which the left rotation is performed on.
+ */
 export function leftRotate(
   pieceTable: IPageContent,
   nodeIndex: number,
@@ -57,6 +62,11 @@ export function leftRotate(
   };
 }
 
+/**
+ * Performs a right rotation on the red-black tree, on the given node.
+ * @param pieceTable The page/piece table.
+ * @param nodeIndex The index of the node in the array for which the right rotation is performed on.
+ */
 export function rightRotate(
   pieceTable: IPageContent,
   nodeIndex: number,

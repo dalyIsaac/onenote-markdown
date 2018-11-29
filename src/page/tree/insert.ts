@@ -8,11 +8,20 @@ import {
   INodePosition,
 } from "./tree";
 
+/**
+ * The desired content and offset for an insertion operation.
+ */
 export interface IContentInsert {
   content: string;
   offset: number;
 }
 
+/**
+ * Inserts the given content into a page.
+ * @param content The content to insert into the page.
+ * @param page The page to insert the content into.
+ * @param maxBufferLength The maximum length of a buffer's content/string.
+ */
 export function insertContent(
   content: IContentInsert,
   page: IPageContent,
@@ -254,6 +263,12 @@ export function calculateLineFeedCount(
   );
 }
 
+/**
+ * Inserts the given content into a page, at the end of the previously inserted node.
+ * @param content The content to insert into the page.
+ * @param page The page to insert the content into.
+ * @param maxBufferLength The maximum length of a buffer's content/string.
+ */
 function insertAtEndPreviouslyInsertedNode(
   content: IContentInsert,
   page: IPageContent,
@@ -302,6 +317,13 @@ function insertAtEndPreviouslyInsertedNode(
   }
 }
 
+/**
+ * Inserts the given content into a page, inside a range which is currently encapsulated by an existing node.
+ * @param content The content to insert into the page.
+ * @param page The page to insert the content into.
+ * @param maxBufferLength The maximum length of a buffer's content/string.
+ * @param nodePosition Information about the node which contains the offset which the content is to be inserted at.
+ */
 function insertInsideNode(
   content: IContentInsert,
   page: IPageContent,
@@ -355,6 +377,13 @@ function insertInsideNode(
   return newPage;
 }
 
+/**
+ * Inserts the given content into a page, by creating a node which is inserted either immediately before or after an
+ * existing node.
+ * @param content The content to insert into the page.
+ * @param page The page to insert the content into.
+ * @param maxBufferLength The maximum length of a buffer's content/string.
+ */
 function insertAtNodeExtremity(
   content: IContentInsert,
   page: IPageContent,
@@ -379,6 +408,11 @@ function insertAtNodeExtremity(
   }
 }
 
+/**
+ * Creates a new node, and appends the content to an existing buffer.
+ * @param content The content to insert into the page.
+ * @param page The page to insert the content into.
+ */
 function createNodeAppendToBuffer(content: IContentInsert, page: IPageContent) {
   const oldBuffer = page.buffers[page.buffers.length - 1];
   const newContent = oldBuffer.content + content.content;
@@ -425,6 +459,11 @@ function createNodeAppendToBuffer(content: IContentInsert, page: IPageContent) {
   return newPage;
 }
 
+/**
+ * Creates a new node, and creates a new buffer to contain the new content.
+ * @param content The content to insert into the page.
+ * @param page The page to insert the content into.
+ */
 function createNodeCreateBuffer(content: IContentInsert, page: IPageContent) {
   const newBuffer: IBuffer = {
     isReadOnly: false,
