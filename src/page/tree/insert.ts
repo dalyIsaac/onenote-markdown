@@ -515,8 +515,13 @@ function insertNode(
       currentNode = page.nodes[currentIndex];
     } else {
       // middle
-      // TODO
+      throw RangeError(
+        "Looking for the place to insert a node should never result in looking in the middle of another node.",
+      );
     }
   }
+  throw RangeError(
+    "The currentIndex has reached a Sentinel node before locating a suitable insertion location.",
+  );
   return null!; // never going to be hit
 }
