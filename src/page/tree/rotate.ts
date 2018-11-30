@@ -1,5 +1,5 @@
 import { PageContent } from "../model";
-import { SENTINEL_INDEX } from "../reducer";
+import { SENTINEL_INDEX } from "./tree";
 
 /**
  * Performs a left rotation on the red-black tree, on the given node.

@@ -1,6 +1,6 @@
 import { Color, NEWLINE, Node, PageContent } from "../model";
-import { SENTINEL_INDEX } from "../reducer";
 import { leftRotate, rightRotate } from "./rotate";
+import { SENTINEL_INDEX } from "./tree";
 
 describe("page/tree/rotate", () => {
   const constructSimplePieceTableBeforeLeftRotate = (): PageContent => {

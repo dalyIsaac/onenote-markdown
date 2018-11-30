@@ -1,10 +1,10 @@
 import { Color, NEWLINE, Node, PageContent } from "../model";
-import { SENTINEL_INDEX } from "../reducer";
 import {
   calculateCharCount,
   calculateLineFeedCount,
   findNodeAtOffset,
   recomputeTreeMetadata,
+  SENTINEL_INDEX,
 } from "./tree";
 
 describe("page/tree/tree", () => {

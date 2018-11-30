@@ -1,7 +1,6 @@
 import { Color, NEWLINE, PageContent } from "../model";
-import { SENTINEL_INDEX } from "../reducer";
 import { ContentInsert, fixInsert, insertContent } from "./insert";
-import { MAX_BUFFER_LENGTH } from "./tree";
+import { MAX_BUFFER_LENGTH, SENTINEL_INDEX } from "./tree";
 
 describe("page/tree/insert", () => {
   describe("insert functions", () => {

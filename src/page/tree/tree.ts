@@ -2,8 +2,14 @@
  * Contains common items.
  */
 
-import { BufferCursor, CharValues, NEWLINE, Node, PageContent } from "../model";
-import { SENTINEL_INDEX } from "../reducer";
+import {
+  BufferCursor,
+  CharValues,
+  Color,
+  NEWLINE,
+  Node,
+  PageContent,
+} from "../model";
 
 /**
  * The maximum length of a buffer string.
@@ -266,3 +272,25 @@ export function calculateLineFeedCount(
     calculateLineFeedCount(page, node.right)
   );
 }
+
+/**
+ * The theoretical index of the sentinel node in the `nodes` array of a page/piece table.
+ */
+export const SENTINEL_INDEX = -1;
+
+/**
+ * The sentinel node of red-black trees.
+ */
+export const SENTINEL: Node = {
+  bufferIndex: -1,
+  start: { column: -1, line: -1 },
+  end: { column: -1, line: -1 },
+  leftCharCount: -1,
+  leftLineFeedCount: -1,
+  length: -1,
+  lineFeedCount: -1,
+  color: Color.Black,
+  parent: SENTINEL_INDEX,
+  left: SENTINEL_INDEX,
+  right: SENTINEL_INDEX,
+};

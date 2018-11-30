@@ -1,5 +1,4 @@
 import { Buffer, Color, Node, PageContent } from "../model";
-import { SENTINEL_INDEX } from "../reducer";
 import { leftRotate, rightRotate } from "./rotate";
 import {
   findNodeAtOffset,
@@ -7,6 +6,7 @@ import {
   getNodeContent,
   NodePosition,
   recomputeTreeMetadata,
+  SENTINEL_INDEX,
 } from "./tree";
 
 /**

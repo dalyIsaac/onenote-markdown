@@ -8,8 +8,9 @@ import {
   PageContent,
   StatePages,
 } from "../model";
-import pageReducer, { SENTINEL_INDEX } from "../reducer";
+import pageReducer from "../reducer";
 import { createNewPage } from "./createNewPage";
+import { SENTINEL_INDEX } from "./tree";
 
 const LF_CONTENT = `<html lang="en-NZ">
     <head>
