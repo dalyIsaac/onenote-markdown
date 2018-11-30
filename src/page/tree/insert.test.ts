@@ -2126,48 +2126,6 @@ describe("page/tree/insert", () => {
         const acquiredPage = fixInsert(page, 3);
         expect(acquiredPage).toEqual(expectedPage);
       });
-
-      test("Scenario 5: Inserted node is root", () => {
-        const getPage = (): PageContent => ({
-          buffers: [
-            {
-              isReadOnly: false,
-              lineStarts: [0],
-              content: "a",
-            },
-          ],
-          newlineFormat: NEWLINE.LF,
-          nodes: [
-            {
-              bufferIndex: 0,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 1,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 1,
-              lineFeedCount: 0,
-              color: Color.Red,
-              parent: SENTINEL_INDEX,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-          ],
-          root: 0,
-          previouslyInsertedNodeIndex: 0,
-          previouslyInsertedNodeOffset: 0,
-        });
-        const expectedPage = getPage();
-        expectedPage.nodes[0].color = Color.Black;
-        const page = getPage();
-        const receivedPage = fixInsert(page, 0);
-        expect(receivedPage).toEqual(expectedPage);
-      });
     });
 
     describe("red uncle cases", () => {
@@ -2536,6 +2494,48 @@ describe("page/tree/insert", () => {
         const receivedPage = fixInsert(page, 3);
         expect(receivedPage).toEqual(expectedPage);
       });
+    });
+
+    test("Inserted node is root", () => {
+      const getPage = (): PageContent => ({
+        buffers: [
+          {
+            isReadOnly: false,
+            lineStarts: [0],
+            content: "a",
+          },
+        ],
+        newlineFormat: NEWLINE.LF,
+        nodes: [
+          {
+            bufferIndex: 0,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 1,
+            },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 1,
+            lineFeedCount: 0,
+            color: Color.Red,
+            parent: SENTINEL_INDEX,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+        root: 0,
+        previouslyInsertedNodeIndex: 0,
+        previouslyInsertedNodeOffset: 0,
+      });
+      const expectedPage = getPage();
+      expectedPage.nodes[0].color = Color.Black;
+      const page = getPage();
+      const receivedPage = fixInsert(page, 0);
+      expect(receivedPage).toEqual(expectedPage);
     });
   });
 });
