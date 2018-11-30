@@ -1234,900 +1234,900 @@ describe("page/tree/insert", () => {
   });
 
   describe("fix insert functions", () => {
-    describe("fixInsert tests", () => {
-      test("Scenario 1: Left left case", () => {
-        const page: PageContent = {
-          buffers: [],
-          root: 0,
-          newlineFormat: NEWLINE.LF,
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
-          nodes: [
-            {
-              // g
-              bufferIndex: 0,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 20,
-              leftLineFeedCount: 4,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 1,
-              right: 2,
+    test("Scenario 1: Left left case", () => {
+      const page: PageContent = {
+        buffers: [],
+        root: 0,
+        newlineFormat: NEWLINE.LF,
+        previouslyInsertedNodeIndex: null,
+        previouslyInsertedNodeOffset: null,
+        nodes: [
+          {
+            // g
+            bufferIndex: 0,
+            start: {
+              line: 0,
+              column: 0,
             },
-            {
-              // p,
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 0,
-              left: 3,
-              right: 4,
+            end: {
+              line: 0,
+              column: 0,
             },
-            {
-              // u
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 0,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            leftCharCount: 20,
+            leftLineFeedCount: 4,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: 1,
+            right: 2,
+          },
+          {
+            // p,
+            bufferIndex: 1,
+            start: {
+              line: 0,
+              column: 0,
             },
-            {
-              // x
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 1,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            end: {
+              line: 0,
+              column: 0,
             },
-            {
-              // T3
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 1,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Red,
+            parent: 0,
+            left: 3,
+            right: 4,
+          },
+          {
+            // u
+            bufferIndex: 2,
+            start: {
+              line: 0,
+              column: 0,
             },
-          ],
-        };
-        const expectedPage: PageContent = {
-          buffers: [],
-          root: 1,
-          newlineFormat: NEWLINE.LF,
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
-          nodes: [
-            {
-              // g
-              bufferIndex: 0,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 1,
-              left: 4,
-              right: 2,
+            end: {
+              line: 0,
+              column: 0,
             },
-            {
-              // p
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 3,
-              right: 0,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            // x
+            bufferIndex: 3,
+            start: {
+              line: 0,
+              column: 0,
             },
-            {
-              // u
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 0,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            end: {
+              line: 0,
+              column: 0,
             },
-            {
-              // x
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 1,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Red,
+            parent: 1,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            // T3
+            bufferIndex: 4,
+            start: {
+              line: 0,
+              column: 0,
             },
-            {
-              // T3
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 0,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            end: {
+              line: 0,
+              column: 0,
             },
-          ],
-        };
-        const acquiredPage = fixInsert(page, 3);
-        expect(acquiredPage).toEqual(expectedPage);
-      });
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: 1,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+      };
+      const expectedPage: PageContent = {
+        buffers: [],
+        root: 1,
+        newlineFormat: NEWLINE.LF,
+        previouslyInsertedNodeIndex: null,
+        previouslyInsertedNodeOffset: null,
+        nodes: [
+          {
+            // g
+            bufferIndex: 0,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 10,
+            leftLineFeedCount: 2,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Red,
+            parent: 1,
+            left: 4,
+            right: 2,
+          },
+          {
+            // p
+            bufferIndex: 1,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 10,
+            leftLineFeedCount: 2,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: 3,
+            right: 0,
+          },
+          {
+            // u
+            bufferIndex: 2,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            // x
+            bufferIndex: 3,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Red,
+            parent: 1,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            // T3
+            bufferIndex: 4,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+      };
+      const acquiredPage = fixInsert(page, 3);
+      expect(acquiredPage).toEqual(expectedPage);
+    });
 
-      test("Scenario 2: Left right case", () => {
-        const page: PageContent = {
-          buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
-          newlineFormat: NEWLINE.LF,
-          root: 0,
-          nodes: [
-            {
-              // g
-              bufferIndex: 0,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 20,
-              leftLineFeedCount: 4,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 1,
-              right: 2,
+    test("Scenario 2: Left right case", () => {
+      const page: PageContent = {
+        buffers: [],
+        previouslyInsertedNodeIndex: null,
+        previouslyInsertedNodeOffset: null,
+        newlineFormat: NEWLINE.LF,
+        root: 0,
+        nodes: [
+          {
+            // g
+            bufferIndex: 0,
+            start: {
+              line: 0,
+              column: 0,
             },
-            {
-              // p
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 0,
-              left: 3,
-              right: 4,
+            end: {
+              line: 0,
+              column: 0,
             },
-            {
-              // u
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 0,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            leftCharCount: 20,
+            leftLineFeedCount: 4,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: 1,
+            right: 2,
+          },
+          {
+            // p
+            bufferIndex: 1,
+            start: {
+              line: 0,
+              column: 0,
             },
-            {
-              // T1
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 1,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            end: {
+              line: 0,
+              column: 0,
             },
-            {
-              // x
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 1,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            leftCharCount: 10,
+            leftLineFeedCount: 2,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Red,
+            parent: 0,
+            left: 3,
+            right: 4,
+          },
+          {
+            // u
+            bufferIndex: 2,
+            start: {
+              line: 0,
+              column: 0,
             },
-          ],
-        };
-        const expectedPage: PageContent = {
-          buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
-          newlineFormat: NEWLINE.LF,
-          root: 4,
-          nodes: [
-            {
-              // g
-              bufferIndex: 0,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 4,
-              left: SENTINEL_INDEX,
-              right: 2,
+            end: {
+              line: 0,
+              column: 0,
             },
-            {
-              // p
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 4,
-              left: 3,
-              right: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            // T1
+            bufferIndex: 3,
+            start: {
+              line: 0,
+              column: 0,
             },
-            {
-              // u
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 0,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            end: {
+              line: 0,
+              column: 0,
             },
-            {
-              // T1
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 1,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: 1,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            // x
+            bufferIndex: 4,
+            start: {
+              line: 0,
+              column: 0,
             },
-            {
-              // x
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 20,
-              leftLineFeedCount: 4,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 1,
-              right: 0,
+            end: {
+              line: 0,
+              column: 0,
             },
-          ],
-        };
-        const acquiredPage = fixInsert(page, 4);
-        expect(acquiredPage).toEqual(expectedPage);
-      });
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Red,
+            parent: 1,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+      };
+      const expectedPage: PageContent = {
+        buffers: [],
+        previouslyInsertedNodeIndex: null,
+        previouslyInsertedNodeOffset: null,
+        newlineFormat: NEWLINE.LF,
+        root: 4,
+        nodes: [
+          {
+            // g
+            bufferIndex: 0,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Red,
+            parent: 4,
+            left: SENTINEL_INDEX,
+            right: 2,
+          },
+          {
+            // p
+            bufferIndex: 1,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 10,
+            leftLineFeedCount: 2,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Red,
+            parent: 4,
+            left: 3,
+            right: SENTINEL_INDEX,
+          },
+          {
+            // u
+            bufferIndex: 2,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            // T1
+            bufferIndex: 3,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: 1,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            // x
+            bufferIndex: 4,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 20,
+            leftLineFeedCount: 4,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: 1,
+            right: 0,
+          },
+        ],
+      };
+      const acquiredPage = fixInsert(page, 4);
+      expect(acquiredPage).toEqual(expectedPage);
+    });
 
-      test("Scenario 3: Right right case", () => {
-        const page: PageContent = {
-          buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
-          newlineFormat: NEWLINE.LF,
-          root: 0,
-          nodes: [
-            {
-              // g
-              bufferIndex: 0,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 1,
-              right: 2,
+    test("Scenario 3: Right right case", () => {
+      const page: PageContent = {
+        buffers: [],
+        previouslyInsertedNodeIndex: null,
+        previouslyInsertedNodeOffset: null,
+        newlineFormat: NEWLINE.LF,
+        root: 0,
+        nodes: [
+          {
+            // g
+            bufferIndex: 0,
+            start: {
+              line: 0,
+              column: 0,
             },
-            {
-              // u
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 0,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            end: {
+              line: 0,
+              column: 0,
             },
-            {
-              // p
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 0,
-              left: 3,
-              right: 4,
+            leftCharCount: 10,
+            leftLineFeedCount: 2,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: 1,
+            right: 2,
+          },
+          {
+            // u
+            bufferIndex: 1,
+            start: {
+              line: 0,
+              column: 0,
             },
-            {
-              // T3
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            end: {
+              line: 0,
+              column: 0,
             },
-            {
-              // x
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            // p
+            bufferIndex: 2,
+            start: {
+              line: 0,
+              column: 0,
             },
-          ],
-        };
-        const expectedPage: PageContent = {
-          buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
-          newlineFormat: NEWLINE.LF,
-          root: 2,
-          nodes: [
-            {
-              // g
-              bufferIndex: 0,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 2,
-              left: 1,
-              right: 3,
+            end: {
+              line: 0,
+              column: 0,
             },
-            {
-              // u
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 0,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            leftCharCount: 10,
+            leftLineFeedCount: 2,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Red,
+            parent: 0,
+            left: 3,
+            right: 4,
+          },
+          {
+            // T3
+            bufferIndex: 3,
+            start: {
+              line: 0,
+              column: 0,
             },
-            {
-              // p
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 30,
-              leftLineFeedCount: 6,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 0,
-              right: 4,
+            end: {
+              line: 0,
+              column: 0,
             },
-            {
-              // T3
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 0,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: 2,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            // x
+            bufferIndex: 4,
+            start: {
+              line: 0,
+              column: 0,
             },
-            {
-              // x
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            end: {
+              line: 0,
+              column: 0,
             },
-          ],
-        };
-        const acquiredPage = fixInsert(page, 4);
-        expect(acquiredPage).toEqual(expectedPage);
-      });
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Red,
+            parent: 2,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+      };
+      const expectedPage: PageContent = {
+        buffers: [],
+        previouslyInsertedNodeIndex: null,
+        previouslyInsertedNodeOffset: null,
+        newlineFormat: NEWLINE.LF,
+        root: 2,
+        nodes: [
+          {
+            // g
+            bufferIndex: 0,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 10,
+            leftLineFeedCount: 2,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Red,
+            parent: 2,
+            left: 1,
+            right: 3,
+          },
+          {
+            // u
+            bufferIndex: 1,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            // p
+            bufferIndex: 2,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 30,
+            leftLineFeedCount: 6,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: 0,
+            right: 4,
+          },
+          {
+            // T3
+            bufferIndex: 3,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            // x
+            bufferIndex: 4,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Red,
+            parent: 2,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+      };
+      const acquiredPage = fixInsert(page, 4);
+      expect(acquiredPage).toEqual(expectedPage);
+    });
 
-      test("Scenario 4: Right left case", () => {
-        const page: PageContent = {
-          buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
-          newlineFormat: NEWLINE.LF,
-          root: 0,
-          nodes: [
-            {
-              // g
-              bufferIndex: 0,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 1,
-              right: 2,
+    test("Scenario 4: Right left case", () => {
+      const page: PageContent = {
+        buffers: [],
+        previouslyInsertedNodeIndex: null,
+        previouslyInsertedNodeOffset: null,
+        newlineFormat: NEWLINE.LF,
+        root: 0,
+        nodes: [
+          {
+            // g
+            bufferIndex: 0,
+            start: {
+              line: 0,
+              column: 0,
             },
-            {
-              // u
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 0,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            end: {
+              line: 0,
+              column: 0,
             },
-            {
-              // p
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 0,
-              left: 3,
-              right: 4,
+            leftCharCount: 10,
+            leftLineFeedCount: 2,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: 1,
+            right: 2,
+          },
+          {
+            // u
+            bufferIndex: 1,
+            start: {
+              line: 0,
+              column: 0,
             },
-            {
-              // x
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            end: {
+              line: 0,
+              column: 0,
             },
-            {
-              // T5
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            // p
+            bufferIndex: 2,
+            start: {
+              line: 0,
+              column: 0,
             },
-          ],
-        };
-        const expectedPage: PageContent = {
-          buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
-          newlineFormat: NEWLINE.LF,
-          root: 3,
-          nodes: [
-            {
-              // g
-              bufferIndex: 0,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 3,
-              left: 1,
-              right: SENTINEL_INDEX,
+            end: {
+              line: 0,
+              column: 0,
             },
-            {
-              // u
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 0,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Red,
+            parent: 0,
+            left: 3,
+            right: 4,
+          },
+          {
+            // x
+            bufferIndex: 3,
+            start: {
+              line: 0,
+              column: 0,
             },
-            {
-              // p
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 3,
-              left: SENTINEL_INDEX,
-              right: 4,
+            end: {
+              line: 0,
+              column: 0,
             },
-            {
-              // x
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 20,
-              leftLineFeedCount: 4,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 0,
-              right: 2,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Red,
+            parent: 2,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            // T5
+            bufferIndex: 4,
+            start: {
+              line: 0,
+              column: 0,
             },
-            {
-              // T5
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
+            end: {
+              line: 0,
+              column: 0,
             },
-          ],
-        };
-        const acquiredPage = fixInsert(page, 3);
-        expect(acquiredPage).toEqual(expectedPage);
-      });
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: 2,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+      };
+      const expectedPage: PageContent = {
+        buffers: [],
+        previouslyInsertedNodeIndex: null,
+        previouslyInsertedNodeOffset: null,
+        newlineFormat: NEWLINE.LF,
+        root: 3,
+        nodes: [
+          {
+            // g
+            bufferIndex: 0,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 10,
+            leftLineFeedCount: 2,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Red,
+            parent: 3,
+            left: 1,
+            right: SENTINEL_INDEX,
+          },
+          {
+            // u
+            bufferIndex: 1,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: 0,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            // p
+            bufferIndex: 2,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Red,
+            parent: 3,
+            left: SENTINEL_INDEX,
+            right: 4,
+          },
+          {
+            // x
+            bufferIndex: 3,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 20,
+            leftLineFeedCount: 4,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: 0,
+            right: 2,
+          },
+          {
+            // T5
+            bufferIndex: 4,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: 2,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+      };
+      const acquiredPage = fixInsert(page, 3);
+      expect(acquiredPage).toEqual(expectedPage);
+    });
 
-      const getScenario5Page = (): PageContent => ({
+    test("Scenario 5: Inserted node is root", () => {
+      const getPage = (): PageContent => ({
         buffers: [
           {
             isReadOnly: false,
@@ -2161,14 +2161,11 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeIndex: 0,
         previouslyInsertedNodeOffset: 0,
       });
-
-      test("Scenario 5: Inserted node is root", () => {
-        const expectedPage = getScenario5Page();
-        expectedPage.nodes[0].color = Color.Black;
-        const page = getScenario5Page();
-        const receivedPage = fixInsert(page, 0);
-        expect(receivedPage).toEqual(expectedPage);
-      });
+      const expectedPage = getPage();
+      expectedPage.nodes[0].color = Color.Black;
+      const page = getPage();
+      const receivedPage = fixInsert(page, 0);
+      expect(receivedPage).toEqual(expectedPage);
     });
   });
 });
