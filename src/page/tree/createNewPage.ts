@@ -1,5 +1,5 @@
 import { OnenotePage } from "@microsoft/microsoft-graph-types";
-import { Color, IBuffer, INode, IPageContent } from "../model";
+import { Buffer, Color, Node, PageContent } from "../model";
 import { SENTINEL_INDEX } from "../reducer";
 import { getLineStarts, getNewlineFormat } from "./tree";
 
@@ -7,9 +7,9 @@ import { getLineStarts, getNewlineFormat } from "./tree";
  * Creates a new page, and its associated piece table.
  * @param receivedPage The received page from the Microsoft Graph.
  */
-export function createNewPage(receivedPage: OnenotePage): IPageContent {
+export function createNewPage(receivedPage: OnenotePage): PageContent {
   const newlineFormat = getNewlineFormat(receivedPage.content);
-  const buffer: IBuffer = {
+  const buffer: Buffer = {
     isReadOnly: true,
     lineStarts: getLineStarts(receivedPage.content, newlineFormat),
     content: receivedPage.content,
@@ -18,7 +18,7 @@ export function createNewPage(receivedPage: OnenotePage): IPageContent {
   const finalLineInitialCharIndex = buffer.lineStarts[finalLine];
   const finalCharColumn =
     receivedPage.content.length - finalLineInitialCharIndex;
-  const node: INode = {
+  const node: Node = {
     bufferIndex: 0,
     start: { line: 0, column: 0 },
     end: { line: finalLine, column: finalCharColumn },

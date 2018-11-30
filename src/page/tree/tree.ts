@@ -2,13 +2,7 @@
  * Contains common items.
  */
 
-import {
-  CharValues,
-  IBufferCursor,
-  INode,
-  IPageContent,
-  NEWLINE,
-} from "../model";
+import { BufferCursor, CharValues, NEWLINE, Node, PageContent } from "../model";
 import { SENTINEL_INDEX } from "../reducer";
 
 /**
@@ -19,11 +13,11 @@ export const MAX_BUFFER_LENGTH = 65535;
 /**
  * The returned object from `findNodeAtOffset`.
  */
-export interface INodePosition {
+export interface NodePosition {
   /**
    * Piece Index
    */
-  node: INode;
+  node: Node;
 
   /**
    * The index of the node inside the array.
@@ -49,11 +43,11 @@ export interface INodePosition {
  */
 export function findNodeAtOffset(
   offset: number,
-  nodes: INode[],
+  nodes: Node[],
   root: number,
-): INodePosition {
+): NodePosition {
   let xIndex = root;
-  let x: INode = nodes[xIndex];
+  let x: Node = nodes[xIndex];
   let nodeStartOffset = 0;
 
   while (xIndex !== SENTINEL_INDEX) {
@@ -153,7 +147,7 @@ export function getLineStarts(
  * @param nodeIndex The index of the node in `page.nodes`.
  * @param page The page/piece table.
  */
-export function getNodeContent(nodeIndex: number, page: IPageContent): string {
+export function getNodeContent(nodeIndex: number, page: PageContent): string {
   if (nodeIndex === SENTINEL_INDEX) {
     return "";
   }
@@ -173,8 +167,8 @@ export function getNodeContent(nodeIndex: number, page: IPageContent): string {
  */
 export function getOffsetInBuffer(
   bufferIndex: number,
-  cursor: IBufferCursor,
-  page: IPageContent,
+  cursor: BufferCursor,
+  page: PageContent,
 ) {
   const lineStarts = page.buffers[bufferIndex].lineStarts;
   return lineStarts[cursor.line] + cursor.column;

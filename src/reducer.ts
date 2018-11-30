@@ -1,9 +1,9 @@
 import { combineReducers, ReducersMapObject } from "redux";
-import { IStatePages } from "./page/model";
+import { StatePages } from "./page/model";
 import pageReducer from "./page/reducer";
 
-export interface IState {
-  pages: IStatePages;
+export interface State {
+  pages: StatePages;
 }
 
 const reducers: ReducersMapObject = {

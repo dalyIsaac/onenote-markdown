@@ -1,9 +1,9 @@
-import { Color, INode } from "../model";
+import { Color, Node } from "../model";
 import { SENTINEL_INDEX } from "../reducer";
 import { findNodeAtOffset } from "./tree";
 
 describe("page/tree/tree", () => {
-  const getFinalTree = (): { nodes: INode[]; root: number } => ({
+  const getFinalTree = (): { nodes: Node[]; root: number } => ({
     nodes: [
       {
         bufferIndex: 1,

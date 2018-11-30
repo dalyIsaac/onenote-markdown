@@ -11,6 +11,7 @@
       "check-format",
       "allow-leading-underscore"
     ],
-    "no-bitwise": false
+    "no-bitwise": false,
+    "interface-name": [true, "never-prefix"]
   }
 }

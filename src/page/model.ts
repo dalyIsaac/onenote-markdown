@@ -17,7 +17,7 @@ export const NEWLINE = {
 /**
  * Represents a buffer for a piece table.
  */
-export interface IBuffer {
+export interface Buffer {
   /**
    * Indicates whether this buffer is an **original content** or an **added content** buffer.
    */
@@ -37,7 +37,7 @@ export interface IBuffer {
 /**
  * Represents a location inside a buffer.
  */
-export interface IBufferCursor {
+export interface BufferCursor {
   column: number;
   line: number;
 }
@@ -53,7 +53,7 @@ export enum Color {
 /**
  * Represents a "piece" inside the piece table.
  */
-export interface INode {
+export interface Node {
   /**
    * The index of the buffer which this node refers to.
    */
@@ -62,12 +62,12 @@ export interface INode {
   /**
    * The start cursor for this piece, within the buffer.
    */
-  start: IBufferCursor;
+  start: BufferCursor;
 
   /**
    * The end cursor for this piece, within the buffer.
    */
-  end: IBufferCursor;
+  end: BufferCursor;
 
   /**
    * The count of the number of characters in the left subtree of this node.
@@ -113,11 +113,11 @@ export interface INode {
 /**
  * Represents the piece table for a single Onenote page.
  */
-export interface IPageContent {
+export interface PageContent {
   /**
    * Array of the buffers for the piece table.
    */
-  buffers: IBuffer[];
+  buffers: Buffer[];
 
   /**
    * The newline format, which is determined by the received content from the Microsoft Graph.
@@ -127,7 +127,7 @@ export interface IPageContent {
   /**
    * The nodes of the piece table.
    */
-  nodes: INode[];
+  nodes: Node[];
 
   /**
    * The index of the root node for the piece table for this page.
@@ -146,6 +146,6 @@ export interface IPageContent {
 /**
  * Represents the content of all the piece tables.
  */
-export interface IStatePages {
-  [key: string]: IPageContent;
+export interface StatePages {
+  [key: string]: PageContent;
 }

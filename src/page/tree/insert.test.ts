@@ -1,10 +1,10 @@
-import { Color, IPageContent, NEWLINE } from "../model";
+import { Color, NEWLINE, PageContent } from "../model";
 import { SENTINEL_INDEX } from "../reducer";
 import {
   calculateCharCount,
   calculateLineFeedCount,
+  ContentInsert,
   fixInsert,
-  IContentInsert,
   insertContent,
   recomputeTreeMetadata,
 } from "./insert";
@@ -13,7 +13,7 @@ import { MAX_BUFFER_LENGTH } from "./tree";
 describe("page/tree/insert", () => {
   describe("insert functions", () => {
     test("Scenario 1: insert at the end of the previously inserted node", () => {
-      const getPage = (): IPageContent => ({
+      const getPage = (): PageContent => ({
         buffers: [
           {
             isReadOnly: false,
@@ -59,7 +59,7 @@ describe("page/tree/insert", () => {
         color: Color.Black,
       };
       const page = getPage();
-      const content: IContentInsert = {
+      const content: ContentInsert = {
         content: "b",
         offset: 1,
       };
@@ -68,7 +68,7 @@ describe("page/tree/insert", () => {
     });
 
     test("Scenario 2: insert at the end of the previously inserted node", () => {
-      const getPage = (): IPageContent => ({
+      const getPage = (): PageContent => ({
         buffers: [
           {
             isReadOnly: false,
@@ -131,7 +131,7 @@ describe("page/tree/insert", () => {
       expectedPage.previouslyInsertedNodeIndex = 1;
       expectedPage.previouslyInsertedNodeOffset = 5;
       const page = getPage();
-      const content: IContentInsert = {
+      const content: ContentInsert = {
         content: "ef",
         offset: 5,
       };
@@ -141,7 +141,7 @@ describe("page/tree/insert", () => {
     });
 
     test("Scenario 3: insert at the end of a node (test 1)", () => {
-      const getPage = (): IPageContent => ({
+      const getPage = (): PageContent => ({
         buffers: [
           {
             isReadOnly: true,
@@ -230,7 +230,7 @@ describe("page/tree/insert", () => {
       expectedPage.nodes[2].color = Color.Black;
       expectedPage.previouslyInsertedNodeIndex = 3;
       expectedPage.previouslyInsertedNodeOffset = 2;
-      const content: IContentInsert = {
+      const content: ContentInsert = {
         content: "ij\nk",
         offset: 2,
       };
@@ -240,7 +240,7 @@ describe("page/tree/insert", () => {
     });
 
     test("Scenario 3: insert at the end of a node (test 2)", () => {
-      const getPage = (): IPageContent => ({
+      const getPage = (): PageContent => ({
         buffers: [
           {
             isReadOnly: true,
@@ -327,7 +327,7 @@ describe("page/tree/insert", () => {
       expectedPage.nodes[2].color = Color.Black;
       expectedPage.previouslyInsertedNodeIndex = 3;
       expectedPage.previouslyInsertedNodeOffset = 9;
-      const content: IContentInsert = {
+      const content: ContentInsert = {
         content: "ij\nk",
         offset: 9,
       };
@@ -337,7 +337,7 @@ describe("page/tree/insert", () => {
     });
 
     test("Scenario 4: insert at the end of a node (test 1)", () => {
-      const getPage = (): IPageContent => ({
+      const getPage = (): PageContent => ({
         buffers: [
           {
             isReadOnly: true,
@@ -429,7 +429,7 @@ describe("page/tree/insert", () => {
       expectedPage.nodes[2].color = Color.Black;
       expectedPage.previouslyInsertedNodeIndex = 3;
       expectedPage.previouslyInsertedNodeOffset = 2;
-      const content: IContentInsert = {
+      const content: ContentInsert = {
         content: "ij\nkl",
         offset: 2,
       };
@@ -439,7 +439,7 @@ describe("page/tree/insert", () => {
     });
 
     test("Scenario 4: insert at the end of a node (test 2)", () => {
-      const getPage = (): IPageContent => ({
+      const getPage = (): PageContent => ({
         buffers: [
           {
             isReadOnly: true,
@@ -494,7 +494,7 @@ describe("page/tree/insert", () => {
       });
       expectedPage.nodes[0].right = 1;
       const page = getPage();
-      const content: IContentInsert = {
+      const content: ContentInsert = {
         content: "ef",
         offset: 5,
       };
@@ -506,7 +506,7 @@ describe("page/tree/insert", () => {
     });
 
     test("Scenario 5: insert at the start of the content", () => {
-      const page: IPageContent = {
+      const page: PageContent = {
         buffers: [
           {
             isReadOnly: true,
@@ -558,7 +558,7 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeIndex: 1,
         previouslyInsertedNodeOffset: 0,
       };
-      const expectedPage: IPageContent = {
+      const expectedPage: PageContent = {
         buffers: [
           {
             isReadOnly: true,
@@ -623,7 +623,7 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeIndex: 2,
         previouslyInsertedNodeOffset: 0,
       };
-      const content: IContentInsert = {
+      const content: ContentInsert = {
         content: "gh\nij",
         offset: 0,
       };
@@ -633,7 +633,7 @@ describe("page/tree/insert", () => {
     });
 
     test("Scenario 6: insert at the start of the content (test 1)", () => {
-      const page: IPageContent = {
+      const page: PageContent = {
         buffers: [
           {
             isReadOnly: false,
@@ -680,7 +680,7 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeIndex: 1,
         previouslyInsertedNodeOffset: 0,
       };
-      const expectedPage: IPageContent = {
+      const expectedPage: PageContent = {
         buffers: [
           {
             isReadOnly: false,
@@ -745,7 +745,7 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeIndex: 2,
         previouslyInsertedNodeOffset: 0,
       };
-      const content: IContentInsert = {
+      const content: ContentInsert = {
         content: "gh\nij",
         offset: 0,
       };
@@ -755,7 +755,7 @@ describe("page/tree/insert", () => {
     });
 
     test("Scenario 6: insert at the start of the content (test 2)", () => {
-      const page: IPageContent = {
+      const page: PageContent = {
         buffers: [
           {
             isReadOnly: true,
@@ -789,7 +789,7 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeIndex: null,
         previouslyInsertedNodeOffset: null,
       };
-      const expectedPage: IPageContent = {
+      const expectedPage: PageContent = {
         buffers: [
           {
             isReadOnly: true,
@@ -841,7 +841,7 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeIndex: 1,
         previouslyInsertedNodeOffset: 0,
       };
-      const content: IContentInsert = {
+      const content: ContentInsert = {
         content: "ef",
         offset: 0,
       };
@@ -851,7 +851,7 @@ describe("page/tree/insert", () => {
     });
 
     test("Scenario 7: insert inside a node's content", () => {
-      const page: IPageContent = {
+      const page: PageContent = {
         buffers: [
           {
             isReadOnly: false,
@@ -905,7 +905,7 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeIndex: 2,
         previouslyInsertedNodeOffset: 7,
       };
-      const expectedPage: IPageContent = {
+      const expectedPage: PageContent = {
         buffers: [
           {
             isReadOnly: false,
@@ -985,7 +985,7 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeIndex: 4,
         previouslyInsertedNodeOffset: 5,
       };
-      const content: IContentInsert = {
+      const content: ContentInsert = {
         content: "ij\nkl",
         offset: 5,
       };
@@ -995,7 +995,7 @@ describe("page/tree/insert", () => {
     });
 
     test("Scenario 8: insert inside a node's content (test 1)", () => {
-      const page: IPageContent = {
+      const page: PageContent = {
         buffers: [
           {
             isReadOnly: false,
@@ -1049,7 +1049,7 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeIndex: 2,
         previouslyInsertedNodeOffset: 7,
       };
-      const expectedPage: IPageContent = {
+      const expectedPage: PageContent = {
         buffers: [
           {
             isReadOnly: false,
@@ -1134,7 +1134,7 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeOffset: 8,
         root: 0,
       };
-      const content: IContentInsert = {
+      const content: ContentInsert = {
         offset: 8,
         content: "ij\nkl\nmn",
       };
@@ -1144,7 +1144,7 @@ describe("page/tree/insert", () => {
     });
 
     test("Scenario 8: insert inside a node's content (test 2", () => {
-      const page: IPageContent = {
+      const page: PageContent = {
         buffers: [
           {
             isReadOnly: true,
@@ -1172,7 +1172,7 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeIndex: null,
         previouslyInsertedNodeOffset: null,
       };
-      const expectedPage: IPageContent = {
+      const expectedPage: PageContent = {
         buffers: [
           {
             isReadOnly: true,
@@ -1231,7 +1231,7 @@ describe("page/tree/insert", () => {
         newlineFormat: NEWLINE.LF,
         root: 2,
       };
-      const content: IContentInsert = {
+      const content: ContentInsert = {
         offset: 1,
         content: "ef",
       };
@@ -1242,7 +1242,7 @@ describe("page/tree/insert", () => {
   });
 
   describe("fix insert functions", () => {
-    const getPage = (): IPageContent => ({
+    const getPage = (): PageContent => ({
       buffers: [],
       nodes: [
         {
@@ -1372,7 +1372,7 @@ describe("page/tree/insert", () => {
 
     describe("fixInsert tests", () => {
       test("Scenario 1: Left left case", () => {
-        const page: IPageContent = {
+        const page: PageContent = {
           buffers: [],
           root: 0,
           newlineFormat: NEWLINE.LF,
@@ -1481,7 +1481,7 @@ describe("page/tree/insert", () => {
             },
           ],
         };
-        const expectedPage: IPageContent = {
+        const expectedPage: PageContent = {
           buffers: [],
           root: 1,
           newlineFormat: NEWLINE.LF,
@@ -1595,7 +1595,7 @@ describe("page/tree/insert", () => {
       });
 
       test("Scenario 2: Left right case", () => {
-        const page: IPageContent = {
+        const page: PageContent = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -1704,7 +1704,7 @@ describe("page/tree/insert", () => {
             },
           ],
         };
-        const expectedPage: IPageContent = {
+        const expectedPage: PageContent = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -1818,7 +1818,7 @@ describe("page/tree/insert", () => {
       });
 
       test("Scenario 3: Right right case", () => {
-        const page: IPageContent = {
+        const page: PageContent = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -1927,7 +1927,7 @@ describe("page/tree/insert", () => {
             },
           ],
         };
-        const expectedPage: IPageContent = {
+        const expectedPage: PageContent = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -2041,7 +2041,7 @@ describe("page/tree/insert", () => {
       });
 
       test("Scenario 4: Right left case", () => {
-        const page: IPageContent = {
+        const page: PageContent = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -2150,7 +2150,7 @@ describe("page/tree/insert", () => {
             },
           ],
         };
-        const expectedPage: IPageContent = {
+        const expectedPage: PageContent = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -2263,7 +2263,7 @@ describe("page/tree/insert", () => {
         expect(acquiredPage).toEqual(expectedPage);
       });
 
-      const getScenario5Page = (): IPageContent => ({
+      const getScenario5Page = (): PageContent => ({
         buffers: [
           {
             isReadOnly: false,

@@ -1,17 +1,17 @@
-import { Color, IBuffer, INode, IPageContent } from "../model";
+import { Buffer, Color, Node, PageContent } from "../model";
 import { SENTINEL_INDEX } from "../reducer";
 import { leftRotate, rightRotate } from "./rotate";
 import {
   findNodeAtOffset,
   getLineStarts,
   getNodeContent,
-  INodePosition,
+  NodePosition,
 } from "./tree";
 
 /**
  * The desired content and offset for an insertion operation.
  */
-export interface IContentInsert {
+export interface ContentInsert {
   content: string;
   offset: number;
 }
@@ -23,12 +23,12 @@ export interface IContentInsert {
  * @param maxBufferLength The maximum length of a buffer's content/string.
  */
 export function insertContent(
-  content: IContentInsert,
-  page: IPageContent,
+  content: ContentInsert,
+  page: PageContent,
   maxBufferLength: number,
-): IPageContent {
-  let previouslyInsertedNode: INode | undefined;
-  let newPage: IPageContent | undefined;
+): PageContent {
+  let previouslyInsertedNode: Node | undefined;
+  let newPage: PageContent | undefined;
 
   if (
     page.previouslyInsertedNodeIndex != null &&
@@ -72,7 +72,7 @@ export function insertContent(
  * @param page The page/piece table.
  * @param xIndex The index of the node in the `node` array, which is the basis for fixing the tree.
  */
-export function fixInsert(page: IPageContent, xIndex: number): IPageContent {
+export function fixInsert(page: PageContent, xIndex: number): PageContent {
   page = recomputeTreeMetadata({ ...page }, xIndex);
   let x = { ...page.nodes[xIndex] };
   page.nodes[xIndex] = x;
@@ -176,9 +176,9 @@ export function fixInsert(page: IPageContent, xIndex: number): IPageContent {
  * @param index The index of the node in the `node` array, which is the basis for updating the tree.
  */
 export function recomputeTreeMetadata(
-  page: IPageContent,
+  page: PageContent,
   xIndex: number,
-): IPageContent {
+): PageContent {
   let lengthDelta = 0;
   let lineFeedDelta = 0;
   if (xIndex === page.root) {
@@ -233,7 +233,7 @@ export function recomputeTreeMetadata(
  * @param page The page/piece table
  * @param index The index of the node in the `node` array of the page/piece table to find the character count for.
  */
-export function calculateCharCount(page: IPageContent, index: number): number {
+export function calculateCharCount(page: PageContent, index: number): number {
   if (index === SENTINEL_INDEX) {
     return 0;
   }
@@ -249,7 +249,7 @@ export function calculateCharCount(page: IPageContent, index: number): number {
  * @param index The index of the node in the `node` array of the page/piece table to find the line feed count for.
  */
 export function calculateLineFeedCount(
-  page: IPageContent,
+  page: PageContent,
   index: number,
 ): number {
   if (index === SENTINEL_INDEX) {
@@ -270,10 +270,10 @@ export function calculateLineFeedCount(
  * @param maxBufferLength The maximum length of a buffer's content/string.
  */
 function insertAtEndPreviouslyInsertedNode(
-  content: IContentInsert,
-  page: IPageContent,
+  content: ContentInsert,
+  page: PageContent,
   maxBufferLength: number,
-): IPageContent {
+): PageContent {
   // check buffer size
   if (
     content.content.length +
@@ -285,13 +285,13 @@ function insertAtEndPreviouslyInsertedNode(
     // appends to the previous buffer
     const oldBuffer = page.buffers[page.buffers.length - 1];
     const newContent = oldBuffer.content + content.content;
-    const buffer: IBuffer = {
+    const buffer: Buffer = {
       isReadOnly: oldBuffer.isReadOnly,
       content: newContent,
       lineStarts: getLineStarts(newContent, page.newlineFormat),
     };
 
-    const node: INode = {
+    const node: Node = {
       ...page.nodes[page.nodes.length - 1],
       end: {
         line: buffer.lineStarts.length - 1,
@@ -303,7 +303,7 @@ function insertAtEndPreviouslyInsertedNode(
     };
     node.length += content.content.length;
 
-    const newPage: IPageContent = {
+    const newPage: PageContent = {
       ...page,
     };
     newPage.buffers[newPage.buffers.length - 1] = buffer;
@@ -325,11 +325,11 @@ function insertAtEndPreviouslyInsertedNode(
  * @param nodePosition Information about the node which contains the offset which the content is to be inserted at.
  */
 function insertInsideNode(
-  content: IContentInsert,
-  page: IPageContent,
+  content: ContentInsert,
+  page: PageContent,
   maxBufferLength: number,
-  nodePosition: INodePosition,
-): IPageContent {
+  nodePosition: NodePosition,
+): PageContent {
   const oldNode = nodePosition.node;
   const nodeContent = getNodeContent(nodePosition.nodeIndex, page);
   const firstPartContent = nodeContent.slice(0, nodePosition.remainder);
@@ -338,7 +338,7 @@ function insertInsideNode(
     page.newlineFormat,
   );
 
-  const firstPartNode: INode = {
+  const firstPartNode: Node = {
     ...oldNode,
     end: {
       line: firstPartLineStarts.length - 1 + oldNode.start.line,
@@ -351,10 +351,10 @@ function insertInsideNode(
     lineFeedCount: firstPartLineStarts.length - 1,
   };
 
-  let newPage: IPageContent = { ...page, nodes: [...page.nodes] };
+  let newPage: PageContent = { ...page, nodes: [...page.nodes] };
   newPage.nodes[nodePosition.nodeIndex] = firstPartNode;
 
-  const secondPartNode: INode = {
+  const secondPartNode: Node = {
     bufferIndex: oldNode.bufferIndex,
     start: firstPartNode.end,
     end: oldNode.end,
@@ -385,10 +385,10 @@ function insertInsideNode(
  * @param maxBufferLength The maximum length of a buffer's content/string.
  */
 function insertAtNodeExtremity(
-  content: IContentInsert,
-  page: IPageContent,
+  content: ContentInsert,
+  page: PageContent,
   maxBufferLength: number,
-): IPageContent {
+): PageContent {
   // check buffer size
   if (
     content.content.length +
@@ -413,15 +413,15 @@ function insertAtNodeExtremity(
  * @param content The content to insert into the page.
  * @param page The page to insert the content into.
  */
-function createNodeAppendToBuffer(content: IContentInsert, page: IPageContent) {
+function createNodeAppendToBuffer(content: ContentInsert, page: PageContent) {
   const oldBuffer = page.buffers[page.buffers.length - 1];
   const newContent = oldBuffer.content + content.content;
-  const updatedBuffer: IBuffer = {
+  const updatedBuffer: Buffer = {
     isReadOnly: oldBuffer.isReadOnly,
     content: newContent,
     lineStarts: getLineStarts(newContent, page.newlineFormat),
   };
-  const newNode: INode = {
+  const newNode: Node = {
     bufferIndex: page.buffers.length - 1,
     start: {
       line: oldBuffer.lineStarts.length - 1,
@@ -446,7 +446,7 @@ function createNodeAppendToBuffer(content: IContentInsert, page: IPageContent) {
     right: SENTINEL_INDEX,
   };
 
-  let newPage: IPageContent = {
+  let newPage: PageContent = {
     ...page,
     nodes: [...page.nodes],
     previouslyInsertedNodeIndex: page.nodes.length,
@@ -464,13 +464,13 @@ function createNodeAppendToBuffer(content: IContentInsert, page: IPageContent) {
  * @param content The content to insert into the page.
  * @param page The page to insert the content into.
  */
-function createNodeCreateBuffer(content: IContentInsert, page: IPageContent) {
-  const newBuffer: IBuffer = {
+function createNodeCreateBuffer(content: ContentInsert, page: PageContent) {
+  const newBuffer: Buffer = {
     isReadOnly: false,
     lineStarts: getLineStarts(content.content, page.newlineFormat),
     content: content.content,
   };
-  const newNode: INode = {
+  const newNode: Node = {
     bufferIndex: page.buffers.length,
     start: { line: 0, column: 0 },
     end: {
@@ -488,7 +488,7 @@ function createNodeCreateBuffer(content: IContentInsert, page: IPageContent) {
     left: SENTINEL_INDEX,
     right: SENTINEL_INDEX,
   };
-  let newPage: IPageContent = {
+  let newPage: PageContent = {
     ...page,
     nodes: [...page.nodes],
     buffers: [...page.buffers],
@@ -509,10 +509,10 @@ function createNodeCreateBuffer(content: IContentInsert, page: IPageContent) {
  * @param offset The offset of the new node.
  */
 function insertNode(
-  page: IPageContent,
-  newNode: INode,
+  page: PageContent,
+  newNode: Node,
   offset: number,
-): IPageContent {
+): PageContent {
   let prevIndex = SENTINEL_INDEX;
 
   let currentIndex = page.root;

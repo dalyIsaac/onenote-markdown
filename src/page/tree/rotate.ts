@@ -1,4 +1,4 @@
-import { IPageContent } from "../model";
+import { PageContent } from "../model";
 import { SENTINEL_INDEX } from "../reducer";
 
 /**
@@ -7,9 +7,9 @@ import { SENTINEL_INDEX } from "../reducer";
  * @param nodeIndex The index of the node in the array for which the left rotation is performed on.
  */
 export function leftRotate(
-  pieceTable: IPageContent,
+  pieceTable: PageContent,
   nodeIndex: number,
-): IPageContent {
+): PageContent {
   const nodes = [...pieceTable.nodes];
 
   const xIndex = nodeIndex;
@@ -68,9 +68,9 @@ export function leftRotate(
  * @param nodeIndex The index of the node in the array for which the right rotation is performed on.
  */
 export function rightRotate(
-  pieceTable: IPageContent,
+  pieceTable: PageContent,
   nodeIndex: number,
-): IPageContent {
+): PageContent {
   const nodes = [...pieceTable.nodes];
 
   const yIndex = nodeIndex;

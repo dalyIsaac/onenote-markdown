@@ -1,10 +1,10 @@
-import { IAction } from "../common";
-import { IStoreReceivedPageAction, STORE_RECEIVED_PAGE } from "./actions";
-import { Color, INode, IStatePages } from "./model";
+import { Action } from "../common";
+import { STORE_RECEIVED_PAGE, StoreReceivedPageAction } from "./actions";
+import { Color, Node, StatePages } from "./model";
 import { createNewPage } from "./tree/createNewPage";
 
 export const SENTINEL_INDEX = -1;
-export const SENTINEL: INode = {
+export const SENTINEL: Node = {
   bufferIndex: -1,
   start: { column: -1, line: -1 },
   end: { column: -1, line: -1 },
@@ -23,10 +23,10 @@ export const SENTINEL: INode = {
  * @param state
  * @param action
  */
-export default function pageReducer(state: IStatePages = {}, action: IAction) {
+export default function pageReducer(state: StatePages = {}, action: Action) {
   switch (action.type) {
     case STORE_RECEIVED_PAGE:
-      const receivedPage = (action as IStoreReceivedPageAction).receivedPage;
+      const receivedPage = (action as StoreReceivedPageAction).receivedPage;
       const newPage = createNewPage(receivedPage);
       state[receivedPage.id as string] = newPage;
       return state;
