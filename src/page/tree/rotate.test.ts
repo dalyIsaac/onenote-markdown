@@ -1,10 +1,10 @@
-import { Color, INode, IPageContent, NEWLINE } from "../model";
-import { SENTINEL_INDEX } from "../reducer";
+import { Color, NEWLINE, Node, PageContent } from "../model";
 import { leftRotate, rightRotate } from "./rotate";
+import { SENTINEL_INDEX } from "./tree";
 
 describe("page/tree/rotate", () => {
-  const constructSimplePieceTableBeforeLeftRotate = (): IPageContent => {
-    const nodes: INode[] = [
+  const constructSimplePieceTableBeforeLeftRotate = (): PageContent => {
+    const nodes: Node[] = [
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -71,7 +71,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
     ];
-    const pieceTable: IPageContent = {
+    const pieceTable: PageContent = {
       buffers: [],
       newlineFormat: NEWLINE.LF,
       nodes,
@@ -83,8 +83,8 @@ describe("page/tree/rotate", () => {
   };
   const constructSimplePieceTableAfterRightRotate = constructSimplePieceTableBeforeLeftRotate;
 
-  const constructSimplePieceTableAfterLeftRotate = (): IPageContent => {
-    const nodes: INode[] = [
+  const constructSimplePieceTableAfterLeftRotate = (): PageContent => {
+    const nodes: Node[] = [
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -151,7 +151,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
     ];
-    const pieceTable: IPageContent = {
+    const pieceTable: PageContent = {
       buffers: [],
       newlineFormat: NEWLINE.LF,
       nodes,
@@ -163,8 +163,8 @@ describe("page/tree/rotate", () => {
   };
   const constructSimplePieceTableBeforeRightRotate = constructSimplePieceTableAfterLeftRotate;
 
-  const constructComplexPieceTableBeforeLeftRotate = (): IPageContent => {
-    const nodes: INode[] = [
+  const constructComplexPieceTableBeforeLeftRotate = (): PageContent => {
+    const nodes: Node[] = [
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -348,7 +348,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
     ];
-    const pieceTable: IPageContent = {
+    const pieceTable: PageContent = {
       buffers: [],
       newlineFormat: NEWLINE.LF,
       nodes,
@@ -360,8 +360,8 @@ describe("page/tree/rotate", () => {
   };
   const constructComplexPieceTableAfterRightRotate = constructComplexPieceTableBeforeLeftRotate;
 
-  const constructComplexPieceTableAfterLeftRotate = (): IPageContent => {
-    const nodes: INode[] = [
+  const constructComplexPieceTableAfterLeftRotate = (): PageContent => {
+    const nodes: Node[] = [
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -545,7 +545,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
     ];
-    const pieceTable: IPageContent = {
+    const pieceTable: PageContent = {
       buffers: [],
       newlineFormat: NEWLINE.LF,
       nodes,
@@ -557,7 +557,7 @@ describe("page/tree/rotate", () => {
   };
   const constructComplexPieceTableBeforeRightRotate = constructComplexPieceTableAfterLeftRotate;
 
-  const constructOneNodePieceTable = (): IPageContent => ({
+  const constructOneNodePieceTable = (): PageContent => ({
     buffers: [],
     nodes: [
       {
@@ -587,8 +587,8 @@ describe("page/tree/rotate", () => {
    * @param newTable The table passed out of the rotate function
    */
   const getDiffCount = (
-    oldTable: IPageContent,
-    newTable: IPageContent,
+    oldTable: PageContent,
+    newTable: PageContent,
   ): number => {
     const diff = [];
     for (let i = 0; i < oldTable.nodes.length; i++) {

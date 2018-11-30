@@ -1,15 +1,16 @@
 import { OnenotePage } from "@microsoft/microsoft-graph-types";
-import { IStoreReceivedPageAction, STORE_RECEIVED_PAGE } from "../actions";
+import { STORE_RECEIVED_PAGE, StoreReceivedPageAction } from "../actions";
 import {
+  Buffer,
+  BufferCursor,
   Color,
-  IBuffer,
-  IBufferCursor,
-  INode,
-  IPageContent,
-  IStatePages,
+  Node,
+  PageContent,
+  StatePages,
 } from "../model";
-import pageReducer, { SENTINEL_INDEX } from "../reducer";
+import pageReducer from "../reducer";
 import { createNewPage } from "./createNewPage";
+import { SENTINEL_INDEX } from "./tree";
 
 const LF_CONTENT = `<html lang="en-NZ">
     <head>
@@ -51,7 +52,7 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
    */
   const variables = (
     content: string,
-  ): { page: OnenotePage; storedPage: IPageContent } => {
+  ): { page: OnenotePage; storedPage: PageContent } => {
     const page: OnenotePage = {
       content,
       id: "fakeId",
@@ -96,8 +97,8 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
     id: string,
     content: string,
     newline: string,
-  ): IStatePages => {
-    const expectedState: IStatePages = {};
+  ): StatePages => {
+    const expectedState: StatePages = {};
     expectedState[id] = {
       buffers: [constructExpectedNewPageBuffer(content, newline)],
       newlineFormat: constructExpectedNewPageNewlineFormat(content, newline),
@@ -117,7 +118,7 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
   const constructExpectedNewPageBuffer = (
     content: string,
     newline: string,
-  ): IBuffer => ({
+  ): Buffer => ({
     isReadOnly: true,
     lineStarts: getExpectedLineStarts(content, newline),
     content,
@@ -125,7 +126,7 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
 
   const pageReducerTest = (content: string, newline: string) => {
     const { page } = variables(content);
-    const action: IStoreReceivedPageAction = {
+    const action: StoreReceivedPageAction = {
       receivedPage: page,
       type: STORE_RECEIVED_PAGE,
     };
@@ -158,12 +159,12 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
   const constructExpectedNewPageNode = (
     content: string,
     newline: string,
-  ): INode => {
-    const start: IBufferCursor = { column: 0, line: 0 };
+  ): Node => {
+    const start: BufferCursor = { column: 0, line: 0 };
     const lines = content.split(newline);
     const rowIndex = lines.length - 1;
     const lastRow = lines[rowIndex];
-    const end: IBufferCursor = {
+    const end: BufferCursor = {
       column: lastRow.length,
       line: rowIndex,
     };

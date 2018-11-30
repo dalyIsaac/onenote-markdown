@@ -1,10 +1,15 @@
-import { IPageContent } from "../model";
-import { SENTINEL_INDEX } from "../reducer";
+import { PageContent } from "../model";
+import { SENTINEL_INDEX } from "./tree";
 
+/**
+ * Performs a left rotation on the red-black tree, on the given node.
+ * @param pieceTable The page/piece table.
+ * @param nodeIndex The index of the node in the array for which the left rotation is performed on.
+ */
 export function leftRotate(
-  pieceTable: IPageContent,
+  pieceTable: PageContent,
   nodeIndex: number,
-): IPageContent {
+): PageContent {
   const nodes = [...pieceTable.nodes];
 
   const xIndex = nodeIndex;
@@ -57,10 +62,15 @@ export function leftRotate(
   };
 }
 
+/**
+ * Performs a right rotation on the red-black tree, on the given node.
+ * @param pieceTable The page/piece table.
+ * @param nodeIndex The index of the node in the array for which the right rotation is performed on.
+ */
 export function rightRotate(
-  pieceTable: IPageContent,
+  pieceTable: PageContent,
   nodeIndex: number,
-): IPageContent {
+): PageContent {
   const nodes = [...pieceTable.nodes];
 
   const yIndex = nodeIndex;

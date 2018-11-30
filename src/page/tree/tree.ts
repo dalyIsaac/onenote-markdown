@@ -3,21 +3,27 @@
  */
 
 import {
+  BufferCursor,
   CharValues,
-  IBufferCursor,
-  INode,
-  IPageContent,
+  Color,
   NEWLINE,
+  Node,
+  PageContent,
 } from "../model";
-import { SENTINEL, SENTINEL_INDEX } from "../reducer";
 
+/**
+ * The maximum length of a buffer string.
+ */
 export const MAX_BUFFER_LENGTH = 65535;
 
-export interface INodePosition {
+/**
+ * The returned object from `findNodeAtOffset`.
+ */
+export interface NodePosition {
   /**
    * Piece Index
    */
-  node: INode;
+  node: Node;
 
   /**
    * The index of the node inside the array.
@@ -43,14 +49,14 @@ export interface INodePosition {
  */
 export function findNodeAtOffset(
   offset: number,
-  nodes: INode[],
+  nodes: Node[],
   root: number,
-): INodePosition {
+): NodePosition {
   let xIndex = root;
-  let x: INode = nodes[xIndex];
+  let x: Node = nodes[xIndex];
   let nodeStartOffset = 0;
 
-  while (x !== SENTINEL) {
+  while (xIndex !== SENTINEL_INDEX) {
     if (x.leftCharCount > offset) {
       const oldXIndex = xIndex;
       xIndex = x.left;
@@ -93,37 +99,9 @@ export function findNodeAtOffset(
       }
     }
   }
-
-  return null!; // this will never be reached - it's just here to make the compiler happy.
-}
-
-/**
- * Creates the start and end buffer cursors.
- * @param startColumn The column of the start buffer.
- * @param startLine The line of the start buffer.
- * @param endColumn The column of the end buffer.
- * @param endLine The line of the end buffer.
- */
-export function createNewBufferCursors(
-  startColumn: number,
-  startLine: number,
-  endColumn: number,
-  endLine: number,
-): {
-  end: IBufferCursor;
-  start: IBufferCursor;
-} {
-  return {
-    start: {
-      column: startColumn,
-      line: startLine,
-    },
-    // tslint:disable-next-line:object-literal-sort-keys
-    end: {
-      column: endColumn,
-      line: endLine,
-    },
-  };
+  throw RangeError(
+    `Reaching here means that \`x\` is a SENTINEL node, and stored inside the piece table's \`nodes\` array.`,
+  );
 }
 
 /**
@@ -131,7 +109,7 @@ export function createNewBufferCursors(
  * format is used within the first 100 lines, it assumes that LF is used.
  * @param content The HTML content of a OneNote page.
  */
-export function getNewline(content: string): CharValues[] {
+export function getNewlineFormat(content: string): CharValues[] {
   for (let i = 0; i < 100; i++) {
     if (content.charCodeAt(i) === CharValues.LF) {
       return NEWLINE.LF;
@@ -175,7 +153,7 @@ export function getLineStarts(
  * @param nodeIndex The index of the node in `page.nodes`.
  * @param page The page/piece table.
  */
-export function getNodeContent(nodeIndex: number, page: IPageContent): string {
+export function getNodeContent(nodeIndex: number, page: PageContent): string {
   if (nodeIndex === SENTINEL_INDEX) {
     return "";
   }
@@ -195,9 +173,124 @@ export function getNodeContent(nodeIndex: number, page: IPageContent): string {
  */
 export function getOffsetInBuffer(
   bufferIndex: number,
-  cursor: IBufferCursor,
-  page: IPageContent,
+  cursor: BufferCursor,
+  page: PageContent,
 ) {
   const lineStarts = page.buffers[bufferIndex].lineStarts;
   return lineStarts[cursor.line] + cursor.column;
 }
+
+/**
+ * Recomputes the metadata for the tree based on the newly inserted node.
+ * @param page The page/piece table.
+ * @param index The index of the node in the `node` array, which is the basis for updating the tree.
+ */
+export function recomputeTreeMetadata(
+  page: PageContent,
+  xIndex: number,
+): PageContent {
+  let lengthDelta = 0;
+  let lineFeedDelta = 0;
+  if (xIndex === page.root) {
+    return page;
+  }
+
+  page.nodes = [...page.nodes];
+  let x = { ...page.nodes[xIndex] };
+  page.nodes[xIndex] = x;
+
+  // go upwards till the node whose left subtree is changed.
+  while (xIndex !== page.root && xIndex === page.nodes[x.parent].right) {
+    xIndex = x.parent;
+    x = page.nodes[xIndex];
+  }
+
+  if (xIndex === page.root) {
+    // well, it means we add a node to the end (inorder)
+    return page;
+  }
+
+  // x is the node whose right subtree is changed.
+  xIndex = x.parent;
+  x = { ...page.nodes[xIndex] };
+  page.nodes[xIndex] = x;
+
+  lengthDelta = calculateCharCount(page, x.left) - x.leftCharCount;
+  lineFeedDelta = calculateLineFeedCount(page, x.left) - x.leftLineFeedCount;
+  x.leftCharCount += lengthDelta;
+  x.leftLineFeedCount += lineFeedDelta;
+
+  // go upwards till root. O(logN)
+  while (xIndex !== page.root && (lengthDelta !== 0 || lineFeedDelta !== 0)) {
+    if (page.nodes[x.parent].left === xIndex) {
+      page.nodes[x.parent] = {
+        ...page.nodes[x.parent],
+      };
+      page.nodes[x.parent].leftCharCount += lengthDelta;
+      page.nodes[x.parent].leftLineFeedCount += lineFeedDelta;
+    }
+
+    xIndex = x.parent;
+    x = { ...page.nodes[xIndex] };
+    page.nodes[xIndex] = x;
+  }
+
+  return page;
+}
+
+/**
+ * Calculates the character count for the node and its subtree.
+ * @param page The page/piece table
+ * @param index The index of the node in the `node` array of the page/piece table to find the character count for.
+ */
+export function calculateCharCount(page: PageContent, index: number): number {
+  if (index === SENTINEL_INDEX) {
+    return 0;
+  }
+  const node = page.nodes[index];
+  return (
+    node.leftCharCount + node.length + calculateCharCount(page, node.right)
+  );
+}
+
+/**
+ * Calculates the line feed count for the node and its subtree.
+ * @param page The page/piece table
+ * @param index The index of the node in the `node` array of the page/piece table to find the line feed count for.
+ */
+export function calculateLineFeedCount(
+  page: PageContent,
+  index: number,
+): number {
+  if (index === SENTINEL_INDEX) {
+    return 0;
+  }
+  const node = page.nodes[index];
+  return (
+    node.leftLineFeedCount +
+    node.lineFeedCount +
+    calculateLineFeedCount(page, node.right)
+  );
+}
+
+/**
+ * The theoretical index of the sentinel node in the `nodes` array of a page/piece table.
+ */
+export const SENTINEL_INDEX = -1;
+
+/**
+ * The sentinel node of red-black trees.
+ */
+export const SENTINEL: Node = {
+  bufferIndex: -1,
+  start: { column: -1, line: -1 },
+  end: { column: -1, line: -1 },
+  leftCharCount: -1,
+  leftLineFeedCount: -1,
+  length: -1,
+  lineFeedCount: -1,
+  color: Color.Black,
+  parent: SENTINEL_INDEX,
+  left: SENTINEL_INDEX,
+  right: SENTINEL_INDEX,
+};
