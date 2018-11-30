@@ -173,3 +173,96 @@ export function getOffsetInBuffer(
   const lineStarts = page.buffers[bufferIndex].lineStarts;
   return lineStarts[cursor.line] + cursor.column;
 }
+
+/**
+ * Recomputes the metadata for the tree based on the newly inserted node.
+ * @param page The page/piece table.
+ * @param index The index of the node in the `node` array, which is the basis for updating the tree.
+ */
+export function recomputeTreeMetadata(
+  page: PageContent,
+  xIndex: number,
+): PageContent {
+  let lengthDelta = 0;
+  let lineFeedDelta = 0;
+  if (xIndex === page.root) {
+    return page;
+  }
+
+  page.nodes = [...page.nodes];
+  let x = { ...page.nodes[xIndex] };
+  page.nodes[xIndex] = x;
+
+  // go upwards till the node whose left subtree is changed.
+  while (xIndex !== page.root && xIndex === page.nodes[x.parent].right) {
+    xIndex = x.parent;
+    x = page.nodes[xIndex];
+  }
+
+  if (xIndex === page.root) {
+    // well, it means we add a node to the end (inorder)
+    return page;
+  }
+
+  // x is the node whose right subtree is changed.
+  xIndex = x.parent;
+  x = { ...page.nodes[xIndex] };
+  page.nodes[xIndex] = x;
+
+  lengthDelta = calculateCharCount(page, x.left) - x.leftCharCount;
+  lineFeedDelta = calculateLineFeedCount(page, x.left) - x.leftLineFeedCount;
+  x.leftCharCount += lengthDelta;
+  x.leftLineFeedCount += lineFeedDelta;
+
+  // go upwards till root. O(logN)
+  while (xIndex !== page.root && (lengthDelta !== 0 || lineFeedDelta !== 0)) {
+    if (page.nodes[x.parent].left === xIndex) {
+      page.nodes[x.parent] = {
+        ...page.nodes[x.parent],
+      };
+      page.nodes[x.parent].leftCharCount += lengthDelta;
+      page.nodes[x.parent].leftLineFeedCount += lineFeedDelta;
+    }
+
+    xIndex = x.parent;
+    x = { ...page.nodes[xIndex] };
+    page.nodes[xIndex] = x;
+  }
+
+  return page;
+}
+
+/**
+ * Calculates the character count for the node and its subtree.
+ * @param page The page/piece table
+ * @param index The index of the node in the `node` array of the page/piece table to find the character count for.
+ */
+export function calculateCharCount(page: PageContent, index: number): number {
+  if (index === SENTINEL_INDEX) {
+    return 0;
+  }
+  const node = page.nodes[index];
+  return (
+    node.leftCharCount + node.length + calculateCharCount(page, node.right)
+  );
+}
+
+/**
+ * Calculates the line feed count for the node and its subtree.
+ * @param page The page/piece table
+ * @param index The index of the node in the `node` array of the page/piece table to find the line feed count for.
+ */
+export function calculateLineFeedCount(
+  page: PageContent,
+  index: number,
+): number {
+  if (index === SENTINEL_INDEX) {
+    return 0;
+  }
+  const node = page.nodes[index];
+  return (
+    node.leftLineFeedCount +
+    node.lineFeedCount +
+    calculateLineFeedCount(page, node.right)
+  );
+}
