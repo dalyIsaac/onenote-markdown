@@ -1,6 +1,6 @@
 import { Color, NEWLINE, PageContent } from "../model";
 import { ContentInsert, fixInsert, insertContent } from "./insert";
-import { MAX_BUFFER_LENGTH, SENTINEL_INDEX } from "./tree";
+import { MAX_BUFFER_LENGTH, SENTINEL, SENTINEL_INDEX } from "./tree";
 
 describe("page/tree/insert", () => {
   describe("insert functions", () => {
@@ -15,6 +15,7 @@ describe("page/tree/insert", () => {
         ],
         newlineFormat: NEWLINE.LF,
         nodes: [
+          SENTINEL,
           {
             bufferIndex: 0,
             start: {
@@ -36,13 +37,13 @@ describe("page/tree/insert", () => {
           },
         ],
         root: 0,
-        previouslyInsertedNodeIndex: 0,
+        previouslyInsertedNodeIndex: 1,
         previouslyInsertedNodeOffset: 0,
       });
       const expectedPage = getPage();
       expectedPage.buffers[0].content += "b";
-      expectedPage.nodes[0] = {
-        ...expectedPage.nodes[0],
+      expectedPage.nodes[1] = {
+        ...expectedPage.nodes[1],
         end: {
           line: 0,
           column: 2,

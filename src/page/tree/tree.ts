@@ -274,21 +274,21 @@ export function calculateLineFeedCount(
 }
 
 /**
- * The theoretical index of the sentinel node in the `nodes` array of a page/piece table.
+ * The index of the sentinel node in the `nodes` array of a page/piece table.
  */
-export const SENTINEL_INDEX = -1;
+export const SENTINEL_INDEX = 0;
 
 /**
  * The sentinel node of red-black trees.
  */
 export const SENTINEL: Node = {
-  bufferIndex: -1,
-  start: { column: -1, line: -1 },
-  end: { column: -1, line: -1 },
-  leftCharCount: -1,
-  leftLineFeedCount: -1,
-  length: -1,
-  lineFeedCount: -1,
+  bufferIndex: 0,
+  start: { column: 0, line: 0 },
+  end: { column: 0, line: 0 },
+  leftCharCount: 0,
+  leftLineFeedCount: 0,
+  length: 0,
+  lineFeedCount: 0,
   color: Color.Black,
   parent: SENTINEL_INDEX,
   left: SENTINEL_INDEX,
