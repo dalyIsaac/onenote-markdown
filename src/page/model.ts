@@ -125,7 +125,7 @@ export interface PageContent {
   newlineFormat: CharValues[];
 
   /**
-   * The nodes of the piece table.
+   * The nodes of the piece table. The first node is always the `SENTINEL` node.
    */
   nodes: Node[];
 

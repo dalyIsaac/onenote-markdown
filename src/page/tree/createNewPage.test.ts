@@ -10,7 +10,7 @@ import {
 } from "../model";
 import pageReducer from "../reducer";
 import { createNewPage } from "./createNewPage";
-import { SENTINEL_INDEX } from "./tree";
+import { SENTINEL, SENTINEL_INDEX } from "./tree";
 
 const LF_CONTENT = `<html lang="en-NZ">
     <head>
@@ -102,7 +102,7 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
     expectedState[id] = {
       buffers: [constructExpectedNewPageBuffer(content, newline)],
       newlineFormat: constructExpectedNewPageNewlineFormat(content, newline),
-      nodes: [constructExpectedNewPageNode(content, newline)],
+      nodes: [SENTINEL, constructExpectedNewPageNode(content, newline)],
       root: constructExpectedNewPageRoot(),
       previouslyInsertedNodeIndex: null,
       previouslyInsertedNodeOffset: null,
@@ -192,7 +192,7 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
   const nodesTest = (content: string, newline: string) => {
     const { storedPage } = variables(content);
     const expectedNode = constructExpectedNewPageNode(content, newline);
-    const node = storedPage.nodes[0];
+    const node = storedPage.nodes[1];
     expect(node).toEqual(expectedNode);
   };
 
