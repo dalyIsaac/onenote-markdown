@@ -302,3 +302,7 @@ export const SENTINEL: Node = {
   left: SENTINEL_INDEX,
   right: SENTINEL_INDEX,
 };
+
+export function resetSentinel(): void {
+  SENTINEL.parent = SENTINEL_INDEX;
+}
