@@ -1161,6 +1161,7 @@ describe("page/tree/insert", () => {
           },
         ],
         nodes: [
+          SENTINEL,
           {
             bufferIndex: 0,
             start: { line: 0, column: 0 },
@@ -1175,7 +1176,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
         ],
-        root: 0,
+        root: 1,
         newlineFormat: NEWLINE.LF,
         previouslyInsertedNodeIndex: null,
         previouslyInsertedNodeOffset: null,
@@ -1194,6 +1195,7 @@ describe("page/tree/insert", () => {
           },
         ],
         nodes: [
+          SENTINEL,
           {
             bufferIndex: 0,
             start: { line: 0, column: 0 },
@@ -1203,7 +1205,7 @@ describe("page/tree/insert", () => {
             length: 1,
             lineFeedCount: 0,
             color: Color.Red,
-            parent: 2,
+            parent: 3,
             left: SENTINEL_INDEX,
             right: SENTINEL_INDEX,
           },
@@ -1216,7 +1218,7 @@ describe("page/tree/insert", () => {
             length: 4,
             lineFeedCount: 1,
             color: Color.Red,
-            parent: 2,
+            parent: 3,
             left: SENTINEL_INDEX,
             right: SENTINEL_INDEX,
           },
@@ -1230,14 +1232,14 @@ describe("page/tree/insert", () => {
             lineFeedCount: 0,
             color: Color.Black,
             parent: SENTINEL_INDEX,
-            left: 0,
-            right: 1,
+            left: 1,
+            right: 2,
           },
         ],
-        previouslyInsertedNodeIndex: 2,
+        previouslyInsertedNodeIndex: 3,
         previouslyInsertedNodeOffset: 1,
         newlineFormat: NEWLINE.LF,
-        root: 2,
+        root: 3,
       };
       const content: ContentInsert = {
         offset: 1,
