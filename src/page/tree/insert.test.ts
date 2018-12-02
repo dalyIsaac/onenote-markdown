@@ -347,6 +347,7 @@ describe("page/tree/insert", () => {
           },
         ],
         nodes: [
+          SENTINEL,
           {
             bufferIndex: 0,
             start: {
@@ -363,8 +364,8 @@ describe("page/tree/insert", () => {
             lineFeedCount: 1,
             color: Color.Black,
             parent: SENTINEL_INDEX,
-            left: 1,
-            right: 2,
+            left: 2,
+            right: 3,
           },
           {
             bufferIndex: 1,
@@ -375,7 +376,7 @@ describe("page/tree/insert", () => {
             length: 2,
             lineFeedCount: 0,
             color: Color.Red,
-            parent: 0,
+            parent: 1,
             left: SENTINEL_INDEX,
             right: SENTINEL_INDEX,
           },
@@ -388,14 +389,14 @@ describe("page/tree/insert", () => {
             length: 2,
             lineFeedCount: 0,
             color: Color.Red,
-            parent: 0,
+            parent: 1,
             left: SENTINEL_INDEX,
             right: SENTINEL_INDEX,
           },
         ],
         newlineFormat: NEWLINE.LF,
-        root: 0,
-        previouslyInsertedNodeIndex: 2,
+        root: 1,
+        previouslyInsertedNodeIndex: 3,
         previouslyInsertedNodeOffset: 7,
       });
       const page = getPage();
@@ -414,16 +415,16 @@ describe("page/tree/insert", () => {
         length: 5,
         lineFeedCount: 1,
         color: Color.Red,
-        parent: 1,
+        parent: 2,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       });
-      expectedPage.nodes[0].leftCharCount = 7;
-      expectedPage.nodes[0].leftLineFeedCount = 1;
-      expectedPage.nodes[1].right = 3;
-      expectedPage.nodes[1].color = Color.Black;
+      expectedPage.nodes[1].leftCharCount = 7;
+      expectedPage.nodes[1].leftLineFeedCount = 1;
+      expectedPage.nodes[2].right = 4;
       expectedPage.nodes[2].color = Color.Black;
-      expectedPage.previouslyInsertedNodeIndex = 3;
+      expectedPage.nodes[3].color = Color.Black;
+      expectedPage.previouslyInsertedNodeIndex = 4;
       expectedPage.previouslyInsertedNodeOffset = 2;
       const content: ContentInsert = {
         content: "ij\nkl",
