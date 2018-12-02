@@ -15,7 +15,7 @@ export function leftRotate(
   const xIndex = nodeIndex;
   const x = { ...nodes[xIndex] };
 
-  if (x.right === -1) {
+  if (x.right === SENTINEL_INDEX) {
     //  you can't left rotate
     return pieceTable;
   }
@@ -76,7 +76,7 @@ export function rightRotate(
   const yIndex = nodeIndex;
   const y = { ...nodes[yIndex] };
 
-  if (y.left === -1) {
+  if (y.left === SENTINEL_INDEX) {
     // you can't right rotate
     return pieceTable;
   }

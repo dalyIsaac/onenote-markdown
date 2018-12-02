@@ -1,6 +1,6 @@
 import { Color, NEWLINE, Node, PageContent } from "../model";
 import { leftRotate, rightRotate } from "./rotate";
-import { SENTINEL_INDEX } from "./tree";
+import { SENTINEL, SENTINEL_INDEX } from "./tree";
 
 describe("page/tree/rotate", () => {
   const constructSimplePieceTableBeforeLeftRotate = (): PageContent => {
@@ -560,6 +560,7 @@ describe("page/tree/rotate", () => {
   const constructOneNodePieceTable = (): PageContent => ({
     buffers: [],
     nodes: [
+      SENTINEL,
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -574,9 +575,9 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
     ],
-    root: 0,
+    root: 1,
     newlineFormat: NEWLINE.LF,
-    previouslyInsertedNodeIndex: 0,
+    previouslyInsertedNodeIndex: 1,
     previouslyInsertedNodeOffset: 0,
   });
 
@@ -607,7 +608,7 @@ describe("page/tree/rotate", () => {
   describe("left rotate", () => {
     test("One node case", () => {
       const pieceTable = constructOneNodePieceTable();
-      const newPieceTable = leftRotate(pieceTable, 0);
+      const newPieceTable = leftRotate(pieceTable, 1);
       expect(newPieceTable).toEqual(constructOneNodePieceTable());
       expect(getDiffCount(pieceTable, newPieceTable)).toBe(0);
     });
