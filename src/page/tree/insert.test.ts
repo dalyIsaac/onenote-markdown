@@ -445,6 +445,7 @@ describe("page/tree/insert", () => {
           },
         ],
         nodes: [
+          SENTINEL,
           {
             bufferIndex: 0,
             start: {
@@ -466,9 +467,9 @@ describe("page/tree/insert", () => {
           },
         ],
         newlineFormat: NEWLINE.LF,
-        root: 0,
-        previouslyInsertedNodeIndex: 2,
-        previouslyInsertedNodeOffset: 7,
+        root: 1,
+        previouslyInsertedNodeIndex: 1,
+        previouslyInsertedNodeOffset: 5,
       });
       const expectedPage = getPage();
       expectedPage.buffers.push({
@@ -485,17 +486,17 @@ describe("page/tree/insert", () => {
         length: 2,
         lineFeedCount: 0,
         color: Color.Red,
-        parent: 0,
+        parent: 1,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       });
-      expectedPage.nodes[0].right = 1;
+      expectedPage.nodes[1].right = 2;
       const page = getPage();
       const content: ContentInsert = {
         content: "ef",
         offset: 5,
       };
-      expectedPage.previouslyInsertedNodeIndex = 1;
+      expectedPage.previouslyInsertedNodeIndex = 2;
       expectedPage.previouslyInsertedNodeOffset = 5;
       const maxBufferLength = 8;
       const receivedPage = insertContent(content, page, maxBufferLength);
