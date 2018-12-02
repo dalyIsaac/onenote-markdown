@@ -5,6 +5,7 @@ import { SENTINEL, SENTINEL_INDEX } from "./tree";
 describe("page/tree/rotate", () => {
   const constructSimplePieceTableBeforeLeftRotate = (): PageContent => {
     const nodes: Node[] = [
+      SENTINEL,
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -14,7 +15,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 1,
+        parent: 2,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -28,8 +29,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 30,
         color: Color.Black,
         parent: SENTINEL_INDEX,
-        left: 0,
-        right: 3,
+        left: 1,
+        right: 4,
       },
       {
         bufferIndex: 2,
@@ -40,7 +41,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 3,
+        parent: 4,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -53,9 +54,9 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 1,
         leftCharCount: 30,
         color: Color.Black,
-        parent: 1,
-        left: 2,
-        right: 4,
+        parent: 2,
+        left: 3,
+        right: 5,
       },
       {
         bufferIndex: 4,
@@ -66,7 +67,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Red,
-        parent: 3,
+        parent: 4,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -75,7 +76,7 @@ describe("page/tree/rotate", () => {
       buffers: [],
       newlineFormat: NEWLINE.LF,
       nodes,
-      root: 1,
+      root: 2,
       previouslyInsertedNodeIndex: null,
       previouslyInsertedNodeOffset: null,
     };
@@ -85,6 +86,7 @@ describe("page/tree/rotate", () => {
 
   const constructSimplePieceTableAfterLeftRotate = (): PageContent => {
     const nodes: Node[] = [
+      SENTINEL,
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -94,7 +96,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 1,
+        parent: 2,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -107,9 +109,9 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 2,
         leftCharCount: 30,
         color: Color.Black,
-        parent: 3,
-        left: 0,
-        right: 2,
+        parent: 4,
+        left: 1,
+        right: 3,
       },
       {
         bufferIndex: 2,
@@ -120,7 +122,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 1,
+        parent: 2,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -134,8 +136,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 90,
         color: Color.Black,
         parent: SENTINEL_INDEX,
-        left: 1,
-        right: 4,
+        left: 2,
+        right: 5,
       },
       {
         bufferIndex: 4,
@@ -146,7 +148,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Red,
-        parent: 3,
+        parent: 4,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -155,7 +157,7 @@ describe("page/tree/rotate", () => {
       buffers: [],
       newlineFormat: NEWLINE.LF,
       nodes,
-      root: 3,
+      root: 4,
       previouslyInsertedNodeIndex: null,
       previouslyInsertedNodeOffset: null,
     };
@@ -615,7 +617,7 @@ describe("page/tree/rotate", () => {
 
     test("Simple case", () => {
       const pieceTable = constructSimplePieceTableBeforeLeftRotate();
-      const newPieceTable = leftRotate(pieceTable, 1);
+      const newPieceTable = leftRotate(pieceTable, 2);
       expect(newPieceTable).toEqual(constructSimplePieceTableAfterLeftRotate());
       expect(getDiffCount(pieceTable, newPieceTable)).toBeLessThanOrEqual(4);
     });
