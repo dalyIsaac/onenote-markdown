@@ -642,6 +642,7 @@ describe("page/tree/insert", () => {
           },
         ],
         nodes: [
+          SENTINEL,
           {
             bufferIndex: 0,
             start: {
@@ -658,7 +659,7 @@ describe("page/tree/insert", () => {
             lineFeedCount: 1,
             color: Color.Black,
             parent: SENTINEL_INDEX,
-            left: 1,
+            left: 2,
             right: SENTINEL_INDEX,
           },
           {
@@ -670,14 +671,14 @@ describe("page/tree/insert", () => {
             length: 2,
             lineFeedCount: 0,
             color: Color.Red,
-            parent: 0,
+            parent: 1,
             left: SENTINEL_INDEX,
             right: SENTINEL_INDEX,
           },
         ],
         newlineFormat: NEWLINE.LF,
-        root: 0,
-        previouslyInsertedNodeIndex: 1,
+        root: 1,
+        previouslyInsertedNodeIndex: 2,
         previouslyInsertedNodeOffset: 0,
       };
       const expectedPage: PageContent = {
@@ -694,6 +695,7 @@ describe("page/tree/insert", () => {
           },
         ],
         nodes: [
+          SENTINEL,
           {
             bufferIndex: 0,
             start: {
@@ -709,7 +711,7 @@ describe("page/tree/insert", () => {
             length: 5,
             lineFeedCount: 1,
             color: Color.Red,
-            parent: 1,
+            parent: 2,
             left: SENTINEL_INDEX,
             right: SENTINEL_INDEX,
           },
@@ -723,8 +725,8 @@ describe("page/tree/insert", () => {
             lineFeedCount: 0,
             color: Color.Black,
             parent: SENTINEL_INDEX,
-            left: 2,
-            right: 0,
+            left: 3,
+            right: 1,
           },
           {
             bufferIndex: 1,
@@ -735,14 +737,14 @@ describe("page/tree/insert", () => {
             length: 5,
             lineFeedCount: 1,
             color: Color.Red,
-            parent: 1,
+            parent: 2,
             left: SENTINEL_INDEX,
             right: SENTINEL_INDEX,
           },
         ],
         newlineFormat: NEWLINE.LF,
-        root: 1,
-        previouslyInsertedNodeIndex: 2,
+        root: 2,
+        previouslyInsertedNodeIndex: 3,
         previouslyInsertedNodeOffset: 0,
       };
       const content: ContentInsert = {
