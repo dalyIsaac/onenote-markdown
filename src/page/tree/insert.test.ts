@@ -1256,11 +1256,12 @@ describe("page/tree/insert", () => {
       test("Scenario 1: Left left case", () => {
         const page: PageContent = {
           buffers: [],
-          root: 0,
+          root: 1,
           newlineFormat: NEWLINE.LF,
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
           nodes: [
+            SENTINEL,
             {
               // g
               bufferIndex: 0,
@@ -1278,8 +1279,8 @@ describe("page/tree/insert", () => {
               lineFeedCount: 2,
               color: Color.Black,
               parent: SENTINEL_INDEX,
-              left: 1,
-              right: 2,
+              left: 2,
+              right: 3,
             },
             {
               // p,
@@ -1297,9 +1298,9 @@ describe("page/tree/insert", () => {
               length: 10,
               lineFeedCount: 2,
               color: Color.Red,
-              parent: 0,
-              left: 3,
-              right: 4,
+              parent: 1,
+              left: 4,
+              right: 5,
             },
             {
               // u
@@ -1317,7 +1318,7 @@ describe("page/tree/insert", () => {
               length: 10,
               lineFeedCount: 2,
               color: Color.Black,
-              parent: 0,
+              parent: 1,
               left: SENTINEL_INDEX,
               right: SENTINEL_INDEX,
             },
@@ -1337,7 +1338,7 @@ describe("page/tree/insert", () => {
               length: 10,
               lineFeedCount: 2,
               color: Color.Red,
-              parent: 1,
+              parent: 2,
               left: SENTINEL_INDEX,
               right: SENTINEL_INDEX,
             },
@@ -1357,7 +1358,7 @@ describe("page/tree/insert", () => {
               length: 10,
               lineFeedCount: 2,
               color: Color.Black,
-              parent: 1,
+              parent: 2,
               left: SENTINEL_INDEX,
               right: SENTINEL_INDEX,
             },
@@ -1365,11 +1366,12 @@ describe("page/tree/insert", () => {
         };
         const expectedPage: PageContent = {
           buffers: [],
-          root: 1,
+          root: 2,
           newlineFormat: NEWLINE.LF,
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
           nodes: [
+            SENTINEL,
             {
               // g
               bufferIndex: 0,
@@ -1386,9 +1388,9 @@ describe("page/tree/insert", () => {
               length: 10,
               lineFeedCount: 2,
               color: Color.Red,
-              parent: 1,
-              left: 4,
-              right: 2,
+              parent: 2,
+              left: 5,
+              right: 3,
             },
             {
               // p
@@ -1407,8 +1409,8 @@ describe("page/tree/insert", () => {
               lineFeedCount: 2,
               color: Color.Black,
               parent: SENTINEL_INDEX,
-              left: 3,
-              right: 0,
+              left: 4,
+              right: 1,
             },
             {
               // u
@@ -1426,7 +1428,7 @@ describe("page/tree/insert", () => {
               length: 10,
               lineFeedCount: 2,
               color: Color.Black,
-              parent: 0,
+              parent: 1,
               left: SENTINEL_INDEX,
               right: SENTINEL_INDEX,
             },
@@ -1446,7 +1448,7 @@ describe("page/tree/insert", () => {
               length: 10,
               lineFeedCount: 2,
               color: Color.Red,
-              parent: 1,
+              parent: 2,
               left: SENTINEL_INDEX,
               right: SENTINEL_INDEX,
             },
@@ -1466,13 +1468,13 @@ describe("page/tree/insert", () => {
               length: 10,
               lineFeedCount: 2,
               color: Color.Black,
-              parent: 0,
+              parent: 1,
               left: SENTINEL_INDEX,
               right: SENTINEL_INDEX,
             },
           ],
         };
-        const acquiredPage = fixInsert(page, 3);
+        const acquiredPage = fixInsert(page, 4);
         expect(acquiredPage).toEqual(expectedPage);
       });
 
