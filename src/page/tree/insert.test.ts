@@ -2537,6 +2537,7 @@ describe("page/tree/insert", () => {
         ],
         newlineFormat: NEWLINE.LF,
         nodes: [
+          SENTINEL,
           {
             bufferIndex: 0,
             start: {
@@ -2557,14 +2558,14 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
         ],
-        root: 0,
-        previouslyInsertedNodeIndex: 0,
+        root: 1,
+        previouslyInsertedNodeIndex: 1,
         previouslyInsertedNodeOffset: 0,
       });
       const expectedPage = getPage();
-      expectedPage.nodes[0].color = Color.Black;
+      expectedPage.nodes[1].color = Color.Black;
       const page = getPage();
-      const receivedPage = fixInsert(page, 0);
+      const receivedPage = fixInsert(page, 1);
       expect(receivedPage).toEqual(expectedPage);
     });
   });
