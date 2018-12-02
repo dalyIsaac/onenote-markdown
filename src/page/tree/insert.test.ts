@@ -1709,8 +1709,9 @@ describe("page/tree/insert", () => {
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 0,
+          root: 1,
           nodes: [
+            SENTINEL,
             {
               // g
               bufferIndex: 0,
@@ -1728,8 +1729,8 @@ describe("page/tree/insert", () => {
               lineFeedCount: 2,
               color: Color.Black,
               parent: SENTINEL_INDEX,
-              left: 1,
-              right: 2,
+              left: 2,
+              right: 3,
             },
             {
               // u
@@ -1747,7 +1748,7 @@ describe("page/tree/insert", () => {
               length: 10,
               lineFeedCount: 2,
               color: Color.Black,
-              parent: 0,
+              parent: 1,
               left: SENTINEL_INDEX,
               right: SENTINEL_INDEX,
             },
@@ -1767,9 +1768,9 @@ describe("page/tree/insert", () => {
               length: 10,
               lineFeedCount: 2,
               color: Color.Red,
-              parent: 0,
-              left: 3,
-              right: 4,
+              parent: 1,
+              left: 4,
+              right: 5,
             },
             {
               // T3
@@ -1787,7 +1788,7 @@ describe("page/tree/insert", () => {
               length: 10,
               lineFeedCount: 2,
               color: Color.Black,
-              parent: 2,
+              parent: 3,
               left: SENTINEL_INDEX,
               right: SENTINEL_INDEX,
             },
@@ -1807,7 +1808,7 @@ describe("page/tree/insert", () => {
               length: 10,
               lineFeedCount: 2,
               color: Color.Red,
-              parent: 2,
+              parent: 3,
               left: SENTINEL_INDEX,
               right: SENTINEL_INDEX,
             },
@@ -1818,8 +1819,9 @@ describe("page/tree/insert", () => {
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 2,
+          root: 3,
           nodes: [
+            SENTINEL,
             {
               // g
               bufferIndex: 0,
@@ -1836,9 +1838,9 @@ describe("page/tree/insert", () => {
               length: 10,
               lineFeedCount: 2,
               color: Color.Red,
-              parent: 2,
-              left: 1,
-              right: 3,
+              parent: 3,
+              left: 2,
+              right: 4,
             },
             {
               // u
@@ -1856,7 +1858,7 @@ describe("page/tree/insert", () => {
               length: 10,
               lineFeedCount: 2,
               color: Color.Black,
-              parent: 0,
+              parent: 1,
               left: SENTINEL_INDEX,
               right: SENTINEL_INDEX,
             },
@@ -1877,8 +1879,8 @@ describe("page/tree/insert", () => {
               lineFeedCount: 2,
               color: Color.Black,
               parent: SENTINEL_INDEX,
-              left: 0,
-              right: 4,
+              left: 1,
+              right: 5,
             },
             {
               // T3
@@ -1896,7 +1898,7 @@ describe("page/tree/insert", () => {
               length: 10,
               lineFeedCount: 2,
               color: Color.Black,
-              parent: 0,
+              parent: 1,
               left: SENTINEL_INDEX,
               right: SENTINEL_INDEX,
             },
@@ -1916,13 +1918,13 @@ describe("page/tree/insert", () => {
               length: 10,
               lineFeedCount: 2,
               color: Color.Red,
-              parent: 2,
+              parent: 3,
               left: SENTINEL_INDEX,
               right: SENTINEL_INDEX,
             },
           ],
         };
-        const acquiredPage = fixInsert(page, 4);
+        const acquiredPage = fixInsert(page, 5);
         expect(acquiredPage).toEqual(expectedPage);
       });
 
