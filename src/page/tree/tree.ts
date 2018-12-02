@@ -99,9 +99,17 @@ export function findNodeAtOffset(
       }
     }
   }
-  throw RangeError(
+  // tslint:disable-next-line:no-console
+  console.error(
     `Reaching here means that \`x\` is a SENTINEL node, and stored inside the piece table's \`nodes\` array.`,
   );
+  // attempt to gracefully handle the error
+  return {
+    node: SENTINEL,
+    nodeIndex: SENTINEL_INDEX,
+    remainder: 0,
+    nodeStartOffset: 0,
+  };
 }
 
 /**
