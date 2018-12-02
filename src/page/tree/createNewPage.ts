@@ -1,6 +1,11 @@
 import { OnenotePage } from "@microsoft/microsoft-graph-types";
 import { Buffer, Color, Node, PageContent } from "../model";
-import { getLineStarts, getNewlineFormat, SENTINEL_INDEX } from "./tree";
+import {
+  getLineStarts,
+  getNewlineFormat,
+  SENTINEL,
+  SENTINEL_INDEX,
+} from "./tree";
 
 /**
  * Creates a new page, and its associated piece table.
@@ -33,7 +38,7 @@ export function createNewPage(receivedPage: OnenotePage): PageContent {
   return {
     buffers: [buffer],
     newlineFormat,
-    nodes: [node],
+    nodes: [SENTINEL, node],
     root: 0,
     previouslyInsertedNodeIndex: null,
     previouslyInsertedNodeOffset: null,

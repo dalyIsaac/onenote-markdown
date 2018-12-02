@@ -469,6 +469,6 @@ function insertNode(
     }
   }
   throw RangeError(
-    "The currentIndex has reached a Sentinel node before locating a suitable insertion location.",
+    "The currentIndex has reached a SENTINEL node before locating a suitable insertion location.",
   );
 }

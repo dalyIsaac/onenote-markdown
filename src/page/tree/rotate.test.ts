@@ -1,10 +1,11 @@
 import { Color, NEWLINE, Node, PageContent } from "../model";
 import { leftRotate, rightRotate } from "./rotate";
-import { SENTINEL_INDEX } from "./tree";
+import { SENTINEL, SENTINEL_INDEX } from "./tree";
 
 describe("page/tree/rotate", () => {
   const constructSimplePieceTableBeforeLeftRotate = (): PageContent => {
     const nodes: Node[] = [
+      SENTINEL,
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -14,7 +15,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 1,
+        parent: 2,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -28,8 +29,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 30,
         color: Color.Black,
         parent: SENTINEL_INDEX,
-        left: 0,
-        right: 3,
+        left: 1,
+        right: 4,
       },
       {
         bufferIndex: 2,
@@ -40,7 +41,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 3,
+        parent: 4,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -53,9 +54,9 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 1,
         leftCharCount: 30,
         color: Color.Black,
-        parent: 1,
-        left: 2,
-        right: 4,
+        parent: 2,
+        left: 3,
+        right: 5,
       },
       {
         bufferIndex: 4,
@@ -66,7 +67,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Red,
-        parent: 3,
+        parent: 4,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -75,7 +76,7 @@ describe("page/tree/rotate", () => {
       buffers: [],
       newlineFormat: NEWLINE.LF,
       nodes,
-      root: 1,
+      root: 2,
       previouslyInsertedNodeIndex: null,
       previouslyInsertedNodeOffset: null,
     };
@@ -85,6 +86,7 @@ describe("page/tree/rotate", () => {
 
   const constructSimplePieceTableAfterLeftRotate = (): PageContent => {
     const nodes: Node[] = [
+      SENTINEL,
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -94,7 +96,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 1,
+        parent: 2,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -107,9 +109,9 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 2,
         leftCharCount: 30,
         color: Color.Black,
-        parent: 3,
-        left: 0,
-        right: 2,
+        parent: 4,
+        left: 1,
+        right: 3,
       },
       {
         bufferIndex: 2,
@@ -120,7 +122,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 1,
+        parent: 2,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -134,8 +136,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 90,
         color: Color.Black,
         parent: SENTINEL_INDEX,
-        left: 1,
-        right: 4,
+        left: 2,
+        right: 5,
       },
       {
         bufferIndex: 4,
@@ -146,7 +148,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Red,
-        parent: 3,
+        parent: 4,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -155,7 +157,7 @@ describe("page/tree/rotate", () => {
       buffers: [],
       newlineFormat: NEWLINE.LF,
       nodes,
-      root: 3,
+      root: 4,
       previouslyInsertedNodeIndex: null,
       previouslyInsertedNodeOffset: null,
     };
@@ -165,6 +167,7 @@ describe("page/tree/rotate", () => {
 
   const constructComplexPieceTableBeforeLeftRotate = (): PageContent => {
     const nodes: Node[] = [
+      SENTINEL,
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -174,7 +177,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 1,
+        parent: 2,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -187,8 +190,8 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 2,
         leftCharCount: 30,
         color: Color.Black,
-        parent: 2,
-        left: 0,
+        parent: 3,
+        left: 1,
         right: SENTINEL_INDEX,
       },
       {
@@ -200,9 +203,9 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 4,
         leftCharCount: 60,
         color: Color.Black,
-        parent: 4,
-        left: 1,
-        right: 3,
+        parent: 5,
+        left: 2,
+        right: 4,
       },
       {
         bufferIndex: 3,
@@ -213,7 +216,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 2,
+        parent: 3,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -227,8 +230,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 120,
         color: Color.Black,
         parent: SENTINEL_INDEX,
-        left: 2,
-        right: 6,
+        left: 3,
+        right: 7,
       },
       {
         bufferIndex: 5,
@@ -239,7 +242,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 6,
+        parent: 7,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -252,9 +255,9 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 2,
         leftCharCount: 30,
         color: Color.Black,
-        parent: 4,
-        left: 5,
-        right: 10,
+        parent: 5,
+        left: 6,
+        right: 11,
       },
       {
         bufferIndex: 7,
@@ -265,7 +268,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 8,
+        parent: 9,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -278,9 +281,9 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 2,
         leftCharCount: 30,
         color: Color.Black,
-        parent: 10,
-        left: 7,
-        right: 9,
+        parent: 11,
+        left: 8,
+        right: 10,
       },
       {
         bufferIndex: 9,
@@ -291,7 +294,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 8,
+        parent: 9,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -304,9 +307,9 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 6,
         leftCharCount: 90,
         color: Color.Black,
-        parent: 6,
-        left: 8,
-        right: 11,
+        parent: 7,
+        left: 9,
+        right: 12,
       },
       {
         bufferIndex: 11,
@@ -317,9 +320,9 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 10,
+        parent: 11,
         left: SENTINEL_INDEX,
-        right: 13,
+        right: 14,
       },
       {
         bufferIndex: 12,
@@ -330,7 +333,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 13,
+        parent: 14,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -343,8 +346,8 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 2,
         leftCharCount: 30,
         color: Color.Black,
-        parent: 11,
-        left: 12,
+        parent: 12,
+        left: 13,
         right: SENTINEL_INDEX,
       },
     ];
@@ -352,7 +355,7 @@ describe("page/tree/rotate", () => {
       buffers: [],
       newlineFormat: NEWLINE.LF,
       nodes,
-      root: 4,
+      root: 5,
       previouslyInsertedNodeIndex: null,
       previouslyInsertedNodeOffset: null,
     };
@@ -362,6 +365,7 @@ describe("page/tree/rotate", () => {
 
   const constructComplexPieceTableAfterLeftRotate = (): PageContent => {
     const nodes: Node[] = [
+      SENTINEL,
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -371,7 +375,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 1,
+        parent: 2,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -384,8 +388,8 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 2,
         leftCharCount: 30,
         color: Color.Black,
-        parent: 2,
-        left: 0,
+        parent: 3,
+        left: 1,
         right: SENTINEL_INDEX,
       },
       {
@@ -397,9 +401,9 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 4,
         leftCharCount: 60,
         color: Color.Black,
-        parent: 4,
-        left: 1,
-        right: 3,
+        parent: 5,
+        left: 2,
+        right: 4,
       },
       {
         bufferIndex: 3,
@@ -410,7 +414,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 2,
+        parent: 3,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -424,8 +428,8 @@ describe("page/tree/rotate", () => {
         leftCharCount: 120,
         color: Color.Black,
         parent: SENTINEL_INDEX,
-        left: 2,
-        right: 10,
+        left: 3,
+        right: 11,
       },
       {
         bufferIndex: 5,
@@ -436,7 +440,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 6,
+        parent: 7,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -449,9 +453,9 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 2,
         leftCharCount: 30,
         color: Color.Black,
-        parent: 10,
-        left: 5,
-        right: 8,
+        parent: 11,
+        left: 6,
+        right: 9,
       },
       {
         bufferIndex: 7,
@@ -462,7 +466,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 8,
+        parent: 9,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -475,9 +479,9 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 2,
         leftCharCount: 30,
         color: Color.Black,
-        parent: 6,
-        left: 7,
-        right: 9,
+        parent: 7,
+        left: 8,
+        right: 10,
       },
       {
         bufferIndex: 9,
@@ -488,7 +492,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 8,
+        parent: 9,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -501,9 +505,9 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 10,
         leftCharCount: 150,
         color: Color.Black,
-        parent: 4,
-        left: 6,
-        right: 11,
+        parent: 5,
+        left: 7,
+        right: 12,
       },
       {
         bufferIndex: 11,
@@ -514,9 +518,9 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 10,
+        parent: 11,
         left: SENTINEL_INDEX,
-        right: 13,
+        right: 14,
       },
       {
         bufferIndex: 12,
@@ -527,7 +531,7 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 0,
         leftCharCount: 0,
         color: Color.Black,
-        parent: 13,
+        parent: 14,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
@@ -540,8 +544,8 @@ describe("page/tree/rotate", () => {
         leftLineFeedCount: 2,
         leftCharCount: 30,
         color: Color.Black,
-        parent: 11,
-        left: 12,
+        parent: 12,
+        left: 13,
         right: SENTINEL_INDEX,
       },
     ];
@@ -549,7 +553,7 @@ describe("page/tree/rotate", () => {
       buffers: [],
       newlineFormat: NEWLINE.LF,
       nodes,
-      root: 4,
+      root: 5,
       previouslyInsertedNodeIndex: null,
       previouslyInsertedNodeOffset: null,
     };
@@ -560,6 +564,7 @@ describe("page/tree/rotate", () => {
   const constructOneNodePieceTable = (): PageContent => ({
     buffers: [],
     nodes: [
+      SENTINEL,
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -574,9 +579,9 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
     ],
-    root: 0,
+    root: 1,
     newlineFormat: NEWLINE.LF,
-    previouslyInsertedNodeIndex: 0,
+    previouslyInsertedNodeIndex: 1,
     previouslyInsertedNodeOffset: 0,
   });
 
@@ -607,21 +612,21 @@ describe("page/tree/rotate", () => {
   describe("left rotate", () => {
     test("One node case", () => {
       const pieceTable = constructOneNodePieceTable();
-      const newPieceTable = leftRotate(pieceTable, 0);
+      const newPieceTable = leftRotate(pieceTable, 1);
       expect(newPieceTable).toEqual(constructOneNodePieceTable());
       expect(getDiffCount(pieceTable, newPieceTable)).toBe(0);
     });
 
     test("Simple case", () => {
       const pieceTable = constructSimplePieceTableBeforeLeftRotate();
-      const newPieceTable = leftRotate(pieceTable, 1);
+      const newPieceTable = leftRotate(pieceTable, 2);
       expect(newPieceTable).toEqual(constructSimplePieceTableAfterLeftRotate());
       expect(getDiffCount(pieceTable, newPieceTable)).toBeLessThanOrEqual(4);
     });
 
     test("Complex case", () => {
       const pieceTable = constructComplexPieceTableBeforeLeftRotate();
-      const newPieceTable = leftRotate(pieceTable, 6);
+      const newPieceTable = leftRotate(pieceTable, 7);
       expect(newPieceTable).toEqual(
         constructComplexPieceTableAfterLeftRotate(),
       );
@@ -632,14 +637,14 @@ describe("page/tree/rotate", () => {
   describe("right rotate", () => {
     test("One node case", () => {
       const pieceTable = constructOneNodePieceTable();
-      const newPieceTable = rightRotate(pieceTable, 0);
+      const newPieceTable = rightRotate(pieceTable, 1);
       expect(newPieceTable).toEqual(constructOneNodePieceTable());
       expect(getDiffCount(pieceTable, newPieceTable)).toBe(0);
     });
 
     test("Simple case", () => {
       const pieceTable = constructSimplePieceTableBeforeRightRotate();
-      const newPieceTable = rightRotate(pieceTable, 3);
+      const newPieceTable = rightRotate(pieceTable, 4);
       expect(newPieceTable).toEqual(
         constructSimplePieceTableAfterRightRotate(),
       );
@@ -648,7 +653,7 @@ describe("page/tree/rotate", () => {
 
     test("Complex case", () => {
       const pieceTable = constructComplexPieceTableBeforeRightRotate();
-      const newPieceTable = rightRotate(pieceTable, 10);
+      const newPieceTable = rightRotate(pieceTable, 11);
       expect(newPieceTable).toEqual(
         constructComplexPieceTableAfterRightRotate(),
       );
