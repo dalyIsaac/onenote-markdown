@@ -637,14 +637,14 @@ describe("page/tree/rotate", () => {
   describe("right rotate", () => {
     test("One node case", () => {
       const pieceTable = constructOneNodePieceTable();
-      const newPieceTable = rightRotate(pieceTable, 0);
+      const newPieceTable = rightRotate(pieceTable, 1);
       expect(newPieceTable).toEqual(constructOneNodePieceTable());
       expect(getDiffCount(pieceTable, newPieceTable)).toBe(0);
     });
 
     test("Simple case", () => {
       const pieceTable = constructSimplePieceTableBeforeRightRotate();
-      const newPieceTable = rightRotate(pieceTable, 3);
+      const newPieceTable = rightRotate(pieceTable, 4);
       expect(newPieceTable).toEqual(
         constructSimplePieceTableAfterRightRotate(),
       );
@@ -653,7 +653,7 @@ describe("page/tree/rotate", () => {
 
     test("Complex case", () => {
       const pieceTable = constructComplexPieceTableBeforeRightRotate();
-      const newPieceTable = rightRotate(pieceTable, 10);
+      const newPieceTable = rightRotate(pieceTable, 11);
       expect(newPieceTable).toEqual(
         constructComplexPieceTableAfterRightRotate(),
       );
