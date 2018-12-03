@@ -131,6 +131,7 @@ export interface PageContent {
 
   /**
    * The index of the root node for the piece table for this page.
+   * When the tree is empty, the root will be `SENTINEL_INDEX`.
    */
   root: number;
 

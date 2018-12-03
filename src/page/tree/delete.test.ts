@@ -1543,5 +1543,68 @@ describe("page/tree/delete", () => {
         expect(receivedPage).toEqual(expectedPage);
       });
     });
+
+    test("Scenario 9: delete root", () => {
+      const page: PageContent = {
+        buffers: [],
+        previouslyInsertedNodeIndex: null,
+        previouslyInsertedNodeOffset: null,
+        newlineFormat: NEWLINE.LF,
+        root: 1,
+        nodes: [
+          SENTINEL,
+          {
+            bufferIndex: 1,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 30,
+            leftLineFeedCount: 6,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+      };
+      const expectedPage: PageContent = {
+        buffers: [],
+        previouslyInsertedNodeIndex: null,
+        previouslyInsertedNodeOffset: null,
+        newlineFormat: NEWLINE.LF,
+        root: SENTINEL_INDEX,
+        nodes: [
+          SENTINEL,
+          {
+            bufferIndex: 1,
+            start: {
+              line: 0,
+              column: 0,
+            },
+            end: {
+              line: 0,
+              column: 0,
+            },
+            leftCharCount: 30,
+            leftLineFeedCount: 6,
+            length: 10,
+            lineFeedCount: 2,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+      };
+      const receivedPage = deleteNode(page, 1);
+      expect(receivedPage).toEqual(expectedPage);
+    });
   });
 });
