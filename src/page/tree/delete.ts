@@ -170,36 +170,6 @@ function detach(page: PageContent, nodeIndex: number) {
   node.right = SENTINEL_INDEX;
 }
 
-function transplant(
-  page: PageContent,
-  uIndex: number,
-  vIndex: number,
-): PageContent {
-  page = { ...page };
-  const u = { ...page.nodes[uIndex] };
-  page.nodes[uIndex] = u;
-
-  const v = { ...page.nodes[vIndex] };
-  page.nodes[vIndex] = v;
-
-  if (u.parent === SENTINEL_INDEX) {
-    page.root = vIndex;
-  } else if (uIndex === page.nodes[u.parent].left) {
-    page.nodes[u.parent] = {
-      ...page.nodes[u.parent],
-      left: vIndex,
-    };
-  } else {
-    page.nodes[u.parent] = {
-      ...page.nodes[u.parent],
-      right: vIndex,
-    };
-  }
-  v.parent = u.parent;
-
-  return page;
-}
-
 function fixDelete(page: PageContent, xIndex: number): PageContent {
   let wIndex: number;
   let w: Node;
