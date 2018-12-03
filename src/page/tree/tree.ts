@@ -208,7 +208,11 @@ export function recomputeTreeMetadata(
   page.nodes[xIndex] = x;
 
   // go upwards till the node whose left subtree is changed.
-  while (xIndex !== page.root && xIndex === page.nodes[x.parent].right) {
+  while (
+    xIndex !== page.root &&
+    xIndex === page.nodes[x.parent].right &&
+    xIndex !== SENTINEL_INDEX
+  ) {
     xIndex = x.parent;
     x = page.nodes[xIndex];
   }
@@ -303,6 +307,46 @@ export const SENTINEL: Node = {
   right: SENTINEL_INDEX,
 };
 
-export function resetSentinel(): void {
-  SENTINEL.parent = SENTINEL_INDEX;
+export function resetSentinel(page: PageContent): void {
+  page.nodes[0] = SENTINEL;
+}
+
+/**
+ * Finds the minimum of the subtree given by the `xIndex`
+ * @param page The piece table/page.
+ * @param xIndex The index from which to find the minimum of that subtree.
+ */
+export function treeMinimum(
+  page: PageContent,
+  xIndex: number,
+): { node: Node; index: number } {
+  let x = page.nodes[xIndex];
+  while (x.left !== SENTINEL_INDEX) {
+    xIndex = x.left;
+    x = page.nodes[xIndex];
+  }
+  return { node: x, index: xIndex };
+}
+
+export function updateTreeMetadata(
+  page: PageContent,
+  xIndex: number,
+  delta: number,
+  lineFeedCntDelta: number,
+): PageContent {
+  // node length change or line feed count change
+  while (xIndex !== page.root && xIndex !== SENTINEL_INDEX) {
+    const x = page.nodes[xIndex];
+    if (page.nodes[x.parent].left === xIndex) {
+      page.nodes[x.parent] = {
+        ...page.nodes[x.parent],
+        leftCharCount: page.nodes[x.parent].leftCharCount + delta,
+        leftLineFeedCount:
+          page.nodes[x.parent].leftLineFeedCount + lineFeedCntDelta,
+      };
+    }
+
+    xIndex = x.parent;
+  }
+  return page;
 }
