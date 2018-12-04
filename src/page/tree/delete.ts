@@ -71,18 +71,24 @@ function deleteContentFromSingleNode(
     length: localStartOffset,
     lineFeedCount: lineFeedCountBeforeStart,
   };
+  const lineFeedCountAfterEnd = getLineFeedCountBetweenOffsets(
+    page,
+    nodePosition.node,
+    localEndOffset,
+    nodePosition.node.length,
+  );
   const nodeAfterContent: Node = {
     bufferIndex: nodePosition.node.bufferIndex,
-    start: nodeBeforeContent.end,
+    start: {
+      line: lineFeedCountAfterEnd,
+      column: localEndOffset - page.buffers[nodePosition.node.bufferIndex].lineStarts[
+        lineFeedCountAfterEnd
+      ],
+    },
     end: nodePosition.node.end,
     length:
       nodePosition.node.length - (deletedLength + nodeBeforeContent.length),
-    lineFeedCount: getLineFeedCountBetweenOffsets(
-      page,
-      nodePosition.node,
-      localEndOffset,
-      nodePosition.node.length,
-    ),
+    lineFeedCount: lineFeedCountAfterEnd - 1,
     leftCharCount: 0,
     leftLineFeedCount: 0,
     left: 0,
@@ -99,6 +105,7 @@ function deleteContentFromSingleNode(
     nodeAfterContent.parent = nodePosition.node.parent;
     nodeAfterContent.left = nodePosition.node.left;
     nodeAfterContent.right = nodePosition.node.right;
+    nodeAfterContent.color = Color.Black;
     page.nodes[nodePosition.nodeIndex] = nodeAfterContent;
   } else {
     page = deleteNode(page, nodePosition.nodeIndex);
