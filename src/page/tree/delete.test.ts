@@ -1977,7 +1977,7 @@ describe("page/tree/delete", () => {
       expect(receivedPage).toEqual(expectedPage);
     });
 
-    test("Scenario 1b: delete the content from an entire node (test 1)", () => {
+    test("Scenario 1b: delete from the start of a node to a point in the node (test 1)", () => {
       const page: PageContent = {
         buffers: [
           {
@@ -2069,7 +2069,7 @@ describe("page/tree/delete", () => {
       expect(receivedPage).toEqual(expectedPage);
     });
 
-    test("Scenario 1b: delete the content from an entire node (test 2)", () => {
+    test("Scenario 1b: delete from the start of a node to a point in the node (test 2)", () => {
       const page: PageContent = {
         buffers: [
           {
@@ -2161,7 +2161,7 @@ describe("page/tree/delete", () => {
       expect(receivedPage).toEqual(expectedPage);
     });
 
-    test("Scenario 1b: delete the content from an entire node (test 3)", () => {
+    test("Scenario 1b: delete from the start of a node to a point in the node (test 3)", () => {
       const page: PageContent = {
         buffers: [
           {
@@ -2253,7 +2253,7 @@ describe("page/tree/delete", () => {
       expect(receivedPage).toEqual(expectedPage);
     });
 
-    test("Scenario 1b: delete the content from an entire node (test 4)", () => {
+    test("Scenario 1b: delete from the start of a node to a point in the node (test 4)", () => {
       const page: PageContent = {
         buffers: [
           {
@@ -2345,7 +2345,7 @@ describe("page/tree/delete", () => {
       expect(receivedPage).toEqual(expectedPage);
     });
 
-    test("Scenario 1b: delete the content from an entire node (test 5)", () => {
+    test("Scenario 1b: delete from the start of a node to a point in the node (test 5)", () => {
       const page: PageContent = {
         buffers: [
           {
@@ -2437,7 +2437,7 @@ describe("page/tree/delete", () => {
       expect(receivedPage).toEqual(expectedPage);
     });
 
-    test("Scenario 1b: delete the content from an entire node (test 6)", () => {
+    test("Scenario 1b: delete from the start of a node to a point in the node (test 6)", () => {
       const page: PageContent = {
         buffers: [
           {
@@ -2458,7 +2458,7 @@ describe("page/tree/delete", () => {
             length: 5,
             lineFeedCount: 1,
             color: Color.Black,
-            parent: SENTINEL_INDEX, 
+            parent: SENTINEL_INDEX,
             left: 2,
             right: SENTINEL_INDEX,
           },
