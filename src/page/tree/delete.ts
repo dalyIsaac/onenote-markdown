@@ -51,7 +51,9 @@ function deleteContentFromSingleNode(
   const localStartOffset =
     page.buffers[nodePosition.node.bufferIndex].lineStarts[
       nodePosition.node.start.line
-    ] + nodePosition.node.start.column;
+    ] +
+    nodePosition.node.start.column +
+    nodePosition.remainder;
   const deletedLength = content.endOffset - content.startOffset;
   const localEndOffset = localStartOffset + deletedLength + 1;
   const {
@@ -74,9 +76,7 @@ function deleteContentFromSingleNode(
           lineFeedCountBeforeStart
         ],
     },
-    length:
-      content.startOffset -
-      (nodePosition.remainder + nodePosition.nodeStartOffset),
+    length: nodePosition.remainder,
     lineFeedCount: lineFeedCountBeforeStart,
   };
   const nodeAfterContent: Node = {
@@ -103,7 +103,6 @@ function deleteContentFromSingleNode(
   };
   if (nodeBeforeContent.length > 0) {
     page.nodes[nodePosition.nodeIndex] = nodeBeforeContent;
-    page = insertNode(page, nodeAfterContent, content.endOffset);
   } else if (nodeAfterContent.length > 0) {
     nodeAfterContent.leftCharCount = nodePosition.node.leftCharCount;
     nodeAfterContent.leftLineFeedCount = nodePosition.node.leftLineFeedCount;
