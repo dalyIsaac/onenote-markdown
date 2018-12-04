@@ -35,6 +35,8 @@ export function deleteContent(
     containingNodePosition.nodeStartOffset + containingNodePosition.node.length
   ) {
     page = deleteContentFromSingleNode(page, content, containingNodePosition);
+  } else {
+    // TODO deleteContentFromMultipleNodes
   }
 
   page.previouslyInsertedNodeIndex = null;
