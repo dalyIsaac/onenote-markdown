@@ -81,6 +81,10 @@ function deleteContentFromSingleNode(
     length: nodePosition.remainder,
     lineFeedCount: lineFeedCountAfterNodeStartBeforeStart,
   };
+  const nodeAfterContentLine =
+    nodePosition.node.start.line +
+    lineFeedCountAfterNodeStartBeforeStart +
+    lineFeedCountBetweenOffset;
   const nodeAfterContent: Node = {
     bufferIndex: nodePosition.node.bufferIndex,
     start: {
@@ -91,9 +95,7 @@ function deleteContentFromSingleNode(
       column:
         localEndOffset -
         page.buffers[nodePosition.node.bufferIndex].lineStarts[
-          lineFeedCountBeforeNodeStart +
-            lineFeedCountAfterNodeStartBeforeStart +
-            lineFeedCountBetweenOffset
+          nodeAfterContentLine
         ] -
         1,
     },
