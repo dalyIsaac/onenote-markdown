@@ -57,36 +57,43 @@ function deleteContentFromSingleNode(
   const deletedLength = content.endOffset - content.startOffset;
   const localEndOffset = localStartOffset + deletedLength + 1;
   const {
-    lineFeedCountBeforeStart,
+    lineFeedCountBeforeNodeStart,
+    lineFeedCountAfterNodeStartBeforeStart,
     lineFeedCountBetweenOffset,
     lineFeedCountAfterEnd,
   } = getLineFeedCountsForOffsets(
     page,
-    nodePosition.node,
+    nodePosition,
     localStartOffset,
     localEndOffset,
   );
   const nodeBeforeContent: Node = {
     ...nodePosition.node,
     end: {
-      line: lineFeedCountBeforeStart,
+      line:
+        lineFeedCountBeforeNodeStart + lineFeedCountAfterNodeStartBeforeStart,
       column:
         localStartOffset -
         page.buffers[nodePosition.node.bufferIndex].lineStarts[
-          lineFeedCountBeforeStart
+          lineFeedCountBeforeNodeStart + lineFeedCountAfterNodeStartBeforeStart
         ],
     },
     length: nodePosition.remainder,
-    lineFeedCount: lineFeedCountBeforeStart,
+    lineFeedCount: lineFeedCountAfterNodeStartBeforeStart,
   };
   const nodeAfterContent: Node = {
     bufferIndex: nodePosition.node.bufferIndex,
     start: {
-      line: lineFeedCountBeforeStart + lineFeedCountBetweenOffset,
+      line:
+        nodePosition.node.start.line +
+        lineFeedCountAfterNodeStartBeforeStart +
+        lineFeedCountBetweenOffset,
       column:
         localEndOffset -
         page.buffers[nodePosition.node.bufferIndex].lineStarts[
-          lineFeedCountBeforeStart + lineFeedCountBetweenOffset
+          lineFeedCountBeforeNodeStart +
+            lineFeedCountAfterNodeStartBeforeStart +
+            lineFeedCountBetweenOffset
         ] -
         1,
     },
@@ -402,23 +409,31 @@ function fixDelete(page: PageContent, xIndex: number): PageContent {
  */
 function getLineFeedCountsForOffsets(
   page: PageContent,
-  node: Node,
+  nodePosition: NodePosition,
   startLocalOffset: number,
   endLocalOffset: number,
 ): {
-  lineFeedCountBeforeStart: number;
+  lineFeedCountBeforeNodeStart: number;
+  lineFeedCountAfterNodeStartBeforeStart: number;
   lineFeedCountBetweenOffset: number;
   lineFeedCountAfterEnd: number;
 } {
-  const buffer = page.buffers[node.bufferIndex];
-  let lineFeedCountBeforeStart = 0;
+  const buffer = page.buffers[nodePosition.node.bufferIndex];
+  const nodeStartOffset =
+    page.buffers[nodePosition.node.bufferIndex].lineStarts[
+      nodePosition.node.start.line
+    ] + nodePosition.node.start.column;
+  let lineFeedCountBeforeNodeStart = 0;
+  let lineFeedCountAfterNodeStartBeforeStart = 0;
   let lineFeedCountBetweenOffset = 0;
   let lineFeedCountAfterEnd = 0;
 
   for (let i = 1; i < buffer.lineStarts.length; i++) {
     const el = buffer.lineStarts[i];
-    if (el < startLocalOffset) {
-      lineFeedCountBeforeStart++;
+    if (el < nodeStartOffset) {
+      lineFeedCountBeforeNodeStart++;
+    } else if (nodeStartOffset <= el && el < startLocalOffset) {
+      lineFeedCountAfterNodeStartBeforeStart++;
     } else if (startLocalOffset <= el && el < endLocalOffset) {
       lineFeedCountBetweenOffset++;
     } else if (endLocalOffset <= el) {
@@ -426,7 +441,8 @@ function getLineFeedCountsForOffsets(
     }
   }
   return {
-    lineFeedCountBeforeStart,
+    lineFeedCountBeforeNodeStart,
+    lineFeedCountAfterNodeStartBeforeStart,
     lineFeedCountBetweenOffset,
     lineFeedCountAfterEnd,
   };
