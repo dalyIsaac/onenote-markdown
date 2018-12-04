@@ -416,7 +416,7 @@ function createNodeCreateBuffer(content: ContentInsert, page: PageContent) {
  * @param newNode Reference to the newly created node. The node already exists inside `page.nodes`.
  * @param offset The offset of the new node.
  */
-function insertNode(
+export function insertNode(
   page: PageContent,
   newNode: Node,
   offset: number,

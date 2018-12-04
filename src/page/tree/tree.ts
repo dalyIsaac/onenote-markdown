@@ -350,3 +350,29 @@ export function updateTreeMetadata(
   }
   return page;
 }
+
+/**
+ * Gets the number of line feeds before a logical offset.
+ * Returns `-1` if nodePosition.remainder === nodePosition.nodeStartOffset.
+ * @param page The page/piece table.
+ * @param nodePosition The position of the node which contains the offset.
+ * @param startLocalOffset The logical offset inside the entire piece table.
+ * @param endLocalOffset The logical offset inside the entire piece table.
+ */
+export function getLineFeedCountBetweenOffsets(
+  page: PageContent,
+  node: Node,
+  startLocalOffset: number,
+  endLocalOffset: number,
+): number {
+  const buffer = page.buffers[node.bufferIndex];
+  let counter = 0;
+  buffer.lineStarts.forEach((x: number) => {
+    if (startLocalOffset <= x && x < endLocalOffset) {
+      counter++;
+    } else if (startLocalOffset <= x) {
+      return counter;
+    }
+  });
+  return -1; // makes the compiler happy
+}

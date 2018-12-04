@@ -1,5 +1,5 @@
 import { Color, NEWLINE, PageContent } from "../model";
-import { deleteNode } from "./delete";
+import { deleteContent, deleteNode } from "./delete";
 import { SENTINEL, SENTINEL_INDEX } from "./tree";
 
 describe("page/tree/delete", () => {
@@ -1604,6 +1604,100 @@ describe("page/tree/delete", () => {
         ],
       };
       const receivedPage = deleteNode(page, 1);
+      expect(receivedPage).toEqual(expectedPage);
+    });
+  });
+
+  describe("delete content", () => {
+    test("Scenario 1a: delete the content from an entire node (test 1)", () => {
+      const page: PageContent = {
+        buffers: [
+          {
+            content: "abc\ndef",
+            lineStarts: [0, 4],
+            isReadOnly: false,
+          },
+        ],
+        newlineFormat: NEWLINE.LF,
+        nodes: [
+          SENTINEL,
+          {
+            bufferIndex: 0,
+            start: { line: 0, column: 0 },
+            end: { line: 1, column: 1 },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 5,
+            lineFeedCount: 1,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: SENTINEL_INDEX,
+            right: 2,
+          },
+          {
+            bufferIndex: 0,
+            start: { line: 1, column: 1 },
+            end: { line: 1, column: 3 },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 0,
+            color: Color.Red,
+            parent: 1,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+        root: 1,
+        previouslyInsertedNodeIndex: 1,
+        previouslyInsertedNodeOffset: 5,
+      };
+      const expectedPage: PageContent = {
+        buffers: [
+          {
+            content: "abc\ndef",
+            lineStarts: [0, 4],
+            isReadOnly: false,
+          },
+        ],
+        newlineFormat: NEWLINE.LF,
+        nodes: [
+          SENTINEL,
+          {
+            bufferIndex: 0,
+            start: { line: 0, column: 0 },
+            end: { line: 1, column: 1 },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 5,
+            lineFeedCount: 1,
+            color: Color.Black,
+            parent: SENTINEL_INDEX,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+          {
+            bufferIndex: 0,
+            start: { line: 1, column: 1 },
+            end: { line: 1, column: 3 },
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 0,
+            color: Color.Red,
+            parent: SENTINEL_INDEX,
+            left: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+          },
+        ],
+        root: 1,
+        previouslyInsertedNodeIndex: null,
+        previouslyInsertedNodeOffset: null,
+      };
+      const receivedPage = deleteContent(page, {
+        startOffset: 5,
+        endOffset: 7,
+      });
       expect(receivedPage).toEqual(expectedPage);
     });
   });

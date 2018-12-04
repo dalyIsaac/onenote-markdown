@@ -1,14 +1,96 @@
 import { Color, Node, PageContent } from "../model";
+import { insertNode } from "./insert";
 import { leftRotate, rightRotate } from "./rotate";
 import {
   calculateCharCount,
   calculateLineFeedCount,
+  findNodeAtOffset,
+  getLineFeedCountBetweenOffsets,
+  NodePosition,
   recomputeTreeMetadata,
   resetSentinel,
   SENTINEL_INDEX,
   treeMinimum,
   updateTreeMetadata,
 } from "./tree";
+
+export interface ContentDelete {
+  startOffset: number;
+  endOffset: number;
+}
+
+export function deleteContent(
+  page: PageContent,
+  content: ContentDelete,
+): PageContent {
+  const containingNodePosition = findNodeAtOffset(
+    content.startOffset,
+    page.nodes,
+    page.root,
+  );
+  const length = content.endOffset - content.startOffset;
+  page = { ...page, nodes: [...page.nodes] };
+  if (
+    containingNodePosition.remainder + length <=
+    containingNodePosition.nodeStartOffset + containingNodePosition.node.length
+  ) {
+    page = deleteContentFromSingleNode(page, content, containingNodePosition);
+  }
+
+  page.previouslyInsertedNodeIndex = null;
+  page.previouslyInsertedNodeOffset = null;
+  return page;
+}
+
+function deleteContentFromSingleNode(
+  page: PageContent,
+  content: ContentDelete,
+  nodePosition: NodePosition,
+): PageContent {
+  const localStartOffset = nodePosition.nodeStartOffset - content.startOffset;
+  const deletedLength = content.endOffset - content.startOffset;
+  const localEndOffset = nodePosition.nodeStartOffset + deletedLength;
+  const lineFeedCountBeforeStart = getLineFeedCountBetweenOffsets(
+    page,
+    nodePosition.node,
+    0,
+    localStartOffset,
+  );
+  const nodeBeforeContent: Node = {
+    ...nodePosition.node,
+    end: {
+      line: lineFeedCountBeforeStart,
+      column:
+        localStartOffset -
+        page.buffers[nodePosition.node.bufferIndex].lineStarts[
+          lineFeedCountBeforeStart
+        ],
+    },
+    length: localStartOffset,
+    lineFeedCount: lineFeedCountBeforeStart,
+  };
+  const nodeAfterContent: Node = {
+    ...nodePosition.node,
+    start: nodeBeforeContent.end,
+    length:
+      nodePosition.node.length - (deletedLength + nodeBeforeContent.length),
+    lineFeedCount: getLineFeedCountBetweenOffsets(
+      page,
+      nodePosition.node,
+      localEndOffset,
+      nodePosition.node.length,
+    ),
+  };
+  if (nodeBeforeContent.length > 0) {
+    page.nodes[nodePosition.nodeIndex] = nodeBeforeContent;
+    page = insertNode(page, nodeAfterContent, content.endOffset);
+  } else if (nodeAfterContent.length > 0) {
+    page.nodes[nodePosition.nodeIndex] = nodeAfterContent;
+  } else {
+    page = deleteNode(page, nodePosition.nodeIndex);
+  }
+  return page;
+}
 
 export function deleteNode(page: PageContent, zIndex: number): PageContent {
   page = { ...page };
