@@ -5,7 +5,6 @@ import {
   calculateCharCount,
   calculateLineFeedCount,
   findNodeAtOffset,
-  getLineFeedCountBetweenOffsets,
   NodePosition,
   recomputeTreeMetadata,
   resetSentinel,
@@ -51,12 +50,16 @@ function deleteContentFromSingleNode(
 ): PageContent {
   const localStartOffset = nodePosition.nodeStartOffset - content.startOffset;
   const deletedLength = content.endOffset - content.startOffset;
-  const localEndOffset = nodePosition.nodeStartOffset + deletedLength;
-  const lineFeedCountBeforeStart = getLineFeedCountBetweenOffsets(
+  const localEndOffset = deletedLength + 1;
+  const {
+    lineFeedCountBeforeStart,
+    lineFeedCountBetweenOffset,
+    lineFeedCountAfterEnd,
+  } = getLineFeedCountsForOffsets(
     page,
     nodePosition.node,
-    0,
     localStartOffset,
+    localEndOffset,
   );
   const nodeBeforeContent: Node = {
     ...nodePosition.node,
@@ -71,24 +74,21 @@ function deleteContentFromSingleNode(
     length: localStartOffset,
     lineFeedCount: lineFeedCountBeforeStart,
   };
-  const lineFeedCountAfterEnd = getLineFeedCountBetweenOffsets(
-    page,
-    nodePosition.node,
-    localEndOffset,
-    nodePosition.node.length,
-  );
   const nodeAfterContent: Node = {
     bufferIndex: nodePosition.node.bufferIndex,
     start: {
-      line: lineFeedCountAfterEnd,
-      column: localEndOffset - page.buffers[nodePosition.node.bufferIndex].lineStarts[
-        lineFeedCountAfterEnd
-      ],
+      line: lineFeedCountBeforeStart + lineFeedCountBetweenOffset,
+      column:
+        localEndOffset -
+        page.buffers[nodePosition.node.bufferIndex].lineStarts[
+          lineFeedCountBeforeStart + lineFeedCountBetweenOffset
+        ] -
+        1,
     },
     end: nodePosition.node.end,
     length:
       nodePosition.node.length - (deletedLength + nodeBeforeContent.length),
-    lineFeedCount: lineFeedCountAfterEnd - 1,
+    lineFeedCount: lineFeedCountAfterEnd,
     leftCharCount: 0,
     leftLineFeedCount: 0,
     left: 0,
@@ -386,4 +386,44 @@ function fixDelete(page: PageContent, xIndex: number): PageContent {
   x.color = Color.Black;
 
   return page;
+}
+
+/**
+ * Gets the number of line feeds before, between, and after a start and end offset.
+ * Returns `-1` if nodePosition.remainder === nodePosition.nodeStartOffset.
+ * @param page The page/piece table.
+ * @param nodePosition The position of the node which contains the offset.
+ * @param startLocalOffset The logical offset inside the entire piece table.
+ * @param endLocalOffset The logical offset inside the entire piece table.
+ */
+function getLineFeedCountsForOffsets(
+  page: PageContent,
+  node: Node,
+  startLocalOffset: number,
+  endLocalOffset: number,
+): {
+  lineFeedCountBeforeStart: number;
+  lineFeedCountBetweenOffset: number;
+  lineFeedCountAfterEnd: number;
+} {
+  const buffer = page.buffers[node.bufferIndex];
+  let lineFeedCountBeforeStart = 0;
+  let lineFeedCountBetweenOffset = 0;
+  let lineFeedCountAfterEnd = 0;
+
+  for (let i = 1; i < buffer.lineStarts.length; i++) {
+    const el = buffer.lineStarts[i];
+    if (el < startLocalOffset) {
+      lineFeedCountBeforeStart++;
+    } else if (startLocalOffset <= el && el < endLocalOffset) {
+      lineFeedCountBetweenOffset++;
+    } else if (endLocalOffset <= el) {
+      lineFeedCountAfterEnd++;
+    }
+  }
+  return {
+    lineFeedCountBeforeStart,
+    lineFeedCountBetweenOffset,
+    lineFeedCountAfterEnd,
+  };
 }
