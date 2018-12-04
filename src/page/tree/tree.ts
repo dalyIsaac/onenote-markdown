@@ -374,5 +374,5 @@ export function getLineFeedCountBetweenOffsets(
       return counter;
     }
   });
-  return -1; // makes the compiler happy
+  return 0;
 }
