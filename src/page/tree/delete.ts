@@ -48,6 +48,7 @@ function deleteContentFromSingleNode(
   content: ContentDelete,
   nodePosition: NodePosition,
 ): PageContent {
+  // "local" offsets refer to local within the buffer
   const localStartOffset =
     page.buffers[nodePosition.node.bufferIndex].lineStarts[
       nodePosition.node.start.line
