@@ -328,7 +328,7 @@ export function deleteNode(page: PageContent, zIndex: number): PageContent {
   return page;
 }
 
-function detach(page: PageContent, nodeIndex: number) {
+function detach(page: PageContent, nodeIndex: number): void {
   const node = page.nodes[nodeIndex];
   const parent = page.nodes[node.parent];
   if (parent.left === nodeIndex) {
