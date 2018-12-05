@@ -411,7 +411,7 @@ function createNodeCreateBuffer(content: ContentInsert, page: PageContent) {
 }
 
 /**
- * Inserts a node at the given offset.
+ * Modifies the metadata of nodes to "insert" a node. **The node should already exist inside `page.nodes`.**
  * @param page The page/piece table.
  * @param newNode Reference to the newly created node. The node already exists inside `page.nodes`.
  * @param offset The offset of the new node.

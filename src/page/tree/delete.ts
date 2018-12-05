@@ -1,5 +1,5 @@
 import { Color, Node, PageContent } from "../model";
-import { insertNode } from "./insert";
+import { fixInsert, insertNode } from "./insert";
 import { leftRotate, rightRotate } from "./rotate";
 import {
   calculateCharCount,
@@ -113,7 +113,9 @@ function deleteContentFromSingleNode(
   if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
     // delete from a point in the node to another point in the node
     page.nodes[nodePosition.nodeIndex] = nodeBeforeContent;
-    page = insertNode(page, nodeAfterContent, content.endOffset);
+    page.nodes.push(nodeAfterContent);
+    page = insertNode(page, nodeAfterContent, content.startOffset);
+    page = fixInsert(page, page.nodes.length - 1);
   } else if (nodeBeforeContent.length > 0) {
     // delete from a point in the node to the end of the node
     page.nodes[nodePosition.nodeIndex] = nodeBeforeContent;
