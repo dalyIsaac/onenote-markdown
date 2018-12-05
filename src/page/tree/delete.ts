@@ -110,9 +110,15 @@ function deleteContentFromSingleNode(
     parent: 0,
     color: Color.Red,
   };
-  if (nodeBeforeContent.length > 0) {
+  if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
+    // delete from a point in the node to another point in the node
+    page.nodes[nodePosition.nodeIndex] = nodeBeforeContent;
+    page = insertNode(page, nodeAfterContent, content.endOffset);
+  } else if (nodeBeforeContent.length > 0) {
+    // delete from a point in the node to the end of the node
     page.nodes[nodePosition.nodeIndex] = nodeBeforeContent;
   } else if (nodeAfterContent.length > 0) {
+    // delete from the start of the node to a point in the node
     nodeAfterContent.leftCharCount = nodePosition.node.leftCharCount;
     nodeAfterContent.leftLineFeedCount = nodePosition.node.leftLineFeedCount;
     nodeAfterContent.parent = nodePosition.node.parent;
@@ -121,6 +127,7 @@ function deleteContentFromSingleNode(
     nodeAfterContent.color = nodePosition.node.color;
     page.nodes[nodePosition.nodeIndex] = nodeAfterContent;
   } else {
+    // delete the entire node
     page = deleteNode(page, nodePosition.nodeIndex);
   }
   return page;

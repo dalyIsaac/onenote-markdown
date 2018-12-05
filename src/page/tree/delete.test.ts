@@ -1610,7 +1610,7 @@ describe("page/tree/delete", () => {
 
   describe("delete content", () => {
     describe("Scenario 1a: delete the content from an entire node", () => {
-      test("Test 1", () => {
+      test("Scenario 1a: Test 1", () => {
         const page: PageContent = {
           buffers: [
             {
@@ -1702,7 +1702,7 @@ describe("page/tree/delete", () => {
         expect(receivedPage).toEqual(expectedPage);
       });
 
-      test("Test 2", () => {
+      test("Scenario 1a: Test 2", () => {
         const page: PageContent = {
           buffers: [
             {
@@ -1794,7 +1794,7 @@ describe("page/tree/delete", () => {
         expect(receivedPage).toEqual(expectedPage);
       });
 
-      test("Test 3", () => {
+      test("Scenario 1a: Test 3", () => {
         const page: PageContent = {
           buffers: [
             {
@@ -1886,7 +1886,7 @@ describe("page/tree/delete", () => {
         expect(receivedPage).toEqual(expectedPage);
       });
 
-      test("Test 4", () => {
+      test("Scenario 1a: Test 4", () => {
         const page: PageContent = {
           buffers: [
             {
@@ -1980,7 +1980,7 @@ describe("page/tree/delete", () => {
     });
 
     describe("Scenario 1b: delete from the start of a node to a point in the node", () => {
-      test("Test 1", () => {
+      test("Scenario 1b: Test 1", () => {
         const page: PageContent = {
           buffers: [
             {
@@ -2072,7 +2072,7 @@ describe("page/tree/delete", () => {
         expect(receivedPage).toEqual(expectedPage);
       });
 
-      test("Test 2", () => {
+      test("Scenario 1b: Test 2", () => {
         const page: PageContent = {
           buffers: [
             {
@@ -2164,7 +2164,7 @@ describe("page/tree/delete", () => {
         expect(receivedPage).toEqual(expectedPage);
       });
 
-      test("Test 3", () => {
+      test("Scenario 1b: Test 3", () => {
         const page: PageContent = {
           buffers: [
             {
@@ -2256,7 +2256,7 @@ describe("page/tree/delete", () => {
         expect(receivedPage).toEqual(expectedPage);
       });
 
-      test("Test 4", () => {
+      test("Scenario 1b: Test 4", () => {
         const page: PageContent = {
           buffers: [
             {
@@ -2348,7 +2348,7 @@ describe("page/tree/delete", () => {
         expect(receivedPage).toEqual(expectedPage);
       });
 
-      test("Test 5", () => {
+      test("Scenario 1b: Test 5", () => {
         const page: PageContent = {
           buffers: [
             {
@@ -2440,7 +2440,7 @@ describe("page/tree/delete", () => {
         expect(receivedPage).toEqual(expectedPage);
       });
 
-      test("Test 6", () => {
+      test("Scenario 1b: Test 6", () => {
         const page: PageContent = {
           buffers: [
             {
@@ -2533,8 +2533,8 @@ describe("page/tree/delete", () => {
       });
     });
 
-    describe("Scenario 1c: delete from a point in a ndoe to the end of the node", () => {
-      test("Test 1", () => {
+    describe("Scenario 1c: delete from a point in a node to the end of the node", () => {
+      test("Scenario 1c: Test 1", () => {
         const page: PageContent = {
           buffers: [
             {
@@ -2626,7 +2626,7 @@ describe("page/tree/delete", () => {
         expect(receivedPage).toEqual(expectedPage);
       });
 
-      test("Test 2", () => {
+      test("Scenario 1c: Test 2", () => {
         const page: PageContent = {
           buffers: [
             {
@@ -2718,7 +2718,7 @@ describe("page/tree/delete", () => {
         expect(receivedPage).toEqual(expectedPage);
       });
 
-      test("Test 3", () => {
+      test("Scenario 1c: Test 3", () => {
         const page: PageContent = {
           buffers: [
             {
@@ -2810,7 +2810,7 @@ describe("page/tree/delete", () => {
         expect(receivedPage).toEqual(expectedPage);
       });
 
-      test("Test 4", () => {
+      test("Scenario 1c: Test 4", () => {
         const page: PageContent = {
           buffers: [
             {
@@ -2902,7 +2902,7 @@ describe("page/tree/delete", () => {
         expect(receivedPage).toEqual(expectedPage);
       });
 
-      test("Test 5", () => {
+      test("Scenario 1c: Test 5", () => {
         const page: PageContent = {
           buffers: [
             {
@@ -2994,7 +2994,7 @@ describe("page/tree/delete", () => {
         expect(receivedPage).toEqual(expectedPage);
       });
 
-      test("Test 6", () => {
+      test("Scenario 1c: Test 6", () => {
         const page: PageContent = {
           buffers: [
             {
@@ -3086,7 +3086,7 @@ describe("page/tree/delete", () => {
         expect(receivedPage).toEqual(expectedPage);
       });
 
-      test("Test 7", () => {
+      test("Scenario 1c: Test 7", () => {
         const page: PageContent = {
           buffers: [
             {
