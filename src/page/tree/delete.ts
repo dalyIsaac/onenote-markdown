@@ -22,32 +22,74 @@ export function deleteContent(
   page: PageContent,
   content: ContentDelete,
 ): PageContent {
-  const containingNodePosition = findNodeAtOffset(
+  const oldNodeStartPosition = findNodeAtOffset(
     content.startOffset,
     page.nodes,
     page.root,
   );
-  const length = content.endOffset - content.startOffset;
-  page = { ...page, nodes: [...page.nodes] };
+  const nodeBeforeContent = getNodeBeforeContent(
+    page,
+    content,
+    oldNodeStartPosition,
+  );
+  let nodeAfterContent: Node;
   if (
-    containingNodePosition.remainder + length <=
-    containingNodePosition.nodeStartOffset + containingNodePosition.node.length
+    oldNodeStartPosition.remainder + length <=
+    oldNodeStartPosition.nodeStartOffset + oldNodeStartPosition.node.length
   ) {
-    page = deleteContentFromSingleNode(page, content, containingNodePosition);
+    nodeAfterContent = getNodeAfterContent(
+      page,
+      content,
+      oldNodeStartPosition,
+      nodeBeforeContent,
+    );
   } else {
-    // TODO deleteContentFromMultipleNodes
+    const oldNodeEndPosition = findNodeAtOffset(
+      content.endOffset,
+      page.nodes,
+      page.root,
+    );
+    nodeAfterContent = getNodeAfterContent(
+      page,
+      content,
+      oldNodeEndPosition,
+      nodeBeforeContent,
+    );
   }
 
+  if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
+    // delete from a point in the node to another point in the node
+    page.nodes[oldNodeStartPosition.nodeIndex] = nodeBeforeContent;
+    page.nodes.push(nodeAfterContent);
+    page = insertNode(page, nodeAfterContent, content.startOffset);
+    page = fixInsert(page, page.nodes.length - 1);
+  } else if (nodeBeforeContent.length > 0) {
+    // delete from a point in the node to the end of the node
+    page.nodes[oldNodeStartPosition.nodeIndex] = nodeBeforeContent;
+  } else if (nodeAfterContent.length > 0) {
+    // delete from the start of the node to a point in the node
+    nodeAfterContent.leftCharCount = oldNodeStartPosition.node.leftCharCount;
+    nodeAfterContent.leftLineFeedCount =
+      oldNodeStartPosition.node.leftLineFeedCount;
+    nodeAfterContent.parent = oldNodeStartPosition.node.parent;
+    nodeAfterContent.left = oldNodeStartPosition.node.left;
+    nodeAfterContent.right = oldNodeStartPosition.node.right;
+    nodeAfterContent.color = oldNodeStartPosition.node.color;
+    page.nodes[oldNodeStartPosition.nodeIndex] = nodeAfterContent;
+  } else {
+    // delete the entire node
+    page = deleteNode(page, oldNodeStartPosition.nodeIndex);
+  }
   page.previouslyInsertedNodeIndex = null;
   page.previouslyInsertedNodeOffset = null;
   return page;
 }
 
-function deleteContentFromSingleNode(
+function getNodeBeforeContent(
   page: PageContent,
   content: ContentDelete,
   nodePosition: NodePosition,
-): PageContent {
+): Node {
   // "local" offsets refer to local within the buffer
   const localStartOffset =
     page.buffers[nodePosition.node.bufferIndex].lineStarts[
@@ -60,8 +102,6 @@ function deleteContentFromSingleNode(
   const {
     lineFeedCountBeforeNodeStart,
     lineFeedCountAfterNodeStartBeforeStart,
-    lineFeedCountBetweenOffset,
-    lineFeedCountAfterEnd,
   } = getLineFeedCountsForOffsets(
     page,
     nodePosition,
@@ -82,6 +122,33 @@ function deleteContentFromSingleNode(
     length: nodePosition.remainder,
     lineFeedCount: lineFeedCountAfterNodeStartBeforeStart,
   };
+  return nodeBeforeContent;
+}
+
+function getNodeAfterContent(
+  page: PageContent,
+  content: ContentDelete,
+  nodePosition: NodePosition,
+  nodeBeforeContent: Node,
+): Node {
+  const localStartOffset =
+    page.buffers[nodePosition.node.bufferIndex].lineStarts[
+      nodePosition.node.start.line
+    ] +
+    nodePosition.node.start.column +
+    nodePosition.remainder;
+  const deletedLength = content.endOffset - content.startOffset;
+  const localEndOffset = localStartOffset + deletedLength + 1;
+  const {
+    lineFeedCountAfterNodeStartBeforeStart,
+    lineFeedCountBetweenOffset,
+    lineFeedCountAfterEnd,
+  } = getLineFeedCountsForOffsets(
+    page,
+    nodePosition,
+    localStartOffset,
+    localEndOffset,
+  );
   const nodeAfterContentLine =
     nodePosition.node.start.line +
     lineFeedCountAfterNodeStartBeforeStart +
@@ -111,29 +178,7 @@ function deleteContentFromSingleNode(
     parent: 0,
     color: Color.Red,
   };
-  if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
-    // delete from a point in the node to another point in the node
-    page.nodes[nodePosition.nodeIndex] = nodeBeforeContent;
-    page.nodes.push(nodeAfterContent);
-    page = insertNode(page, nodeAfterContent, content.startOffset);
-    page = fixInsert(page, page.nodes.length - 1);
-  } else if (nodeBeforeContent.length > 0) {
-    // delete from a point in the node to the end of the node
-    page.nodes[nodePosition.nodeIndex] = nodeBeforeContent;
-  } else if (nodeAfterContent.length > 0) {
-    // delete from the start of the node to a point in the node
-    nodeAfterContent.leftCharCount = nodePosition.node.leftCharCount;
-    nodeAfterContent.leftLineFeedCount = nodePosition.node.leftLineFeedCount;
-    nodeAfterContent.parent = nodePosition.node.parent;
-    nodeAfterContent.left = nodePosition.node.left;
-    nodeAfterContent.right = nodePosition.node.right;
-    nodeAfterContent.color = nodePosition.node.color;
-    page.nodes[nodePosition.nodeIndex] = nodeAfterContent;
-  } else {
-    // delete the entire node
-    page = deleteNode(page, nodePosition.nodeIndex);
-  }
-  return page;
+  return nodeAfterContent;
 }
 
 export function deleteNode(page: PageContent, zIndex: number): PageContent {
