@@ -3599,6 +3599,111 @@ describe("page/tree/delete", () => {
         });
         expect(receivedPage).toEqual(expectedPage);
       });
+
+      test("Scenario 1d: Test 5", () => {
+        const page: PageContent = {
+          buffers: [
+            {
+              content: "abc\ndefgh",
+              lineStarts: [0, 4],
+              isReadOnly: false,
+            },
+          ],
+          newlineFormat: NEWLINE.LF,
+          nodes: [
+            SENTINEL,
+            {
+              bufferIndex: 0,
+              start: { line: 0, column: 0 },
+              end: { line: 1, column: 1 },
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 5,
+              lineFeedCount: 1,
+              color: Color.Black,
+              parent: SENTINEL_INDEX,
+              left: SENTINEL_INDEX,
+              right: 2,
+            },
+            {
+              bufferIndex: 0,
+              start: { line: 1, column: 1 },
+              end: { line: 1, column: 5 },
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 4,
+              lineFeedCount: 0,
+              color: Color.Red,
+              parent: 1,
+              left: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+            },
+          ],
+          root: 1,
+          previouslyInsertedNodeIndex: null,
+          previouslyInsertedNodeOffset: null,
+        };
+        const expectedPage: PageContent = {
+          buffers: [
+            {
+              content: "abc\ndefgh",
+              lineStarts: [0, 4],
+              isReadOnly: false,
+            },
+          ],
+          newlineFormat: NEWLINE.LF,
+          nodes: [
+            SENTINEL,
+            {
+              bufferIndex: 0,
+              start: { line: 0, column: 0 },
+              end: { line: 1, column: 1 },
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 5,
+              lineFeedCount: 1,
+              color: Color.Red,
+              parent: 2,
+              left: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+            },
+            {
+              bufferIndex: 0,
+              start: { line: 1, column: 1 },
+              end: { line: 1, column: 2 },
+              leftCharCount: 5,
+              leftLineFeedCount: 1,
+              length: 1,
+              lineFeedCount: 0,
+              color: Color.Black,
+              parent: SENTINEL_INDEX,
+              left: 1,
+              right: 3,
+            },
+            {
+              bufferIndex: 0,
+              start: { line: 1, column: 4 },
+              end: { line: 1, column: 5 },
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 1,
+              lineFeedCount: 0,
+              color: Color.Red,
+              parent: 2,
+              left: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+            },
+          ],
+          root: 2,
+          previouslyInsertedNodeIndex: null,
+          previouslyInsertedNodeOffset: null,
+        };
+        const receivedPage = deleteContent(page, {
+          startOffset: 6,
+          endOffset: 8,
+        });
+        expect(receivedPage).toEqual(expectedPage);
+      });
     });
   });
 });
