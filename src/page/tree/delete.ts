@@ -34,9 +34,10 @@ export function deleteContent(
     content,
     oldNodeStartPosition,
   );
+  const deleteLength = content.endOffset - content.startOffset;
   let nodeAfterContent: Node;
   if (
-    oldNodeStartPosition.remainder + length <=
+    oldNodeStartPosition.remainder + deleteLength <=
     oldNodeStartPosition.nodeStartOffset + oldNodeStartPosition.node.length
   ) {
     nodeAfterContent = getNodeAfterContent(
