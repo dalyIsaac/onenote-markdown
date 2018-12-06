@@ -5,6 +5,7 @@ import {
   calculateCharCount,
   calculateLineFeedCount,
   findNodeAtOffset,
+  nextNode,
   NodePositionOffset,
   recomputeTreeMetadata,
   resetSentinel,
@@ -27,6 +28,7 @@ export function deleteContent(
     page.nodes,
     page.root,
   );
+  let oldNodeEndPosition: NodePositionOffset;
   const nodeBeforeContent = getNodeBeforeContent(
     page,
     content,
@@ -44,7 +46,7 @@ export function deleteContent(
       nodeBeforeContent,
     );
   } else {
-    const oldNodeEndPosition = findNodeAtOffset(
+    oldNodeEndPosition = findNodeAtOffset(
       content.endOffset,
       page.nodes,
       page.root,
@@ -55,6 +57,13 @@ export function deleteContent(
       oldNodeEndPosition,
       nodeBeforeContent,
     );
+    if (oldNodeStartPosition.nodeIndex !== oldNodeEndPosition.nodeIndex) {
+      page = deleteBetweenNodes(
+        page,
+        oldNodeStartPosition.nodeIndex,
+        oldNodeEndPosition.nodeIndex,
+      );
+    }
   }
 
   if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
@@ -179,6 +188,19 @@ function getNodeAfterContent(
     color: Color.Red,
   };
   return nodeAfterContent;
+}
+
+function deleteBetweenNodes(
+  page: PageContent,
+  startIndex: number,
+  endIndex: number,
+): PageContent {
+  let currentIndex = startIndex;
+  while (currentIndex !== endIndex) {
+    page = deleteNode(page, currentIndex);
+    currentIndex = nextNode(page, currentIndex).index;
+  }
+  return page;
 }
 
 export function deleteNode(page: PageContent, zIndex: number): PageContent {
