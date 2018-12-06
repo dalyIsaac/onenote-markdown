@@ -321,7 +321,10 @@ function insertAtNodeExtremity(
  * @param content The content to insert into the page.
  * @param page The page to insert the content into.
  */
-function createNodeAppendToBuffer(content: ContentInsert, page: PageContent) {
+function createNodeAppendToBuffer(
+  content: ContentInsert,
+  page: PageContent,
+): PageContent {
   const oldBuffer = page.buffers[page.buffers.length - 1];
   const newContent = oldBuffer.content + content.content;
   const updatedBuffer: Buffer = {
@@ -372,7 +375,10 @@ function createNodeAppendToBuffer(content: ContentInsert, page: PageContent) {
  * @param content The content to insert into the page.
  * @param page The page to insert the content into.
  */
-function createNodeCreateBuffer(content: ContentInsert, page: PageContent) {
+function createNodeCreateBuffer(
+  content: ContentInsert,
+  page: PageContent,
+): PageContent {
   const newBuffer: Buffer = {
     isReadOnly: false,
     lineStarts: getLineStarts(content.content, page.newlineFormat),

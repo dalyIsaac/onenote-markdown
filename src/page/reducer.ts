@@ -8,7 +8,10 @@ import { createNewPage } from "./tree/createNewPage";
  * @param state
  * @param action
  */
-export default function pageReducer(state: StatePages = {}, action: Action) {
+export default function pageReducer(
+  state: StatePages = {},
+  action: Action,
+): StatePages {
   switch (action.type) {
     case STORE_RECEIVED_PAGE:
       const receivedPage = (action as StoreReceivedPageAction).receivedPage;

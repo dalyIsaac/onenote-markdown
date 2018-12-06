@@ -183,7 +183,7 @@ export function getOffsetInBuffer(
   bufferIndex: number,
   cursor: BufferCursor,
   page: PageContent,
-) {
+): number {
   const lineStarts = page.buffers[bufferIndex].lineStarts;
   return lineStarts[cursor.line] + cursor.column;
 }
