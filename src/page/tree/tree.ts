@@ -307,6 +307,10 @@ export const SENTINEL: Node = {
   right: SENTINEL_INDEX,
 };
 
+/**
+ * Ensures that the `SENTINEL` node in the piece table is true to the values of the `SENTINEL` node.
+ * @param page The page/piece table which contains the `SENTINEL` node.
+ */
 export function resetSentinel(page: PageContent): void {
   page.nodes[0] = SENTINEL;
 }
@@ -328,11 +332,18 @@ export function treeMinimum(
   return { node: x, index: xIndex };
 }
 
+/**
+ * Goes up the tree, and updates the metadata of each node.
+ * @param page The page/piece table.
+ * @param xIndex The index of the current node.
+ * @param charCountDelta The character count delta to be applied.
+ * @param lineFeedCountDelta The line feed count delta to be applied.
+ */
 export function updateTreeMetadata(
   page: PageContent,
   xIndex: number,
-  delta: number,
-  lineFeedCntDelta: number,
+  charCountDelta: number,
+  lineFeedCountDelta: number,
 ): PageContent {
   // node length change or line feed count change
   while (xIndex !== page.root && xIndex !== SENTINEL_INDEX) {
@@ -340,9 +351,9 @@ export function updateTreeMetadata(
     if (page.nodes[x.parent].left === xIndex) {
       page.nodes[x.parent] = {
         ...page.nodes[x.parent],
-        leftCharCount: page.nodes[x.parent].leftCharCount + delta,
+        leftCharCount: page.nodes[x.parent].leftCharCount + charCountDelta,
         leftLineFeedCount:
-          page.nodes[x.parent].leftLineFeedCount + lineFeedCntDelta,
+          page.nodes[x.parent].leftLineFeedCount + lineFeedCountDelta,
       };
     }
 
