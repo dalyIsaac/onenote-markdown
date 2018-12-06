@@ -19,7 +19,7 @@ export const MAX_BUFFER_LENGTH = 65535;
 /**
  * The returned object from `findNodeAtOffset`.
  */
-export interface NodePosition {
+export interface NodePositionOffset {
   /**
    * Piece Index
    */
@@ -42,6 +42,14 @@ export interface NodePosition {
 }
 
 /**
+ * Contains a node and its index in a page/piece table.
+ */
+export interface NodePosition {
+  node: Node;
+  index: number;
+}
+
+/**
  * Finds the node which contains the offset.
  * @param offset The offset.
  * @param nodes The nodes.
@@ -51,7 +59,7 @@ export function findNodeAtOffset(
   offset: number,
   nodes: Node[],
   root: number,
-): NodePosition {
+): NodePositionOffset {
   let xIndex = root;
   let x: Node = nodes[xIndex];
   let nodeStartOffset = 0;
@@ -320,13 +328,24 @@ export function resetSentinel(page: PageContent): void {
  * @param page The piece table/page.
  * @param xIndex The index from which to find the minimum of that subtree.
  */
-export function treeMinimum(
-  page: PageContent,
-  xIndex: number,
-): { node: Node; index: number } {
+export function treeMinimum(page: PageContent, xIndex: number): NodePosition {
   let x = page.nodes[xIndex];
   while (x.left !== SENTINEL_INDEX) {
     xIndex = x.left;
+    x = page.nodes[xIndex];
+  }
+  return { node: x, index: xIndex };
+}
+
+/**
+ * Finds the maximum of the subtree given by the `xIndex`
+ * @param page The piece table/page.
+ * @param xIndex The index from which to find the maximum of that subtree.
+ */
+export function treeMaximum(page: PageContent, xIndex: number): NodePosition {
+  let x = page.nodes[xIndex];
+  while (x.right !== SENTINEL_INDEX) {
+    xIndex = x.right;
     x = page.nodes[xIndex];
   }
   return { node: x, index: xIndex };
@@ -360,4 +379,64 @@ export function updateTreeMetadata(
     xIndex = x.parent;
   }
   return page;
+}
+
+/**
+ * Gets the next node of a red-black tree, given the current node's index.
+ * @param page The page/piece table.
+ * @param currentNodeIndex The index of the current node in the `page.nodes` array.
+ */
+export function nextNode(
+  page: PageContent,
+  currentNodeIndex: number,
+): NodePosition {
+  let currentNode = page.nodes[currentNodeIndex];
+  if (currentNode.right !== SENTINEL_INDEX) {
+    return treeMinimum(page, currentNode.right);
+  }
+
+  while (currentNode.parent !== SENTINEL_INDEX) {
+    if (page.nodes[currentNode.parent].left === currentNodeIndex) {
+      break;
+    }
+
+    currentNodeIndex = currentNode.parent;
+    currentNode = page.nodes[currentNodeIndex];
+  }
+
+  if (currentNode.parent === SENTINEL_INDEX) {
+    return { node: SENTINEL, index: SENTINEL_INDEX };
+  } else {
+    return { index: currentNode.parent, node: page.nodes[currentNode.parent] };
+  }
+}
+
+/**
+ * Gets the previous node of a red-black tree, given the current node's index.
+ * @param page The page/piece table.
+ * @param currentNodeIndex The index of the current node in the `page.nodes` array.
+ */
+export function prevNode(
+  page: PageContent,
+  currentNodeIndex: number,
+): NodePosition {
+  let currentNode = page.nodes[currentNodeIndex];
+  if (currentNode.left !== SENTINEL_INDEX) {
+    return treeMaximum(page, currentNode.left);
+  }
+
+  while (currentNode.parent !== SENTINEL_INDEX) {
+    if (page.nodes[currentNode.parent].right === currentNodeIndex) {
+      break;
+    }
+
+    currentNodeIndex = currentNode.parent;
+    currentNode = page.nodes[currentNodeIndex];
+  }
+
+  if (currentNode.parent === SENTINEL_INDEX) {
+    return { node: SENTINEL, index: SENTINEL_INDEX };
+  } else {
+    return { index: currentNode.parent, node: page.nodes[currentNode.parent] };
+  }
 }

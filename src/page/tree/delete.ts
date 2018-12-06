@@ -5,7 +5,7 @@ import {
   calculateCharCount,
   calculateLineFeedCount,
   findNodeAtOffset,
-  NodePosition,
+  NodePositionOffset,
   recomputeTreeMetadata,
   resetSentinel,
   SENTINEL_INDEX,
@@ -88,7 +88,7 @@ export function deleteContent(
 function getNodeBeforeContent(
   page: PageContent,
   content: ContentDelete,
-  nodePosition: NodePosition,
+  nodePosition: NodePositionOffset,
 ): Node {
   // "local" offsets refer to local within the buffer
   const localStartOffset =
@@ -128,7 +128,7 @@ function getNodeBeforeContent(
 function getNodeAfterContent(
   page: PageContent,
   content: ContentDelete,
-  nodePosition: NodePosition,
+  nodePosition: NodePositionOffset,
   nodeBeforeContent: Node,
 ): Node {
   const localStartOffset =
@@ -466,7 +466,7 @@ function fixDelete(page: PageContent, xIndex: number): PageContent {
  */
 function getLineFeedCountsForOffsets(
   page: PageContent,
-  nodePosition: NodePosition,
+  nodePosition: NodePositionOffset,
   startLocalOffset: number,
   endLocalOffset: number,
 ): {
