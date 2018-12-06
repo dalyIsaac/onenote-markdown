@@ -4,7 +4,7 @@ import {
   findNodeAtOffset,
   getLineStarts,
   getNodeContent,
-  NodePosition,
+  NodePositionOffset,
   recomputeTreeMetadata,
   SENTINEL_INDEX,
 } from "./tree";
@@ -236,7 +236,7 @@ function insertInsideNode(
   content: ContentInsert,
   page: PageContent,
   maxBufferLength: number,
-  nodePosition: NodePosition,
+  nodePosition: NodePositionOffset,
 ): PageContent {
   const oldNode = nodePosition.node;
   const nodeContent = getNodeContent(nodePosition.nodeIndex, page);
