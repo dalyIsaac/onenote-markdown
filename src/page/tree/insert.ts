@@ -76,7 +76,6 @@ export function insertContent(
 export function fixInsert(page: PageContent, x: number): PageContent {
   page = recomputeTreeMetadata({ ...page }, x);
   page.nodes[x] = { ...page.nodes[x] };
-  page.nodes[x] = page.nodes[x];
 
   if (x === page.root) {
     page.nodes[x].color = Color.Black;
@@ -95,7 +94,6 @@ export function fixInsert(page: PageContent, x: number): PageContent {
     ) {
       const y = page.nodes[page.nodes[page.nodes[x].parent].parent].right;
       page.nodes[y] = { ...page.nodes[y] };
-      page.nodes[y] = page.nodes[y];
 
       if (page.nodes[y].color === Color.Red) {
         page.nodes[page.nodes[x].parent] = {
@@ -109,15 +107,12 @@ export function fixInsert(page: PageContent, x: number): PageContent {
         };
         x = page.nodes[page.nodes[x].parent].parent;
         page.nodes[x] = { ...page.nodes[x] };
-        page.nodes[x] = page.nodes[x];
       } else {
         if (x === page.nodes[page.nodes[x].parent].right) {
           x = page.nodes[x].parent;
           page.nodes[x] = { ...page.nodes[x] };
-          page.nodes[x] = page.nodes[x];
           page = leftRotate(page, x);
           page.nodes = page.nodes;
-          page.nodes[x] = page.nodes[x];
         }
         page.nodes[page.nodes[x].parent] = {
           ...page.nodes[page.nodes[x].parent],
@@ -134,8 +129,6 @@ export function fixInsert(page: PageContent, x: number): PageContent {
       page.nodes[y] = {
         ...page.nodes[y],
       };
-      page.nodes[y] = page.nodes[y];
-
       if (page.nodes[y].color === Color.Red) {
         page.nodes[page.nodes[x].parent] = {
           ...page.nodes[page.nodes[x].parent],
@@ -148,16 +141,13 @@ export function fixInsert(page: PageContent, x: number): PageContent {
         };
         x = page.nodes[page.nodes[x].parent].parent;
         page.nodes[x] = { ...page.nodes[x] };
-        page.nodes[x] = page.nodes[x];
       } else {
         if (
           page.nodes[x] === page.nodes[page.nodes[page.nodes[x].parent].left]
         ) {
           x = page.nodes[x].parent;
           page.nodes[x] = { ...page.nodes[x] };
-          page.nodes[x] = page.nodes[x];
           page = rightRotate(page, x);
-          page.nodes[x] = page.nodes[x];
         }
         page.nodes[page.nodes[x].parent] = {
           ...page.nodes[page.nodes[x].parent],

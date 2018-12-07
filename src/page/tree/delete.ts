@@ -38,7 +38,7 @@ export function deleteContent(
   let nodeAfterContent: Node;
   if (
     oldNodeStartPosition.remainder + deleteLength <=
-    oldNodeStartPosition.nodeStartOffset + oldNodeStartPosition.node.length
+    oldNodeStartPosition.node.length
   ) {
     nodeAfterContent = getNodeAfterContent(
       page,
@@ -197,9 +197,11 @@ function deleteBetweenNodes(
   endIndex: number,
 ): PageContent {
   let currentIndex = startIndex;
-  while (currentIndex !== endIndex) {
+  let nextIndex = currentIndex;
+  while (nextIndex !== endIndex) {
+    currentIndex = nextIndex;
+    nextIndex = nextNode(page, currentIndex).index;
     page = deleteNode(page, currentIndex);
-    currentIndex = nextNode(page, currentIndex).index;
   }
   return page;
 }
@@ -215,13 +217,11 @@ export function deleteNode(page: PageContent, z: number): PageContent {
     page.nodes[y] = page.nodes[z];
     x = page.nodes[y].right;
     page.nodes[x] = { ...page.nodes[x] };
-    page.nodes[x] = page.nodes[x];
   } else if (page.nodes[z].right === SENTINEL_INDEX) {
     y = z;
     page.nodes[y] = page.nodes[z];
     x = page.nodes[y].left;
     page.nodes[x] = { ...page.nodes[page.nodes[y].left] };
-    page.nodes[x] = page.nodes[x];
   } else {
     const result = treeMinimum(page, page.nodes[z].right);
     y = result.index;
@@ -230,7 +230,6 @@ export function deleteNode(page: PageContent, z: number): PageContent {
 
     x = page.nodes[y].right;
     page.nodes[x] = page.nodes[page.nodes[y].right];
-    page.nodes[x] = page.nodes[x];
   }
 
   if (y === page.root) {
@@ -369,7 +368,7 @@ function detach(page: PageContent, node: number): void {
 
 function fixDelete(page: PageContent, x: number): PageContent {
   let w: number;
-  page.nodes[x] = page.nodes[x];
+  
   while (x !== page.root && page.nodes[x].color === Color.Black) {
     if (x === page.nodes[page.nodes[x].parent].left) {
       w = page.nodes[page.nodes[x].parent].right;
@@ -395,7 +394,7 @@ function fixDelete(page: PageContent, x: number): PageContent {
         page.nodes[w].color = Color.Red;
         x = page.nodes[x].parent;
         page.nodes[x] = { ...page.nodes[x] };
-        page.nodes[x] = page.nodes[x];
+        
       } else {
         if (page.nodes[page.nodes[w].right].color === Color.Black) {
           page.nodes[page.nodes[w].left] = {
@@ -421,7 +420,7 @@ function fixDelete(page: PageContent, x: number): PageContent {
         page = leftRotate(page, page.nodes[x].parent);
         x = page.root;
         page.nodes[x] = { ...page.nodes[x] };
-        page.nodes[x] = page.nodes[x];
+        
       }
     } else {
       w = page.nodes[page.nodes[x].parent].left;
@@ -446,7 +445,7 @@ function fixDelete(page: PageContent, x: number): PageContent {
         page.nodes[w].color = Color.Red;
         x = page.nodes[x].parent;
         page.nodes[x] = { ...page.nodes[x] };
-        page.nodes[x] = page.nodes[x];
+        
       } else {
         if (page.nodes[page.nodes[w].left].color === Color.Black) {
           page.nodes[page.nodes[w].right] = {
@@ -471,7 +470,7 @@ function fixDelete(page: PageContent, x: number): PageContent {
         page = rightRotate(page, page.nodes[x].parent);
         x = page.root;
         page.nodes[x] = { ...page.nodes[x] };
-        page.nodes[x] = page.nodes[x];
+        
       }
     }
   }
