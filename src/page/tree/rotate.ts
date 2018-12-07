@@ -10,54 +10,55 @@ export function leftRotate(
   pieceTable: PageContent,
   nodeIndex: number,
 ): PageContent {
-  const nodes = [...pieceTable.nodes];
+  pieceTable.nodes = [...pieceTable.nodes];
 
-  const xIndex = nodeIndex;
-  const x = { ...nodes[xIndex] };
+  const x = nodeIndex;
+  pieceTable.nodes[x] = { ...pieceTable.nodes[x] };
 
-  if (x.right === SENTINEL_INDEX) {
+  if (pieceTable.nodes[x].right === SENTINEL_INDEX) {
     //  you can't left rotate
     return pieceTable;
   }
-  const yIndex = x.right;
-  const y = { ...nodes[yIndex] };
+  const y = pieceTable.nodes[x].right;
+  pieceTable.nodes[y] = { ...pieceTable.nodes[y] };
 
   let root = pieceTable.root;
 
   // fix leftCharCount
-  y.leftCharCount += x.leftCharCount + x.length;
-  y.leftLineFeedCount += x.leftLineFeedCount + x.lineFeedCount;
+  pieceTable.nodes[y].leftCharCount +=
+    pieceTable.nodes[x].leftCharCount + pieceTable.nodes[x].length;
+  pieceTable.nodes[y].leftLineFeedCount +=
+    pieceTable.nodes[x].leftLineFeedCount + pieceTable.nodes[x].lineFeedCount;
 
-  x.right = y.left;
-  if (y.left !== SENTINEL_INDEX) {
-    nodes[y.left] = {
-      ...nodes[y.left],
-      parent: xIndex,
+  pieceTable.nodes[x].right = pieceTable.nodes[y].left;
+  if (pieceTable.nodes[y].left !== SENTINEL_INDEX) {
+    pieceTable.nodes[pieceTable.nodes[y].left] = {
+      ...pieceTable.nodes[pieceTable.nodes[y].left],
+      parent: x,
     };
   }
-  y.parent = x.parent;
-  if (x.parent === SENTINEL_INDEX) {
-    root = yIndex;
-  } else if (xIndex === nodes[x.parent].left) {
-    nodes[x.parent] = {
-      ...nodes[x.parent],
-      left: yIndex,
+  pieceTable.nodes[y].parent = pieceTable.nodes[x].parent;
+  if (pieceTable.nodes[x].parent === SENTINEL_INDEX) {
+    root = y;
+  } else if (x === pieceTable.nodes[pieceTable.nodes[x].parent].left) {
+    pieceTable.nodes[pieceTable.nodes[x].parent] = {
+      ...pieceTable.nodes[pieceTable.nodes[x].parent],
+      left: y,
     };
   } else {
-    nodes[x.parent] = {
-      ...nodes[x.parent],
-      right: yIndex,
+    pieceTable.nodes[pieceTable.nodes[x].parent] = {
+      ...pieceTable.nodes[pieceTable.nodes[x].parent],
+      right: y,
     };
   }
-  y.left = xIndex;
-  x.parent = yIndex;
+  pieceTable.nodes[y].left = x;
+  pieceTable.nodes[x].parent = y;
 
-  nodes[xIndex] = x;
-  nodes[yIndex] = y;
+  pieceTable.nodes[x] = pieceTable.nodes[x];
+  pieceTable.nodes[y] = pieceTable.nodes[y];
 
   return {
     ...pieceTable,
-    nodes,
     root,
   };
 }
@@ -73,49 +74,51 @@ export function rightRotate(
 ): PageContent {
   const nodes = [...pieceTable.nodes];
 
-  const yIndex = nodeIndex;
-  const y = { ...nodes[yIndex] };
+  const y = nodeIndex;
+  pieceTable.nodes[y] = { ...nodes[y] };
 
-  if (y.left === SENTINEL_INDEX) {
+  if (pieceTable.nodes[y].left === SENTINEL_INDEX) {
     // you can't right rotate
     return pieceTable;
   }
-  const xIndex = y.left;
-  const x = { ...nodes[xIndex] };
+  const x = pieceTable.nodes[y].left;
+  pieceTable.nodes[x] = { ...nodes[x] };
 
   let root = pieceTable.root;
 
-  y.left = x.right;
-  if (x.right !== SENTINEL_INDEX) {
-    nodes[x.right] = {
-      ...nodes[x.right],
-      parent: yIndex,
+  pieceTable.nodes[y].left = pieceTable.nodes[x].right;
+  if (pieceTable.nodes[x].right !== SENTINEL_INDEX) {
+    nodes[pieceTable.nodes[x].right] = {
+      ...nodes[pieceTable.nodes[x].right],
+      parent: y,
     };
   }
-  x.parent = y.parent;
+  pieceTable.nodes[x].parent = pieceTable.nodes[y].parent;
 
   // fix leftCharCount
-  y.leftCharCount -= x.leftCharCount + x.length;
-  y.leftLineFeedCount -= x.leftLineFeedCount + x.lineFeedCount;
+  pieceTable.nodes[y].leftCharCount -=
+    pieceTable.nodes[x].leftCharCount + pieceTable.nodes[x].length;
+  pieceTable.nodes[y].leftLineFeedCount -=
+    pieceTable.nodes[x].leftLineFeedCount + pieceTable.nodes[x].lineFeedCount;
 
-  if (y.parent === SENTINEL_INDEX) {
-    root = xIndex;
-  } else if (yIndex === nodes[y.parent].right) {
-    nodes[y.parent] = {
-      ...nodes[y.parent],
-      right: xIndex,
+  if (pieceTable.nodes[y].parent === SENTINEL_INDEX) {
+    root = x;
+  } else if (y === nodes[pieceTable.nodes[y].parent].right) {
+    nodes[pieceTable.nodes[y].parent] = {
+      ...nodes[pieceTable.nodes[y].parent],
+      right: x,
     };
   } else {
-    nodes[y.parent] = {
-      ...nodes[y.parent],
-      left: xIndex,
+    nodes[pieceTable.nodes[y].parent] = {
+      ...nodes[pieceTable.nodes[y].parent],
+      left: x,
     };
   }
-  x.right = yIndex;
-  y.parent = xIndex;
+  pieceTable.nodes[x].right = y;
+  pieceTable.nodes[y].parent = x;
 
-  nodes[yIndex] = y;
-  nodes[xIndex] = x;
+  nodes[y] = pieceTable.nodes[y];
+  nodes[x] = pieceTable.nodes[x];
 
   return {
     ...pieceTable,
