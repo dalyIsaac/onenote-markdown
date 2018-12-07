@@ -226,8 +226,6 @@ export function deleteNode(page: PageContent, z: number): PageContent {
     const result = treeMinimum(page, page.nodes[z].right);
     y = result.index;
     page.nodes[y] = { ...result.node };
-    page.nodes[y] = page.nodes[y];
-
     x = page.nodes[y].right;
     page.nodes[x] = page.nodes[page.nodes[y].right];
   }
