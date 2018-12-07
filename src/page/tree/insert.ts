@@ -71,95 +71,103 @@ export function insertContent(
 /**
  * Restores the properties of a red-black tree after the insertion of a node.
  * @param page The page/piece table.
- * @param xIndex The index of the node in the `node` array, which is the basis for fixing the tree.
+ * @param x The index of the node in the `node` array, which is the basis for fixing the tree.
  */
-export function fixInsert(page: PageContent, xIndex: number): PageContent {
-  page = recomputeTreeMetadata({ ...page }, xIndex);
-  let x = { ...page.nodes[xIndex] };
-  page.nodes[xIndex] = x;
+export function fixInsert(page: PageContent, x: number): PageContent {
+  page = recomputeTreeMetadata({ ...page }, x);
+  page.nodes[x] = { ...page.nodes[x] };
+  page.nodes[x] = page.nodes[x];
 
-  if (xIndex === page.root) {
-    x.color = Color.Black;
+  if (x === page.root) {
+    page.nodes[x].color = Color.Black;
     return page;
   }
 
   while (
-    x.parent !== SENTINEL_INDEX &&
-    page.nodes[x.parent].parent !== SENTINEL_INDEX &&
-    xIndex !== page.root &&
-    page.nodes[x.parent].color === Color.Red
+    page.nodes[x].parent !== SENTINEL_INDEX &&
+    page.nodes[page.nodes[x].parent].parent !== SENTINEL_INDEX &&
+    x !== page.root &&
+    page.nodes[page.nodes[x].parent].color === Color.Red
   ) {
-    if (x.parent === page.nodes[page.nodes[x.parent].parent].left) {
-      const yIndex = page.nodes[page.nodes[x.parent].parent].right;
-      const y = { ...page.nodes[yIndex] };
-      page.nodes[yIndex] = y;
+    if (
+      page.nodes[x].parent ===
+      page.nodes[page.nodes[page.nodes[x].parent].parent].left
+    ) {
+      const y = page.nodes[page.nodes[page.nodes[x].parent].parent].right;
+      page.nodes[y] = { ...page.nodes[y] };
+      page.nodes[y] = page.nodes[y];
 
-      if (y.color === Color.Red) {
-        page.nodes[x.parent] = {
-          ...page.nodes[x.parent],
+      if (page.nodes[y].color === Color.Red) {
+        page.nodes[page.nodes[x].parent] = {
+          ...page.nodes[page.nodes[x].parent],
           color: Color.Black,
         };
-        y.color = Color.Black;
-        page.nodes[page.nodes[x.parent].parent] = {
-          ...page.nodes[page.nodes[x.parent].parent],
+        page.nodes[y].color = Color.Black;
+        page.nodes[page.nodes[page.nodes[x].parent].parent] = {
+          ...page.nodes[page.nodes[page.nodes[x].parent].parent],
           color: Color.Red,
         };
-        xIndex = page.nodes[x.parent].parent;
-        x = { ...page.nodes[xIndex] };
-        page.nodes[xIndex] = x;
+        x = page.nodes[page.nodes[x].parent].parent;
+        page.nodes[x] = { ...page.nodes[x] };
+        page.nodes[x] = page.nodes[x];
       } else {
-        if (xIndex === page.nodes[x.parent].right) {
-          xIndex = x.parent;
-          x = { ...page.nodes[xIndex] };
-          page.nodes[xIndex] = x;
-          page = leftRotate(page, xIndex);
+        if (x === page.nodes[page.nodes[x].parent].right) {
+          x = page.nodes[x].parent;
+          page.nodes[x] = { ...page.nodes[x] };
+          page.nodes[x] = page.nodes[x];
+          page = leftRotate(page, x);
           page.nodes = page.nodes;
-          x = page.nodes[xIndex];
+          page.nodes[x] = page.nodes[x];
         }
-        page.nodes[x.parent] = {
-          ...page.nodes[x.parent],
+        page.nodes[page.nodes[x].parent] = {
+          ...page.nodes[page.nodes[x].parent],
           color: Color.Black,
         };
-        page.nodes[page.nodes[x.parent].parent] = {
-          ...page.nodes[page.nodes[x.parent].parent],
+        page.nodes[page.nodes[page.nodes[x].parent].parent] = {
+          ...page.nodes[page.nodes[page.nodes[x].parent].parent],
           color: Color.Red,
         };
-        page = rightRotate(page, page.nodes[x.parent].parent);
+        page = rightRotate(page, page.nodes[page.nodes[x].parent].parent);
       }
     } else {
-      const y = { ...page.nodes[page.nodes[page.nodes[x.parent].parent].left] };
-      page.nodes[page.nodes[page.nodes[x.parent].parent].left] = y;
+      const y = page.nodes[page.nodes[page.nodes[x].parent].parent].left;
+      page.nodes[y] = {
+        ...page.nodes[y],
+      };
+      page.nodes[y] = page.nodes[y];
 
-      if (y.color === Color.Red) {
-        page.nodes[x.parent] = {
-          ...page.nodes[x.parent],
+      if (page.nodes[y].color === Color.Red) {
+        page.nodes[page.nodes[x].parent] = {
+          ...page.nodes[page.nodes[x].parent],
           color: Color.Black,
         };
-        y.color = Color.Black;
-        page.nodes[page.nodes[x.parent].parent] = {
-          ...page.nodes[page.nodes[x.parent].parent],
+        page.nodes[y].color = Color.Black;
+        page.nodes[page.nodes[page.nodes[x].parent].parent] = {
+          ...page.nodes[page.nodes[page.nodes[x].parent].parent],
           color: Color.Red,
         };
-        xIndex = page.nodes[x.parent].parent;
-        x = { ...page.nodes[xIndex] };
-        page.nodes[xIndex] = x;
+        x = page.nodes[page.nodes[x].parent].parent;
+        page.nodes[x] = { ...page.nodes[x] };
+        page.nodes[x] = page.nodes[x];
       } else {
-        if (x === page.nodes[page.nodes[x.parent].left]) {
-          xIndex = x.parent;
-          x = { ...page.nodes[xIndex] };
-          page.nodes[xIndex] = x;
-          page = rightRotate(page, xIndex);
-          x = page.nodes[xIndex];
+        if (
+          page.nodes[x] === page.nodes[page.nodes[page.nodes[x].parent].left]
+        ) {
+          x = page.nodes[x].parent;
+          page.nodes[x] = { ...page.nodes[x] };
+          page.nodes[x] = page.nodes[x];
+          page = rightRotate(page, x);
+          page.nodes[x] = page.nodes[x];
         }
-        page.nodes[x.parent] = {
-          ...page.nodes[x.parent],
+        page.nodes[page.nodes[x].parent] = {
+          ...page.nodes[page.nodes[x].parent],
           color: Color.Black,
         };
-        page.nodes[page.nodes[x.parent].parent] = {
-          ...page.nodes[page.nodes[x.parent].parent],
+        page.nodes[page.nodes[page.nodes[x].parent].parent] = {
+          ...page.nodes[page.nodes[page.nodes[x].parent].parent],
           color: Color.Red,
         };
-        page = leftRotate(page, page.nodes[x.parent].parent);
+        page = leftRotate(page, page.nodes[page.nodes[x].parent].parent);
       }
     }
   }
