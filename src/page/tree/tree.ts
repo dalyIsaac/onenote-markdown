@@ -302,33 +302,37 @@ export const SENTINEL_INDEX = 0;
 /**
  * The sentinel node of red-black trees.
  */
-export const SENTINEL: Node = getSentinel();
-
-/**
- * Returns `SENTINEL` every time.
- */
-function getSentinel(): Node {
-  return {
-    bufferIndex: 0,
-    start: { column: 0, line: 0 },
-    end: { column: 0, line: 0 },
-    leftCharCount: 0,
-    leftLineFeedCount: 0,
-    length: 0,
-    lineFeedCount: 0,
-    color: Color.Black,
-    parent: SENTINEL_INDEX,
-    left: SENTINEL_INDEX,
-    right: SENTINEL_INDEX,
-  };
-}
+export const SENTINEL: Node = {
+  bufferIndex: 0,
+  start: { column: 0, line: 0 },
+  end: { column: 0, line: 0 },
+  leftCharCount: 0,
+  leftLineFeedCount: 0,
+  length: 0,
+  lineFeedCount: 0,
+  color: Color.Black,
+  parent: SENTINEL_INDEX,
+  left: SENTINEL_INDEX,
+  right: SENTINEL_INDEX,
+};
 
 /**
  * Ensures that the `SENTINEL` node in the piece table is true to the values of the `SENTINEL` node.
+ * This function does mutate the `SENTINEL` node, to ensure that `SENTINEL` is a singleton.
  * @param page The page/piece table which contains the `SENTINEL` node.
  */
 export function resetSentinel(page: PageContent): void {
-  page.nodes[0] = getSentinel();
+  page.nodes[0].bufferIndex = 0;
+  page.nodes[0].start = { column: 0, line: 0 };
+  page.nodes[0].end = { column: 0, line: 0 };
+  page.nodes[0].leftCharCount = 0;
+  page.nodes[0].leftLineFeedCount = 0;
+  page.nodes[0].length = 0;
+  page.nodes[0].lineFeedCount = 0;
+  page.nodes[0].color = Color.Black;
+  page.nodes[0].parent = SENTINEL_INDEX;
+  page.nodes[0].left = SENTINEL_INDEX;
+  page.nodes[0].right = SENTINEL_INDEX;
 }
 
 /**
