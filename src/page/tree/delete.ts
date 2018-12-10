@@ -46,6 +46,7 @@ export function deleteContent(
       oldNodeStartPosition,
       nodeBeforeContent,
     );
+    oldNodeEndPosition = oldNodeStartPosition;
   } else {
     oldNodeEndPosition = findNodeAtOffset(
       content.endOffset,
@@ -58,13 +59,6 @@ export function deleteContent(
       oldNodeEndPosition,
       nodeBeforeContent,
     );
-    if (oldNodeStartPosition.nodeIndex !== oldNodeEndPosition.nodeIndex) {
-      page = deleteBetweenNodes(
-        page,
-        oldNodeStartPosition.nodeIndex,
-        oldNodeEndPosition.nodeIndex,
-      );
-    }
   }
 
   if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
@@ -78,20 +72,29 @@ export function deleteContent(
     page.nodes[oldNodeStartPosition.nodeIndex] = nodeBeforeContent;
   } else if (nodeAfterContent.length > 0) {
     // delete from the start of the node to a point in the node
-    nodeAfterContent.leftCharCount = oldNodeStartPosition.node.leftCharCount;
+    nodeAfterContent.leftCharCount = oldNodeEndPosition.node.leftCharCount;
     nodeAfterContent.leftLineFeedCount =
-      oldNodeStartPosition.node.leftLineFeedCount;
-    nodeAfterContent.parent = oldNodeStartPosition.node.parent;
-    nodeAfterContent.left = oldNodeStartPosition.node.left;
-    nodeAfterContent.right = oldNodeStartPosition.node.right;
-    nodeAfterContent.color = oldNodeStartPosition.node.color;
-    page.nodes[oldNodeStartPosition.nodeIndex] = nodeAfterContent;
+      oldNodeEndPosition.node.leftLineFeedCount;
+    nodeAfterContent.parent = oldNodeEndPosition.node.parent;
+    nodeAfterContent.left = oldNodeEndPosition.node.left;
+    nodeAfterContent.right = oldNodeEndPosition.node.right;
+    nodeAfterContent.color = oldNodeEndPosition.node.color;
+    page.nodes[oldNodeEndPosition.nodeIndex] = nodeAfterContent;
   } else {
     // delete the entire node
     page = deleteNode(page, oldNodeStartPosition.nodeIndex);
   }
   page.previouslyInsertedNodeIndex = null;
   page.previouslyInsertedNodeOffset = null;
+
+  if (oldNodeStartPosition.nodeIndex !== oldNodeEndPosition.nodeIndex) {
+    page = deleteBetweenNodes(
+      page,
+      oldNodeStartPosition.nodeIndex,
+      oldNodeEndPosition.nodeIndex,
+    );
+  }
+
   return page;
 }
 
@@ -141,6 +144,7 @@ function getNodeAfterContent(
   nodePosition: NodePositionOffset,
   nodeBeforeContent: Node,
 ): Node {
+  // localStartOffset is the index of nodePosition.startOffset inside the buffer
   const localStartOffset =
     page.buffers[nodePosition.node.bufferIndex].lineStarts[
       nodePosition.node.start.line
@@ -148,7 +152,15 @@ function getNodeAfterContent(
     nodePosition.node.start.column +
     nodePosition.remainder;
   const deletedLength = content.endOffset - content.startOffset;
-  const localEndOffset = localStartOffset + deletedLength + 1;
+
+  let localEndOffset: number;
+  if (content.startOffset < nodePosition.nodeStartOffset) {
+    const firstSection = nodePosition.nodeStartOffset - content.startOffset;
+    const secondSection = deletedLength - firstSection;
+    localEndOffset = localStartOffset + secondSection + 1;
+  } else {
+    localEndOffset = localStartOffset + deletedLength + 1;
+  }
   const {
     lineFeedCountAfterNodeStartBeforeStart,
     lineFeedCountBetweenOffset,
@@ -163,23 +175,21 @@ function getNodeAfterContent(
     nodePosition.node.start.line +
     lineFeedCountAfterNodeStartBeforeStart +
     lineFeedCountBetweenOffset;
+  const lineStart =
+    page.buffers[nodePosition.node.bufferIndex].lineStarts[
+      nodeAfterContentLine
+    ];
   const nodeAfterContent: Node = {
     bufferIndex: nodePosition.node.bufferIndex,
     start: {
-      line:
-        nodePosition.node.start.line +
-        lineFeedCountAfterNodeStartBeforeStart +
-        lineFeedCountBetweenOffset,
-      column:
-        localEndOffset -
-        page.buffers[nodePosition.node.bufferIndex].lineStarts[
-          nodeAfterContentLine
-        ] -
-        1,
+      line: nodeAfterContentLine,
+      column: localEndOffset - lineStart - 1,
     },
     end: nodePosition.node.end,
     length:
-      nodePosition.node.length - (deletedLength + nodeBeforeContent.length),
+      nodePosition.nodeStartOffset +
+      nodePosition.node.length -
+      content.endOffset,
     lineFeedCount: lineFeedCountAfterEnd,
     leftCharCount: 0,
     leftLineFeedCount: 0,
@@ -353,20 +363,30 @@ export function deleteNode(page: PageContent, z: number): PageContent {
 }
 
 function detach(page: PageContent, node: number): void {
-  const parent = page.nodes[page.nodes[node].parent];
+  const parent = page.nodes[page.nodes[node].parent]; // NEVER ASSIGN TO THIS
   if (parent.left === node) {
-    parent.left = SENTINEL_INDEX;
+    page.nodes[page.nodes[node].parent] = {
+      ...page.nodes[page.nodes[node].parent],
+      left: SENTINEL_INDEX,
+    };
   } else if (parent.right === node) {
-    parent.right = SENTINEL_INDEX;
+    page.nodes[page.nodes[node].parent] = {
+      ...page.nodes[page.nodes[node].parent],
+      right: SENTINEL_INDEX,
+    };
   }
-  page.nodes[node].parent = SENTINEL_INDEX;
-  page.nodes[node].left = SENTINEL_INDEX;
-  page.nodes[node].right = SENTINEL_INDEX;
+  page.nodes[node] = {
+    ...page.nodes[node],
+    color: Color.Black,
+    parent: SENTINEL_INDEX,
+    left: SENTINEL_INDEX,
+    right: SENTINEL_INDEX,
+  };
 }
 
 function fixDelete(page: PageContent, x: number): PageContent {
   let w: number;
-  
+
   while (x !== page.root && page.nodes[x].color === Color.Black) {
     if (x === page.nodes[page.nodes[x].parent].left) {
       w = page.nodes[page.nodes[x].parent].right;
@@ -392,7 +412,6 @@ function fixDelete(page: PageContent, x: number): PageContent {
         page.nodes[w].color = Color.Red;
         x = page.nodes[x].parent;
         page.nodes[x] = { ...page.nodes[x] };
-        
       } else {
         if (page.nodes[page.nodes[w].right].color === Color.Black) {
           page.nodes[page.nodes[w].left] = {
@@ -418,7 +437,6 @@ function fixDelete(page: PageContent, x: number): PageContent {
         page = leftRotate(page, page.nodes[x].parent);
         x = page.root;
         page.nodes[x] = { ...page.nodes[x] };
-        
       }
     } else {
       w = page.nodes[page.nodes[x].parent].left;
@@ -443,7 +461,6 @@ function fixDelete(page: PageContent, x: number): PageContent {
         page.nodes[w].color = Color.Red;
         x = page.nodes[x].parent;
         page.nodes[x] = { ...page.nodes[x] };
-        
       } else {
         if (page.nodes[page.nodes[w].left].color === Color.Black) {
           page.nodes[page.nodes[w].right] = {
@@ -468,7 +485,6 @@ function fixDelete(page: PageContent, x: number): PageContent {
         page = rightRotate(page, page.nodes[x].parent);
         x = page.root;
         page.nodes[x] = { ...page.nodes[x] };
-        
       }
     }
   }
