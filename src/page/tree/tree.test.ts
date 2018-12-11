@@ -114,7 +114,7 @@ describe("page/tree/tree", () => {
 
     expect(findNodeAtOffset(-1, nodes, root)).toEqual({
       node: SENTINEL,
-      nodeIndex: SENTINEL_INDEX,
+      nodeIndex: 1,
       remainder: 0,
       nodeStartOffset: 0,
     });
@@ -224,11 +224,12 @@ describe("page/tree/tree", () => {
       nodeStartOffset: 80,
     });
 
+    // out of range
     expect(findNodeAtOffset(121, nodes, root)).toEqual({
-      node: SENTINEL,
-      nodeIndex: SENTINEL_INDEX,
-      remainder: 0,
-      nodeStartOffset: 0,
+      node: nodes[7],
+      nodeIndex: 7,
+      remainder: 41,
+      nodeStartOffset: 80,
     });
   });
 

@@ -67,9 +67,7 @@ export function findNodeAtOffset(
     if (nodes[x].leftCharCount > offset) {
       const oldXIndex = x;
       x = nodes[x].left;
-      if (nodes[x]) {
-        nodes[x] = nodes[x];
-      } else {
+      if (x === SENTINEL_INDEX) {
         // to the left of the tree
         return {
           node: nodes[x],
@@ -89,19 +87,18 @@ export function findNodeAtOffset(
       };
     } else {
       offset -= nodes[x].leftCharCount + nodes[x].length;
+      const oldNodeStartOffset = nodeStartOffset;
       nodeStartOffset += nodes[x].leftCharCount + nodes[x].length;
 
       const oldXIndex = x;
       x = nodes[x].right;
-      if (nodes[x]) {
-        nodes[x] = nodes[x];
-      } else {
+      if (x === SENTINEL_INDEX) {
         // to the right of the tree
         return {
-          node: nodes[x],
+          node: nodes[oldXIndex],
           nodeIndex: oldXIndex,
-          remainder: nodes[x].length,
-          nodeStartOffset,
+          remainder: nodes[oldXIndex].length,
+          nodeStartOffset: oldNodeStartOffset,
         };
       }
     }
