@@ -15,41 +15,57 @@ import {
   updateTreeMetadata,
 } from "./tree";
 
-export interface ContentDelete {
+/**
+ * The logical offset range for the content to be deleted.
+ */
+export interface ContentDeleteOffset {
   startOffset: number;
   endOffset: number;
 }
 
+/**
+ * Deletes the given range from the page.
+ * @param page The page/piece table to delete the content from.
+ * @param deleteRange The start and end offset of the content to delete.
+ */
 export function deleteContent(
   page: PageContent,
-  content: ContentDelete,
+  deleteRange: ContentDeleteOffset,
 ): PageContent {
   const oldNodeStartPosition = findNodeAtOffset(
-    content.startOffset,
+    deleteRange.startOffset,
     page.nodes,
     page.root,
   );
   let oldNodeEndPosition: NodePositionOffset;
   const nodeBeforeContent = getNodeBeforeContent(
     page,
-    content,
+    deleteRange,
     oldNodeStartPosition,
   );
-  const deleteLength = content.endOffset - content.startOffset;
+  const deleteLength = deleteRange.endOffset - deleteRange.startOffset;
   let nodeAfterContent: Node;
   if (
     oldNodeStartPosition.remainder + deleteLength <=
     oldNodeStartPosition.node.length
   ) {
-    nodeAfterContent = getNodeAfterContent(page, content, oldNodeStartPosition);
+    nodeAfterContent = getNodeAfterContent(
+      page,
+      deleteRange,
+      oldNodeStartPosition,
+    );
     oldNodeEndPosition = oldNodeStartPosition;
   } else {
     oldNodeEndPosition = findNodeAtOffset(
-      content.endOffset,
+      deleteRange.endOffset,
       page.nodes,
       page.root,
     );
-    nodeAfterContent = getNodeAfterContent(page, content, oldNodeEndPosition);
+    nodeAfterContent = getNodeAfterContent(
+      page,
+      deleteRange,
+      oldNodeEndPosition,
+    );
   }
 
   let lastNodeToDelete = oldNodeEndPosition.nodeIndex;
@@ -58,7 +74,7 @@ export function deleteContent(
     // delete from a point in the node to another point in the node
     page.nodes[oldNodeStartPosition.nodeIndex] = nodeBeforeContent;
     page.nodes.push(nodeAfterContent);
-    page = insertNode(page, nodeAfterContent, content.startOffset);
+    page = insertNode(page, nodeAfterContent, deleteRange.startOffset);
     page = fixInsert(page, page.nodes.length - 1);
   } else if (nodeBeforeContent.length > 0) {
     // delete from a point in the node to the end of the node
@@ -95,9 +111,15 @@ export function deleteContent(
   return page;
 }
 
+/**
+ * Gets the node after the content.
+ * @param page The page/piece table.
+ * @param deleteRange The start and end offset of the content to delete.
+ * @param nodePosition The position of the old node before the content to delete.
+ */
 function getNodeBeforeContent(
   page: PageContent,
-  content: ContentDelete,
+  deleteRange: ContentDeleteOffset,
   nodePosition: NodePositionOffset,
 ): Node {
   // "local" offsets refer to local within the buffer
@@ -107,7 +129,7 @@ function getNodeBeforeContent(
     ] +
     nodePosition.node.start.column +
     nodePosition.remainder;
-  const deletedLength = content.endOffset - content.startOffset;
+  const deletedLength = deleteRange.endOffset - deleteRange.startOffset;
   const localEndOffset = localStartOffset + deletedLength + 1;
   const {
     lineFeedCountBeforeNodeStart,
@@ -135,9 +157,15 @@ function getNodeBeforeContent(
   return nodeBeforeContent;
 }
 
+/**
+ * Gets the node after the content.
+ * @param page The page/piece table.
+ * @param deleteRange The start and end offset of the content to delete.
+ * @param nodePosition The position of the old node after the content to delete.
+ */
 function getNodeAfterContent(
   page: PageContent,
-  content: ContentDelete,
+  deleteRange: ContentDeleteOffset,
   nodePosition: NodePositionOffset,
 ): Node {
   // localStartOffset is the index of nodePosition.startOffset inside the buffer
@@ -147,11 +175,11 @@ function getNodeAfterContent(
     ] +
     nodePosition.node.start.column +
     nodePosition.remainder;
-  const deletedLength = content.endOffset - content.startOffset;
+  const deletedLength = deleteRange.endOffset - deleteRange.startOffset;
 
   let localEndOffset: number;
-  if (content.startOffset < nodePosition.nodeStartOffset) {
-    const firstSection = nodePosition.nodeStartOffset - content.startOffset;
+  if (deleteRange.startOffset < nodePosition.nodeStartOffset) {
+    const firstSection = nodePosition.nodeStartOffset - deleteRange.startOffset;
     const secondSection = deletedLength - firstSection;
     localEndOffset = localStartOffset + secondSection + 1;
   } else {
@@ -185,7 +213,7 @@ function getNodeAfterContent(
     length:
       nodePosition.nodeStartOffset +
       nodePosition.node.length -
-      content.endOffset,
+      deleteRange.endOffset,
     lineFeedCount: lineFeedCountAfterEnd,
     leftCharCount: 0,
     leftLineFeedCount: 0,
@@ -197,6 +225,13 @@ function getNodeAfterContent(
   return nodeAfterContent;
 }
 
+/**
+ * Deletes nodes inorder between the start and end index.
+ * Format: `startIndex <= in order node to delete < endIndex`
+ * @param page The page/piece table.
+ * @param startIndex The index of the first node to delete.
+ * @param endIndex The index of the node after the last node to delete.
+ */
 function deleteBetweenNodes(
   page: PageContent,
   startIndex: number,
@@ -212,6 +247,12 @@ function deleteBetweenNodes(
   return page;
 }
 
+/**
+ * Deletes a node from the page/piece table. The node itself still resides inside the piece table, however `parent`,
+ * `left`, and `right` will point to `SENTINEL_INDEX`, and no other nodes will point to the deleted node.
+ * @param page The page/piece table.
+ * @param z The index of the node to delete.
+ */
 export function deleteNode(page: PageContent, z: number): PageContent {
   page = { ...page };
   page.nodes[z] = { ...page.nodes[z] };
@@ -358,6 +399,11 @@ export function deleteNode(page: PageContent, z: number): PageContent {
   return page;
 }
 
+/**
+ * Sets the color of the node to `Color.BLack`, and sets `parent`, `left`, and `right` to `SENTINEL_INDEX`.
+ * @param page The page/piece table.
+ * @param node The index of the node to detach.
+ */
 function detach(page: PageContent, node: number): void {
   const parent = page.nodes[page.nodes[node].parent]; // NEVER ASSIGN TO THIS
   if (parent.left === node) {
@@ -380,6 +426,11 @@ function detach(page: PageContent, node: number): void {
   };
 }
 
+/**
+ * Restores the properties of a red-black tree after the deletion of a node.
+ * @param page The page/piece table.
+ * @param x The node to start the fixup from.
+ */
 function fixDelete(page: PageContent, x: number): PageContent {
   let w: number;
 
