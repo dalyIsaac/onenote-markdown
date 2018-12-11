@@ -41,12 +41,7 @@ export function deleteContent(
     oldNodeStartPosition.remainder + deleteLength <=
     oldNodeStartPosition.node.length
   ) {
-    nodeAfterContent = getNodeAfterContent(
-      page,
-      content,
-      oldNodeStartPosition,
-      nodeBeforeContent,
-    );
+    nodeAfterContent = getNodeAfterContent(page, content, oldNodeStartPosition);
     oldNodeEndPosition = oldNodeStartPosition;
   } else {
     oldNodeEndPosition = findNodeAtOffset(
@@ -54,13 +49,10 @@ export function deleteContent(
       page.nodes,
       page.root,
     );
-    nodeAfterContent = getNodeAfterContent(
-      page,
-      content,
-      oldNodeEndPosition,
-      nodeBeforeContent,
-    );
+    nodeAfterContent = getNodeAfterContent(page, content, oldNodeEndPosition);
   }
+
+  let lastNodeToDelete = oldNodeEndPosition.nodeIndex;
 
   if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
     // delete from a point in the node to another point in the node
@@ -81,10 +73,14 @@ export function deleteContent(
     nodeAfterContent.right = oldNodeEndPosition.node.right;
     nodeAfterContent.color = oldNodeEndPosition.node.color;
     page.nodes[oldNodeEndPosition.nodeIndex] = nodeAfterContent;
-  } else {
+  } else if (oldNodeStartPosition === oldNodeEndPosition) {
     // delete the entire node
     page = deleteNode(page, oldNodeStartPosition.nodeIndex);
+  } else {
+    // deleting up to and including the last node
+    lastNodeToDelete = nextNode(page, lastNodeToDelete).index;
   }
+
   page.previouslyInsertedNodeIndex = null;
   page.previouslyInsertedNodeOffset = null;
 
@@ -92,7 +88,7 @@ export function deleteContent(
     page = deleteBetweenNodes(
       page,
       oldNodeStartPosition.nodeIndex,
-      oldNodeEndPosition.nodeIndex,
+      lastNodeToDelete,
     );
   }
   page.nodes[0] = SENTINEL; // ensures that every page will have the same SENTINEL node.
@@ -143,7 +139,6 @@ function getNodeAfterContent(
   page: PageContent,
   content: ContentDelete,
   nodePosition: NodePositionOffset,
-  nodeBeforeContent: Node,
 ): Node {
   // localStartOffset is the index of nodePosition.startOffset inside the buffer
   const localStartOffset =
