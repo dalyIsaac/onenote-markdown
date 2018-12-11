@@ -9,6 +9,7 @@ import {
   NodePositionOffset,
   recomputeTreeMetadata,
   resetSentinel,
+  SENTINEL,
   SENTINEL_INDEX,
   treeMinimum,
   updateTreeMetadata,
@@ -94,7 +95,7 @@ export function deleteContent(
       oldNodeEndPosition.nodeIndex,
     );
   }
-
+  page.nodes[0] = SENTINEL; // ensures that every page will have the same SENTINEL node.
   return page;
 }
 
