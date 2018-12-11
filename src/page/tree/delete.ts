@@ -172,19 +172,13 @@ function getNodeAfterContent(
   const localStartOffset =
     page.buffers[nodePosition.node.bufferIndex].lineStarts[
       nodePosition.node.start.line
-    ] +
-    nodePosition.node.start.column +
-    nodePosition.remainder;
+    ] + nodePosition.node.start.column;
   const deletedLength = deleteRange.endOffset - deleteRange.startOffset;
 
-  let localEndOffset: number;
-  if (deleteRange.startOffset < nodePosition.nodeStartOffset) {
-    const firstSection = nodePosition.nodeStartOffset - deleteRange.startOffset;
-    const secondSection = deletedLength - firstSection;
-    localEndOffset = localStartOffset + secondSection + 1;
-  } else {
-    localEndOffset = localStartOffset + deletedLength + 1;
-  }
+  const firstSection = nodePosition.nodeStartOffset - deleteRange.startOffset;
+  const secondSection = deletedLength - firstSection;
+  const localEndOffset = localStartOffset + secondSection + 1;
+
   const {
     lineFeedCountAfterNodeStartBeforeStart,
     lineFeedCountBetweenOffset,
@@ -195,19 +189,19 @@ function getNodeAfterContent(
     localStartOffset,
     localEndOffset,
   );
-  const nodeAfterContentLine =
+  const nodeAfterContentStartLine =
     nodePosition.node.start.line +
     lineFeedCountAfterNodeStartBeforeStart +
     lineFeedCountBetweenOffset;
-  const lineStart =
+  const lineStartOffset =
     page.buffers[nodePosition.node.bufferIndex].lineStarts[
-      nodeAfterContentLine
+      nodeAfterContentStartLine
     ];
   const nodeAfterContent: Node = {
     bufferIndex: nodePosition.node.bufferIndex,
     start: {
-      line: nodeAfterContentLine,
-      column: localEndOffset - lineStart - 1,
+      line: nodeAfterContentStartLine,
+      column: localEndOffset - lineStartOffset - 1,
     },
     end: nodePosition.node.end,
     length:
