@@ -71,9 +71,9 @@ export function deleteContent(
   let firstNodeToDelete = oldNodeStartPosition.nodeIndex;
   let lastNodeToDelete = oldNodeEndPosition.nodeIndex;
   if (
+    oldNodeStartPosition === oldNodeEndPosition &&
     nodeBeforeContent.length > 0 &&
-    nodeAfterContent.length > 0 &&
-    oldNodeStartPosition === oldNodeEndPosition
+    nodeAfterContent.length > 0
   ) {
     // delete from a point in the node to another point in the node
     page.nodes[oldNodeStartPosition.nodeIndex] = nodeBeforeContent;
