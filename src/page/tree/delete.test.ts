@@ -6481,7 +6481,6 @@ describe("page/tree/delete", () => {
                 leftCharCount: 14,
                 leftLineFeedCount: 0,
                 length: 1,
-                length: 1,
                 lineFeedCount: 0,
                 color: Color.Black,
                 parent: 2,
