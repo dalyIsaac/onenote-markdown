@@ -177,22 +177,24 @@ function getNodeAfterContent(
 
   const firstSection = nodePosition.nodeStartOffset - deleteRange.startOffset;
   const secondSection = deletedLength - firstSection;
+  // localEndOffset is the offset of the content after the deleted content
   const localEndOffset = localStartOffset + secondSection + 1;
 
+  const length =
+    nodePosition.nodeStartOffset +
+    nodePosition.node.length -
+    deleteRange.endOffset;
   const {
     lineFeedCountAfterNodeStartBeforeStart,
     lineFeedCountBetweenOffset,
-    lineFeedCountAfterEnd,
   } = getLineFeedCountsForOffsets(
     page,
     nodePosition,
-    localStartOffset,
     localEndOffset,
+    localEndOffset + length,
   );
   const nodeAfterContentStartLine =
-    nodePosition.node.start.line +
-    lineFeedCountAfterNodeStartBeforeStart +
-    lineFeedCountBetweenOffset;
+    nodePosition.node.start.line + lineFeedCountAfterNodeStartBeforeStart;
   const lineStartOffset =
     page.buffers[nodePosition.node.bufferIndex].lineStarts[
       nodeAfterContentStartLine
@@ -204,11 +206,8 @@ function getNodeAfterContent(
       column: localEndOffset - lineStartOffset - 1,
     },
     end: nodePosition.node.end,
-    length:
-      nodePosition.nodeStartOffset +
-      nodePosition.node.length -
-      deleteRange.endOffset,
-    lineFeedCount: lineFeedCountAfterEnd,
+    length,
+    lineFeedCount: lineFeedCountBetweenOffset,
     leftCharCount: 0,
     leftLineFeedCount: 0,
     left: 0,

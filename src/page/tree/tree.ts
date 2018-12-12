@@ -193,7 +193,7 @@ export function getOffsetInBuffer(
 }
 
 /**
- * Recomputes the metadata for the tree based on the newly inserted node.
+ * Recomputes the metadata for the tree based on the newly inserted/updated node.
  * @param page The page/piece table.
  * @param index The index of the node in the `node` array, which is the basis for updating the tree.
  */
@@ -208,16 +208,10 @@ export function recomputeTreeMetadata(
   }
   page.nodes = [...page.nodes];
   page.nodes[x] = { ...page.nodes[x] };
-  page.nodes[x] = page.nodes[x];
 
   // go upwards till the node whose left subtree is changed.
-  while (
-    x !== page.root &&
-    x === page.nodes[page.nodes[x].parent].right &&
-    x !== SENTINEL_INDEX
-  ) {
+  while (x !== page.root && x === page.nodes[page.nodes[x].parent].right) {
     x = page.nodes[x].parent;
-    page.nodes[x] = page.nodes[x];
   }
 
   if (x === page.root) {
@@ -228,7 +222,6 @@ export function recomputeTreeMetadata(
   // page.nodes[x] is the node whose right subtree is changed.
   x = page.nodes[x].parent;
   page.nodes[x] = { ...page.nodes[x] };
-  page.nodes[x] = page.nodes[x];
 
   lengthDelta =
     calculateCharCount(page, page.nodes[x].left) - page.nodes[x].leftCharCount;
@@ -250,7 +243,6 @@ export function recomputeTreeMetadata(
 
     x = page.nodes[x].parent;
     page.nodes[x] = { ...page.nodes[x] };
-    page.nodes[x] = page.nodes[x];
   }
 
   return page;
