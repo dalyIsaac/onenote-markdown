@@ -68,27 +68,29 @@ export function deleteContent(
     );
   }
 
+  let firstNodeToDelete = oldNodeStartPosition.nodeIndex;
   let lastNodeToDelete = oldNodeEndPosition.nodeIndex;
-
-  if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
+  if (
+    nodeBeforeContent.length > 0 &&
+    nodeAfterContent.length > 0 &&
+    oldNodeStartPosition === oldNodeEndPosition
+  ) {
     // delete from a point in the node to another point in the node
     page.nodes[oldNodeStartPosition.nodeIndex] = nodeBeforeContent;
     page.nodes.push(nodeAfterContent);
     page = insertNode(page, nodeAfterContent, deleteRange.startOffset);
     page = fixInsert(page, page.nodes.length - 1);
+  } else if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
+    // delete from a point in a node to the end of another node
+    updateNode(page, oldNodeStartPosition.nodeIndex, nodeBeforeContent);
+    updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
+    firstNodeToDelete = nextNode(page, firstNodeToDelete).index;
   } else if (nodeBeforeContent.length > 0) {
     // delete from a point in the node to the end of the node
     page.nodes[oldNodeStartPosition.nodeIndex] = nodeBeforeContent;
   } else if (nodeAfterContent.length > 0) {
     // delete from the start of the node to a point in the node
-    nodeAfterContent.leftCharCount = oldNodeEndPosition.node.leftCharCount;
-    nodeAfterContent.leftLineFeedCount =
-      oldNodeEndPosition.node.leftLineFeedCount;
-    nodeAfterContent.parent = oldNodeEndPosition.node.parent;
-    nodeAfterContent.left = oldNodeEndPosition.node.left;
-    nodeAfterContent.right = oldNodeEndPosition.node.right;
-    nodeAfterContent.color = oldNodeEndPosition.node.color;
-    page.nodes[oldNodeEndPosition.nodeIndex] = nodeAfterContent;
+    updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
   } else if (oldNodeStartPosition === oldNodeEndPosition) {
     // delete the entire node
     page = deleteNode(page, oldNodeStartPosition.nodeIndex);
@@ -101,14 +103,20 @@ export function deleteContent(
   page.previouslyInsertedNodeOffset = null;
 
   if (oldNodeStartPosition.nodeIndex !== oldNodeEndPosition.nodeIndex) {
-    page = deleteBetweenNodes(
-      page,
-      oldNodeStartPosition.nodeIndex,
-      lastNodeToDelete,
-    );
+    page = deleteBetweenNodes(page, firstNodeToDelete, lastNodeToDelete);
   }
   page.nodes[0] = SENTINEL; // ensures that every page will have the same SENTINEL node.
   return page;
+}
+
+function updateNode(page: PageContent, index: number, newNode: Node): void {
+  newNode.leftCharCount = page.nodes[index].leftCharCount;
+  newNode.leftLineFeedCount = page.nodes[index].leftLineFeedCount;
+  newNode.parent = page.nodes[index].parent;
+  newNode.left = page.nodes[index].left;
+  newNode.right = page.nodes[index].right;
+  newNode.color = page.nodes[index].color;
+  page.nodes[index] = newNode;
 }
 
 /**
