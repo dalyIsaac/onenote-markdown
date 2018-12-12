@@ -3910,7 +3910,7 @@ describe("page/tree/delete", () => {
             leftCharCount: 85,
             leftLineFeedCount: 2,
             length: 2,
-            lineFeedCount: 2,
+            lineFeedCount: 0,
             color: Color.Black,
             parent: SENTINEL_INDEX,
             left: 4,
@@ -4014,6 +4014,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                // 1
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -4027,6 +4028,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 2
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -4040,6 +4042,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 3
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -4053,6 +4056,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 4
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -4066,6 +4070,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 5
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -4079,19 +4084,21 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 6
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
                 leftCharCount: 66,
                 leftLineFeedCount: 1,
                 length: 2,
-                lineFeedCount: 2,
+                lineFeedCount: 0,
                 color: Color.Black,
                 parent: SENTINEL_INDEX,
                 left: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
               },
               {
+                // 7
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -4105,6 +4112,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 8
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -4118,6 +4126,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 9
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -4131,6 +4140,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 10
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -4144,6 +4154,7 @@ describe("page/tree/delete", () => {
                 right: 11,
               },
               {
+                // 11
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -4189,6 +4200,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                // 1
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -4202,6 +4214,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 2
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -4215,6 +4228,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 3
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -4228,6 +4242,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 4
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -4241,6 +4256,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 5
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -4254,19 +4270,21 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 6
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
                 leftCharCount: 65,
                 leftLineFeedCount: 1,
                 length: 2,
-                lineFeedCount: 2,
+                lineFeedCount: 0,
                 color: Color.Black,
                 parent: SENTINEL_INDEX,
                 left: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
               },
               {
+                // 7
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -4280,6 +4298,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 8
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -4293,6 +4312,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 9
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -4306,6 +4326,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 10
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -4319,6 +4340,7 @@ describe("page/tree/delete", () => {
                 right: 11,
               },
               {
+                // 11
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -4364,6 +4386,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                // 1
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -4377,6 +4400,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 2
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -4390,6 +4414,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 3
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -4403,6 +4428,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 4
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -4416,6 +4442,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 5
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -4429,19 +4456,21 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 6
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 2,
-                lineFeedCount: 2,
+                lineFeedCount: 0,
                 color: Color.Black,
                 parent: SENTINEL_INDEX,
                 left: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
               },
               {
+                // 7
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -4455,6 +4484,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 8
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -4468,6 +4498,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 9
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -4481,6 +4512,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 10
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -4494,6 +4526,7 @@ describe("page/tree/delete", () => {
                 right: 11,
               },
               {
+                // 11
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -4539,6 +4572,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                // 1
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -4552,6 +4586,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 2
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -4565,6 +4600,7 @@ describe("page/tree/delete", () => {
                 right: 4,
               },
               {
+                // 3
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -4578,6 +4614,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 4
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -4591,6 +4628,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 5
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -4604,19 +4642,21 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 6
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
                 leftCharCount: 83,
                 leftLineFeedCount: 1,
                 length: 2,
-                lineFeedCount: 2,
+                lineFeedCount: 0,
                 color: Color.Black,
                 parent: SENTINEL_INDEX,
                 left: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
               },
               {
+                // 7
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -4630,6 +4670,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 8
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -4643,6 +4684,7 @@ describe("page/tree/delete", () => {
                 right: 10,
               },
               {
+                // 9
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -4656,6 +4698,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 10
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -4669,6 +4712,7 @@ describe("page/tree/delete", () => {
                 right: 11,
               },
               {
+                // 11
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -4714,6 +4758,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                // 1
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -4727,6 +4772,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 2
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -4740,6 +4786,7 @@ describe("page/tree/delete", () => {
                 right: 4,
               },
               {
+                // 3
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -4753,6 +4800,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 4
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -4766,6 +4814,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 5
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -4779,19 +4828,21 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 6
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
                 leftCharCount: 83,
                 leftLineFeedCount: 1,
                 length: 2,
-                lineFeedCount: 2,
+                lineFeedCount: 0,
                 color: Color.Black,
                 parent: SENTINEL_INDEX,
                 left: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
               },
               {
+                // 7
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -4805,6 +4856,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 8
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -4818,6 +4870,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 9
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -4831,6 +4884,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 10
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -4844,6 +4898,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 11
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -4889,6 +4944,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                // 1
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -4902,6 +4958,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 2
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -4915,6 +4972,7 @@ describe("page/tree/delete", () => {
                 right: 3,
               },
               {
+                // 3
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -4928,6 +4986,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 4
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -4941,6 +5000,7 @@ describe("page/tree/delete", () => {
                 right: 5,
               },
               {
+                // 5
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -4954,19 +5014,21 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 6
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
                 leftCharCount: 85,
                 leftLineFeedCount: 2,
                 length: 2,
-                lineFeedCount: 2,
+                lineFeedCount: 0,
                 color: Color.Black,
                 parent: SENTINEL_INDEX,
                 left: 4,
                 right: 8,
               },
               {
+                // 7
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -4980,6 +5042,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 8
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -4993,6 +5056,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 9
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -5006,6 +5070,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 10
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -5019,6 +5084,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 11
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -5064,6 +5130,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                // 1
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -5077,6 +5144,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 2
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -5090,6 +5158,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 3
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -5103,6 +5172,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 4
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -5116,6 +5186,7 @@ describe("page/tree/delete", () => {
                 right: 5,
               },
               {
+                // 5
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -5129,19 +5200,21 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 6
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
                 leftCharCount: 5,
                 leftLineFeedCount: 1,
                 length: 2,
-                lineFeedCount: 2,
+                lineFeedCount: 0,
                 color: Color.Black,
                 parent: SENTINEL_INDEX,
                 left: 4,
                 right: 8,
               },
               {
+                // 7
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -5155,6 +5228,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 8
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -5168,6 +5242,7 @@ describe("page/tree/delete", () => {
                 right: 10,
               },
               {
+                // 9
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -5181,6 +5256,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 10
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -5194,6 +5270,7 @@ describe("page/tree/delete", () => {
                 right: 11,
               },
               {
+                // 11
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -5427,6 +5504,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                // 1
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -5440,6 +5518,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 2
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -5453,6 +5532,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 3
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -5466,6 +5546,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 4
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -5479,6 +5560,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 5
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -5492,19 +5574,21 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 6
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
                 leftCharCount: 66,
                 leftLineFeedCount: 1,
                 length: 2,
-                lineFeedCount: 2,
+                lineFeedCount: 0,
                 color: Color.Black,
                 parent: SENTINEL_INDEX,
                 left: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
               },
               {
+                // 7
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -5518,6 +5602,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 8
                 bufferIndex: 1,
                 start: { line: 0, column: 9 },
                 end: { line: 0, column: 12 },
@@ -5531,6 +5616,7 @@ describe("page/tree/delete", () => {
                 right: 10,
               },
               {
+                // 9
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -5544,6 +5630,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                // 10
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -5557,6 +5644,7 @@ describe("page/tree/delete", () => {
                 right: 11,
               },
               {
+                // 11
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -5675,7 +5763,7 @@ describe("page/tree/delete", () => {
                 leftCharCount: 1,
                 leftLineFeedCount: 1,
                 length: 2,
-                lineFeedCount: 2,
+                lineFeedCount: 0,
                 color: Color.Black,
                 parent: SENTINEL_INDEX,
                 left: 5,
@@ -5861,7 +5949,7 @@ describe("page/tree/delete", () => {
                 leftCharCount: 80,
                 leftLineFeedCount: 2,
                 length: 2,
-                lineFeedCount: 2,
+                lineFeedCount: 0,
                 color: Color.Black,
                 parent: SENTINEL_INDEX,
                 left: 4,
@@ -6047,7 +6135,7 @@ describe("page/tree/delete", () => {
                 leftCharCount: 85,
                 leftLineFeedCount: 2,
                 length: 2,
-                lineFeedCount: 2,
+                lineFeedCount: 0,
                 color: Color.Black,
                 parent: SENTINEL_INDEX,
                 left: 4,
@@ -6235,7 +6323,7 @@ describe("page/tree/delete", () => {
                 leftCharCount: 50,
                 leftLineFeedCount: 1,
                 length: 2,
-                lineFeedCount: 2,
+                lineFeedCount: 0,
                 color: Color.Black,
                 parent: SENTINEL_INDEX,
                 left: 4,
