@@ -439,7 +439,6 @@ function fixDelete(page: PageContent, x: number): PageContent {
     if (x === page.nodes[page.nodes[x].parent].left) {
       w = page.nodes[page.nodes[x].parent].right;
       page.nodes[w] = { ...page.nodes[w] };
-      page.nodes[w] = page.nodes[w];
 
       if (page.nodes[w].color === Color.Red) {
         page.nodes[w].color = Color.Black;
@@ -450,7 +449,6 @@ function fixDelete(page: PageContent, x: number): PageContent {
         page = leftRotate(page, page.nodes[x].parent);
         w = page.nodes[page.nodes[x].parent].right;
         page.nodes[w] = { ...page.nodes[w] };
-        page.nodes[w] = page.nodes[w];
       }
 
       if (
@@ -470,7 +468,6 @@ function fixDelete(page: PageContent, x: number): PageContent {
           page = rightRotate(page, w);
           w = page.nodes[page.nodes[x].parent].right;
           page.nodes[w] = { ...page.nodes[w] };
-          page.nodes[w] = page.nodes[w];
         }
 
         page.nodes[w].color = page.nodes[page.nodes[x].parent].color;
@@ -488,7 +485,6 @@ function fixDelete(page: PageContent, x: number): PageContent {
       }
     } else {
       w = page.nodes[page.nodes[x].parent].left;
-      page.nodes[w] = page.nodes[w];
 
       if (page.nodes[w].color === Color.Red) {
         page.nodes[w].color = Color.Black;
@@ -499,7 +495,6 @@ function fixDelete(page: PageContent, x: number): PageContent {
         page = rightRotate(page, page.nodes[x].parent);
         w = page.nodes[page.nodes[x].parent].left;
         page.nodes[w] = { ...page.nodes[w] };
-        page.nodes[w] = page.nodes[w];
       }
 
       if (
@@ -518,7 +513,6 @@ function fixDelete(page: PageContent, x: number): PageContent {
           page.nodes[w].color = Color.Red;
           page = leftRotate(page, w);
           w = page.nodes[page.nodes[x].parent].left;
-          page.nodes[w] = page.nodes[w];
         }
 
         page.nodes[w].color = page.nodes[page.nodes[x].parent].color;
