@@ -69,7 +69,7 @@ export function deleteContent(
   }
 
   let firstNodeToDelete = oldNodeStartPosition.nodeIndex;
-  let lastNodeToDelete = oldNodeEndPosition.nodeIndex;
+  let nodeAfterLastNodeToDelete = oldNodeEndPosition.nodeIndex;
   if (
     oldNodeStartPosition === oldNodeEndPosition &&
     nodeBeforeContent.length > 0 &&
@@ -82,34 +82,42 @@ export function deleteContent(
     page = fixInsert(page, page.nodes.length - 1);
   } else if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
     // delete from a point in a node to the end of another node
-    updateNode(page, oldNodeStartPosition.nodeIndex, nodeBeforeContent);
-    updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
+    page = updateNode(page, oldNodeStartPosition.nodeIndex, nodeBeforeContent);
+    page = updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
     firstNodeToDelete = nextNode(page, firstNodeToDelete).index;
   } else if (nodeBeforeContent.length > 0) {
     // delete from a point in the node to the end of the node
     page.nodes[oldNodeStartPosition.nodeIndex] = nodeBeforeContent;
   } else if (nodeAfterContent.length > 0) {
     // delete from the start of the node to a point in the node
-    updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
+    page = updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
   } else if (oldNodeStartPosition === oldNodeEndPosition) {
     // delete the entire node
     page = deleteNode(page, oldNodeStartPosition.nodeIndex);
   } else {
     // deleting up to and including the last node
-    lastNodeToDelete = nextNode(page, lastNodeToDelete).index;
+    nodeAfterLastNodeToDelete = nextNode(page, nodeAfterLastNodeToDelete).index;
   }
 
   page.previouslyInsertedNodeIndex = null;
   page.previouslyInsertedNodeOffset = null;
 
   if (oldNodeStartPosition.nodeIndex !== oldNodeEndPosition.nodeIndex) {
-    page = deleteBetweenNodes(page, firstNodeToDelete, lastNodeToDelete);
+    page = deleteBetweenNodes(
+      page,
+      firstNodeToDelete,
+      nodeAfterLastNodeToDelete,
+    );
   }
   page.nodes[0] = SENTINEL; // ensures that every page will have the same SENTINEL node.
   return page;
 }
 
-function updateNode(page: PageContent, index: number, newNode: Node): void {
+function updateNode(
+  page: PageContent,
+  index: number,
+  newNode: Node,
+): PageContent {
   newNode.leftCharCount = page.nodes[index].leftCharCount;
   newNode.leftLineFeedCount = page.nodes[index].leftLineFeedCount;
   newNode.parent = page.nodes[index].parent;
@@ -117,6 +125,8 @@ function updateNode(page: PageContent, index: number, newNode: Node): void {
   newNode.right = page.nodes[index].right;
   newNode.color = page.nodes[index].color;
   page.nodes[index] = newNode;
+  page = recomputeTreeMetadata(page, index);
+  return page;
 }
 
 /**
