@@ -1251,7 +1251,7 @@ describe("page/tree/insert", () => {
     });
   });
 
-  describe("fix insert functions", () => {
+  describe("fix insert function", () => {
     describe("black uncle cases", () => {
       test("Scenario 1: Left left case", () => {
         const page: PageContent = {

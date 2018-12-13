@@ -3,6 +3,8 @@ import {
   calculateCharCount,
   calculateLineFeedCount,
   findNodeAtOffset,
+  nextNode,
+  prevNode,
   recomputeTreeMetadata,
   SENTINEL,
   SENTINEL_INDEX,
@@ -112,7 +114,7 @@ describe("page/tree/tree", () => {
 
     expect(findNodeAtOffset(-1, nodes, root)).toEqual({
       node: SENTINEL,
-      nodeIndex: SENTINEL_INDEX,
+      nodeIndex: 1,
       remainder: 0,
       nodeStartOffset: 0,
     });
@@ -222,11 +224,12 @@ describe("page/tree/tree", () => {
       nodeStartOffset: 80,
     });
 
+    // out of range
     expect(findNodeAtOffset(121, nodes, root)).toEqual({
-      node: SENTINEL,
-      nodeIndex: SENTINEL_INDEX,
-      remainder: 0,
-      nodeStartOffset: 0,
+      node: nodes[7],
+      nodeIndex: 7,
+      remainder: 41,
+      nodeStartOffset: 80,
     });
   });
 
@@ -357,5 +360,29 @@ describe("page/tree/tree", () => {
 
     const receivedPage = recomputeTreeMetadata(page, 4);
     expect(receivedPage).toEqual(expectedPage);
+  });
+
+  test("nextNode", () => {
+    const page = getPage();
+
+    expect(nextNode(getPage(), 1)).toEqual({ node: page.nodes[2], index: 2 });
+    expect(nextNode(getPage(), 2)).toEqual({ node: page.nodes[3], index: 3 });
+    expect(nextNode(getPage(), 3)).toEqual({ node: page.nodes[4], index: 4 });
+    expect(nextNode(getPage(), 4)).toEqual({ node: page.nodes[5], index: 5 });
+    expect(nextNode(getPage(), 5)).toEqual({ node: page.nodes[6], index: 6 });
+    expect(nextNode(getPage(), 6)).toEqual({ node: page.nodes[7], index: 7 });
+    expect(nextNode(getPage(), 7)).toEqual({ node: page.nodes[0], index: 0 });
+  });
+
+  test("prevNode", () => {
+    const page = getPage();
+
+    expect(prevNode(getPage(), 7)).toEqual({ node: page.nodes[6], index: 6 });
+    expect(prevNode(getPage(), 6)).toEqual({ node: page.nodes[5], index: 5 });
+    expect(prevNode(getPage(), 5)).toEqual({ node: page.nodes[4], index: 4 });
+    expect(prevNode(getPage(), 4)).toEqual({ node: page.nodes[3], index: 3 });
+    expect(prevNode(getPage(), 3)).toEqual({ node: page.nodes[2], index: 2 });
+    expect(prevNode(getPage(), 2)).toEqual({ node: page.nodes[1], index: 1 });
+    expect(prevNode(getPage(), 1)).toEqual({ node: page.nodes[0], index: 0 });
   });
 });

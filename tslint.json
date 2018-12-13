@@ -12,6 +12,8 @@
       "allow-leading-underscore"
     ],
     "no-bitwise": false,
-    "interface-name": [true, "never-prefix"]
+    "interface-name": [true, "never-prefix"],
+    "prefer-conditional-expression": false,
+    "typedef": [true, "call-signature"] 
   }
 }

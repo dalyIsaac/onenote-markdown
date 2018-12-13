@@ -19,7 +19,7 @@ export const MAX_BUFFER_LENGTH = 65535;
 /**
  * The returned object from `findNodeAtOffset`.
  */
-export interface NodePosition {
+export interface NodePositionOffset {
   /**
    * Piece Index
    */
@@ -42,6 +42,14 @@ export interface NodePosition {
 }
 
 /**
+ * Contains a node and its index in a page/piece table.
+ */
+export interface NodePosition {
+  node: Node;
+  index: number;
+}
+
+/**
  * Finds the node which contains the offset.
  * @param offset The offset.
  * @param nodes The nodes.
@@ -51,57 +59,53 @@ export function findNodeAtOffset(
   offset: number,
   nodes: Node[],
   root: number,
-): NodePosition {
-  let xIndex = root;
-  let x: Node = nodes[xIndex];
+): NodePositionOffset {
+  let x = root;
   let nodeStartOffset = 0;
 
-  while (xIndex !== SENTINEL_INDEX) {
-    if (x.leftCharCount > offset) {
-      const oldXIndex = xIndex;
-      xIndex = x.left;
-      if (nodes[xIndex]) {
-        x = nodes[xIndex];
-      } else {
+  while (x !== SENTINEL_INDEX) {
+    if (nodes[x].leftCharCount > offset) {
+      const oldXIndex = x;
+      x = nodes[x].left;
+      if (x === SENTINEL_INDEX) {
         // to the left of the tree
         return {
-          node: x,
+          node: nodes[x],
           nodeIndex: oldXIndex,
           remainder: 0,
           nodeStartOffset,
         };
       }
-    } else if (x.leftCharCount + x.length > offset) {
+    } else if (nodes[x].leftCharCount + nodes[x].length > offset) {
       // note, the vscode nodeAt function uses >= instead of >
-      nodeStartOffset += x.leftCharCount;
+      nodeStartOffset += nodes[x].leftCharCount;
       return {
-        node: x,
-        nodeIndex: xIndex,
-        remainder: offset - x.leftCharCount,
+        node: nodes[x],
+        nodeIndex: x,
+        remainder: offset - nodes[x].leftCharCount,
         nodeStartOffset,
       };
     } else {
-      offset -= x.leftCharCount + x.length;
-      nodeStartOffset += x.leftCharCount + x.length;
+      offset -= nodes[x].leftCharCount + nodes[x].length;
+      const oldNodeStartOffset = nodeStartOffset;
+      nodeStartOffset += nodes[x].leftCharCount + nodes[x].length;
 
-      const oldXIndex = xIndex;
-      xIndex = x.right;
-      if (nodes[xIndex]) {
-        x = nodes[xIndex];
-      } else {
+      const oldXIndex = x;
+      x = nodes[x].right;
+      if (x === SENTINEL_INDEX) {
         // to the right of the tree
         return {
-          node: x,
+          node: nodes[oldXIndex],
           nodeIndex: oldXIndex,
-          remainder: x.length,
-          nodeStartOffset,
+          remainder: nodes[oldXIndex].length,
+          nodeStartOffset: oldNodeStartOffset,
         };
       }
     }
   }
   // tslint:disable-next-line:no-console
   console.error(
-    `Reaching here means that \`x\` is a SENTINEL node, and stored inside the piece table's \`nodes\` array.`,
+    `Reaching here means that \`nodes[x]\` is a SENTINEL node, and stored inside the piece table's \`nodes\` array.`,
   );
   // attempt to gracefully handle the error
   return {
@@ -183,64 +187,62 @@ export function getOffsetInBuffer(
   bufferIndex: number,
   cursor: BufferCursor,
   page: PageContent,
-) {
+): number {
   const lineStarts = page.buffers[bufferIndex].lineStarts;
   return lineStarts[cursor.line] + cursor.column;
 }
 
 /**
- * Recomputes the metadata for the tree based on the newly inserted node.
+ * Recomputes the metadata for the tree based on the newly inserted/updated node.
  * @param page The page/piece table.
  * @param index The index of the node in the `node` array, which is the basis for updating the tree.
  */
 export function recomputeTreeMetadata(
   page: PageContent,
-  xIndex: number,
+  x: number,
 ): PageContent {
   let lengthDelta = 0;
   let lineFeedDelta = 0;
-  if (xIndex === page.root) {
+  if (x === page.root) {
     return page;
   }
-
   page.nodes = [...page.nodes];
-  let x = { ...page.nodes[xIndex] };
-  page.nodes[xIndex] = x;
+  page.nodes[x] = { ...page.nodes[x] };
 
   // go upwards till the node whose left subtree is changed.
-  while (xIndex !== page.root && xIndex === page.nodes[x.parent].right) {
-    xIndex = x.parent;
-    x = page.nodes[xIndex];
+  while (x !== page.root && x === page.nodes[page.nodes[x].parent].right) {
+    x = page.nodes[x].parent;
   }
 
-  if (xIndex === page.root) {
+  if (x === page.root) {
     // well, it means we add a node to the end (inorder)
     return page;
   }
 
-  // x is the node whose right subtree is changed.
-  xIndex = x.parent;
-  x = { ...page.nodes[xIndex] };
-  page.nodes[xIndex] = x;
+  // page.nodes[x] is the node whose right subtree is changed.
+  x = page.nodes[x].parent;
+  page.nodes[x] = { ...page.nodes[x] };
 
-  lengthDelta = calculateCharCount(page, x.left) - x.leftCharCount;
-  lineFeedDelta = calculateLineFeedCount(page, x.left) - x.leftLineFeedCount;
-  x.leftCharCount += lengthDelta;
-  x.leftLineFeedCount += lineFeedDelta;
+  lengthDelta =
+    calculateCharCount(page, page.nodes[x].left) - page.nodes[x].leftCharCount;
+  lineFeedDelta =
+    calculateLineFeedCount(page, page.nodes[x].left) -
+    page.nodes[x].leftLineFeedCount;
+  page.nodes[x].leftCharCount += lengthDelta;
+  page.nodes[x].leftLineFeedCount += lineFeedDelta;
 
   // go upwards till root. O(logN)
-  while (xIndex !== page.root && (lengthDelta !== 0 || lineFeedDelta !== 0)) {
-    if (page.nodes[x.parent].left === xIndex) {
-      page.nodes[x.parent] = {
-        ...page.nodes[x.parent],
+  while (x !== page.root && (lengthDelta !== 0 || lineFeedDelta !== 0)) {
+    if (page.nodes[page.nodes[x].parent].left === x) {
+      page.nodes[page.nodes[x].parent] = {
+        ...page.nodes[page.nodes[x].parent],
       };
-      page.nodes[x.parent].leftCharCount += lengthDelta;
-      page.nodes[x.parent].leftLineFeedCount += lineFeedDelta;
+      page.nodes[page.nodes[x].parent].leftCharCount += lengthDelta;
+      page.nodes[page.nodes[x].parent].leftLineFeedCount += lineFeedDelta;
     }
 
-    xIndex = x.parent;
-    x = { ...page.nodes[xIndex] };
-    page.nodes[xIndex] = x;
+    x = page.nodes[x].parent;
+    page.nodes[x] = { ...page.nodes[x] };
   }
 
   return page;
@@ -302,3 +304,139 @@ export const SENTINEL: Node = {
   left: SENTINEL_INDEX,
   right: SENTINEL_INDEX,
 };
+
+/**
+ * Ensures that the `SENTINEL` node in the piece table is true to the values of the `SENTINEL` node.
+ * This function does mutate the `SENTINEL` node, to ensure that `SENTINEL` is a singleton.
+ * @param page The page/piece table which contains the `SENTINEL` node.
+ */
+export function resetSentinel(page: PageContent): void {
+  page.nodes[0].bufferIndex = 0;
+  page.nodes[0].start = { column: 0, line: 0 };
+  page.nodes[0].end = { column: 0, line: 0 };
+  page.nodes[0].leftCharCount = 0;
+  page.nodes[0].leftLineFeedCount = 0;
+  page.nodes[0].length = 0;
+  page.nodes[0].lineFeedCount = 0;
+  page.nodes[0].color = Color.Black;
+  page.nodes[0].parent = SENTINEL_INDEX;
+  page.nodes[0].left = SENTINEL_INDEX;
+  page.nodes[0].right = SENTINEL_INDEX;
+}
+
+/**
+ * Finds the minimum of the subtree given by the `x`
+ * @param page The piece table/page.
+ * @param x The index from which to find the minimum of that subtree.
+ */
+export function treeMinimum(page: PageContent, x: number): NodePosition {
+  page.nodes[x] = page.nodes[x];
+  while (page.nodes[x].left !== SENTINEL_INDEX) {
+    x = page.nodes[x].left;
+    page.nodes[x] = page.nodes[x];
+  }
+  return { node: page.nodes[x], index: x };
+}
+
+/**
+ * Finds the maximum of the subtree given by the `x`
+ * @param page The piece table/page.
+ * @param x The index from which to find the maximum of that subtree.
+ */
+export function treeMaximum(page: PageContent, x: number): NodePosition {
+  page.nodes[x] = page.nodes[x];
+  while (page.nodes[x].right !== SENTINEL_INDEX) {
+    x = page.nodes[x].right;
+    page.nodes[x] = page.nodes[x];
+  }
+  return { node: page.nodes[x], index: x };
+}
+
+/**
+ * Goes up the tree, and updates the metadata of each node.
+ * @param page The page/piece table.
+ * @param x The index of the current node.
+ * @param charCountDelta The character count delta to be applied.
+ * @param lineFeedCountDelta The line feed count delta to be applied.
+ */
+export function updateTreeMetadata(
+  page: PageContent,
+  x: number,
+  charCountDelta: number,
+  lineFeedCountDelta: number,
+): PageContent {
+  // node length change or line feed count change
+  while (x !== page.root && x !== SENTINEL_INDEX) {
+    page.nodes[x] = page.nodes[x];
+    if (page.nodes[page.nodes[x].parent].left === x) {
+      page.nodes[page.nodes[x].parent] = {
+        ...page.nodes[page.nodes[x].parent],
+        leftCharCount:
+          page.nodes[page.nodes[x].parent].leftCharCount + charCountDelta,
+        leftLineFeedCount:
+          page.nodes[page.nodes[x].parent].leftLineFeedCount +
+          lineFeedCountDelta,
+      };
+    }
+
+    x = page.nodes[x].parent;
+  }
+  return page;
+}
+
+/**
+ * Gets the next node of a red-black tree, given the current node's index.
+ * @param page The page/piece table.
+ * @param currentNode The index of the current node in the `page.nodes` array.
+ */
+export function nextNode(page: PageContent, currentNode: number): NodePosition {
+  if (page.nodes[currentNode].right !== SENTINEL_INDEX) {
+    return treeMinimum(page, page.nodes[currentNode].right);
+  }
+
+  while (page.nodes[currentNode].parent !== SENTINEL_INDEX) {
+    if (page.nodes[page.nodes[currentNode].parent].left === currentNode) {
+      break;
+    }
+
+    currentNode = page.nodes[currentNode].parent;
+    page.nodes[currentNode] = page.nodes[currentNode];
+  }
+
+  if (page.nodes[currentNode].parent === SENTINEL_INDEX) {
+    return { node: SENTINEL, index: SENTINEL_INDEX };
+  } else {
+    return {
+      index: page.nodes[currentNode].parent,
+      node: page.nodes[page.nodes[currentNode].parent],
+    };
+  }
+}
+
+/**
+ * Gets the previous node of a red-black tree, given the current node's index.
+ * @param page The page/piece table.
+ * @param currentNode The index of the current node in the `page.nodes` array.
+ */
+export function prevNode(page: PageContent, currentNode: number): NodePosition {
+  if (page.nodes[currentNode].left !== SENTINEL_INDEX) {
+    return treeMaximum(page, page.nodes[currentNode].left);
+  }
+
+  while (page.nodes[currentNode].parent !== SENTINEL_INDEX) {
+    if (page.nodes[page.nodes[currentNode].parent].right === currentNode) {
+      break;
+    }
+
+    currentNode = page.nodes[currentNode].parent;
+  }
+
+  if (page.nodes[currentNode].parent === SENTINEL_INDEX) {
+    return { node: SENTINEL, index: SENTINEL_INDEX };
+  } else {
+    return {
+      index: page.nodes[currentNode].parent,
+      node: page.nodes[page.nodes[currentNode].parent],
+    };
+  }
+}

@@ -3,122 +3,119 @@ import { SENTINEL_INDEX } from "./tree";
 
 /**
  * Performs a left rotation on the red-black tree, on the given node.
- * @param pieceTable The page/piece table.
+ * @param page The page/piece table.
  * @param nodeIndex The index of the node in the array for which the left rotation is performed on.
  */
-export function leftRotate(
-  pieceTable: PageContent,
-  nodeIndex: number,
-): PageContent {
-  const nodes = [...pieceTable.nodes];
+export function leftRotate(page: PageContent, nodeIndex: number): PageContent {
+  page.nodes = [...page.nodes];
 
-  const xIndex = nodeIndex;
-  const x = { ...nodes[xIndex] };
+  const x = nodeIndex;
+  page.nodes[x] = { ...page.nodes[x] };
 
-  if (x.right === SENTINEL_INDEX) {
+  if (page.nodes[x].right === SENTINEL_INDEX) {
     //  you can't left rotate
-    return pieceTable;
+    return page;
   }
-  const yIndex = x.right;
-  const y = { ...nodes[yIndex] };
+  const y = page.nodes[x].right;
+  page.nodes[y] = { ...page.nodes[y] };
 
-  let root = pieceTable.root;
+  let root = page.root;
 
   // fix leftCharCount
-  y.leftCharCount += x.leftCharCount + x.length;
-  y.leftLineFeedCount += x.leftLineFeedCount + x.lineFeedCount;
+  page.nodes[y].leftCharCount +=
+    page.nodes[x].leftCharCount + page.nodes[x].length;
+  page.nodes[y].leftLineFeedCount +=
+    page.nodes[x].leftLineFeedCount + page.nodes[x].lineFeedCount;
 
-  x.right = y.left;
-  if (y.left !== SENTINEL_INDEX) {
-    nodes[y.left] = {
-      ...nodes[y.left],
-      parent: xIndex,
+  page.nodes[x].right = page.nodes[y].left;
+  if (page.nodes[y].left !== SENTINEL_INDEX) {
+    page.nodes[page.nodes[y].left] = {
+      ...page.nodes[page.nodes[y].left],
+      parent: x,
     };
   }
-  y.parent = x.parent;
-  if (x.parent === SENTINEL_INDEX) {
-    root = yIndex;
-  } else if (xIndex === nodes[x.parent].left) {
-    nodes[x.parent] = {
-      ...nodes[x.parent],
-      left: yIndex,
+  page.nodes[y].parent = page.nodes[x].parent;
+  if (page.nodes[x].parent === SENTINEL_INDEX) {
+    root = y;
+  } else if (x === page.nodes[page.nodes[x].parent].left) {
+    page.nodes[page.nodes[x].parent] = {
+      ...page.nodes[page.nodes[x].parent],
+      left: y,
     };
   } else {
-    nodes[x.parent] = {
-      ...nodes[x.parent],
-      right: yIndex,
+    page.nodes[page.nodes[x].parent] = {
+      ...page.nodes[page.nodes[x].parent],
+      right: y,
     };
   }
-  y.left = xIndex;
-  x.parent = yIndex;
+  page.nodes[y].left = x;
+  page.nodes[x].parent = y;
 
-  nodes[xIndex] = x;
-  nodes[yIndex] = y;
+  page.nodes[x] = page.nodes[x];
+  page.nodes[y] = page.nodes[y];
 
   return {
-    ...pieceTable,
-    nodes,
+    ...page,
     root,
   };
 }
 
 /**
  * Performs a right rotation on the red-black tree, on the given node.
- * @param pieceTable The page/piece table.
+ * @param page The page/piece table.
  * @param nodeIndex The index of the node in the array for which the right rotation is performed on.
  */
-export function rightRotate(
-  pieceTable: PageContent,
-  nodeIndex: number,
-): PageContent {
-  const nodes = [...pieceTable.nodes];
+export function rightRotate(page: PageContent, nodeIndex: number): PageContent {
+  const nodes = [...page.nodes];
 
-  const yIndex = nodeIndex;
-  const y = { ...nodes[yIndex] };
+  const y = nodeIndex;
+  page.nodes[y] = { ...nodes[y] };
 
-  if (y.left === SENTINEL_INDEX) {
+  if (page.nodes[y].left === SENTINEL_INDEX) {
     // you can't right rotate
-    return pieceTable;
+    return page;
   }
-  const xIndex = y.left;
-  const x = { ...nodes[xIndex] };
+  const x = page.nodes[y].left;
+  page.nodes[x] = { ...nodes[x] };
 
-  let root = pieceTable.root;
+  let root = page.root;
 
-  y.left = x.right;
-  if (x.right !== SENTINEL_INDEX) {
-    nodes[x.right] = {
-      ...nodes[x.right],
-      parent: yIndex,
+  page.nodes[y].left = page.nodes[x].right;
+  if (page.nodes[x].right !== SENTINEL_INDEX) {
+    nodes[page.nodes[x].right] = {
+      ...nodes[page.nodes[x].right],
+      parent: y,
     };
   }
-  x.parent = y.parent;
+  page.nodes[x].parent = page.nodes[y].parent;
 
   // fix leftCharCount
-  y.leftCharCount -= x.leftCharCount + x.length;
-  y.leftLineFeedCount -= x.leftLineFeedCount + x.lineFeedCount;
+  page.nodes[y].leftCharCount -=
+    page.nodes[x].leftCharCount + page.nodes[x].length;
+  page.nodes[y].leftLineFeedCount -=
+    page.nodes[x].leftLineFeedCount + page.nodes[x].lineFeedCount;
 
-  if (y.parent === SENTINEL_INDEX) {
-    root = xIndex;
-  } else if (yIndex === nodes[y.parent].right) {
-    nodes[y.parent] = {
-      ...nodes[y.parent],
-      right: xIndex,
+  if (page.nodes[y].parent === SENTINEL_INDEX) {
+    root = x;
+  } else if (y === nodes[page.nodes[y].parent].right) {
+    nodes[page.nodes[y].parent] = {
+      ...nodes[page.nodes[y].parent],
+      right: x,
     };
   } else {
-    nodes[y.parent] = {
-      ...nodes[y.parent],
-      left: xIndex,
+    nodes[page.nodes[y].parent] = {
+      ...nodes[page.nodes[y].parent],
+      left: x,
     };
   }
-  x.right = yIndex;
-  y.parent = xIndex;
+  page.nodes[x].right = y;
+  page.nodes[y].parent = x;
 
-  nodes[yIndex] = y;
-  nodes[xIndex] = x;
+  nodes[y] = page.nodes[y];
+  nodes[x] = page.nodes[x];
 
   return {
-    ...pieceTable,
+    ...page,
     nodes,
     root,
   };
