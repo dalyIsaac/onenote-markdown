@@ -88,6 +88,12 @@ export function deleteContent(
   } else if (nodeBeforeContent.length > 0) {
     // delete from a point in the node to the end of the node
     page.nodes[oldNodeStartPosition.nodeIndex] = nodeBeforeContent;
+    if (oldNodeStartPosition !== oldNodeEndPosition) {
+      // deleting from a point in a node to the end of the content
+      page = deleteNode(page, oldNodeEndPosition.nodeIndex);
+      nodeAfterLastNodeToDelete = SENTINEL_INDEX;
+      firstNodeToDelete = nextNode(page, firstNodeToDelete).index;
+    }
   } else if (nodeAfterContent.length > 0) {
     // delete from the start of the node to a point in the node
     page = updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
