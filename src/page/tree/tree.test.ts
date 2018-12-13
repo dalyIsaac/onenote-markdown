@@ -15,6 +15,7 @@ describe("page/tree/tree", () => {
     nodes: [
       SENTINEL,
       {
+        // 1
         bufferIndex: 1,
         start: { line: 0, column: 0 },
         end: { line: 2, column: 6 },
@@ -28,6 +29,7 @@ describe("page/tree/tree", () => {
         right: SENTINEL_INDEX,
       },
       {
+        // 2
         bufferIndex: 0,
         start: { line: 0, column: 1 },
         end: { line: 0, column: 12 },
@@ -41,6 +43,7 @@ describe("page/tree/tree", () => {
         right: 6,
       },
       {
+        // 3
         bufferIndex: 0,
         start: { line: 0, column: 55 },
         end: { line: 0, column: 65 },
@@ -54,6 +57,7 @@ describe("page/tree/tree", () => {
         right: SENTINEL_INDEX,
       },
       {
+        // 4
         bufferIndex: 0,
         start: { line: 0, column: 12 },
         end: { line: 0, column: 14 },
@@ -67,6 +71,7 @@ describe("page/tree/tree", () => {
         right: 5,
       },
       {
+        // 5
         bufferIndex: 0,
         start: { line: 0, column: 66 },
         end: { line: 0, column: 76 },
@@ -74,12 +79,13 @@ describe("page/tree/tree", () => {
         leftLineFeedCount: 0,
         length: 10,
         lineFeedCount: 0,
-        color: Color.Red,
+        color: Color.Black,
         parent: 4,
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       },
       {
+        // 6
         bufferIndex: 1,
         start: { line: 2, column: 6 },
         end: { line: 2, column: 22 },
@@ -93,6 +99,7 @@ describe("page/tree/tree", () => {
         right: 7,
       },
       {
+        // 7
         bufferIndex: 0,
         start: { line: 0, column: 14 },
         end: { line: 0, column: 55 },
@@ -235,101 +242,7 @@ describe("page/tree/tree", () => {
 
   const getPage = (): PageContent => ({
     buffers: [],
-    nodes: [
-      SENTINEL,
-      {
-        bufferIndex: 1,
-        start: { line: 0, column: 0 },
-        end: { line: 2, column: 6 },
-        leftCharCount: 0,
-        leftLineFeedCount: 0,
-        length: 31,
-        lineFeedCount: 2,
-        color: Color.Black,
-        parent: 2,
-        left: SENTINEL_INDEX,
-        right: SENTINEL_INDEX,
-      },
-      {
-        bufferIndex: 0,
-        start: { line: 0, column: 1 },
-        end: { line: 0, column: 12 },
-        leftCharCount: 31,
-        leftLineFeedCount: 2,
-        length: 11,
-        lineFeedCount: 0,
-        color: Color.Black,
-        parent: SENTINEL_INDEX,
-        left: 1,
-        right: 6,
-      },
-      {
-        bufferIndex: 0,
-        start: { line: 0, column: 55 },
-        end: { line: 0, column: 65 },
-        leftCharCount: 0,
-        leftLineFeedCount: 0,
-        length: 10,
-        lineFeedCount: 0,
-        color: Color.Black,
-        parent: 4,
-        left: SENTINEL_INDEX,
-        right: SENTINEL_INDEX,
-      },
-      {
-        bufferIndex: 0,
-        start: { line: 0, column: 12 },
-        end: { line: 0, column: 14 },
-        leftCharCount: 10,
-        leftLineFeedCount: 0,
-        length: 2,
-        lineFeedCount: 0,
-        color: Color.Black,
-        parent: 6,
-        left: 3,
-        right: 5,
-      },
-      {
-        bufferIndex: 0,
-        start: { line: 0, column: 66 },
-        end: { line: 0, column: 76 },
-        leftCharCount: 0,
-        leftLineFeedCount: 0,
-        length: 10,
-        lineFeedCount: 0,
-        color: Color.Red,
-        parent: 4,
-        left: SENTINEL_INDEX,
-        right: SENTINEL_INDEX,
-      },
-      {
-        bufferIndex: 1,
-        start: { line: 2, column: 6 },
-        end: { line: 2, column: 22 },
-        leftCharCount: 22,
-        leftLineFeedCount: 0,
-        length: 16,
-        lineFeedCount: 0,
-        color: Color.Black,
-        parent: 2,
-        left: 4,
-        right: 7,
-      },
-      {
-        bufferIndex: 0,
-        start: { line: 0, column: 14 },
-        end: { line: 0, column: 55 },
-        leftCharCount: 0,
-        leftLineFeedCount: 0,
-        length: 41,
-        lineFeedCount: 0,
-        color: Color.Black,
-        parent: 6,
-        left: SENTINEL_INDEX,
-        right: SENTINEL_INDEX,
-      },
-    ],
-    root: 2,
+    ...getFinalTree(),
     newlineFormat: NEWLINE.LF,
     previouslyInsertedNodeIndex: null,
     previouslyInsertedNodeOffset: null,
@@ -347,11 +260,11 @@ describe("page/tree/tree", () => {
 
   test("Recompute tree metadata: add a node to the end", () => {
     const page = getPage(); // hypothetically added the last node
-    expect(recomputeTreeMetadata(page, 6)).toEqual(getPage());
+    expect(recomputeTreeMetadata(page, 7)).toEqual(getPage());
   });
 
   test("Recompute tree metadata: add a node in the middle", () => {
-    const page = getPage();
+    const page = getPage(); // hypothetically added node 5
     page.nodes[6].leftCharCount = 12;
     page.nodes[5].lineFeedCount = 5;
     const expectedPage = getPage();

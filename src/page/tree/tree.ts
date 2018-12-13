@@ -249,7 +249,7 @@ export function recomputeTreeMetadata(
 }
 
 /**
- * Calculates the character count for the node and its subtree.
+ * Calculates the character count for the node and its subtrees.
  * @param page The page/piece table
  * @param index The index of the node in the `node` array of the page/piece table to find the character count for.
  */
@@ -264,7 +264,7 @@ export function calculateCharCount(page: PageContent, index: number): number {
 }
 
 /**
- * Calculates the line feed count for the node and its subtree.
+ * Calculates the line feed count for the node and subtrees.
  * @param page The page/piece table
  * @param index The index of the node in the `node` array of the page/piece table to find the line feed count for.
  */
