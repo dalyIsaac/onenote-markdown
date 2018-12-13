@@ -274,7 +274,6 @@ function insertInsideNode(
     right: SENTINEL_INDEX,
   };
 
-  newPage.nodes.push(secondPartNode);
   newPage = insertNode(newPage, secondPartNode, content.offset);
   newPage = fixInsert(newPage, newPage.nodes.length - 1);
   newPage = insertAtNodeExtremity(content, newPage, maxBufferLength);
@@ -362,8 +361,6 @@ function createNodeAppendToBuffer(
     previouslyInsertedNodeOffset: content.offset,
   };
   newPage.buffers[page.buffers.length - 1] = updatedBuffer;
-  newPage.nodes.push(newNode);
-
   newPage = insertNode(newPage, newNode, content.offset);
   return newPage;
 }
@@ -408,8 +405,6 @@ function createNodeCreateBuffer(
     previouslyInsertedNodeOffset: content.offset,
   };
   newPage.buffers.push(newBuffer);
-  newPage.nodes.push(newNode);
-
   newPage = insertNode(newPage, newNode, content.offset);
   return newPage;
 }
@@ -425,6 +420,8 @@ export function insertNode(
   newNode: Node,
   offset: number,
 ): PageContent {
+  page.nodes = [...page.nodes];
+  page.nodes.push(newNode);
   let prevIndex = SENTINEL_INDEX;
 
   let currentIndex = page.root;

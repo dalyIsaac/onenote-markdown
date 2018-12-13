@@ -77,7 +77,6 @@ export function deleteContent(
   ) {
     // delete from a point in the node to another point in the node
     page.nodes[oldNodeStartPosition.nodeIndex] = nodeBeforeContent;
-    page.nodes.push(nodeAfterContent);
     page = insertNode(page, nodeAfterContent, deleteRange.startOffset);
     page = fixInsert(page, page.nodes.length - 1);
   } else if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
