@@ -7155,7 +7155,7 @@ describe("page/tree/delete", () => {
           expect(receivedPage).toEqual(expectedPage);
         });
 
-        test("Scenario 2c: Test 5", () => {
+        test("Scenario 2c: Test 6", () => {
           const page = getStartPage();
           const expectedPage: PageContent = {
             buffers: [
