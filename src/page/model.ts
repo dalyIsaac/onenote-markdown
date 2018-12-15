@@ -135,6 +135,10 @@ export interface PageContent {
    */
   root: number;
 
+  /**
+   * The index of the last node which had content inserted into it.
+   * `null` if another operation which wasn't an insert was performed.
+   */
   previouslyInsertedNodeIndex: number | null;
 
   /**
