@@ -16,8 +16,9 @@ export default function pageReducer(
     case STORE_RECEIVED_PAGE:
       const receivedPage = (action as StoreReceivedPageAction).receivedPage;
       const newPage = createNewPage(receivedPage);
-      state[receivedPage.id as string] = newPage;
-      return state;
+      const newState = { ...state };
+      newState[receivedPage.id as string] = newPage;
+      return newState;
     default:
       return state;
   }
