@@ -24,8 +24,8 @@ export interface ContentInsert {
  * @param maxBufferLength The maximum length of a buffer's content/string.
  */
 export function insertContent(
-  content: ContentInsert,
   page: PageContent,
+  content: ContentInsert,
   maxBufferLength: number,
 ): PageContent {
   let previouslyInsertedNode: Node | undefined;

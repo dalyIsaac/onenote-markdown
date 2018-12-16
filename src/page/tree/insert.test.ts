@@ -56,7 +56,7 @@ describe("page/tree/insert", () => {
         content: "b",
         offset: 1,
       };
-      const receivedPage = insertContent(content, page, MAX_BUFFER_LENGTH);
+      const receivedPage = insertContent(page, content, MAX_BUFFER_LENGTH);
       expect(receivedPage).toEqual(expectedPage);
     });
 
@@ -130,7 +130,7 @@ describe("page/tree/insert", () => {
         offset: 5,
       };
       const maxBufferLength = 5;
-      const receivedPage = insertContent(content, page, maxBufferLength);
+      const receivedPage = insertContent(page, content, maxBufferLength);
       expect(receivedPage).toEqual(expectedPage);
     });
 
@@ -230,7 +230,7 @@ describe("page/tree/insert", () => {
         offset: 2,
       };
       const maxBufferLength = 8;
-      const receivedPage = insertContent(content, page, maxBufferLength);
+      const receivedPage = insertContent(page, content, maxBufferLength);
       expect(receivedPage).toEqual(expectedPage);
     });
 
@@ -328,7 +328,7 @@ describe("page/tree/insert", () => {
         offset: 9,
       };
       const maxBufferLength = 8;
-      const receivedPage = insertContent(content, page, maxBufferLength);
+      const receivedPage = insertContent(page, content, maxBufferLength);
       expect(receivedPage).toEqual(expectedPage);
     });
 
@@ -431,7 +431,7 @@ describe("page/tree/insert", () => {
         offset: 2,
       };
       const maxBufferLength = 8;
-      const receivedPage = insertContent(content, page, maxBufferLength);
+      const receivedPage = insertContent(page, content, maxBufferLength);
       expect(receivedPage).toEqual(expectedPage);
     });
 
@@ -499,7 +499,7 @@ describe("page/tree/insert", () => {
       expectedPage.previouslyInsertedNodeIndex = 2;
       expectedPage.previouslyInsertedNodeOffset = 5;
       const maxBufferLength = 8;
-      const receivedPage = insertContent(content, page, maxBufferLength);
+      const receivedPage = insertContent(page, content, maxBufferLength);
       expect(receivedPage).toEqual(expectedPage);
     });
 
@@ -628,7 +628,7 @@ describe("page/tree/insert", () => {
         offset: 0,
       };
       const maxBufferLength = 8;
-      const receivedPage = insertContent(content, page, maxBufferLength);
+      const receivedPage = insertContent(page, content, maxBufferLength);
       expect(receivedPage).toEqual(expectedPage);
     });
 
@@ -752,7 +752,7 @@ describe("page/tree/insert", () => {
         offset: 0,
       };
       const maxBufferLength = 8;
-      const receivedPage = insertContent(content, page, maxBufferLength);
+      const receivedPage = insertContent(page, content, maxBufferLength);
       expect(receivedPage).toEqual(expectedPage);
     });
 
@@ -850,7 +850,7 @@ describe("page/tree/insert", () => {
         offset: 0,
       };
       const maxBufferLength = 8;
-      const receivedPage = insertContent(content, page, maxBufferLength);
+      const receivedPage = insertContent(page, content, maxBufferLength);
       expect(receivedPage).toEqual(expectedPage);
     });
 
@@ -996,7 +996,7 @@ describe("page/tree/insert", () => {
         offset: 5,
       };
       const maxBufferLength = 16;
-      const receivedPage = insertContent(content, page, maxBufferLength);
+      const receivedPage = insertContent(page, content, maxBufferLength);
       expect(receivedPage).toEqual(expectedPage);
     });
 
@@ -1147,7 +1147,7 @@ describe("page/tree/insert", () => {
         content: "ij\nkl\nmn",
       };
       const maxBufferLength = 16;
-      const receivedPage = insertContent(content, page, maxBufferLength);
+      const receivedPage = insertContent(page, content, maxBufferLength);
       expect(receivedPage).toEqual(expectedPage);
     });
 
@@ -1246,7 +1246,7 @@ describe("page/tree/insert", () => {
         content: "ef",
       };
       const maxBufferLength = 8;
-      const receivedPage = insertContent(content, page, maxBufferLength);
+      const receivedPage = insertContent(page, content, maxBufferLength);
       expect(receivedPage).toEqual(expectedPage);
     });
   });
