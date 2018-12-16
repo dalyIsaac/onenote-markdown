@@ -2,6 +2,8 @@
 
 This is a new prototype for building a markdown editor for OneNote, starting with the editor.
 
+Documentation: https://github.com/dalyIsaac/onenote-markdown/wiki
+
 ## Why a new project?
 
 The main reason is that the previous attempt wasn't written with full code coverage, and going back to rectify that was painful. There were also some fundamentally bad architectural decisions - like sending multitudes of unnecessary requests to the Microsoft Graph at once.
