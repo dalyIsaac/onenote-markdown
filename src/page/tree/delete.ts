@@ -18,7 +18,7 @@ import {
 /**
  * The logical offset range for the content to be deleted.
  */
-export interface ContentDeleteOffset {
+export interface ContentDelete {
   startOffset: number;
   endOffset: number;
 }
@@ -30,7 +30,7 @@ export interface ContentDeleteOffset {
  */
 export function deleteContent(
   page: PageContent,
-  deleteRange: ContentDeleteOffset,
+  deleteRange: ContentDelete,
 ): PageContent {
   const oldNodeStartPosition = findNodeAtOffset(
     deleteRange.startOffset,
@@ -142,7 +142,7 @@ function updateNode(
  */
 function getNodeBeforeContent(
   page: PageContent,
-  deleteRange: ContentDeleteOffset,
+  deleteRange: ContentDelete,
   nodePosition: NodePositionOffset,
 ): Node {
   // "local" offsets refer to local within the buffer
@@ -188,7 +188,7 @@ function getNodeBeforeContent(
  */
 function getNodeAfterContent(
   page: PageContent,
-  deleteRange: ContentDeleteOffset,
+  deleteRange: ContentDelete,
   nodePosition: NodePositionOffset,
 ): Node {
   // localStartOffset is the index of nodePosition.startOffset inside the buffer
