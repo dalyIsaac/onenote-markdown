@@ -1,4 +1,4 @@
-# onenote-markdown-prototype
+# onenote-markdown
 
 This is a new prototype for building a markdown editor for OneNote, starting with the editor.
 
@@ -10,7 +10,7 @@ This attempt starts with building the editor first, instead of the Microsoft Gra
 
 However, starting from scratch doesn't mean that the old project will be completely ignored - bits and pieces will provide "inspiration" when needed.
 
-Link to old project: [https://github.com/dalyIsaac/onenote-markdown](https://github.com/dalyIsaac/onenote-markdown)
+Link to old project: [https://github.com/dalyIsaac/onenote-markdown-old](https://github.com/dalyIsaac/onenote-markdown-old)
 
 ## Prerequisites
 
