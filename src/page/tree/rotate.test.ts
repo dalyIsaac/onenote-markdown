@@ -613,21 +613,21 @@ describe("page/tree/rotate", () => {
     test("One node case", () => {
       const pieceTable = constructOneNodePieceTable();
       const newPieceTable = leftRotate(pieceTable, 1);
-      expect(newPieceTable).toEqual(constructOneNodePieceTable());
+      expect(newPieceTable).toStrictEqual(constructOneNodePieceTable());
       expect(getDiffCount(pieceTable, newPieceTable)).toBe(0);
     });
 
     test("Simple case", () => {
       const pieceTable = constructSimplePieceTableBeforeLeftRotate();
       const newPieceTable = leftRotate(pieceTable, 2);
-      expect(newPieceTable).toEqual(constructSimplePieceTableAfterLeftRotate());
+      expect(newPieceTable).toStrictEqual(constructSimplePieceTableAfterLeftRotate());
       expect(getDiffCount(pieceTable, newPieceTable)).toBeLessThanOrEqual(4);
     });
 
     test("Complex case", () => {
       const pieceTable = constructComplexPieceTableBeforeLeftRotate();
       const newPieceTable = leftRotate(pieceTable, 7);
-      expect(newPieceTable).toEqual(
+      expect(newPieceTable).toStrictEqual(
         constructComplexPieceTableAfterLeftRotate(),
       );
       expect(getDiffCount(pieceTable, newPieceTable)).toBeLessThanOrEqual(4);
@@ -638,14 +638,14 @@ describe("page/tree/rotate", () => {
     test("One node case", () => {
       const pieceTable = constructOneNodePieceTable();
       const newPieceTable = rightRotate(pieceTable, 1);
-      expect(newPieceTable).toEqual(constructOneNodePieceTable());
+      expect(newPieceTable).toStrictEqual(constructOneNodePieceTable());
       expect(getDiffCount(pieceTable, newPieceTable)).toBe(0);
     });
 
     test("Simple case", () => {
       const pieceTable = constructSimplePieceTableBeforeRightRotate();
       const newPieceTable = rightRotate(pieceTable, 4);
-      expect(newPieceTable).toEqual(
+      expect(newPieceTable).toStrictEqual(
         constructSimplePieceTableAfterRightRotate(),
       );
       expect(getDiffCount(pieceTable, newPieceTable)).toBeLessThanOrEqual(4);
@@ -654,7 +654,7 @@ describe("page/tree/rotate", () => {
     test("Complex case", () => {
       const pieceTable = constructComplexPieceTableBeforeRightRotate();
       const newPieceTable = rightRotate(pieceTable, 11);
-      expect(newPieceTable).toEqual(
+      expect(newPieceTable).toStrictEqual(
         constructComplexPieceTableAfterRightRotate(),
       );
       expect(getDiffCount(pieceTable, newPieceTable)).toBeLessThanOrEqual(4);

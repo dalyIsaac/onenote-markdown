@@ -184,7 +184,7 @@ export const pageReducerTest = (content: string, newline: string) => {
     content,
     newline,
   );
-  expect(state).toEqual(expectedState);
+  expect(state).toStrictEqual(expectedState);
 };
 
 const CRLF = "\r\n";
@@ -200,7 +200,7 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
     const { storedPage } = variables(content);
     const expectedBuffer = constructExpectedNewPageBuffer(content, newline);
     expect(storedPage.buffers.length).toBe(1);
-    expect(storedPage.buffers[0]).toEqual(expectedBuffer);
+    expect(storedPage.buffers[0]).toStrictEqual(expectedBuffer);
   };
 
   /**
@@ -212,7 +212,7 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
     const { storedPage } = variables(content);
     const expectedNode = constructExpectedNewPageNode(content, newline);
     const node = storedPage.nodes[1];
-    expect(node).toEqual(expectedNode);
+    expect(node).toStrictEqual(expectedNode);
   };
 
   /**
@@ -236,7 +236,7 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
       content,
       newline,
     );
-    expect(storedPage.newlineFormat).toEqual(expectedFormatCharValues);
+    expect(storedPage.newlineFormat).toStrictEqual(expectedFormatCharValues);
   };
 
   describe("LF content", () => {

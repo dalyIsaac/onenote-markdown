@@ -416,7 +416,7 @@ describe("page/reducer", () => {
       ],
     };
     state[PAGE_ID] = expectedPage;
-    expect(result).toEqual(state);
+    expect(result).toStrictEqual(state);
     expect(result).not.toBe(state);
   });
 

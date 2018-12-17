@@ -57,7 +57,7 @@ describe("page/tree/insert", () => {
         offset: 1,
       };
       const receivedPage = insertContent(page, content, MAX_BUFFER_LENGTH);
-      expect(receivedPage).toEqual(expectedPage);
+      expect(receivedPage).toStrictEqual(expectedPage);
     });
 
     test("Scenario 2: insert at the end of the previously inserted node", () => {
@@ -131,7 +131,7 @@ describe("page/tree/insert", () => {
       };
       const maxBufferLength = 5;
       const receivedPage = insertContent(page, content, maxBufferLength);
-      expect(receivedPage).toEqual(expectedPage);
+      expect(receivedPage).toStrictEqual(expectedPage);
     });
 
     test("Scenario 3: insert at the end of a node (test 1)", () => {
@@ -231,7 +231,7 @@ describe("page/tree/insert", () => {
       };
       const maxBufferLength = 8;
       const receivedPage = insertContent(page, content, maxBufferLength);
-      expect(receivedPage).toEqual(expectedPage);
+      expect(receivedPage).toStrictEqual(expectedPage);
     });
 
     test("Scenario 3: insert at the end of a node (test 2)", () => {
@@ -329,7 +329,7 @@ describe("page/tree/insert", () => {
       };
       const maxBufferLength = 8;
       const receivedPage = insertContent(page, content, maxBufferLength);
-      expect(receivedPage).toEqual(expectedPage);
+      expect(receivedPage).toStrictEqual(expectedPage);
     });
 
     test("Scenario 4: insert at the end of a node (test 1)", () => {
@@ -432,7 +432,7 @@ describe("page/tree/insert", () => {
       };
       const maxBufferLength = 8;
       const receivedPage = insertContent(page, content, maxBufferLength);
-      expect(receivedPage).toEqual(expectedPage);
+      expect(receivedPage).toStrictEqual(expectedPage);
     });
 
     test("Scenario 4: insert at the end of a node (test 2)", () => {
@@ -500,7 +500,7 @@ describe("page/tree/insert", () => {
       expectedPage.previouslyInsertedNodeOffset = 5;
       const maxBufferLength = 8;
       const receivedPage = insertContent(page, content, maxBufferLength);
-      expect(receivedPage).toEqual(expectedPage);
+      expect(receivedPage).toStrictEqual(expectedPage);
     });
 
     test("Scenario 5: insert at the start of the content", () => {
@@ -629,7 +629,7 @@ describe("page/tree/insert", () => {
       };
       const maxBufferLength = 8;
       const receivedPage = insertContent(page, content, maxBufferLength);
-      expect(receivedPage).toEqual(expectedPage);
+      expect(receivedPage).toStrictEqual(expectedPage);
     });
 
     test("Scenario 6: insert at the start of the content (test 1)", () => {
@@ -753,7 +753,7 @@ describe("page/tree/insert", () => {
       };
       const maxBufferLength = 8;
       const receivedPage = insertContent(page, content, maxBufferLength);
-      expect(receivedPage).toEqual(expectedPage);
+      expect(receivedPage).toStrictEqual(expectedPage);
     });
 
     test("Scenario 6: insert at the start of the content (test 2)", () => {
@@ -851,7 +851,7 @@ describe("page/tree/insert", () => {
       };
       const maxBufferLength = 8;
       const receivedPage = insertContent(page, content, maxBufferLength);
-      expect(receivedPage).toEqual(expectedPage);
+      expect(receivedPage).toStrictEqual(expectedPage);
     });
 
     test("Scenario 7: insert inside a node's content", () => {
@@ -997,7 +997,7 @@ describe("page/tree/insert", () => {
       };
       const maxBufferLength = 16;
       const receivedPage = insertContent(page, content, maxBufferLength);
-      expect(receivedPage).toEqual(expectedPage);
+      expect(receivedPage).toStrictEqual(expectedPage);
     });
 
     test("Scenario 8: insert inside a node's content (test 1)", () => {
@@ -1148,7 +1148,7 @@ describe("page/tree/insert", () => {
       };
       const maxBufferLength = 16;
       const receivedPage = insertContent(page, content, maxBufferLength);
-      expect(receivedPage).toEqual(expectedPage);
+      expect(receivedPage).toStrictEqual(expectedPage);
     });
 
     test("Scenario 8: insert inside a node's content (test 2", () => {
@@ -1247,7 +1247,7 @@ describe("page/tree/insert", () => {
       };
       const maxBufferLength = 8;
       const receivedPage = insertContent(page, content, maxBufferLength);
-      expect(receivedPage).toEqual(expectedPage);
+      expect(receivedPage).toStrictEqual(expectedPage);
     });
   });
 
@@ -1475,7 +1475,7 @@ describe("page/tree/insert", () => {
           ],
         };
         const acquiredPage = fixInsert(page, 4);
-        expect(acquiredPage).toEqual(expectedPage);
+        expect(acquiredPage).toStrictEqual(expectedPage);
       });
 
       test("Scenario 2: Left right case", () => {
@@ -1700,7 +1700,7 @@ describe("page/tree/insert", () => {
           ],
         };
         const acquiredPage = fixInsert(page, 5);
-        expect(acquiredPage).toEqual(expectedPage);
+        expect(acquiredPage).toStrictEqual(expectedPage);
       });
 
       test("Scenario 3: Right right case", () => {
@@ -1925,7 +1925,7 @@ describe("page/tree/insert", () => {
           ],
         };
         const acquiredPage = fixInsert(page, 5);
-        expect(acquiredPage).toEqual(expectedPage);
+        expect(acquiredPage).toStrictEqual(expectedPage);
       });
 
       test("Scenario 4: Right left case", () => {
@@ -2150,7 +2150,7 @@ describe("page/tree/insert", () => {
           ],
         };
         const acquiredPage = fixInsert(page, 4);
-        expect(acquiredPage).toEqual(expectedPage);
+        expect(acquiredPage).toStrictEqual(expectedPage);
       });
     });
 
@@ -2337,7 +2337,7 @@ describe("page/tree/insert", () => {
           newlineFormat: NEWLINE.LF,
         };
         const receivedPage = fixInsert(page, 4);
-        expect(receivedPage).toEqual(expectedPage);
+        expect(receivedPage).toStrictEqual(expectedPage);
       });
 
       test("Left red uncle", () => {
@@ -2522,7 +2522,7 @@ describe("page/tree/insert", () => {
           newlineFormat: NEWLINE.LF,
         };
         const receivedPage = fixInsert(page, 4);
-        expect(receivedPage).toEqual(expectedPage);
+        expect(receivedPage).toStrictEqual(expectedPage);
       });
     });
 
@@ -2566,7 +2566,7 @@ describe("page/tree/insert", () => {
       expectedPage.nodes[1].color = Color.Black;
       const page = getPage();
       const receivedPage = fixInsert(page, 1);
-      expect(receivedPage).toEqual(expectedPage);
+      expect(receivedPage).toStrictEqual(expectedPage);
     });
   });
 });

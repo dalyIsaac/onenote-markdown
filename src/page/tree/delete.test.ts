@@ -183,7 +183,7 @@ describe("page/tree/delete", () => {
         ],
       };
       const receivedPage = deleteNode(page, 1);
-      expect(receivedPage).toEqual(expectedPage);
+      expect(receivedPage).toStrictEqual(expectedPage);
     });
 
     describe("Sibling s is black and at least one of s's children is red", () => {
@@ -399,7 +399,7 @@ describe("page/tree/delete", () => {
           ],
         };
         const receivedPage = deleteNode(page, 1);
-        expect(receivedPage).toEqual(expectedPage);
+        expect(receivedPage).toStrictEqual(expectedPage);
       });
 
       test("Scenario 3: Right left case", () => {
@@ -578,7 +578,7 @@ describe("page/tree/delete", () => {
           ],
         };
         const receivedPage = deleteNode(page, 1);
-        expect(receivedPage).toEqual(expectedPage);
+        expect(receivedPage).toStrictEqual(expectedPage);
       });
 
       test("Scenario 4: Left left case", () => {
@@ -793,7 +793,7 @@ describe("page/tree/delete", () => {
           ],
         };
         const receivedPage = deleteNode(page, 5);
-        expect(receivedPage).toEqual(expectedPage);
+        expect(receivedPage).toStrictEqual(expectedPage);
       });
 
       test("Scenario 5: Left right case", () => {
@@ -970,7 +970,7 @@ describe("page/tree/delete", () => {
           ],
         };
         const receivedPage = deleteNode(page, 4);
-        expect(receivedPage).toEqual(expectedPage);
+        expect(receivedPage).toStrictEqual(expectedPage);
       });
     });
 
@@ -1110,7 +1110,7 @@ describe("page/tree/delete", () => {
         ],
       };
       const receivedPage = deleteNode(page, 1);
-      expect(receivedPage).toEqual(expectedPage);
+      expect(receivedPage).toStrictEqual(expectedPage);
     });
 
     describe("Sibling s is red", () => {
@@ -1326,7 +1326,7 @@ describe("page/tree/delete", () => {
           ],
         };
         const receivedPage = deleteNode(page, 1);
-        expect(receivedPage).toEqual(expectedPage);
+        expect(receivedPage).toStrictEqual(expectedPage);
       });
 
       test("Scenario 8: sibling s is left child of its parent", () => {
@@ -1541,7 +1541,7 @@ describe("page/tree/delete", () => {
           ],
         };
         const receivedPage = deleteNode(page, 5);
-        expect(receivedPage).toEqual(expectedPage);
+        expect(receivedPage).toStrictEqual(expectedPage);
       });
     });
 
@@ -1605,7 +1605,7 @@ describe("page/tree/delete", () => {
         ],
       };
       const receivedPage = deleteNode(page, 1);
-      expect(receivedPage).toEqual(expectedPage);
+      expect(receivedPage).toStrictEqual(expectedPage);
     });
   });
 
@@ -1701,7 +1701,7 @@ describe("page/tree/delete", () => {
             startOffset: 5,
             endOffset: 7,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1a: Test 2", () => {
@@ -1793,7 +1793,7 @@ describe("page/tree/delete", () => {
             startOffset: 0,
             endOffset: 2,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1a: Test 3", () => {
@@ -1885,7 +1885,7 @@ describe("page/tree/delete", () => {
             startOffset: 0,
             endOffset: 5,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1a: Test 4", () => {
@@ -1977,7 +1977,7 @@ describe("page/tree/delete", () => {
             startOffset: 2,
             endOffset: 7,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
       });
 
@@ -2071,7 +2071,7 @@ describe("page/tree/delete", () => {
             startOffset: 0,
             endOffset: 4,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1b: Test 2", () => {
@@ -2163,7 +2163,7 @@ describe("page/tree/delete", () => {
             startOffset: 2,
             endOffset: 6,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1b: Test 3", () => {
@@ -2255,7 +2255,7 @@ describe("page/tree/delete", () => {
             startOffset: 2,
             endOffset: 5,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1b: Test 4", () => {
@@ -2347,7 +2347,7 @@ describe("page/tree/delete", () => {
             startOffset: 2,
             endOffset: 4,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1b: Test 5", () => {
@@ -2439,7 +2439,7 @@ describe("page/tree/delete", () => {
             startOffset: 5,
             endOffset: 6,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1b: Test 6", () => {
@@ -2531,7 +2531,7 @@ describe("page/tree/delete", () => {
             startOffset: 0,
             endOffset: 1,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
       });
 
@@ -2625,7 +2625,7 @@ describe("page/tree/delete", () => {
             startOffset: 2,
             endOffset: 5,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1c: Test 2", () => {
@@ -2717,7 +2717,7 @@ describe("page/tree/delete", () => {
             startOffset: 3,
             endOffset: 5,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1c: Test 3", () => {
@@ -2809,7 +2809,7 @@ describe("page/tree/delete", () => {
             startOffset: 4,
             endOffset: 5,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1c: Test 4", () => {
@@ -2901,7 +2901,7 @@ describe("page/tree/delete", () => {
             startOffset: 5,
             endOffset: 6,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1c: Test 5", () => {
@@ -2993,7 +2993,7 @@ describe("page/tree/delete", () => {
             startOffset: 4,
             endOffset: 7,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1c: Test 6", () => {
@@ -3085,7 +3085,7 @@ describe("page/tree/delete", () => {
             startOffset: 6,
             endOffset: 7,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1c: Test 7", () => {
@@ -3177,7 +3177,7 @@ describe("page/tree/delete", () => {
             startOffset: 1,
             endOffset: 2,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
       });
 
@@ -3284,7 +3284,7 @@ describe("page/tree/delete", () => {
             startOffset: 2,
             endOffset: 4,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1d: Test 2", () => {
@@ -3389,7 +3389,7 @@ describe("page/tree/delete", () => {
             startOffset: 3,
             endOffset: 4,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1d: Test 3", () => {
@@ -3494,7 +3494,7 @@ describe("page/tree/delete", () => {
             startOffset: 2,
             endOffset: 3,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1d: Test 4", () => {
@@ -3599,7 +3599,7 @@ describe("page/tree/delete", () => {
             startOffset: 4,
             endOffset: 6,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1d: Test 5", () => {
@@ -3704,7 +3704,7 @@ describe("page/tree/delete", () => {
             startOffset: 4,
             endOffset: 5,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1d: Test 6", () => {
@@ -3809,7 +3809,7 @@ describe("page/tree/delete", () => {
             startOffset: 6,
             endOffset: 8,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1d: Test 7", () => {
@@ -3914,7 +3914,7 @@ describe("page/tree/delete", () => {
             startOffset: 1,
             endOffset: 3,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
       });
     });
@@ -4104,7 +4104,7 @@ describe("page/tree/delete", () => {
             startOffset: 66,
             endOffset: 94,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2a: Test 2", () => {
@@ -4290,7 +4290,7 @@ describe("page/tree/delete", () => {
             startOffset: 65,
             endOffset: 94,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2a: Test 3", () => {
@@ -4476,7 +4476,7 @@ describe("page/tree/delete", () => {
             startOffset: 0,
             endOffset: 94,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2a: Test 4", () => {
@@ -4662,7 +4662,7 @@ describe("page/tree/delete", () => {
             startOffset: 83,
             endOffset: 88,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2a: Test 5", () => {
@@ -4848,7 +4848,7 @@ describe("page/tree/delete", () => {
             startOffset: 83,
             endOffset: 127,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2a: Test 6", () => {
@@ -5034,7 +5034,7 @@ describe("page/tree/delete", () => {
             startOffset: 93,
             endOffset: 127,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2a: Test 7", () => {
@@ -5220,7 +5220,7 @@ describe("page/tree/delete", () => {
             startOffset: 0,
             endOffset: 80,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2a: Test 8", () => {
@@ -5406,7 +5406,7 @@ describe("page/tree/delete", () => {
             startOffset: 80,
             endOffset: 85,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
       });
 
@@ -5594,7 +5594,7 @@ describe("page/tree/delete", () => {
             startOffset: 66,
             endOffset: 90,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2b: Test 2", () => {
@@ -5776,7 +5776,7 @@ describe("page/tree/delete", () => {
             startOffset: 0,
             endOffset: 84,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2b: Test 3", () => {
@@ -5962,7 +5962,7 @@ describe("page/tree/delete", () => {
             startOffset: 65,
             endOffset: 70,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2b: Test 4", () => {
@@ -6148,7 +6148,7 @@ describe("page/tree/delete", () => {
             startOffset: 87,
             endOffset: 90,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
       });
 
@@ -6336,7 +6336,7 @@ describe("page/tree/delete", () => {
             startOffset: 31,
             endOffset: 66,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2c: Test 2", () => {
@@ -6522,7 +6522,7 @@ describe("page/tree/delete", () => {
             startOffset: 81,
             endOffset: 85,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2c: Test 3", () => {
@@ -6708,7 +6708,7 @@ describe("page/tree/delete", () => {
             startOffset: 84,
             endOffset: 87,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2c: Test 4", () => {
@@ -6894,7 +6894,7 @@ describe("page/tree/delete", () => {
             startOffset: 120,
             endOffset: 127,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2c: Test 5", () => {
@@ -7080,7 +7080,7 @@ describe("page/tree/delete", () => {
             startOffset: 90,
             endOffset: 127,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2c: Test 6", () => {
@@ -7266,7 +7266,7 @@ describe("page/tree/delete", () => {
             startOffset: 60,
             endOffset: 127,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
       });
 
@@ -7454,7 +7454,7 @@ describe("page/tree/delete", () => {
             startOffset: 60,
             endOffset: 70,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2d: Test 2", () => {
@@ -7640,7 +7640,7 @@ describe("page/tree/delete", () => {
             startOffset: 30,
             endOffset: 70,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2d: Test 3", () => {
@@ -7826,7 +7826,7 @@ describe("page/tree/delete", () => {
             startOffset: 84,
             endOffset: 89,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2d: Test 4", () => {
@@ -8012,7 +8012,7 @@ describe("page/tree/delete", () => {
             startOffset: 81,
             endOffset: 86,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2d: Test 5", () => {
@@ -8198,7 +8198,7 @@ describe("page/tree/delete", () => {
             startOffset: 89,
             endOffset: 100,
           });
-          expect(receivedPage).toEqual(expectedPage);
+          expect(receivedPage).toStrictEqual(expectedPage);
         });
       });
     });

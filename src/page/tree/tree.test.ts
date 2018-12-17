@@ -119,112 +119,112 @@ describe("page/tree/tree", () => {
   test("findNodeAtOffset", () => {
     const { nodes, root } = getFinalTree();
 
-    expect(findNodeAtOffset(-1, nodes, root)).toEqual({
+    expect(findNodeAtOffset(-1, nodes, root)).toStrictEqual({
       node: SENTINEL,
       nodeIndex: 1,
       remainder: 0,
       nodeStartOffset: 0,
     });
 
-    expect(findNodeAtOffset(0, nodes, root)).toEqual({
+    expect(findNodeAtOffset(0, nodes, root)).toStrictEqual({
       node: nodes[1],
       nodeIndex: 1,
       remainder: 0,
       nodeStartOffset: 0,
     });
 
-    expect(findNodeAtOffset(30, nodes, root)).toEqual({
+    expect(findNodeAtOffset(30, nodes, root)).toStrictEqual({
       node: nodes[1],
       nodeIndex: 1,
       remainder: 30,
       nodeStartOffset: 0,
     });
 
-    expect(findNodeAtOffset(31, nodes, root)).toEqual({
+    expect(findNodeAtOffset(31, nodes, root)).toStrictEqual({
       node: nodes[2],
       nodeIndex: 2,
       remainder: 0,
       nodeStartOffset: 31,
     });
 
-    expect(findNodeAtOffset(32, nodes, root)).toEqual({
+    expect(findNodeAtOffset(32, nodes, root)).toStrictEqual({
       node: nodes[2],
       nodeIndex: 2,
       remainder: 1,
       nodeStartOffset: 31,
     });
 
-    expect(findNodeAtOffset(41, nodes, root)).toEqual({
+    expect(findNodeAtOffset(41, nodes, root)).toStrictEqual({
       node: nodes[2],
       nodeIndex: 2,
       remainder: 10,
       nodeStartOffset: 31,
     });
 
-    expect(findNodeAtOffset(42, nodes, root)).toEqual({
+    expect(findNodeAtOffset(42, nodes, root)).toStrictEqual({
       node: nodes[3],
       nodeIndex: 3,
       remainder: 0,
       nodeStartOffset: 42,
     });
 
-    expect(findNodeAtOffset(51, nodes, root)).toEqual({
+    expect(findNodeAtOffset(51, nodes, root)).toStrictEqual({
       node: nodes[3],
       nodeIndex: 3,
       remainder: 9,
       nodeStartOffset: 42,
     });
 
-    expect(findNodeAtOffset(52, nodes, root)).toEqual({
+    expect(findNodeAtOffset(52, nodes, root)).toStrictEqual({
       node: nodes[4],
       nodeIndex: 4,
       remainder: 0,
       nodeStartOffset: 52,
     });
 
-    expect(findNodeAtOffset(53, nodes, root)).toEqual({
+    expect(findNodeAtOffset(53, nodes, root)).toStrictEqual({
       node: nodes[4],
       nodeIndex: 4,
       remainder: 1,
       nodeStartOffset: 52,
     });
 
-    expect(findNodeAtOffset(54, nodes, root)).toEqual({
+    expect(findNodeAtOffset(54, nodes, root)).toStrictEqual({
       node: nodes[5],
       nodeIndex: 5,
       remainder: 0,
       nodeStartOffset: 54,
     });
 
-    expect(findNodeAtOffset(63, nodes, root)).toEqual({
+    expect(findNodeAtOffset(63, nodes, root)).toStrictEqual({
       node: nodes[5],
       nodeIndex: 5,
       remainder: 9,
       nodeStartOffset: 54,
     });
 
-    expect(findNodeAtOffset(64, nodes, root)).toEqual({
+    expect(findNodeAtOffset(64, nodes, root)).toStrictEqual({
       node: nodes[6],
       nodeIndex: 6,
       remainder: 0,
       nodeStartOffset: 64,
     });
 
-    expect(findNodeAtOffset(79, nodes, root)).toEqual({
+    expect(findNodeAtOffset(79, nodes, root)).toStrictEqual({
       node: nodes[6],
       nodeIndex: 6,
       remainder: 15,
       nodeStartOffset: 64,
     });
 
-    expect(findNodeAtOffset(80, nodes, root)).toEqual({
+    expect(findNodeAtOffset(80, nodes, root)).toStrictEqual({
       node: nodes[7],
       nodeIndex: 7,
       remainder: 0,
       nodeStartOffset: 80,
     });
 
-    expect(findNodeAtOffset(120, nodes, root)).toEqual({
+    expect(findNodeAtOffset(120, nodes, root)).toStrictEqual({
       node: nodes[7],
       nodeIndex: 7,
       remainder: 40,
@@ -232,7 +232,7 @@ describe("page/tree/tree", () => {
     });
 
     // out of range
-    expect(findNodeAtOffset(121, nodes, root)).toEqual({
+    expect(findNodeAtOffset(121, nodes, root)).toStrictEqual({
       node: nodes[7],
       nodeIndex: 7,
       remainder: 41,
@@ -260,7 +260,7 @@ describe("page/tree/tree", () => {
 
   test("Recompute tree metadata: add a node to the end", () => {
     const page = getPage(); // hypothetically added the last node
-    expect(recomputeTreeMetadata(page, 7)).toEqual(getPage());
+    expect(recomputeTreeMetadata(page, 7)).toStrictEqual(getPage());
   });
 
   test("Recompute tree metadata: add a node in the middle", () => {
@@ -272,30 +272,30 @@ describe("page/tree/tree", () => {
     expectedPage.nodes[5].lineFeedCount += 5;
 
     const receivedPage = recomputeTreeMetadata(page, 4);
-    expect(receivedPage).toEqual(expectedPage);
+    expect(receivedPage).toStrictEqual(expectedPage);
   });
 
   test("nextNode", () => {
     const page = getPage();
 
-    expect(nextNode(getPage(), 1)).toEqual({ node: page.nodes[2], index: 2 });
-    expect(nextNode(getPage(), 2)).toEqual({ node: page.nodes[3], index: 3 });
-    expect(nextNode(getPage(), 3)).toEqual({ node: page.nodes[4], index: 4 });
-    expect(nextNode(getPage(), 4)).toEqual({ node: page.nodes[5], index: 5 });
-    expect(nextNode(getPage(), 5)).toEqual({ node: page.nodes[6], index: 6 });
-    expect(nextNode(getPage(), 6)).toEqual({ node: page.nodes[7], index: 7 });
-    expect(nextNode(getPage(), 7)).toEqual({ node: page.nodes[0], index: 0 });
+    expect(nextNode(getPage(), 1)).toStrictEqual({ node: page.nodes[2], index: 2 });
+    expect(nextNode(getPage(), 2)).toStrictEqual({ node: page.nodes[3], index: 3 });
+    expect(nextNode(getPage(), 3)).toStrictEqual({ node: page.nodes[4], index: 4 });
+    expect(nextNode(getPage(), 4)).toStrictEqual({ node: page.nodes[5], index: 5 });
+    expect(nextNode(getPage(), 5)).toStrictEqual({ node: page.nodes[6], index: 6 });
+    expect(nextNode(getPage(), 6)).toStrictEqual({ node: page.nodes[7], index: 7 });
+    expect(nextNode(getPage(), 7)).toStrictEqual({ node: page.nodes[0], index: 0 });
   });
 
   test("prevNode", () => {
     const page = getPage();
 
-    expect(prevNode(getPage(), 7)).toEqual({ node: page.nodes[6], index: 6 });
-    expect(prevNode(getPage(), 6)).toEqual({ node: page.nodes[5], index: 5 });
-    expect(prevNode(getPage(), 5)).toEqual({ node: page.nodes[4], index: 4 });
-    expect(prevNode(getPage(), 4)).toEqual({ node: page.nodes[3], index: 3 });
-    expect(prevNode(getPage(), 3)).toEqual({ node: page.nodes[2], index: 2 });
-    expect(prevNode(getPage(), 2)).toEqual({ node: page.nodes[1], index: 1 });
-    expect(prevNode(getPage(), 1)).toEqual({ node: page.nodes[0], index: 0 });
+    expect(prevNode(getPage(), 7)).toStrictEqual({ node: page.nodes[6], index: 6 });
+    expect(prevNode(getPage(), 6)).toStrictEqual({ node: page.nodes[5], index: 5 });
+    expect(prevNode(getPage(), 5)).toStrictEqual({ node: page.nodes[4], index: 4 });
+    expect(prevNode(getPage(), 4)).toStrictEqual({ node: page.nodes[3], index: 3 });
+    expect(prevNode(getPage(), 3)).toStrictEqual({ node: page.nodes[2], index: 2 });
+    expect(prevNode(getPage(), 2)).toStrictEqual({ node: page.nodes[1], index: 1 });
+    expect(prevNode(getPage(), 1)).toStrictEqual({ node: page.nodes[0], index: 0 });
   });
 });
