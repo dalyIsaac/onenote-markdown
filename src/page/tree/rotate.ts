@@ -6,15 +6,12 @@ import { SENTINEL_INDEX } from "./tree";
  * @param page The page/piece table.
  * @param nodeIndex The index of the node in the array for which the left rotation is performed on.
  */
-export function leftRotate(
-  page: PageContentMutable,
-  nodeIndex: number,
-): PageContentMutable {
+export function leftRotate(page: PageContentMutable, nodeIndex: number): void {
   const x = nodeIndex;
 
   if (page.nodes[x].right === SENTINEL_INDEX) {
     //  you can't left rotate
-    return page;
+    return;
   }
 
   page.nodes[x] = { ...page.nodes[x] };
@@ -57,8 +54,6 @@ export function leftRotate(
 
   (page.nodes[y] as NodeMutable).left = x;
   (page.nodes[x] as NodeMutable).parent = y;
-
-  return page;
 }
 
 /**
