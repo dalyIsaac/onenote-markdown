@@ -53,7 +53,7 @@ export function insertContent(
       nodePosition.nodeStartOffset < content.offset &&
       content.offset < nodePosition.nodeStartOffset + nodePosition.node.length
     ) {
-      page = insertInsideNode(content, page, maxBufferLength, nodePosition);
+      insertInsideNode(content, page, maxBufferLength, nodePosition);
     } else {
       insertAtNodeExtremity(content, page, maxBufferLength);
     }
@@ -230,7 +230,7 @@ function insertInsideNode(
   page: PageContentMutable,
   maxBufferLength: number,
   nodePosition: NodePositionOffset,
-): PageContentMutable {
+): void {
   const oldNode = nodePosition.node;
   const nodeContent = getNodeContent(nodePosition.nodeIndex, page);
   const firstPartContent = nodeContent.slice(0, nodePosition.remainder);
@@ -273,7 +273,6 @@ function insertInsideNode(
   insertAtNodeExtremity(content, page, maxBufferLength);
   page.previouslyInsertedNodeIndex = page.nodes.length - 1;
   page.previouslyInsertedNodeOffset = content.offset;
-  return page;
 }
 
 /**
