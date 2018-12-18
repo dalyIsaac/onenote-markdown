@@ -15,7 +15,6 @@ import {
   NodePositionOffset,
   recomputeTreeMetadata,
   resetSentinel,
-  SENTINEL,
   SENTINEL_INDEX,
   treeMinimum,
   updateTreeMetadata,
@@ -431,7 +430,7 @@ export function deleteNode(
     return page;
   }
 
-  page = fixDelete(page, x);
+  fixDelete(page, x);
   resetSentinel(page);
   return page;
 }
@@ -468,7 +467,7 @@ function detach(page: PageContentMutable, node: number): void {
  * @param page The page/piece table.
  * @param x The node to start the fixup from.
  */
-function fixDelete(page: PageContentMutable, x: number): PageContentMutable {
+function fixDelete(page: PageContentMutable, x: number): void {
   let w: number;
 
   while (x !== page.root && page.nodes[x].color === Color.Black) {
@@ -573,8 +572,6 @@ function fixDelete(page: PageContentMutable, x: number): PageContentMutable {
     ...page.nodes[x],
     color: Color.Black,
   };
-
-  return page;
 }
 
 /**
