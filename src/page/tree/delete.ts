@@ -88,8 +88,8 @@ export function deleteContent(
     page = fixInsert(page, page.nodes.length - 1);
   } else if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
     // delete from a point in a node to the end of another node
-    page = updateNode(page, oldNodeStartPosition.nodeIndex, nodeBeforeContent);
-    page = updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
+    updateNode(page, oldNodeStartPosition.nodeIndex, nodeBeforeContent);
+    updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
     firstNodeToDelete = nextNode(page, firstNodeToDelete).index;
   } else if (nodeBeforeContent.length > 0) {
     // delete from a point in the node to the end of the node
@@ -104,7 +104,7 @@ export function deleteContent(
     }
   } else if (nodeAfterContent.length > 0) {
     // delete from the start of the node to a point in the node
-    page = updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
+    updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
   } else if (oldNodeStartPosition === oldNodeEndPosition) {
     // delete the entire node
     deleteNode(page, oldNodeStartPosition.nodeIndex);
@@ -134,7 +134,7 @@ function updateNode(
   page: PageContentMutable,
   index: number,
   newNode: NodeMutable,
-): PageContentMutable {
+): void {
   newNode.leftCharCount = page.nodes[index].leftCharCount;
   newNode.leftLineFeedCount = page.nodes[index].leftLineFeedCount;
   newNode.parent = page.nodes[index].parent;
@@ -143,7 +143,6 @@ function updateNode(
   newNode.color = page.nodes[index].color;
   page.nodes[index] = newNode;
   recomputeTreeMetadata(page, index);
-  return page;
 }
 
 /**
