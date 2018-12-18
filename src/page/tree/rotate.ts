@@ -61,15 +61,12 @@ export function leftRotate(page: PageContentMutable, nodeIndex: number): void {
  * @param page The page/piece table.
  * @param nodeIndex The index of the node in the array for which the right rotation is performed on.
  */
-export function rightRotate(
-  page: PageContentMutable,
-  nodeIndex: number,
-): PageContentMutable {
+export function rightRotate(page: PageContentMutable, nodeIndex: number): void {
   const y = nodeIndex;
 
   if (page.nodes[y].left === SENTINEL_INDEX) {
     // you can't right rotate
-    return page;
+    return;
   }
 
   page.nodes[y] = { ...page.nodes[y] };
@@ -109,6 +106,4 @@ export function rightRotate(
 
   page.nodes[y] = page.nodes[y];
   page.nodes[x] = page.nodes[x];
-
-  return page;
 }

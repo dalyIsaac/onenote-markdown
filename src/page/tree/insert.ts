@@ -117,7 +117,7 @@ export function fixInsert(page: PageContentMutable, x: number): void {
           ...page.nodes[page.nodes[page.nodes[x].parent].parent],
           color: Color.Red,
         };
-        page = rightRotate(page, page.nodes[page.nodes[x].parent].parent);
+        rightRotate(page, page.nodes[page.nodes[x].parent].parent);
       }
     } else {
       const y = page.nodes[page.nodes[page.nodes[x].parent].parent].left;
@@ -142,7 +142,7 @@ export function fixInsert(page: PageContentMutable, x: number): void {
         ) {
           x = page.nodes[x].parent;
           page.nodes[x] = { ...page.nodes[x] };
-          page = rightRotate(page, x);
+          rightRotate(page, x);
         }
         page.nodes[page.nodes[x].parent] = {
           ...page.nodes[page.nodes[x].parent],

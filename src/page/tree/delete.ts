@@ -490,7 +490,7 @@ function fixDelete(page: PageContentMutable, x: number): void {
             color: Color.Black,
           };
           (page.nodes[w] as NodeMutable).color = Color.Red;
-          page = rightRotate(page, w);
+          rightRotate(page, w);
           w = page.nodes[page.nodes[x].parent].right;
           (page.nodes[w] as NodeMutable) = { ...page.nodes[w] };
         }
@@ -519,7 +519,7 @@ function fixDelete(page: PageContentMutable, x: number): void {
           ...page.nodes[page.nodes[x].parent],
           color: Color.Red,
         };
-        page = rightRotate(page, page.nodes[x].parent);
+        rightRotate(page, page.nodes[x].parent);
         w = page.nodes[page.nodes[x].parent].left;
         (page.nodes[w] as NodeMutable) = { ...page.nodes[w] };
       }
@@ -552,7 +552,7 @@ function fixDelete(page: PageContentMutable, x: number): void {
           ...page.nodes[page.nodes[w].left],
           color: Color.Black,
         };
-        page = rightRotate(page, page.nodes[x].parent);
+        rightRotate(page, page.nodes[x].parent);
         x = page.root;
         (page.nodes[x] as NodeMutable) = { ...page.nodes[x] };
       }
