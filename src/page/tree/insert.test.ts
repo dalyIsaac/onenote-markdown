@@ -1482,8 +1482,8 @@ describe("page/tree/insert", () => {
             },
           ],
         };
-        const acquiredPage = fixInsert(page as PageContentMutable, 4);
-        expect(acquiredPage).toStrictEqual(expectedPage);
+        fixInsert(page as PageContentMutable, 4);
+        expect(page).toStrictEqual(expectedPage);
       });
 
       test("Scenario 2: Left right case", () => {
@@ -1707,8 +1707,8 @@ describe("page/tree/insert", () => {
             },
           ],
         };
-        const acquiredPage = fixInsert(page as PageContentMutable, 5);
-        expect(acquiredPage).toStrictEqual(expectedPage);
+        fixInsert(page as PageContentMutable, 5);
+        expect(page).toStrictEqual(expectedPage);
       });
 
       test("Scenario 3: Right right case", () => {
@@ -1932,8 +1932,8 @@ describe("page/tree/insert", () => {
             },
           ],
         };
-        const acquiredPage = fixInsert(page as PageContentMutable, 5);
-        expect(acquiredPage).toStrictEqual(expectedPage);
+        fixInsert(page as PageContentMutable, 5);
+        expect(page).toStrictEqual(expectedPage);
       });
 
       test("Scenario 4: Right left case", () => {
@@ -2157,8 +2157,8 @@ describe("page/tree/insert", () => {
             },
           ],
         };
-        const acquiredPage = fixInsert(page as PageContentMutable, 4);
-        expect(acquiredPage).toStrictEqual(expectedPage);
+        fixInsert(page as PageContentMutable, 4);
+        expect(page).toStrictEqual(expectedPage);
       });
     });
 
@@ -2344,8 +2344,8 @@ describe("page/tree/insert", () => {
           previouslyInsertedNodeOffset: null,
           newlineFormat: NEWLINE.LF,
         };
-        const receivedPage = fixInsert(page as PageContentMutable, 4);
-        expect(receivedPage).toStrictEqual(expectedPage);
+        fixInsert(page as PageContentMutable, 4);
+        expect(page).toStrictEqual(expectedPage);
       });
 
       test("Left red uncle", () => {
@@ -2529,8 +2529,8 @@ describe("page/tree/insert", () => {
           previouslyInsertedNodeOffset: null,
           newlineFormat: NEWLINE.LF,
         };
-        const receivedPage = fixInsert(page as PageContentMutable, 4);
-        expect(receivedPage).toStrictEqual(expectedPage);
+        fixInsert(page as PageContentMutable, 4);
+        expect(page).toStrictEqual(expectedPage);
       });
     });
 
@@ -2573,8 +2573,8 @@ describe("page/tree/insert", () => {
       const expectedPage = getPage();
       (expectedPage.nodes[1] as NodeMutable).color = Color.Black;
       const page = getPage();
-      const receivedPage = fixInsert(page, 1);
-      expect(receivedPage).toStrictEqual(expectedPage);
+      fixInsert(page, 1);
+      expect(page).toStrictEqual(expectedPage);
     });
   });
 });

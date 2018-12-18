@@ -60,7 +60,7 @@ export function insertContent(
   }
 
   if (page) {
-    return fixInsert(page, page.nodes.length - 1);
+    fixInsert(page, page.nodes.length - 1);
   }
   return page;
 }
@@ -70,16 +70,13 @@ export function insertContent(
  * @param page The page/piece table.
  * @param x The index of the node in the `node` array, which is the basis for fixing the tree.
  */
-export function fixInsert(
-  page: PageContentMutable,
-  x: number,
-): PageContentMutable {
+export function fixInsert(page: PageContentMutable, x: number): void {
   recomputeTreeMetadata(page, x);
   page.nodes[x] = { ...page.nodes[x] };
 
   if (x === page.root) {
     (page.nodes[x] as NodeMutable).color = Color.Black;
-    return page;
+    return;
   }
 
   while (
@@ -164,8 +161,6 @@ export function fixInsert(
     ...page.nodes[page.root],
     color: Color.Black,
   };
-
-  return page;
 }
 
 /**
@@ -269,7 +264,7 @@ function insertInsideNode(
   };
 
   insertNode(page, secondPartNode, content.offset);
-  page = fixInsert(page, page.nodes.length - 1);
+  fixInsert(page, page.nodes.length - 1);
   insertAtNodeExtremity(content, page, maxBufferLength);
   page.previouslyInsertedNodeIndex = page.nodes.length - 1;
   page.previouslyInsertedNodeOffset = content.offset;

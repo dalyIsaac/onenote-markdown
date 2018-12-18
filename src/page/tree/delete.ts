@@ -85,7 +85,7 @@ export function deleteContent(
       oldNodeStartPosition.nodeIndex
     ] as NodeMutable) = nodeBeforeContent;
     insertNode(page, nodeAfterContent, deleteRange.startOffset);
-    page = fixInsert(page, page.nodes.length - 1);
+    fixInsert(page, page.nodes.length - 1);
   } else if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
     // delete from a point in a node to the end of another node
     updateNode(page, oldNodeStartPosition.nodeIndex, nodeBeforeContent);
