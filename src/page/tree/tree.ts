@@ -366,7 +366,7 @@ export function updateTreeMetadata(
   x: number,
   charCountDelta: number,
   lineFeedCountDelta: number,
-): PageContentMutable {
+): void {
   // node length change or line feed count change
   while (x !== page.root && x !== SENTINEL_INDEX) {
     if (page.nodes[page.nodes[x].parent].left === x) {
@@ -382,7 +382,6 @@ export function updateTreeMetadata(
 
     x = page.nodes[x].parent;
   }
-  return page;
 }
 
 /**

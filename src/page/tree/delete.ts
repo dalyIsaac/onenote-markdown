@@ -404,12 +404,7 @@ export function deleteNode(page: PageContentMutable, z: number): void {
         leftCharCount: newSizeLeft,
         leftLineFeedCount: newSizeLeft,
       };
-      page = updateTreeMetadata(
-        page,
-        page.nodes[x].parent,
-        charDelta,
-        lineFeedDelta,
-      );
+      updateTreeMetadata(page, page.nodes[x].parent, charDelta, lineFeedDelta);
     }
   }
 
