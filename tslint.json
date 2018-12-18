@@ -3,6 +3,18 @@
   "rules": {
     "jsx-wrap-multiline": false,
     "jsx-alignment": true,
-    "no-implicit-dependencies": false
+    "no-implicit-dependencies": false,
+    "object-literal-sort-keys": false,
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-leading-underscore"
+    ],
+    "no-bitwise": false,
+    "interface-name": [true, "never-prefix"],
+    "prefer-conditional-expression": false,
+    "typedef": [true, "call-signature"],
+    "no-console": [true, "log", "warn", "info"]
   }
 }
