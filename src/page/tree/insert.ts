@@ -42,7 +42,7 @@ export function insertContent(
     content.offset ===
       page.previouslyInsertedNodeOffset! + previouslyInsertedNode.length
   ) {
-    page = insertAtEndPreviouslyInsertedNode(content, page, maxBufferLength);
+    insertAtEndPreviouslyInsertedNode(content, page, maxBufferLength);
   } else {
     const nodePosition = findNodeAtOffset(
       content.offset,
@@ -178,7 +178,7 @@ function insertAtEndPreviouslyInsertedNode(
   content: ContentInsert,
   page: PageContentMutable,
   maxBufferLength: number,
-): PageContentMutable {
+): void {
   // check buffer size
   if (
     content.content.length +
@@ -210,12 +210,11 @@ function insertAtEndPreviouslyInsertedNode(
 
     page.buffers[page.buffers.length - 1] = buffer;
     page.nodes[page.nodes.length - 1] = node;
-    return page;
   } else {
     // scenario 2: cannot fit inside the previous buffer
     // creates a new node
     // creates a new buffer
-    return createNodeCreateBuffer(content, page);
+    createNodeCreateBuffer(content, page);
   }
 }
 
@@ -363,7 +362,7 @@ function createNodeAppendToBuffer(
 function createNodeCreateBuffer(
   content: ContentInsert,
   page: PageContentMutable,
-): PageContentMutable {
+): void {
   const newBuffer: Buffer = {
     isReadOnly: false,
     lineStarts: getLineStarts(content.content, page.newlineFormat),
@@ -391,7 +390,6 @@ function createNodeCreateBuffer(
   page.previouslyInsertedNodeOffset = content.offset;
   page.buffers.push(newBuffer);
   insertNode(page, newNode, content.offset);
-  return page;
 }
 
 /**
