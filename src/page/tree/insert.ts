@@ -27,7 +27,7 @@ export function insertContent(
   page: PageContentMutable,
   content: ContentInsert,
   maxBufferLength: number,
-): PageContentMutable {
+): void {
   let previouslyInsertedNode: Node | undefined;
 
   if (
@@ -62,7 +62,6 @@ export function insertContent(
   if (page) {
     fixInsert(page, page.nodes.length - 1);
   }
-  return page;
 }
 
 /**

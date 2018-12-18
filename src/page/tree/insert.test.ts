@@ -64,7 +64,7 @@ describe("page/tree/insert", () => {
         offset: 1,
       };
       const receivedPage = insertContent(page, content, MAX_BUFFER_LENGTH);
-      expect(receivedPage).toStrictEqual(expectedPage);
+      expect(page).toStrictEqual(expectedPage);
     });
 
     test("Scenario 2: insert at the end of the previously inserted node", () => {
@@ -336,8 +336,8 @@ describe("page/tree/insert", () => {
         offset: 9,
       };
       const maxBufferLength = 8;
-      const receivedPage = insertContent(page, content, maxBufferLength);
-      expect(receivedPage).toStrictEqual(expectedPage);
+      insertContent(page, content, maxBufferLength);
+      expect(page).toStrictEqual(expectedPage);
     });
 
     test("Scenario 4: insert at the end of a node (test 1)", () => {
@@ -439,8 +439,8 @@ describe("page/tree/insert", () => {
         offset: 2,
       };
       const maxBufferLength = 8;
-      const receivedPage = insertContent(page, content, maxBufferLength);
-      expect(receivedPage).toStrictEqual(expectedPage);
+      insertContent(page, content, maxBufferLength);
+      expect(page).toStrictEqual(expectedPage);
     });
 
     test("Scenario 4: insert at the end of a node (test 2)", () => {
@@ -507,8 +507,8 @@ describe("page/tree/insert", () => {
       expectedPage.previouslyInsertedNodeIndex = 2;
       expectedPage.previouslyInsertedNodeOffset = 5;
       const maxBufferLength = 8;
-      const receivedPage = insertContent(page, content, maxBufferLength);
-      expect(receivedPage).toStrictEqual(expectedPage);
+      insertContent(page, content, maxBufferLength);
+      expect(page).toStrictEqual(expectedPage);
     });
 
     test("Scenario 5: insert at the start of the content", () => {

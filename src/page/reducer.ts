@@ -63,14 +63,14 @@ export default function pageReducer(
         buffers: [...state[insertAction.pageId].buffers],
         nodes: [...state[insertAction.pageId].nodes],
       };
-      newPage = insertContent(
+      insertContent(
         extractedPage as PageContentMutable,
         { content: insertAction.content, offset: insertAction.offset },
         MAX_BUFFER_LENGTH,
       );
       newState = {
         ...state,
-        [insertAction.pageId]: newPage,
+        [insertAction.pageId]: extractedPage,
       };
       return newState;
     case DELETE_CONTENT:
