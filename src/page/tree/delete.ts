@@ -36,7 +36,7 @@ export interface ContentDelete {
 export function deleteContent(
   page: PageContentMutable,
   deleteRange: ContentDelete,
-): PageContentMutable {
+): void {
   const oldNodeStartPosition = findNodeAtOffset(
     deleteRange.startOffset,
     page.nodes,
@@ -120,7 +120,6 @@ export function deleteContent(
     deleteBetweenNodes(page, firstNodeToDelete, nodeAfterLastNodeToDelete);
   }
   resetSentinel(page);
-  return page;
 }
 
 /**
