@@ -117,11 +117,7 @@ export function deleteContent(
   page.previouslyInsertedNodeOffset = null;
 
   if (oldNodeStartPosition.nodeIndex !== oldNodeEndPosition.nodeIndex) {
-    page = deleteBetweenNodes(
-      page,
-      firstNodeToDelete,
-      nodeAfterLastNodeToDelete,
-    );
+    deleteBetweenNodes(page, firstNodeToDelete, nodeAfterLastNodeToDelete);
   }
   resetSentinel(page);
   return page;
@@ -268,7 +264,7 @@ function deleteBetweenNodes(
   page: PageContentMutable,
   startIndex: number,
   endIndex: number,
-): PageContentMutable {
+): void {
   let currentIndex = startIndex;
   let nextIndex = currentIndex;
   while (nextIndex !== endIndex) {
@@ -276,7 +272,6 @@ function deleteBetweenNodes(
     nextIndex = nextNode(page, currentIndex).index;
     deleteNode(page, currentIndex);
   }
-  return page;
 }
 
 /**
