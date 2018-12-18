@@ -1,13 +1,11 @@
-import { combineReducers, ReducersMapObject } from "redux";
+import { combineReducers } from "redux";
 import { StatePages } from "./page/model";
 import pageReducer from "./page/reducer";
 
 export interface State {
-  pages: StatePages;
+  readonly pages: StatePages;
 }
 
-const reducers: ReducersMapObject = {
+export default combineReducers({
   pages: pageReducer,
-};
-
-export default combineReducers(reducers);
+});

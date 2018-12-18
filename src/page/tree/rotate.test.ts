@@ -1,9 +1,9 @@
-import { Color, NEWLINE, Node, PageContent } from "../model";
+import { Color, NEWLINE, Node, PageContentMutable } from "../model";
 import { leftRotate, rightRotate } from "./rotate";
 import { SENTINEL, SENTINEL_INDEX } from "./tree";
 
 describe("page/tree/rotate", () => {
-  const constructSimplePieceTableBeforeLeftRotate = (): PageContent => {
+  const constructSimplePieceTableBeforeLeftRotate = (): PageContentMutable => {
     const nodes: Node[] = [
       SENTINEL,
       {
@@ -72,7 +72,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
     ];
-    const pieceTable: PageContent = {
+    const pieceTable: PageContentMutable = {
       buffers: [],
       newlineFormat: NEWLINE.LF,
       nodes,
@@ -84,7 +84,7 @@ describe("page/tree/rotate", () => {
   };
   const constructSimplePieceTableAfterRightRotate = constructSimplePieceTableBeforeLeftRotate;
 
-  const constructSimplePieceTableAfterLeftRotate = (): PageContent => {
+  const constructSimplePieceTableAfterLeftRotate = (): PageContentMutable => {
     const nodes: Node[] = [
       SENTINEL,
       {
@@ -153,7 +153,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
     ];
-    const pieceTable: PageContent = {
+    const pieceTable: PageContentMutable = {
       buffers: [],
       newlineFormat: NEWLINE.LF,
       nodes,
@@ -165,7 +165,7 @@ describe("page/tree/rotate", () => {
   };
   const constructSimplePieceTableBeforeRightRotate = constructSimplePieceTableAfterLeftRotate;
 
-  const constructComplexPieceTableBeforeLeftRotate = (): PageContent => {
+  const constructComplexPieceTableBeforeLeftRotate = (): PageContentMutable => {
     const nodes: Node[] = [
       SENTINEL,
       {
@@ -351,7 +351,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
     ];
-    const pieceTable: PageContent = {
+    const pieceTable: PageContentMutable = {
       buffers: [],
       newlineFormat: NEWLINE.LF,
       nodes,
@@ -363,7 +363,7 @@ describe("page/tree/rotate", () => {
   };
   const constructComplexPieceTableAfterRightRotate = constructComplexPieceTableBeforeLeftRotate;
 
-  const constructComplexPieceTableAfterLeftRotate = (): PageContent => {
+  const constructComplexPieceTableAfterLeftRotate = (): PageContentMutable => {
     const nodes: Node[] = [
       SENTINEL,
       {
@@ -549,7 +549,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
     ];
-    const pieceTable: PageContent = {
+    const pieceTable: PageContentMutable = {
       buffers: [],
       newlineFormat: NEWLINE.LF,
       nodes,
@@ -561,7 +561,7 @@ describe("page/tree/rotate", () => {
   };
   const constructComplexPieceTableBeforeRightRotate = constructComplexPieceTableAfterLeftRotate;
 
-  const constructOneNodePieceTable = (): PageContent => ({
+  const constructOneNodePieceTable = (): PageContentMutable => ({
     buffers: [],
     nodes: [
       SENTINEL,
@@ -592,8 +592,8 @@ describe("page/tree/rotate", () => {
    * @param newTable The table passed out of the rotate function
    */
   const getDiffCount = (
-    oldTable: PageContent,
-    newTable: PageContent,
+    oldTable: PageContentMutable,
+    newTable: PageContentMutable,
   ): number => {
     const diff = [];
     for (let i = 0; i < oldTable.nodes.length; i++) {
@@ -620,7 +620,9 @@ describe("page/tree/rotate", () => {
     test("Simple case", () => {
       const pieceTable = constructSimplePieceTableBeforeLeftRotate();
       const newPieceTable = leftRotate(pieceTable, 2);
-      expect(newPieceTable).toStrictEqual(constructSimplePieceTableAfterLeftRotate());
+      expect(newPieceTable).toStrictEqual(
+        constructSimplePieceTableAfterLeftRotate(),
+      );
       expect(getDiffCount(pieceTable, newPieceTable)).toBeLessThanOrEqual(4);
     });
 

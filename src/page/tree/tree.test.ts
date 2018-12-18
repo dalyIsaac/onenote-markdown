@@ -1,4 +1,10 @@
-import { Color, NEWLINE, Node, PageContent } from "../model";
+import {
+  Color,
+  NEWLINE,
+  Node,
+  NodeMutable,
+  PageContentMutable,
+} from "../model";
 import {
   calculateCharCount,
   calculateLineFeedCount,
@@ -240,7 +246,7 @@ describe("page/tree/tree", () => {
     });
   });
 
-  const getPage = (): PageContent => ({
+  const getPage = (): PageContentMutable => ({
     buffers: [],
     ...getFinalTree(),
     newlineFormat: NEWLINE.LF,
@@ -265,11 +271,11 @@ describe("page/tree/tree", () => {
 
   test("Recompute tree metadata: add a node in the middle", () => {
     const page = getPage(); // hypothetically added node 5
-    page.nodes[6].leftCharCount = 12;
-    page.nodes[5].lineFeedCount = 5;
+    (page.nodes[6] as NodeMutable).leftCharCount = 12;
+    (page.nodes[5] as NodeMutable).lineFeedCount = 5;
     const expectedPage = getPage();
-    expectedPage.nodes[6].leftLineFeedCount += 5;
-    expectedPage.nodes[5].lineFeedCount += 5;
+    (expectedPage.nodes[6] as NodeMutable).leftLineFeedCount += 5;
+    (expectedPage.nodes[5] as NodeMutable).lineFeedCount += 5;
 
     const receivedPage = recomputeTreeMetadata(page, 4);
     expect(receivedPage).toStrictEqual(expectedPage);
@@ -278,24 +284,66 @@ describe("page/tree/tree", () => {
   test("nextNode", () => {
     const page = getPage();
 
-    expect(nextNode(getPage(), 1)).toStrictEqual({ node: page.nodes[2], index: 2 });
-    expect(nextNode(getPage(), 2)).toStrictEqual({ node: page.nodes[3], index: 3 });
-    expect(nextNode(getPage(), 3)).toStrictEqual({ node: page.nodes[4], index: 4 });
-    expect(nextNode(getPage(), 4)).toStrictEqual({ node: page.nodes[5], index: 5 });
-    expect(nextNode(getPage(), 5)).toStrictEqual({ node: page.nodes[6], index: 6 });
-    expect(nextNode(getPage(), 6)).toStrictEqual({ node: page.nodes[7], index: 7 });
-    expect(nextNode(getPage(), 7)).toStrictEqual({ node: page.nodes[0], index: 0 });
+    expect(nextNode(getPage(), 1)).toStrictEqual({
+      node: page.nodes[2],
+      index: 2,
+    });
+    expect(nextNode(getPage(), 2)).toStrictEqual({
+      node: page.nodes[3],
+      index: 3,
+    });
+    expect(nextNode(getPage(), 3)).toStrictEqual({
+      node: page.nodes[4],
+      index: 4,
+    });
+    expect(nextNode(getPage(), 4)).toStrictEqual({
+      node: page.nodes[5],
+      index: 5,
+    });
+    expect(nextNode(getPage(), 5)).toStrictEqual({
+      node: page.nodes[6],
+      index: 6,
+    });
+    expect(nextNode(getPage(), 6)).toStrictEqual({
+      node: page.nodes[7],
+      index: 7,
+    });
+    expect(nextNode(getPage(), 7)).toStrictEqual({
+      node: page.nodes[0],
+      index: 0,
+    });
   });
 
   test("prevNode", () => {
     const page = getPage();
 
-    expect(prevNode(getPage(), 7)).toStrictEqual({ node: page.nodes[6], index: 6 });
-    expect(prevNode(getPage(), 6)).toStrictEqual({ node: page.nodes[5], index: 5 });
-    expect(prevNode(getPage(), 5)).toStrictEqual({ node: page.nodes[4], index: 4 });
-    expect(prevNode(getPage(), 4)).toStrictEqual({ node: page.nodes[3], index: 3 });
-    expect(prevNode(getPage(), 3)).toStrictEqual({ node: page.nodes[2], index: 2 });
-    expect(prevNode(getPage(), 2)).toStrictEqual({ node: page.nodes[1], index: 1 });
-    expect(prevNode(getPage(), 1)).toStrictEqual({ node: page.nodes[0], index: 0 });
+    expect(prevNode(getPage(), 7)).toStrictEqual({
+      node: page.nodes[6],
+      index: 6,
+    });
+    expect(prevNode(getPage(), 6)).toStrictEqual({
+      node: page.nodes[5],
+      index: 5,
+    });
+    expect(prevNode(getPage(), 5)).toStrictEqual({
+      node: page.nodes[4],
+      index: 4,
+    });
+    expect(prevNode(getPage(), 4)).toStrictEqual({
+      node: page.nodes[3],
+      index: 3,
+    });
+    expect(prevNode(getPage(), 3)).toStrictEqual({
+      node: page.nodes[2],
+      index: 2,
+    });
+    expect(prevNode(getPage(), 2)).toStrictEqual({
+      node: page.nodes[1],
+      index: 1,
+    });
+    expect(prevNode(getPage(), 1)).toStrictEqual({
+      node: page.nodes[0],
+      index: 0,
+    });
   });
 });

@@ -68,14 +68,15 @@ export const constructExpectedNewPageState = (
   content: string,
   newline: string,
 ): StatePages => {
-  const expectedState: StatePages = {};
-  expectedState[id] = {
-    buffers: [constructExpectedNewPageBuffer(content, newline)],
-    newlineFormat: constructExpectedNewPageNewlineFormat(content, newline),
-    nodes: [SENTINEL, constructExpectedNewPageNode(content, newline)],
-    root: constructExpectedNewPageRoot(),
-    previouslyInsertedNodeIndex: null,
-    previouslyInsertedNodeOffset: null,
+  const expectedState: StatePages = {
+    [id]: {
+      buffers: [constructExpectedNewPageBuffer(content, newline)],
+      newlineFormat: constructExpectedNewPageNewlineFormat(content, newline),
+      nodes: [SENTINEL, constructExpectedNewPageNode(content, newline)],
+      root: constructExpectedNewPageRoot(),
+      previouslyInsertedNodeIndex: null,
+      previouslyInsertedNodeOffset: null,
+    },
   };
   return expectedState;
 };

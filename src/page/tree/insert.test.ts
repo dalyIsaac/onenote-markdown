@@ -1,11 +1,11 @@
-import { Color, NEWLINE, PageContent } from "../model";
+import { Color, NEWLINE, PageContent, PageContentMutable } from "../model";
 import { ContentInsert, fixInsert, insertContent } from "./insert";
 import { MAX_BUFFER_LENGTH, SENTINEL, SENTINEL_INDEX } from "./tree";
 
 describe("page/tree/insert", () => {
   describe("insert functions", () => {
     test("Scenario 1: insert at the end of the previously inserted node", () => {
-      const getPage = (): PageContent => ({
+      const getPage = (): PageContentMutable => ({
         buffers: [
           {
             isReadOnly: false,
@@ -61,7 +61,7 @@ describe("page/tree/insert", () => {
     });
 
     test("Scenario 2: insert at the end of the previously inserted node", () => {
-      const getPage = (): PageContent => ({
+      const getPage = (): PageContentMutable => ({
         buffers: [
           {
             isReadOnly: false,
@@ -135,7 +135,7 @@ describe("page/tree/insert", () => {
     });
 
     test("Scenario 3: insert at the end of a node (test 1)", () => {
-      const getPage = (): PageContent => ({
+      const getPage = (): PageContentMutable => ({
         buffers: [
           {
             isReadOnly: true,
@@ -235,7 +235,7 @@ describe("page/tree/insert", () => {
     });
 
     test("Scenario 3: insert at the end of a node (test 2)", () => {
-      const getPage = (): PageContent => ({
+      const getPage = (): PageContentMutable => ({
         buffers: [
           {
             isReadOnly: true,
@@ -333,7 +333,7 @@ describe("page/tree/insert", () => {
     });
 
     test("Scenario 4: insert at the end of a node (test 1)", () => {
-      const getPage = (): PageContent => ({
+      const getPage = (): PageContentMutable => ({
         buffers: [
           {
             isReadOnly: true,
@@ -436,7 +436,7 @@ describe("page/tree/insert", () => {
     });
 
     test("Scenario 4: insert at the end of a node (test 2)", () => {
-      const getPage = (): PageContent => ({
+      const getPage = (): PageContentMutable => ({
         buffers: [
           {
             isReadOnly: true,
@@ -2527,7 +2527,7 @@ describe("page/tree/insert", () => {
     });
 
     test("Inserted node is root", () => {
-      const getPage = (): PageContent => ({
+      const getPage = (): PageContentMutable => ({
         buffers: [
           {
             isReadOnly: false,

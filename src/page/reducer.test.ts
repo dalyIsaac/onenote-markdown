@@ -194,8 +194,9 @@ const PAGE_ID = "pageId";
 
 describe("page/reducer", () => {
   const getState = (): StatePages => {
-    const state: StatePages = {};
-    state[PAGE_ID] = getStartPage();
+    const state: StatePages = {
+      [PAGE_ID]: getStartPage(),
+    };
     return state;
   };
 
@@ -220,8 +221,6 @@ describe("page/reducer", () => {
       content: "Hello world",
       offset: 127,
     };
-    const state = getState();
-    const result = pageReducer(state, action);
 
     const expectedPage: PageContent = {
       root: 6,
@@ -415,8 +414,15 @@ describe("page/reducer", () => {
         },
       ],
     };
-    state[PAGE_ID] = expectedPage;
-    expect(result).toStrictEqual(state);
+
+    const state = getState();
+    const result = pageReducer(state, action);
+    const expectedState: StatePages = {
+      ...state,
+      [PAGE_ID]: expectedPage,
+    };
+
+    expect(result).toStrictEqual(expectedState);
     expect(result).not.toBe(state);
   });
 
@@ -607,8 +613,11 @@ describe("page/reducer", () => {
       previouslyInsertedNodeIndex: null,
       previouslyInsertedNodeOffset: null,
     };
-    state[PAGE_ID] = expectedPage;
-    expect(result).toStrictEqual(state);
+    const expectedState: StatePages = {
+      ...state,
+      [PAGE_ID]: expectedPage,
+    };
+    expect(result).toStrictEqual(expectedState);
     expect(result).not.toBe(state);
   });
 
@@ -815,8 +824,11 @@ describe("page/reducer", () => {
       previouslyInsertedNodeIndex: 12,
       previouslyInsertedNodeOffset: 126,
     };
-    state[PAGE_ID] = expectedPage;
-    expect(result).toStrictEqual(state);
+    const expectedState: StatePages = {
+      ...state,
+      [PAGE_ID]: expectedPage,
+    };
+    expect(result).toStrictEqual(expectedState);
     expect(result).not.toBe(state);
   });
 

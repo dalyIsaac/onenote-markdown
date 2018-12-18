@@ -9,7 +9,12 @@ import {
   STORE_RECEIVED_PAGE,
   StoreReceivedPageAction,
 } from "./actions";
-import { PageContent, StatePages } from "./model";
+import {
+  NodeMutable,
+  PageContent,
+  PageContentMutable,
+  StatePages,
+} from "./model";
 import { createNewPage } from "./tree/createNewPage";
 import { deleteContent } from "./tree/delete";
 import { insertContent } from "./tree/insert";
@@ -44,49 +49,60 @@ export default function pageReducer(
 
   switch (action.type) {
     case STORE_RECEIVED_PAGE:
-      newState = { ...state };
       const receivedPage = (action as StoreReceivedPageAction).receivedPage;
       newPage = createNewPage(receivedPage);
-      newState[receivedPage.id as string] = newPage;
+      newState = {
+        ...state,
+        [receivedPage.id as string]: newPage,
+      };
       return newState;
     case INSERT_CONTENT:
-      newState = { ...state };
       const insertAction = action as InsertContentAction;
       extractedPage = {
         ...state[insertAction.pageId],
+        buffers: [...state[insertAction.pageId].buffers],
         nodes: [...state[insertAction.pageId].nodes],
       };
       newPage = insertContent(
-        extractedPage,
+        extractedPage as PageContentMutable,
         { content: insertAction.content, offset: insertAction.offset },
         MAX_BUFFER_LENGTH,
       );
-      newState[insertAction.pageId] = newPage;
+      newState = {
+        ...state,
+        [insertAction.pageId]: newPage,
+      };
       return newState;
     case DELETE_CONTENT:
-      newState = { ...state };
       const deleteAction = action as DeleteContentAction;
       extractedPage = {
         ...state[deleteAction.pageId],
+        buffers: [...state[deleteAction.pageId].buffers],
         nodes: [...state[deleteAction.pageId].nodes],
       };
-      newPage = deleteContent(extractedPage, {
+      newPage = deleteContent(extractedPage as PageContentMutable, {
         startOffset: deleteAction.startOffset,
         endOffset: deleteAction.endOffset,
       });
-      newState[deleteAction.pageId] = newPage;
+      newState = {
+        ...state,
+        [deleteAction.pageId]: newPage,
+      };
       return newState;
     case REPLACE_CONTENT:
-      newState = { ...state };
       const replaceAction = action as ReplaceContentAction;
       extractedPage = {
         ...state[replaceAction.pageId],
+        buffers: [...state[replaceAction.pageId].buffers],
         nodes: [...state[replaceAction.pageId].nodes],
       };
-      const pageAfterDelete = deleteContent(extractedPage, {
-        startOffset: replaceAction.startOffset,
-        endOffset: replaceAction.endOffset,
-      });
+      const pageAfterDelete = deleteContent(
+        extractedPage as PageContentMutable,
+        {
+          startOffset: replaceAction.startOffset,
+          endOffset: replaceAction.endOffset,
+        },
+      );
       const pageAfterInsert = insertContent(
         pageAfterDelete,
         {
@@ -95,7 +111,10 @@ export default function pageReducer(
         },
         MAX_BUFFER_LENGTH,
       );
-      newState[replaceAction.pageId] = pageAfterInsert;
+      newState = {
+        ...state,
+        [replaceAction.pageId]: pageAfterInsert,
+      };
       return newState;
     default:
       return state;

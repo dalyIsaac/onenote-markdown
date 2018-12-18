@@ -7,14 +7,14 @@ import { ContentInsert } from "./tree/insert";
  * Partial action which should be used to extend any action whihch interacts with a page.
  */
 export interface PageActionPartial extends Action {
-  pageId: string;
+  readonly pageId: string;
 }
 
 //#region Store received page
 export const STORE_RECEIVED_PAGE = "STORE_RECEIVED_PAGE";
 
 export interface StoreReceivedPageAction extends PageActionPartial {
-  receivedPage: OnenotePage;
+  readonly receivedPage: OnenotePage;
 }
 
 export const storeReceivedPage = (
@@ -65,7 +65,7 @@ export const deleteContent = (
 export const REPLACE_CONTENT = "REPLACE_CONTENT";
 
 export interface ReplaceContentAction extends PageActionPartial, ContentDelete {
-  content: string;
+  readonly content: string;
 }
 
 export const replaceContent = (

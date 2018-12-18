@@ -8,7 +8,9 @@ import {
   Color,
   NEWLINE,
   Node,
+  NodeMutable,
   PageContent,
+  PageContentMutable,
 } from "../model";
 
 /**
@@ -23,30 +25,30 @@ export interface NodePositionOffset {
   /**
    * Piece Index
    */
-  node: Node;
+  readonly node: Node;
 
   /**
    * The index of the node inside the array.
    */
-  nodeIndex: number;
+  readonly nodeIndex: number;
 
   /**
    * The remainder between the offset and the character count of the left subtree
    */
-  remainder: number;
+  readonly remainder: number;
 
   /**
    * The offset of the node against the start of the content.
    */
-  nodeStartOffset: number;
+  readonly nodeStartOffset: number;
 }
 
 /**
  * Contains a node and its index in a page/piece table.
  */
 export interface NodePosition {
-  node: Node;
-  index: number;
+  readonly node: Node;
+  readonly index: number;
 }
 
 /**
@@ -57,7 +59,7 @@ export interface NodePosition {
  */
 export function findNodeAtOffset(
   offset: number,
-  nodes: Node[],
+  nodes: ReadonlyArray<Node>,
   root: number,
 ): NodePositionOffset {
   let x = root;
@@ -121,7 +123,7 @@ export function findNodeAtOffset(
  * format is used within the first 100 lines, it assumes that LF is used.
  * @param content The HTML content of a OneNote page.
  */
-export function getNewlineFormat(content: string): CharValues[] {
+export function getNewlineFormat(content: string): ReadonlyArray<CharValues> {
   for (let i = 0; i < 100; i++) {
     if (content.charCodeAt(i) === CharValues.LF) {
       return NEWLINE.LF;
@@ -144,7 +146,7 @@ export function getNewlineFormat(content: string): CharValues[] {
  */
 export function getLineStarts(
   content: string,
-  newline: CharValues[],
+  newline: ReadonlyArray<CharValues>,
 ): number[] {
   const lineStarts: number[] = [0];
   for (let i = 0; i + newline.length - 1 <= content.length; i++) {
@@ -198,15 +200,14 @@ export function getOffsetInBuffer(
  * @param index The index of the node in the `node` array, which is the basis for updating the tree.
  */
 export function recomputeTreeMetadata(
-  page: PageContent,
+  page: PageContentMutable,
   x: number,
-): PageContent {
+): PageContentMutable {
   let lengthDelta = 0;
   let lineFeedDelta = 0;
   if (x === page.root) {
     return page;
   }
-  page.nodes = [...page.nodes];
   page.nodes[x] = { ...page.nodes[x] };
 
   // go upwards till the node whose left subtree is changed.
@@ -228,8 +229,8 @@ export function recomputeTreeMetadata(
   lineFeedDelta =
     calculateLineFeedCount(page, page.nodes[x].left) -
     page.nodes[x].leftLineFeedCount;
-  page.nodes[x].leftCharCount += lengthDelta;
-  page.nodes[x].leftLineFeedCount += lineFeedDelta;
+  (page.nodes[x] as NodeMutable).leftCharCount += lengthDelta;
+  (page.nodes[x] as NodeMutable).leftLineFeedCount += lineFeedDelta;
 
   // go upwards till root. O(logN)
   while (x !== page.root && (lengthDelta !== 0 || lineFeedDelta !== 0)) {
@@ -237,8 +238,12 @@ export function recomputeTreeMetadata(
       page.nodes[page.nodes[x].parent] = {
         ...page.nodes[page.nodes[x].parent],
       };
-      page.nodes[page.nodes[x].parent].leftCharCount += lengthDelta;
-      page.nodes[page.nodes[x].parent].leftLineFeedCount += lineFeedDelta;
+      (page.nodes[
+        page.nodes[x].parent
+      ] as NodeMutable).leftCharCount += lengthDelta;
+      (page.nodes[
+        page.nodes[x].parent
+      ] as NodeMutable).leftLineFeedCount += lineFeedDelta;
     }
 
     x = page.nodes[x].parent;
@@ -310,18 +315,19 @@ export const SENTINEL: Node = {
  * This function does mutate the `SENTINEL` node, to ensure that `SENTINEL` is a singleton.
  * @param page The page/piece table which contains the `SENTINEL` node.
  */
-export function resetSentinel(page: PageContent): void {
-  page.nodes[0].bufferIndex = 0;
-  page.nodes[0].start = { column: 0, line: 0 };
-  page.nodes[0].end = { column: 0, line: 0 };
-  page.nodes[0].leftCharCount = 0;
-  page.nodes[0].leftLineFeedCount = 0;
-  page.nodes[0].length = 0;
-  page.nodes[0].lineFeedCount = 0;
-  page.nodes[0].color = Color.Black;
-  page.nodes[0].parent = SENTINEL_INDEX;
-  page.nodes[0].left = SENTINEL_INDEX;
-  page.nodes[0].right = SENTINEL_INDEX;
+export function resetSentinel(page: PageContentMutable): void {
+  (SENTINEL as NodeMutable).bufferIndex = 0;
+  (SENTINEL as NodeMutable).start = { column: 0, line: 0 };
+  (SENTINEL as NodeMutable).end = { column: 0, line: 0 };
+  (SENTINEL as NodeMutable).leftCharCount = 0;
+  (SENTINEL as NodeMutable).leftLineFeedCount = 0;
+  (SENTINEL as NodeMutable).length = 0;
+  (SENTINEL as NodeMutable).lineFeedCount = 0;
+  (SENTINEL as NodeMutable).color = Color.Black;
+  (SENTINEL as NodeMutable).parent = SENTINEL_INDEX;
+  (SENTINEL as NodeMutable).left = SENTINEL_INDEX;
+  (SENTINEL as NodeMutable).right = SENTINEL_INDEX;
+  page.nodes[0] = SENTINEL;
 }
 
 /**
@@ -330,10 +336,8 @@ export function resetSentinel(page: PageContent): void {
  * @param x The index from which to find the minimum of that subtree.
  */
 export function treeMinimum(page: PageContent, x: number): NodePosition {
-  page.nodes[x] = page.nodes[x];
   while (page.nodes[x].left !== SENTINEL_INDEX) {
     x = page.nodes[x].left;
-    page.nodes[x] = page.nodes[x];
   }
   return { node: page.nodes[x], index: x };
 }
@@ -344,10 +348,8 @@ export function treeMinimum(page: PageContent, x: number): NodePosition {
  * @param x The index from which to find the maximum of that subtree.
  */
 export function treeMaximum(page: PageContent, x: number): NodePosition {
-  page.nodes[x] = page.nodes[x];
   while (page.nodes[x].right !== SENTINEL_INDEX) {
     x = page.nodes[x].right;
-    page.nodes[x] = page.nodes[x];
   }
   return { node: page.nodes[x], index: x };
 }
@@ -360,14 +362,13 @@ export function treeMaximum(page: PageContent, x: number): NodePosition {
  * @param lineFeedCountDelta The line feed count delta to be applied.
  */
 export function updateTreeMetadata(
-  page: PageContent,
+  page: PageContentMutable,
   x: number,
   charCountDelta: number,
   lineFeedCountDelta: number,
-): PageContent {
+): PageContentMutable {
   // node length change or line feed count change
   while (x !== page.root && x !== SENTINEL_INDEX) {
-    page.nodes[x] = page.nodes[x];
     if (page.nodes[page.nodes[x].parent].left === x) {
       page.nodes[page.nodes[x].parent] = {
         ...page.nodes[page.nodes[x].parent],
@@ -400,7 +401,6 @@ export function nextNode(page: PageContent, currentNode: number): NodePosition {
     }
 
     currentNode = page.nodes[currentNode].parent;
-    page.nodes[currentNode] = page.nodes[currentNode];
   }
 
   if (page.nodes[currentNode].parent === SENTINEL_INDEX) {
