@@ -7,12 +7,12 @@ import {
   REPLACE_CONTENT,
   ReplaceContentAction,
 } from "./actions";
-import { Color, NEWLINE, PageContent, StatePages } from "./model";
+import { Color, NEWLINE, PageContent, PageContentMutable, StatePages } from "./model";
 import pageReducer from "./reducer";
 import { LF, LF_CONTENT, pageReducerTest } from "./tree/createNewPage.test";
 import { SENTINEL, SENTINEL_INDEX } from "./tree/tree";
 
-export const getStartPage = (): PageContent => ({
+export const getStartPage = (): PageContentMutable => ({
   buffers: [
     {
       isReadOnly: true,

@@ -63,14 +63,14 @@ export default function pageReducer(
         buffers: [...state[insertAction.pageId].buffers],
         nodes: [...state[insertAction.pageId].nodes],
       };
-      newPage = insertContent(
+      insertContent(
         extractedPage as PageContentMutable,
         { content: insertAction.content, offset: insertAction.offset },
         MAX_BUFFER_LENGTH,
       );
       newState = {
         ...state,
-        [insertAction.pageId]: newPage,
+        [insertAction.pageId]: extractedPage,
       };
       return newState;
     case DELETE_CONTENT:
@@ -80,13 +80,13 @@ export default function pageReducer(
         buffers: [...state[deleteAction.pageId].buffers],
         nodes: [...state[deleteAction.pageId].nodes],
       };
-      newPage = deleteContent(extractedPage as PageContentMutable, {
+      deleteContent(extractedPage as PageContentMutable, {
         startOffset: deleteAction.startOffset,
         endOffset: deleteAction.endOffset,
       });
       newState = {
         ...state,
-        [deleteAction.pageId]: newPage,
+        [deleteAction.pageId]: extractedPage,
       };
       return newState;
     case REPLACE_CONTENT:
@@ -96,15 +96,12 @@ export default function pageReducer(
         buffers: [...state[replaceAction.pageId].buffers],
         nodes: [...state[replaceAction.pageId].nodes],
       };
-      const pageAfterDelete = deleteContent(
+      deleteContent(extractedPage as PageContentMutable, {
+        startOffset: replaceAction.startOffset,
+        endOffset: replaceAction.endOffset,
+      });
+      insertContent(
         extractedPage as PageContentMutable,
-        {
-          startOffset: replaceAction.startOffset,
-          endOffset: replaceAction.endOffset,
-        },
-      );
-      const pageAfterInsert = insertContent(
-        pageAfterDelete,
         {
           content: replaceAction.content,
           offset: replaceAction.startOffset,
@@ -113,7 +110,7 @@ export default function pageReducer(
       );
       newState = {
         ...state,
-        [replaceAction.pageId]: pageAfterInsert,
+        [replaceAction.pageId]: extractedPage,
       };
       return newState;
     default:

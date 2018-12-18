@@ -1,4 +1,4 @@
-import { Color, NEWLINE, PageContent } from "../model";
+import { Color, NEWLINE, PageContentMutable } from "../model";
 import { getStartPage } from "../reducer.test";
 import { deleteContent, deleteNode } from "./delete";
 import { SENTINEL, SENTINEL_INDEX } from "./tree";
@@ -6,7 +6,7 @@ import { SENTINEL, SENTINEL_INDEX } from "./tree";
 describe("page/tree/delete", () => {
   describe("delete node", () => {
     test("Scenario 1: Simple case", () => {
-      const page: PageContent = {
+      const page: PageContentMutable = {
         buffers: [],
         previouslyInsertedNodeIndex: null,
         previouslyInsertedNodeOffset: null,
@@ -94,7 +94,7 @@ describe("page/tree/delete", () => {
           },
         ],
       };
-      const expectedPage: PageContent = {
+      const expectedPage: PageContentMutable = {
         buffers: [],
         previouslyInsertedNodeIndex: null,
         previouslyInsertedNodeOffset: null,
@@ -182,13 +182,13 @@ describe("page/tree/delete", () => {
           },
         ],
       };
-      const receivedPage = deleteNode(page, 1);
-      expect(receivedPage).toStrictEqual(expectedPage);
+      deleteNode(page, 1);
+      expect(page).toStrictEqual(expectedPage);
     });
 
     describe("Sibling s is black and at least one of s's children is red", () => {
       test("Scenario 2: Right right case", () => {
-        const page: PageContent = {
+        const page: PageContentMutable = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -293,7 +293,7 @@ describe("page/tree/delete", () => {
             },
           ],
         };
-        const expectedPage: PageContent = {
+        const expectedPage: PageContentMutable = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -398,12 +398,12 @@ describe("page/tree/delete", () => {
             },
           ],
         };
-        const receivedPage = deleteNode(page, 1);
-        expect(receivedPage).toStrictEqual(expectedPage);
+        deleteNode(page, 1);
+        expect(page).toStrictEqual(expectedPage);
       });
 
       test("Scenario 3: Right left case", () => {
-        const page: PageContent = {
+        const page: PageContentMutable = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -491,7 +491,7 @@ describe("page/tree/delete", () => {
             },
           ],
         };
-        const expectedPage: PageContent = {
+        const expectedPage: PageContentMutable = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -577,12 +577,12 @@ describe("page/tree/delete", () => {
             },
           ],
         };
-        const receivedPage = deleteNode(page, 1);
-        expect(receivedPage).toStrictEqual(expectedPage);
+        deleteNode(page, 1);
+        expect(page).toStrictEqual(expectedPage);
       });
 
       test("Scenario 4: Left left case", () => {
-        const page: PageContent = {
+        const page: PageContentMutable = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -687,7 +687,7 @@ describe("page/tree/delete", () => {
             },
           ],
         };
-        const expectedPage: PageContent = {
+        const expectedPage: PageContentMutable = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -792,12 +792,12 @@ describe("page/tree/delete", () => {
             },
           ],
         };
-        const receivedPage = deleteNode(page, 5);
-        expect(receivedPage).toStrictEqual(expectedPage);
+        deleteNode(page, 5);
+        expect(page).toStrictEqual(expectedPage);
       });
 
       test("Scenario 5: Left right case", () => {
-        const page: PageContent = {
+        const page: PageContentMutable = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -883,7 +883,7 @@ describe("page/tree/delete", () => {
             },
           ],
         };
-        const expectedPage: PageContent = {
+        const expectedPage: PageContentMutable = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -969,13 +969,13 @@ describe("page/tree/delete", () => {
             },
           ],
         };
-        const receivedPage = deleteNode(page, 4);
-        expect(receivedPage).toStrictEqual(expectedPage);
+        deleteNode(page, 4);
+        expect(page).toStrictEqual(expectedPage);
       });
     });
 
     test("Scenario 6: Sibling s is black, and both its children are black", () => {
-      const page: PageContent = {
+      const page: PageContentMutable = {
         buffers: [],
         previouslyInsertedNodeIndex: null,
         previouslyInsertedNodeOffset: null,
@@ -1042,7 +1042,7 @@ describe("page/tree/delete", () => {
           },
         ],
       };
-      const expectedPage: PageContent = {
+      const expectedPage: PageContentMutable = {
         buffers: [],
         previouslyInsertedNodeIndex: null,
         previouslyInsertedNodeOffset: null,
@@ -1109,13 +1109,13 @@ describe("page/tree/delete", () => {
           },
         ],
       };
-      const receivedPage = deleteNode(page, 1);
-      expect(receivedPage).toStrictEqual(expectedPage);
+      deleteNode(page, 1);
+      expect(page).toStrictEqual(expectedPage);
     });
 
     describe("Sibling s is red", () => {
       test("Scenario 7: sibling s is right child of its parent", () => {
-        const page: PageContent = {
+        const page: PageContentMutable = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -1220,7 +1220,7 @@ describe("page/tree/delete", () => {
             },
           ],
         };
-        const expectedPage: PageContent = {
+        const expectedPage: PageContentMutable = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -1325,12 +1325,12 @@ describe("page/tree/delete", () => {
             },
           ],
         };
-        const receivedPage = deleteNode(page, 1);
-        expect(receivedPage).toStrictEqual(expectedPage);
+        deleteNode(page, 1);
+        expect(page).toStrictEqual(expectedPage);
       });
 
       test("Scenario 8: sibling s is left child of its parent", () => {
-        const page: PageContent = {
+        const page: PageContentMutable = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -1435,7 +1435,7 @@ describe("page/tree/delete", () => {
             },
           ],
         };
-        const expectedPage: PageContent = {
+        const expectedPage: PageContentMutable = {
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -1540,13 +1540,13 @@ describe("page/tree/delete", () => {
             },
           ],
         };
-        const receivedPage = deleteNode(page, 5);
-        expect(receivedPage).toStrictEqual(expectedPage);
+        deleteNode(page, 5);
+        expect(page).toStrictEqual(expectedPage);
       });
     });
 
     test("Scenario 9: delete root", () => {
-      const page: PageContent = {
+      const page: PageContentMutable = {
         buffers: [],
         previouslyInsertedNodeIndex: null,
         previouslyInsertedNodeOffset: null,
@@ -1575,7 +1575,7 @@ describe("page/tree/delete", () => {
           },
         ],
       };
-      const expectedPage: PageContent = {
+      const expectedPage: PageContentMutable = {
         buffers: [],
         previouslyInsertedNodeIndex: null,
         previouslyInsertedNodeOffset: null,
@@ -1604,8 +1604,8 @@ describe("page/tree/delete", () => {
           },
         ],
       };
-      const receivedPage = deleteNode(page, 1);
-      expect(receivedPage).toStrictEqual(expectedPage);
+      deleteNode(page, 1);
+      expect(page).toStrictEqual(expectedPage);
     });
   });
 
@@ -1613,7 +1613,7 @@ describe("page/tree/delete", () => {
     describe("Scenario 1", () => {
       describe("Scenario 1a: delete the content from an entire node", () => {
         test("Scenario 1a: Test 1", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -1655,7 +1655,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 5,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -1697,15 +1697,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 5,
             endOffset: 7,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1a: Test 2", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -1747,7 +1747,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 0,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -1789,15 +1789,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 0,
             endOffset: 2,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1a: Test 3", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -1839,7 +1839,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 5,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -1881,15 +1881,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 0,
             endOffset: 5,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1a: Test 4", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -1931,7 +1931,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 0,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -1973,17 +1973,17 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 2,
             endOffset: 7,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
       });
 
       describe("Scenario 1b: delete from the start of a node to a point in the node", () => {
         test("Scenario 1b: Test 1", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2025,7 +2025,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 5,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2067,15 +2067,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 0,
             endOffset: 4,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1b: Test 2", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2117,7 +2117,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 0,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2159,15 +2159,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 2,
             endOffset: 6,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1b: Test 3", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2209,7 +2209,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 0,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2251,15 +2251,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 2,
             endOffset: 5,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1b: Test 4", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2301,7 +2301,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 0,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2343,15 +2343,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 2,
             endOffset: 4,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1b: Test 5", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2393,7 +2393,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 5,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2435,15 +2435,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 5,
             endOffset: 6,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1b: Test 6", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2485,7 +2485,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 0,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2527,17 +2527,17 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 0,
             endOffset: 1,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
       });
 
       describe("Scenario 1c: delete from a point in a node to the end of the node", () => {
         test("Scenario 1c: Test 1", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2579,7 +2579,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 5,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2621,15 +2621,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 2,
             endOffset: 5,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1c: Test 2", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2671,7 +2671,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 5,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2713,15 +2713,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 3,
             endOffset: 5,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1c: Test 3", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2763,7 +2763,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 5,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2805,15 +2805,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 4,
             endOffset: 5,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1c: Test 4", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndzef",
@@ -2855,7 +2855,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 5,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndzef",
@@ -2897,15 +2897,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 5,
             endOffset: 6,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1c: Test 5", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2947,7 +2947,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 0,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -2989,15 +2989,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 4,
             endOffset: 7,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1c: Test 6", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -3039,7 +3039,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 0,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -3081,15 +3081,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 6,
             endOffset: 7,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1c: Test 7", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -3131,7 +3131,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 0,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -3173,17 +3173,17 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 1,
             endOffset: 2,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
       });
 
       describe("Scenario 1d: delete from a point in a node to another point in the node", () => {
         test("Scenario 1d: Test 1", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -3225,7 +3225,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 5,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -3280,15 +3280,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 2,
             endOffset: 4,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1d: Test 2", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -3330,7 +3330,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 5,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -3385,15 +3385,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 3,
             endOffset: 4,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1d: Test 3", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -3435,7 +3435,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: 1,
             previouslyInsertedNodeOffset: 5,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -3490,15 +3490,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 2,
             endOffset: 3,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1d: Test 4", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -3540,7 +3540,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -3595,15 +3595,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 4,
             endOffset: 6,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1d: Test 5", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -3645,7 +3645,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndef",
@@ -3700,15 +3700,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 4,
             endOffset: 5,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1d: Test 6", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndefgh",
@@ -3750,7 +3750,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndefgh",
@@ -3805,15 +3805,15 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 6,
             endOffset: 8,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 1d: Test 7", () => {
-          const page: PageContent = {
+          const page: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndefgh",
@@ -3855,7 +3855,7 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 content: "abc\ndefgh",
@@ -3910,11 +3910,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 1,
             endOffset: 3,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
       });
     });
@@ -3923,7 +3923,7 @@ describe("page/tree/delete", () => {
       describe("Scenario 2a: delete from the start of a node to the end of another node", () => {
         test("Scenario 2a: Test 1", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -4100,16 +4100,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 66,
             endOffset: 94,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2a: Test 2", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -4286,16 +4286,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 65,
             endOffset: 94,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2a: Test 3", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -4472,16 +4472,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 0,
             endOffset: 94,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2a: Test 4", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -4658,16 +4658,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 83,
             endOffset: 88,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2a: Test 5", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -4844,16 +4844,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 83,
             endOffset: 127,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2a: Test 6", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -5030,16 +5030,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 93,
             endOffset: 127,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2a: Test 7", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -5216,16 +5216,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 0,
             endOffset: 80,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2a: Test 8", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -5402,18 +5402,18 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 80,
             endOffset: 85,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
       });
 
       describe("Scenario 2b: delete from the start of a node to a point in another node", () => {
         test("Scenario 2b: Test 1", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -5590,16 +5590,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 66,
             endOffset: 90,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2b: Test 2", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -5772,16 +5772,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 0,
             endOffset: 84,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2b: Test 3", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -5958,16 +5958,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 65,
             endOffset: 70,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2b: Test 4", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -6144,18 +6144,18 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 87,
             endOffset: 90,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
       });
 
       describe("Scenario 2c: delete from a point in a node to the end of another node", () => {
         test("Scenario 2c: Test 1", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -6332,16 +6332,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 31,
             endOffset: 66,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2c: Test 2", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -6518,16 +6518,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 81,
             endOffset: 85,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2c: Test 3", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -6704,16 +6704,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 84,
             endOffset: 87,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2c: Test 4", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -6890,16 +6890,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 120,
             endOffset: 127,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2c: Test 5", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -7076,16 +7076,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 90,
             endOffset: 127,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2c: Test 6", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -7262,18 +7262,18 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 60,
             endOffset: 127,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
       });
 
       describe("Scenario 2d: delete from a point in a node to a point in another node", () => {
         test("Scenario 2d: Test 1", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -7450,16 +7450,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 60,
             endOffset: 70,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2d: Test 2", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -7636,16 +7636,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 30,
             endOffset: 70,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2d: Test 3", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -7822,16 +7822,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 84,
             endOffset: 89,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2d: Test 4", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -8008,16 +8008,16 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 81,
             endOffset: 86,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
 
         test("Scenario 2d: Test 5", () => {
           const page = getStartPage();
-          const expectedPage: PageContent = {
+          const expectedPage: PageContentMutable = {
             buffers: [
               {
                 isReadOnly: true,
@@ -8194,11 +8194,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeIndex: null,
             previouslyInsertedNodeOffset: null,
           };
-          const receivedPage = deleteContent(page, {
+          deleteContent(page, {
             startOffset: 89,
             endOffset: 100,
           });
-          expect(receivedPage).toStrictEqual(expectedPage);
+          expect(page).toStrictEqual(expectedPage);
         });
       });
     });

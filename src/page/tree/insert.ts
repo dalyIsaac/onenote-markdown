@@ -27,7 +27,7 @@ export function insertContent(
   page: PageContentMutable,
   content: ContentInsert,
   maxBufferLength: number,
-): PageContentMutable {
+): void {
   let previouslyInsertedNode: Node | undefined;
 
   if (
@@ -42,29 +42,26 @@ export function insertContent(
     content.offset ===
       page.previouslyInsertedNodeOffset! + previouslyInsertedNode.length
   ) {
-    page = insertAtEndPreviouslyInsertedNode(content, page, maxBufferLength);
+    insertAtEndPreviouslyInsertedNode(content, page, maxBufferLength);
   } else {
     const nodePosition = findNodeAtOffset(
       content.offset,
       page.nodes,
       page.root,
     );
-    page =
+    if (
       nodePosition.nodeStartOffset < content.offset &&
       content.offset < nodePosition.nodeStartOffset + nodePosition.node.length
-        ? (page = insertInsideNode(
-            content,
-            page,
-            maxBufferLength,
-            nodePosition,
-          ))
-        : (page = insertAtNodeExtremity(content, page, maxBufferLength));
+    ) {
+      insertInsideNode(content, page, maxBufferLength, nodePosition);
+    } else {
+      insertAtNodeExtremity(content, page, maxBufferLength);
+    }
   }
 
   if (page) {
-    return fixInsert(page, page.nodes.length - 1);
+    fixInsert(page, page.nodes.length - 1);
   }
-  return page;
 }
 
 /**
@@ -72,16 +69,13 @@ export function insertContent(
  * @param page The page/piece table.
  * @param x The index of the node in the `node` array, which is the basis for fixing the tree.
  */
-export function fixInsert(
-  page: PageContentMutable,
-  x: number,
-): PageContentMutable {
-  page = recomputeTreeMetadata(page, x);
+export function fixInsert(page: PageContentMutable, x: number): void {
+  recomputeTreeMetadata(page, x);
   page.nodes[x] = { ...page.nodes[x] };
 
   if (x === page.root) {
     (page.nodes[x] as NodeMutable).color = Color.Black;
-    return page;
+    return;
   }
 
   while (
@@ -113,7 +107,7 @@ export function fixInsert(
         if (x === page.nodes[page.nodes[x].parent].right) {
           x = page.nodes[x].parent;
           page.nodes[x] = { ...page.nodes[x] };
-          page = leftRotate(page, x);
+          leftRotate(page, x);
         }
         page.nodes[page.nodes[x].parent] = {
           ...page.nodes[page.nodes[x].parent],
@@ -123,7 +117,7 @@ export function fixInsert(
           ...page.nodes[page.nodes[page.nodes[x].parent].parent],
           color: Color.Red,
         };
-        page = rightRotate(page, page.nodes[page.nodes[x].parent].parent);
+        rightRotate(page, page.nodes[page.nodes[x].parent].parent);
       }
     } else {
       const y = page.nodes[page.nodes[page.nodes[x].parent].parent].left;
@@ -148,7 +142,7 @@ export function fixInsert(
         ) {
           x = page.nodes[x].parent;
           page.nodes[x] = { ...page.nodes[x] };
-          page = rightRotate(page, x);
+          rightRotate(page, x);
         }
         page.nodes[page.nodes[x].parent] = {
           ...page.nodes[page.nodes[x].parent],
@@ -158,7 +152,7 @@ export function fixInsert(
           ...page.nodes[page.nodes[page.nodes[x].parent].parent],
           color: Color.Red,
         };
-        page = leftRotate(page, page.nodes[page.nodes[x].parent].parent);
+        leftRotate(page, page.nodes[page.nodes[x].parent].parent);
       }
     }
   }
@@ -166,8 +160,6 @@ export function fixInsert(
     ...page.nodes[page.root],
     color: Color.Black,
   };
-
-  return page;
 }
 
 /**
@@ -180,7 +172,7 @@ function insertAtEndPreviouslyInsertedNode(
   content: ContentInsert,
   page: PageContentMutable,
   maxBufferLength: number,
-): PageContentMutable {
+): void {
   // check buffer size
   if (
     content.content.length +
@@ -212,12 +204,11 @@ function insertAtEndPreviouslyInsertedNode(
 
     page.buffers[page.buffers.length - 1] = buffer;
     page.nodes[page.nodes.length - 1] = node;
-    return page;
   } else {
     // scenario 2: cannot fit inside the previous buffer
     // creates a new node
     // creates a new buffer
-    return createNodeCreateBuffer(content, page);
+    createNodeCreateBuffer(content, page);
   }
 }
 
@@ -233,7 +224,7 @@ function insertInsideNode(
   page: PageContentMutable,
   maxBufferLength: number,
   nodePosition: NodePositionOffset,
-): PageContentMutable {
+): void {
   const oldNode = nodePosition.node;
   const nodeContent = getNodeContent(nodePosition.nodeIndex, page);
   const firstPartContent = nodeContent.slice(0, nodePosition.remainder);
@@ -271,12 +262,11 @@ function insertInsideNode(
     right: SENTINEL_INDEX,
   };
 
-  page = insertNode(page, secondPartNode, content.offset);
-  page = fixInsert(page, page.nodes.length - 1);
-  page = insertAtNodeExtremity(content, page, maxBufferLength);
+  insertNode(page, secondPartNode, content.offset);
+  fixInsert(page, page.nodes.length - 1);
+  insertAtNodeExtremity(content, page, maxBufferLength);
   page.previouslyInsertedNodeIndex = page.nodes.length - 1;
   page.previouslyInsertedNodeOffset = content.offset;
-  return page;
 }
 
 /**
@@ -290,7 +280,7 @@ function insertAtNodeExtremity(
   content: ContentInsert,
   page: PageContentMutable,
   maxBufferLength: number,
-): PageContentMutable {
+): void {
   // check buffer size
   if (
     content.content.length +
@@ -301,12 +291,12 @@ function insertAtNodeExtremity(
     // scenario 3 and 5: it can fit inside the previous buffer
     // creates a new node
     // appends to the previous buffer
-    return createNodeAppendToBuffer(content, page);
+    createNodeAppendToBuffer(content, page);
   } else {
     // scenario 4 and 6: it cannot fit inside the previous buffer
     // creates a new node
     // creates a new buffer
-    return createNodeCreateBuffer(content, page);
+    createNodeCreateBuffer(content, page);
   }
 }
 
@@ -318,7 +308,7 @@ function insertAtNodeExtremity(
 function createNodeAppendToBuffer(
   content: ContentInsert,
   page: PageContentMutable,
-): PageContentMutable {
+): void {
   const oldBuffer = page.buffers[page.buffers.length - 1];
   const newContent = oldBuffer.content + content.content;
   const updatedBuffer: Buffer = {
@@ -354,8 +344,7 @@ function createNodeAppendToBuffer(
   page.buffers[page.buffers.length - 1] = updatedBuffer;
   page.previouslyInsertedNodeIndex = page.nodes.length;
   page.previouslyInsertedNodeOffset = content.offset;
-  page = insertNode(page, newNode, content.offset);
-  return page;
+  insertNode(page, newNode, content.offset);
 }
 
 /**
@@ -366,7 +355,7 @@ function createNodeAppendToBuffer(
 function createNodeCreateBuffer(
   content: ContentInsert,
   page: PageContentMutable,
-): PageContentMutable {
+): void {
   const newBuffer: Buffer = {
     isReadOnly: false,
     lineStarts: getLineStarts(content.content, page.newlineFormat),
@@ -393,8 +382,7 @@ function createNodeCreateBuffer(
   page.previouslyInsertedNodeIndex = page.nodes.length;
   page.previouslyInsertedNodeOffset = content.offset;
   page.buffers.push(newBuffer);
-  page = insertNode(page, newNode, content.offset);
-  return page;
+  insertNode(page, newNode, content.offset);
 }
 
 /**
@@ -407,7 +395,7 @@ export function insertNode(
   page: PageContentMutable,
   newNode: NodeMutable,
   offset: number,
-): PageContentMutable {
+): void {
   page.nodes.push(newNode);
   let prevIndex = SENTINEL_INDEX;
 
@@ -429,7 +417,7 @@ export function insertNode(
           left: nodeIndex,
         };
         newNode.parent = prevIndex; // can mutate the node since it's new
-        return page;
+        return;
       }
       currentNode = page.nodes[currentIndex];
     } else if (
@@ -446,7 +434,7 @@ export function insertNode(
           right: nodeIndex,
         };
         newNode.parent = prevIndex; // can mutate the node since it's new
-        return page;
+        return;
       }
       currentNode = page.nodes[currentIndex];
     } else {

@@ -15,7 +15,6 @@ import {
   NodePositionOffset,
   recomputeTreeMetadata,
   resetSentinel,
-  SENTINEL,
   SENTINEL_INDEX,
   treeMinimum,
   updateTreeMetadata,
@@ -37,7 +36,7 @@ export interface ContentDelete {
 export function deleteContent(
   page: PageContentMutable,
   deleteRange: ContentDelete,
-): PageContentMutable {
+): void {
   const oldNodeStartPosition = findNodeAtOffset(
     deleteRange.startOffset,
     page.nodes,
@@ -85,12 +84,12 @@ export function deleteContent(
     (page.nodes[
       oldNodeStartPosition.nodeIndex
     ] as NodeMutable) = nodeBeforeContent;
-    page = insertNode(page, nodeAfterContent, deleteRange.startOffset);
-    page = fixInsert(page, page.nodes.length - 1);
+    insertNode(page, nodeAfterContent, deleteRange.startOffset);
+    fixInsert(page, page.nodes.length - 1);
   } else if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
     // delete from a point in a node to the end of another node
-    page = updateNode(page, oldNodeStartPosition.nodeIndex, nodeBeforeContent);
-    page = updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
+    updateNode(page, oldNodeStartPosition.nodeIndex, nodeBeforeContent);
+    updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
     firstNodeToDelete = nextNode(page, firstNodeToDelete).index;
   } else if (nodeBeforeContent.length > 0) {
     // delete from a point in the node to the end of the node
@@ -99,16 +98,16 @@ export function deleteContent(
     ] as NodeMutable) = nodeBeforeContent;
     if (oldNodeStartPosition !== oldNodeEndPosition) {
       // deleting from a point in a node to the end of the content
-      page = deleteNode(page, oldNodeEndPosition.nodeIndex);
+      deleteNode(page, oldNodeEndPosition.nodeIndex);
       nodeAfterLastNodeToDelete = SENTINEL_INDEX;
       firstNodeToDelete = nextNode(page, firstNodeToDelete).index;
     }
   } else if (nodeAfterContent.length > 0) {
     // delete from the start of the node to a point in the node
-    page = updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
+    updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
   } else if (oldNodeStartPosition === oldNodeEndPosition) {
     // delete the entire node
-    page = deleteNode(page, oldNodeStartPosition.nodeIndex);
+    deleteNode(page, oldNodeStartPosition.nodeIndex);
   } else {
     // deleting up to and including the last node
     nodeAfterLastNodeToDelete = nextNode(page, nodeAfterLastNodeToDelete).index;
@@ -118,14 +117,9 @@ export function deleteContent(
   page.previouslyInsertedNodeOffset = null;
 
   if (oldNodeStartPosition.nodeIndex !== oldNodeEndPosition.nodeIndex) {
-    page = deleteBetweenNodes(
-      page,
-      firstNodeToDelete,
-      nodeAfterLastNodeToDelete,
-    );
+    deleteBetweenNodes(page, firstNodeToDelete, nodeAfterLastNodeToDelete);
   }
   resetSentinel(page);
-  return page;
 }
 
 /**
@@ -139,7 +133,7 @@ function updateNode(
   page: PageContentMutable,
   index: number,
   newNode: NodeMutable,
-): PageContentMutable {
+): void {
   newNode.leftCharCount = page.nodes[index].leftCharCount;
   newNode.leftLineFeedCount = page.nodes[index].leftLineFeedCount;
   newNode.parent = page.nodes[index].parent;
@@ -147,8 +141,7 @@ function updateNode(
   newNode.right = page.nodes[index].right;
   newNode.color = page.nodes[index].color;
   page.nodes[index] = newNode;
-  page = recomputeTreeMetadata(page, index);
-  return page;
+  recomputeTreeMetadata(page, index);
 }
 
 /**
@@ -269,15 +262,14 @@ function deleteBetweenNodes(
   page: PageContentMutable,
   startIndex: number,
   endIndex: number,
-): PageContentMutable {
+): void {
   let currentIndex = startIndex;
   let nextIndex = currentIndex;
   while (nextIndex !== endIndex) {
     currentIndex = nextIndex;
     nextIndex = nextNode(page, currentIndex).index;
-    page = deleteNode(page, currentIndex);
+    deleteNode(page, currentIndex);
   }
-  return page;
 }
 
 /**
@@ -286,10 +278,7 @@ function deleteBetweenNodes(
  * @param page The page/piece table.
  * @param z The index of the node to delete.
  */
-export function deleteNode(
-  page: PageContentMutable,
-  z: number,
-): PageContentMutable {
+export function deleteNode(page: PageContentMutable, z: number): void {
   page.nodes[z] = { ...page.nodes[z] };
   let xTemp: number;
   let yTemp: number;
@@ -326,7 +315,7 @@ export function deleteNode(
       parent: SENTINEL_INDEX,
     };
     resetSentinel(page);
-    return page;
+    return;
   }
 
   const yWasRed = page.nodes[y].color === Color.Red;
@@ -345,7 +334,7 @@ export function deleteNode(
 
   if (y === z) {
     (page.nodes[x] as NodeMutable).parent = page.nodes[y].parent;
-    page = recomputeTreeMetadata(page, x);
+    recomputeTreeMetadata(page, x);
   } else {
     if (page.nodes[y].parent === z) {
       (page.nodes[x] as NodeMutable).parent = y;
@@ -354,7 +343,7 @@ export function deleteNode(
     }
 
     // as we make changes to page.nodes[x]'s hierarchy, update leftCharCount of subtree first
-    page = recomputeTreeMetadata(page, x);
+    recomputeTreeMetadata(page, x);
 
     (page.nodes[y] as NodeMutable).left = page.nodes[z].left;
     (page.nodes[y] as NodeMutable).right = page.nodes[z].right;
@@ -394,7 +383,7 @@ export function deleteNode(
     (page.nodes[y] as NodeMutable).leftCharCount = page.nodes[z].leftCharCount;
     (page.nodes[y] as NodeMutable).leftLineFeedCount =
       page.nodes[z].leftLineFeedCount;
-    page = recomputeTreeMetadata(page, y);
+    recomputeTreeMetadata(page, y);
   }
 
   detach(page, z);
@@ -424,16 +413,16 @@ export function deleteNode(
     }
   }
 
-  page = recomputeTreeMetadata(page, page.nodes[x].parent);
+  recomputeTreeMetadata(page, page.nodes[x].parent);
 
   if (yWasRed) {
     resetSentinel(page);
-    return page;
+    return;
   }
 
-  page = fixDelete(page, x);
+  fixDelete(page, x);
   resetSentinel(page);
-  return page;
+  return;
 }
 
 /**
@@ -468,7 +457,7 @@ function detach(page: PageContentMutable, node: number): void {
  * @param page The page/piece table.
  * @param x The node to start the fixup from.
  */
-function fixDelete(page: PageContentMutable, x: number): PageContentMutable {
+function fixDelete(page: PageContentMutable, x: number): void {
   let w: number;
 
   while (x !== page.root && page.nodes[x].color === Color.Black) {
@@ -482,7 +471,7 @@ function fixDelete(page: PageContentMutable, x: number): PageContentMutable {
           ...page.nodes[page.nodes[x].parent],
           color: Color.Red,
         };
-        page = leftRotate(page, page.nodes[x].parent);
+        leftRotate(page, page.nodes[x].parent);
         w = page.nodes[page.nodes[x].parent].right;
         (page.nodes[w] as NodeMutable) = { ...page.nodes[w] };
       }
@@ -501,7 +490,7 @@ function fixDelete(page: PageContentMutable, x: number): PageContentMutable {
             color: Color.Black,
           };
           (page.nodes[w] as NodeMutable).color = Color.Red;
-          page = rightRotate(page, w);
+          rightRotate(page, w);
           w = page.nodes[page.nodes[x].parent].right;
           (page.nodes[w] as NodeMutable) = { ...page.nodes[w] };
         }
@@ -516,7 +505,7 @@ function fixDelete(page: PageContentMutable, x: number): PageContentMutable {
           ...page.nodes[page.nodes[w].right],
           color: Color.Black,
         };
-        page = leftRotate(page, page.nodes[x].parent);
+        leftRotate(page, page.nodes[x].parent);
         x = page.root;
         (page.nodes[x] as NodeMutable) = { ...page.nodes[x] };
       }
@@ -530,7 +519,7 @@ function fixDelete(page: PageContentMutable, x: number): PageContentMutable {
           ...page.nodes[page.nodes[x].parent],
           color: Color.Red,
         };
-        page = rightRotate(page, page.nodes[x].parent);
+        rightRotate(page, page.nodes[x].parent);
         w = page.nodes[page.nodes[x].parent].left;
         (page.nodes[w] as NodeMutable) = { ...page.nodes[w] };
       }
@@ -549,7 +538,7 @@ function fixDelete(page: PageContentMutable, x: number): PageContentMutable {
             color: Color.Black,
           };
           (page.nodes[w] as NodeMutable).color = Color.Red;
-          page = leftRotate(page, w);
+          leftRotate(page, w);
           w = page.nodes[page.nodes[x].parent].left;
         }
 
@@ -563,7 +552,7 @@ function fixDelete(page: PageContentMutable, x: number): PageContentMutable {
           ...page.nodes[page.nodes[w].left],
           color: Color.Black,
         };
-        page = rightRotate(page, page.nodes[x].parent);
+        rightRotate(page, page.nodes[x].parent);
         x = page.root;
         (page.nodes[x] as NodeMutable) = { ...page.nodes[x] };
       }
@@ -573,8 +562,6 @@ function fixDelete(page: PageContentMutable, x: number): PageContentMutable {
     ...page.nodes[x],
     color: Color.Black,
   };
-
-  return page;
 }
 
 /**
