@@ -142,7 +142,7 @@ function updateNode(
   newNode.right = page.nodes[index].right;
   newNode.color = page.nodes[index].color;
   page.nodes[index] = newNode;
-  page = recomputeTreeMetadata(page, index);
+  recomputeTreeMetadata(page, index);
   return page;
 }
 
@@ -336,7 +336,7 @@ export function deleteNode(page: PageContentMutable, z: number): void {
 
   if (y === z) {
     (page.nodes[x] as NodeMutable).parent = page.nodes[y].parent;
-    page = recomputeTreeMetadata(page, x);
+    recomputeTreeMetadata(page, x);
   } else {
     if (page.nodes[y].parent === z) {
       (page.nodes[x] as NodeMutable).parent = y;
@@ -345,7 +345,7 @@ export function deleteNode(page: PageContentMutable, z: number): void {
     }
 
     // as we make changes to page.nodes[x]'s hierarchy, update leftCharCount of subtree first
-    page = recomputeTreeMetadata(page, x);
+    recomputeTreeMetadata(page, x);
 
     (page.nodes[y] as NodeMutable).left = page.nodes[z].left;
     (page.nodes[y] as NodeMutable).right = page.nodes[z].right;
@@ -385,7 +385,7 @@ export function deleteNode(page: PageContentMutable, z: number): void {
     (page.nodes[y] as NodeMutable).leftCharCount = page.nodes[z].leftCharCount;
     (page.nodes[y] as NodeMutable).leftLineFeedCount =
       page.nodes[z].leftLineFeedCount;
-    page = recomputeTreeMetadata(page, y);
+    recomputeTreeMetadata(page, y);
   }
 
   detach(page, z);
@@ -415,7 +415,7 @@ export function deleteNode(page: PageContentMutable, z: number): void {
     }
   }
 
-  page = recomputeTreeMetadata(page, page.nodes[x].parent);
+  recomputeTreeMetadata(page, page.nodes[x].parent);
 
   if (yWasRed) {
     resetSentinel(page);

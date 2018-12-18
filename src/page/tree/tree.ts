@@ -202,11 +202,11 @@ export function getOffsetInBuffer(
 export function recomputeTreeMetadata(
   page: PageContentMutable,
   x: number,
-): PageContentMutable {
+): void {
   let lengthDelta = 0;
   let lineFeedDelta = 0;
   if (x === page.root) {
-    return page;
+    return;
   }
   page.nodes[x] = { ...page.nodes[x] };
 
@@ -217,7 +217,7 @@ export function recomputeTreeMetadata(
 
   if (x === page.root) {
     // well, it means we add a node to the end (inorder)
-    return page;
+    return;
   }
 
   // page.nodes[x] is the node whose right subtree is changed.
@@ -250,7 +250,7 @@ export function recomputeTreeMetadata(
     page.nodes[x] = { ...page.nodes[x] };
   }
 
-  return page;
+  return;
 }
 
 /**

@@ -266,7 +266,8 @@ describe("page/tree/tree", () => {
 
   test("Recompute tree metadata: add a node to the end", () => {
     const page = getPage(); // hypothetically added the last node
-    expect(recomputeTreeMetadata(page, 7)).toStrictEqual(getPage());
+    recomputeTreeMetadata(page, 7);
+    expect(page).toStrictEqual(getPage());
   });
 
   test("Recompute tree metadata: add a node in the middle", () => {
@@ -277,8 +278,8 @@ describe("page/tree/tree", () => {
     (expectedPage.nodes[6] as NodeMutable).leftLineFeedCount += 5;
     (expectedPage.nodes[5] as NodeMutable).lineFeedCount += 5;
 
-    const receivedPage = recomputeTreeMetadata(page, 4);
-    expect(receivedPage).toStrictEqual(expectedPage);
+    recomputeTreeMetadata(page, 4);
+    expect(page).toStrictEqual(expectedPage);
   });
 
   test("nextNode", () => {

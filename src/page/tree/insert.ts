@@ -76,7 +76,7 @@ export function fixInsert(
   page: PageContentMutable,
   x: number,
 ): PageContentMutable {
-  page = recomputeTreeMetadata(page, x);
+  recomputeTreeMetadata(page, x);
   page.nodes[x] = { ...page.nodes[x] };
 
   if (x === page.root) {
