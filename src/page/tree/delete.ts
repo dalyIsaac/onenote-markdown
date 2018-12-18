@@ -98,7 +98,7 @@ export function deleteContent(
     ] as NodeMutable) = nodeBeforeContent;
     if (oldNodeStartPosition !== oldNodeEndPosition) {
       // deleting from a point in a node to the end of the content
-      page = deleteNode(page, oldNodeEndPosition.nodeIndex);
+      deleteNode(page, oldNodeEndPosition.nodeIndex);
       nodeAfterLastNodeToDelete = SENTINEL_INDEX;
       firstNodeToDelete = nextNode(page, firstNodeToDelete).index;
     }
@@ -107,7 +107,7 @@ export function deleteContent(
     page = updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
   } else if (oldNodeStartPosition === oldNodeEndPosition) {
     // delete the entire node
-    page = deleteNode(page, oldNodeStartPosition.nodeIndex);
+    deleteNode(page, oldNodeStartPosition.nodeIndex);
   } else {
     // deleting up to and including the last node
     nodeAfterLastNodeToDelete = nextNode(page, nodeAfterLastNodeToDelete).index;
@@ -274,7 +274,7 @@ function deleteBetweenNodes(
   while (nextIndex !== endIndex) {
     currentIndex = nextIndex;
     nextIndex = nextNode(page, currentIndex).index;
-    page = deleteNode(page, currentIndex);
+    deleteNode(page, currentIndex);
   }
   return page;
 }
@@ -285,10 +285,7 @@ function deleteBetweenNodes(
  * @param page The page/piece table.
  * @param z The index of the node to delete.
  */
-export function deleteNode(
-  page: PageContentMutable,
-  z: number,
-): PageContentMutable {
+export function deleteNode(page: PageContentMutable, z: number): void {
   page.nodes[z] = { ...page.nodes[z] };
   let xTemp: number;
   let yTemp: number;
@@ -325,7 +322,7 @@ export function deleteNode(
       parent: SENTINEL_INDEX,
     };
     resetSentinel(page);
-    return page;
+    return;
   }
 
   const yWasRed = page.nodes[y].color === Color.Red;
@@ -427,12 +424,12 @@ export function deleteNode(
 
   if (yWasRed) {
     resetSentinel(page);
-    return page;
+    return;
   }
 
   fixDelete(page, x);
   resetSentinel(page);
-  return page;
+  return;
 }
 
 /**
