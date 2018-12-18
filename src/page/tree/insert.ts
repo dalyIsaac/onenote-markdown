@@ -49,16 +49,14 @@ export function insertContent(
       page.nodes,
       page.root,
     );
-    page =
+    if (
       nodePosition.nodeStartOffset < content.offset &&
       content.offset < nodePosition.nodeStartOffset + nodePosition.node.length
-        ? (page = insertInsideNode(
-            content,
-            page,
-            maxBufferLength,
-            nodePosition,
-          ))
-        : (page = insertAtNodeExtremity(content, page, maxBufferLength));
+    ) {
+      page = insertInsideNode(content, page, maxBufferLength, nodePosition);
+    } else {
+      insertAtNodeExtremity(content, page, maxBufferLength);
+    }
   }
 
   if (page) {
@@ -273,7 +271,7 @@ function insertInsideNode(
 
   insertNode(page, secondPartNode, content.offset);
   page = fixInsert(page, page.nodes.length - 1);
-  page = insertAtNodeExtremity(content, page, maxBufferLength);
+  insertAtNodeExtremity(content, page, maxBufferLength);
   page.previouslyInsertedNodeIndex = page.nodes.length - 1;
   page.previouslyInsertedNodeOffset = content.offset;
   return page;
@@ -290,7 +288,7 @@ function insertAtNodeExtremity(
   content: ContentInsert,
   page: PageContentMutable,
   maxBufferLength: number,
-): PageContentMutable {
+): void {
   // check buffer size
   if (
     content.content.length +
@@ -301,12 +299,12 @@ function insertAtNodeExtremity(
     // scenario 3 and 5: it can fit inside the previous buffer
     // creates a new node
     // appends to the previous buffer
-    return createNodeAppendToBuffer(content, page);
+    createNodeAppendToBuffer(content, page);
   } else {
     // scenario 4 and 6: it cannot fit inside the previous buffer
     // creates a new node
     // creates a new buffer
-    return createNodeCreateBuffer(content, page);
+    createNodeCreateBuffer(content, page);
   }
 }
 
@@ -318,7 +316,7 @@ function insertAtNodeExtremity(
 function createNodeAppendToBuffer(
   content: ContentInsert,
   page: PageContentMutable,
-): PageContentMutable {
+): void {
   const oldBuffer = page.buffers[page.buffers.length - 1];
   const newContent = oldBuffer.content + content.content;
   const updatedBuffer: Buffer = {
@@ -355,7 +353,6 @@ function createNodeAppendToBuffer(
   page.previouslyInsertedNodeIndex = page.nodes.length;
   page.previouslyInsertedNodeOffset = content.offset;
   insertNode(page, newNode, content.offset);
-  return page;
 }
 
 /**
