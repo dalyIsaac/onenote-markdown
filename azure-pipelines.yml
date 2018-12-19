@@ -15,8 +15,8 @@ steps:
 - script: python3 -m pip install --upgrade pip setuptools wheel
   displayName: 'Install Python tools'
 
-- script: pip install BeautifulSoup
-  displayName: 'Install BeautifulSoup'
+- script: pip install beautifulsoup4
+  displayName: 'Install BeautifulSoup4'
 
 - task: PythonScript@0
   displayName: 'Embed coverage report CSS in HTML'
