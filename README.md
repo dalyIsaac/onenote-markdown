@@ -17,7 +17,6 @@ Link to old project: [https://github.com/dalyIsaac/onenote-markdown-old](https:/
 ## Prerequisites
 
 - [Node.js and npm](https://nodejs.org/)
-- [yarn](https://yarnpkg.com/)
 - [git](https://git-scm.com/downloads)
 
 ## Getting the source
@@ -32,25 +31,25 @@ git clone https://github.com/dalyIsaac/onenote-markdown-prototype.git
 
 ```shell
 cd onenote-markdown
-yarn
+npm install
 ```
 
 ## Run dev build
 
 ```shell
-yarn start
+npm start
 ```
 
 ## Build production
 
 ```shell
-yarn build
+npm build
 ```
 
 ## Jest testing
 
 ```Shell
-yarn test
+npm test
 ```
 
 ## Debugging in VSCode
