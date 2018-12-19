@@ -1,0 +1,16 @@
+pool:
+  vmImage: 'ubuntu-16.04'
+
+steps:
+- script: npm install --only=dev
+- script: npm install
+- script: npm run test:ci
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testRunner: JUnit
+    testResultsFiles: './junit.xml'
+- task: PublishCodeCoverageResults@1
+  inputs: 
+    codeCoverageTool: Cobertura
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'

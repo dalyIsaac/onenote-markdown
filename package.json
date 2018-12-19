@@ -18,6 +18,7 @@
     "@microsoft/microsoft-graph-types": "^1.5.0",
     "@types/jest": "^23.3.9",
     "jest": "^23.6.0",
+    "jest-junit": "^5.2.0",
     "redux-devtools-extension": "^2.13.5",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
@@ -28,6 +29,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:ci": "react-scripts test --ci --reporters=default --reporters=jest-junit --coverage",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -38,5 +40,10 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "jest": {
+    "coverageReporters": [
+      "cobertura"
+    ]
+  }
 }
