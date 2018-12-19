@@ -1,5 +1,7 @@
 # onenote-markdown
 
+[![Build Status](https://dev.azure.com/isaacdaly/onenote-markdown/_apis/build/status/onenote-markdown-CI?branchName=master)](https://dev.azure.com/isaacdaly/onenote-markdown/_build/latest?definitionId=3?branchName=master) [![Code coverage](https://img.shields.io/azure-devops/coverage/isaacdaly/onenote-markdown/3.svg)](https://dev.azure.com/isaacdaly/onenote-markdown/_build/latest?definitionId=3?branchName=master) [![Dependencies status](https://img.shields.io/david/dalyIsaac/onenote-markdown.svg)](https://github.com/dalyIsaac/onenote-markdown)
+
 This is a new prototype for building a markdown editor for OneNote, starting with the editor.
 
 Documentation: https://github.com/dalyIsaac/onenote-markdown/wiki
@@ -81,7 +83,7 @@ Install the [Chrome debugger](https://marketplace.visualstudio.com/items?itemNam
 }
 ```
 
-To attach to an existing Chrome instance, ensure that Chrome from the command line as:
+To attach to an existing Chrome instance, ensure that Chrome is launched from the command line as:
 
 Windows
 
