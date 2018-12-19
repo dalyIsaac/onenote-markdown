@@ -20,7 +20,7 @@ def embed_css_in_html_file(html_file, css_dir):
     for s in stylesheets:
         t = soup.new_tag('style')
         css_file = s["href"]
-        print(f"found link to {css_file}")
+        print("found link to", css_file)
         with open(os.path.join(css_dir, css_file), 'r') as f:
             c = bs4.element.NavigableString(f.read())
         t.insert(0, c)
@@ -33,6 +33,6 @@ def embed_css_in_html_file(html_file, css_dir):
 
 for file in os.listdir(COVERAGE_REPORT_DIR):
     if file.endswith(".html"):
-        print(f"Embedding CSS in {file}")
+        print("Embedding CSS in", file)
         embed_css_in_html_file(os.path.join(COVERAGE_REPORT_DIR, file), COVERAGE_REPORT_DIR)
         
