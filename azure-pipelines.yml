@@ -12,16 +12,8 @@ steps:
 - script: npm run test:ci
   displayName: 'Tests'
 
-- script: sudo apt-get install python3-bs4
-  displayName: 'Install Beautiful Soup'
-
-- task: PythonScript@0
-  displayName: 'Embed coverage report CSS in HTML'
-  inputs:
-      scriptSource: 'filePath'
-      scriptPath: '$(System.DefaultWorkingDirectory)/tools/process-coverage-report.py'
-      workingDirectory: '$(System.DefaultWorkingDirectory)'
-      pythonInterpreter: 'python3'
+- script: node ./tools/process-coverage-report.js
+  displayName: 'Clean up coverage report'
 
 - task: PublishTestResults@2
   condition: succeededOrFailed()
