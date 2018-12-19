@@ -12,6 +12,12 @@ steps:
 - script: npm run test:ci
   displayName: 'Tests'
 
+- script: python3 -m pip install --upgrade pip setuptools wheel
+  displayName: 'Install Python tools'
+
+- script: pip install BeautifulSoup
+  displayName: 'Install BeautifulSoup'
+
 - task: PythonScript@0
   displayName: 'Embed coverage report CSS in HTML'
   inputs:
