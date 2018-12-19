@@ -8,7 +8,7 @@ import os
 
 import bs4
 
-COVERAGE_REPORT_DIR = 'build/coverage/htmlcov/'
+COVERAGE_REPORT_DIR = 'src/coverage/'
 COVERAGE_REPORT = os.path.join(COVERAGE_REPORT_DIR, 'index.html')
 
 
