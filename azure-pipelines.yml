@@ -9,9 +9,19 @@ steps:
   condition: succeededOrFailed()
   inputs:
     testRunner: JUnit
-    testResultsFiles: './junit.xml'
+    testResultsFiles: './coverage/junit.xml'
+- task: Bash@3
+  displayName: 'Move coverage reports into the correct directories'
+  inputs:
+      workingDirectory: '$(System.DefaultWorkingDirectory)'
+      script: 'mkdir coverage/report && cd coverage && mv !(report) report && mv report/cobertura-coverage.xml cobertura.xml'
+- task: Bash@3
+  displayName: 'Move junit.xml into ./coverage'
+  inputs:
+    workingDirectory: '$(System.DefaultWorkingDirectory)'
+    script: 'mv junit.xml coverage/junit.xml'
 - task: PublishCodeCoverageResults@1
   inputs: 
     codeCoverageTool: Cobertura
-    summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/clover.xml'
-    reportDirectory: '$(System.DefaultWorkingDirectory)/coverage/lcov-report'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura.xml'
+    reportDirectory: '$(System.DefaultWorkingDirectory)/coverage/report'
