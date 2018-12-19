@@ -2,14 +2,29 @@ pool:
   vmImage: 'ubuntu-16.04'
 
 steps:
+
 - script: npm install --only=dev
+  displayName: 'Install dev dependencies'
+
 - script: npm install
+  displayName: 'Install dependencies'
+
 - script: npm run test:ci
+  displayName: 'Tests'
+
+- task: PythonScript@0
+  displayName: 'Embed coverage report CSS in HTML'
+  inputs:
+      scriptSource: 'filePath'
+      scriptPath: '$(System.DefaultWorkingDirectory)/tools/process-coverage-report.py'
+      pythonInterpreter: 'python3'
+
 - task: PublishTestResults@2
   condition: succeededOrFailed()
   inputs:
     testRunner: JUnit
     testResultsFiles: './junit.xml'
+
 - task: PublishCodeCoverageResults@1
   inputs: 
     codeCoverageTool: Cobertura
