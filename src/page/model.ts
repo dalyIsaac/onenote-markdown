@@ -279,6 +279,16 @@ export interface PageContent {
    * The datetime string for when the page was created.
    */
   readonly created: string;
+
+  /**
+   * The default font family for this page.
+   */
+  readonly fontFamily: string;
+
+  /**
+   * The default font size for this page.
+   */
+  readonly fontSize: string;
 }
 
 export interface PageContentMutable {
@@ -334,6 +344,16 @@ export interface PageContentMutable {
    * The datetime string for when the page was created.
    */
   created?: string;
+
+  /**
+   * The default font family for this page.
+   */
+  fontFamily?: string;
+
+  /**
+   * The default font size for this page.
+   */
+  fontSize?: string;
 }
 
 //#endregion
