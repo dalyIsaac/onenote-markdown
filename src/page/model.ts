@@ -161,57 +161,62 @@ export interface NodeMutable {
   /**
    * The index of the buffer which this node refers to.
    */
-  bufferIndex: number;
+  bufferIndex?: number;
 
   /**
    * The start cursor for this piece, within the buffer.
    */
-  start: BufferCursor;
+  start?: BufferCursor;
 
   /**
    * The end cursor for this piece, within the buffer.
    */
-  end: BufferCursor;
+  end?: BufferCursor;
 
   /**
    * The count of the number of characters in the left subtree of this node.
    */
-  leftCharCount: number;
+  leftCharCount?: number;
 
   /**
    * The count of the number of line feeds in the left subtree of this node.
    */
-  leftLineFeedCount: number;
+  leftLineFeedCount?: number;
 
   /**
    * The number of characters in this node/piece.
    */
-  length: number;
+  length?: number;
 
   /**
    * The count of the number of line feeds in this node/piece.
    */
-  lineFeedCount: number;
+  lineFeedCount?: number;
 
   /**
    * The color of this node in the tree.
    */
-  color: Color;
+  color?: Color;
 
   /**
    * The index of the parent to this node, in the piece table's `nodes` array.
    */
-  parent: number;
+  parent?: number;
 
   /**
    * The index of the left child to this node, in the piece table's `nodes` array.
    */
-  left: number;
+  left?: number;
 
   /**
    * The index of the right child to this node, in the piece table's `nodes` array.
    */
-  right: number;
+  right?: number;
+
+  /**
+   * The HTML tag for this node.
+   */
+  tag: string;
 }
 
 //#endregion Node
@@ -254,6 +259,26 @@ export interface PageContent {
    * `null` if another operation which wasn't an insert was performed.
    */
   readonly previouslyInsertedNodeOffset: number | null;
+
+  /**
+   * The language of the page.
+   */
+  readonly language?: string;
+
+  /**
+   * The title of the page.
+   */
+  readonly title: string;
+
+  /**
+   * The charset of the page.
+   */
+  readonly charset: string;
+
+  /**
+   * The datetime string for when the page was created.
+   */
+  readonly created: string;
 }
 
 export interface PageContentMutable {
@@ -289,6 +314,26 @@ export interface PageContentMutable {
    * `null` if another operation which wasn't an insert was performed.
    */
   previouslyInsertedNodeOffset: number | null;
+
+  /**
+   * The language of the page.
+   */
+  language?: string;
+
+  /**
+   * The title of the page.
+   */
+  title?: string;
+
+  /**
+   * The charset of the page.
+   */
+  charset?: string;
+
+  /**
+   * The datetime string for when the page was created.
+   */
+  created?: string;
 }
 
 //#endregion

@@ -12,7 +12,8 @@
     "react-redux": "^5.1.1",
     "react-scripts": "2.1.1",
     "redux": "^4.0.1",
-    "redux-saga": "^0.16.2"
+    "redux-saga": "^0.16.2",
+    "tiny-html-lexer": "^0.8.1"
   },
   "devDependencies": {
     "@microsoft/microsoft-graph-types": "^1.5.0",
