@@ -305,9 +305,10 @@ function insertAtNodeExtremity(
  * @param content The content to insert into the page.
  * @param page The page to insert the content into.
  */
-function createNodeAppendToBuffer(
+export function createNodeAppendToBuffer(
   content: ContentInsert,
   page: PageContentMutable,
+  node?: NodeMutable,
 ): void {
   const oldBuffer = page.buffers[page.buffers.length - 1];
   const newContent = oldBuffer.content + content.content;
@@ -317,6 +318,7 @@ function createNodeAppendToBuffer(
     lineStarts: getLineStarts(newContent, page.newlineFormat),
   };
   const newNode: Node = {
+    ...node,
     bufferIndex: page.buffers.length - 1,
     start: {
       line: oldBuffer.lineStarts.length - 1,
@@ -352,9 +354,10 @@ function createNodeAppendToBuffer(
  * @param content The content to insert into the page.
  * @param page The page to insert the content into.
  */
-function createNodeCreateBuffer(
+export function createNodeCreateBuffer(
   content: ContentInsert,
   page: PageContentMutable,
+  node?: NodeMutable,
 ): void {
   const newBuffer: Buffer = {
     isReadOnly: false,
@@ -362,6 +365,7 @@ function createNodeCreateBuffer(
     content: content.content,
   };
   const newNode: Node = {
+    ...node,
     bufferIndex: page.buffers.length,
     start: { line: 0, column: 0 },
     end: {
@@ -386,7 +390,7 @@ function createNodeCreateBuffer(
 }
 
 /**
- * Modifies the metadata of nodes to "insert" a node. **The node should already exist inside `page.nodes`.**
+ * Modifies the metadata of nodes to "insert" a node.
  * @param page The page/piece table.
  * @param newNode Reference to the newly created node. The node already exists inside `page.nodes`.
  * @param offset The offset of the new node.
@@ -396,10 +400,15 @@ export function insertNode(
   newNode: NodeMutable,
   offset: number,
 ): void {
-  page.nodes.push(newNode);
+  page.nodes.push(newNode as Node);
   let prevIndex = SENTINEL_INDEX;
 
   let currentIndex = page.root;
+  if (currentIndex === -1) {
+    newNode.color = Color.Black;
+    page.root = 1;
+    return;
+  }
   let currentNode = page.nodes[currentIndex];
 
   let nodeStartOffset = 0;

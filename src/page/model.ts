@@ -1,3 +1,5 @@
+import { KeyValue } from "../common";
+
 /**
  * Mutable objects are only used in constructing the next state.
  * Immutable (interfaces with readonly properties) are used in the state.
@@ -104,37 +106,37 @@ export interface Node {
   /**
    * The index of the buffer which this node refers to.
    */
-  readonly bufferIndex: number;
+  readonly bufferIndex?: number;
 
   /**
    * The start cursor for this piece, within the buffer.
    */
-  readonly start: BufferCursor;
+  readonly start?: BufferCursor;
 
   /**
    * The end cursor for this piece, within the buffer.
    */
-  readonly end: BufferCursor;
+  readonly end?: BufferCursor;
 
   /**
    * The count of the number of characters in the left subtree of this node.
    */
-  readonly leftCharCount: number;
+  readonly leftCharCount?: number;
 
   /**
    * The count of the number of line feeds in the left subtree of this node.
    */
-  readonly leftLineFeedCount: number;
+  readonly leftLineFeedCount?: number;
 
   /**
    * The number of characters in this node/piece.
    */
-  readonly length: number;
+  readonly length?: number;
 
   /**
    * The count of the number of line feeds in this node/piece.
    */
-  readonly lineFeedCount: number;
+  readonly lineFeedCount?: number;
 
   /**
    * The color of this node in the tree.
@@ -155,6 +157,21 @@ export interface Node {
    * The index of the right child to this node, in the piece table's `nodes` array.
    */
   readonly right: number;
+
+  /**
+   * The HTML tag for this node.
+   */
+  readonly tag?: string;
+
+  /**
+   * The HTML properties for this node's tag.
+   */
+  readonly properties?: KeyValue;
+
+  /**
+   * The inline CSS styles for this node's tag.
+   */
+  readonly styles?: KeyValue;
 }
 
 export interface NodeMutable {
@@ -216,7 +233,17 @@ export interface NodeMutable {
   /**
    * The HTML tag for this node.
    */
-  tag: string;
+  tag?: string;
+
+  /**
+   * The HTML properties for this node's tag.
+   */
+  properties?: KeyValue;
+
+  /**
+   * The inline CSS styles for this node's tag.
+   */
+  styles?: KeyValue;
 }
 
 //#endregion Node
