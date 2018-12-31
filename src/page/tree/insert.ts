@@ -1,9 +1,17 @@
-import { Buffer, Color, Node, NodeMutable, PageContentMutable } from "../model";
+import {
+  Buffer,
+  Color,
+  Node,
+  NodeMutable,
+  PageContent,
+  PageContentMutable,
+} from "../model";
 import { leftRotate, rightRotate } from "./rotate";
 import {
   findNodeAtOffset,
   getLineStarts,
   getNodeContent,
+  nextNode,
   NodePositionOffset,
   recomputeTreeMetadata,
   SENTINEL_INDEX,
@@ -353,18 +361,21 @@ export function createNodeAppendToBuffer(
  * Creates a new node, and creates a new buffer to contain the new content.
  * @param content The content to insert into the page.
  * @param page The page to insert the content into.
+ * @param node Node which supplements the node which is going to be stored.
+ * @param indexToInsertAfter The index of the node to insert the new node after.
  */
 export function createNodeCreateBuffer(
   content: ContentInsert,
   page: PageContentMutable,
   node?: NodeMutable,
+  indexToInsertAfter?: number,
 ): void {
   const newBuffer: Buffer = {
     isReadOnly: false,
     lineStarts: getLineStarts(content.content, page.newlineFormat),
     content: content.content,
   };
-  const newNode: Node = {
+  const newNode: NodeMutable = {
     ...node,
     bufferIndex: page.buffers.length,
     start: { line: 0, column: 0 },
@@ -386,7 +397,19 @@ export function createNodeCreateBuffer(
   page.previouslyInsertedNodeIndex = page.nodes.length;
   page.previouslyInsertedNodeOffset = content.offset;
   page.buffers.push(newBuffer);
-  insertNode(page, newNode, content.offset);
+  if (indexToInsertAfter) {
+    const next = nextNode(page as PageContent, indexToInsertAfter);
+    if (next.index === 0) {
+      (page.nodes[indexToInsertAfter] as NodeMutable).right = page.nodes.length;
+      newNode.parent = indexToInsertAfter;
+    } else {
+      (page.nodes[next.index] as NodeMutable).left = page.nodes.length;
+      newNode.parent = next.index;
+    }
+    page.nodes.push(newNode as Node);
+  } else {
+    insertNode(page, newNode, content.offset);
+  }
 }
 
 /**

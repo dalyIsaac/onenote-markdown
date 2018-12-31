@@ -97,6 +97,13 @@ export enum Color {
   Black = 1,
 }
 
+export enum NodeType {
+  StartTag = 0,
+  EndTag = 1,
+  StartEndTag = 2,
+  Content = 3,
+}
+
 //#region Node
 
 /**
@@ -121,22 +128,22 @@ export interface Node {
   /**
    * The count of the number of characters in the left subtree of this node.
    */
-  readonly leftCharCount?: number;
+  readonly leftCharCount: number;
 
   /**
    * The count of the number of line feeds in the left subtree of this node.
    */
-  readonly leftLineFeedCount?: number;
+  readonly leftLineFeedCount: number;
 
   /**
    * The number of characters in this node/piece.
    */
-  readonly length?: number;
+  readonly length: number;
 
   /**
    * The count of the number of line feeds in this node/piece.
    */
-  readonly lineFeedCount?: number;
+  readonly lineFeedCount: number;
 
   /**
    * The color of this node in the tree.
@@ -164,6 +171,11 @@ export interface Node {
   readonly tag?: string;
 
   /**
+   * The type of tag for this node.
+   */
+  readonly nodeType?: NodeType;
+
+  /**
    * The HTML properties for this node's tag.
    */
   readonly properties?: KeyValue;
@@ -172,6 +184,11 @@ export interface Node {
    * The inline CSS styles for this node's tag.
    */
   readonly styles?: KeyValue;
+
+  /**
+   * The id for this node's tag.
+   */
+  readonly id?: string;
 }
 
 export interface NodeMutable {
@@ -236,6 +253,11 @@ export interface NodeMutable {
   tag?: string;
 
   /**
+   * The type of tag for this node.
+   */
+  nodeType?: NodeType;
+
+  /**
    * The HTML properties for this node's tag.
    */
   properties?: KeyValue;
@@ -244,6 +266,11 @@ export interface NodeMutable {
    * The inline CSS styles for this node's tag.
    */
   styles?: KeyValue;
+
+  /**
+   * The id for this node's tag.
+   */
+  id?: string;
 }
 
 //#endregion Node

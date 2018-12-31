@@ -1,49 +1,56 @@
 import { chunks, TokenizeResult, tokens } from "tiny-html-lexer";
 import { KeyValue } from "../../common";
 import {
+  BufferMutable,
   NodeMutable,
+  NodeType,
   PageContent,
   PageContentMutable,
-  BufferMutable,
 } from "../model";
-import { getNewlineFormat, MAX_BUFFER_LENGTH, SENTINEL } from "./tree";
-// tslint:disable-next-line:ordered-imports
 import {
   ContentInsert,
-  createNodeCreateBuffer,
   createNodeAppendToBuffer,
+  createNodeCreateBuffer,
+  fixInsert,
   insertNode,
 } from "./insert";
+import { getNewlineFormat, MAX_BUFFER_LENGTH, SENTINEL } from "./tree";
 
 const STYLE = "style";
+const ID = "id";
+
+/**
+ * Tags which reside inside the body of the HTML content.
+ */
+const bodyTags = {
+  span: "span",
+  p: "p",
+  h1: "h1",
+  h2: "h2",
+  h3: "h3",
+  h4: "h5",
+  h6: "h6",
+};
+
+/**
+ * Tags which do not reside inside the body of the HTML content.
+ */
+const exteriorTags = {
+  html: "html",
+  head: "head",
+  title: "title",
+  meta: "meta",
+  body: "body",
+};
 
 export default class Parser {
-  /**
-   * Tags which reside inside the body of the HTML content.
-   */
-  private bodyTags = {
-    span: "span",
-  };
-
-  /**
-   * Tags which do not reside inside the body of the HTML content.
-   */
-  private exteriorTags = {
-    html: "html",
-    head: "head",
-    title: "title",
-    meta: "meta",
-    body: "body",
-    span: "span",
-  };
-
   private page: PageContentMutable;
   private stream: TokenizeResult;
   private content: string;
   private lastAttribute = "";
   private metaFirstAttribute = "";
   private node: NodeMutable = {};
-  private tagStack: string[] = [];
+  private tagStack: Array<{ tag: string; id?: string }> = [];
   private length = 0;
   private writtenTo = false;
 
@@ -65,13 +72,12 @@ export default class Parser {
       return this.page as PageContent;
     }
     for (const [type, chunk] of this.stream) {
-      this.node.tag = this.tagStack[this.tagStack.length - 1];
       switch (type) {
         case tokens.T_startTag_start:
-          this.startTagStart(chunk);
+          this.startTag(chunk);
           break;
         case tokens.T_endTag_start:
-          if (this.node.tag === chunk.slice(2)) {
+          if (this.tagStack[this.tagStack.length - 1].tag === chunk.slice(2)) {
             this.endTag();
           }
           break;
@@ -85,17 +91,9 @@ export default class Parser {
           this.attributeValue(chunk);
           break;
         case tokens.T_rcdata:
-          if (this.node.tag === this.exteriorTags.title) {
+          if (this.node.tag === exteriorTags.title) {
             this.page.title = chunk;
           } else {
-            console.log({ type, chunk });
-          }
-          break;
-        case tokens.T_tag_end:
-          if (
-            !this.exteriorTags.hasOwnProperty(this.node.tag) &&
-            this.bodyTags.hasOwnProperty(this.node.tag)
-          ) {
             console.log({ type, chunk });
           }
           break;
@@ -106,6 +104,7 @@ export default class Parser {
         case tokens.T_att_value_start:
         case tokens.T_att_equals:
         case tokens.T_att_value_end:
+        case tokens.T_tag_end:
           break;
         default:
           console.log({ type, chunk });
@@ -115,51 +114,57 @@ export default class Parser {
     return this.page as PageContent;
   }
 
-  private startTagStart(chunk: string): void {
+  private startTag(chunk: string): void {
+    this.insertPreviousNode();
     this.node.tag = chunk.slice(1);
-    this.tagStack.push(this.node.tag);
-    if (this.node.tag === this.exteriorTags.meta) {
+    this.node.nodeType = NodeType.StartTag;
+    this.tagStack.push({ tag: this.node.tag });
+    if (this.node.tag === exteriorTags.meta) {
       this.metaFirstAttribute = "";
     }
     if (
-      !this.exteriorTags.hasOwnProperty(this.node.tag) &&
-      this.bodyTags.hasOwnProperty(this.node.tag)
+      !exteriorTags.hasOwnProperty(this.node.tag) &&
+      !bodyTags.hasOwnProperty(this.node.tag)
     ) {
       console.log({ lastTag: this.node.tag });
     }
   }
 
   private endTag(): void {
+    this.insertPreviousNode();
     const currentTag = this.tagStack.pop();
     this.lastAttribute = "";
     this.metaFirstAttribute = "";
 
-    if (
-      currentTag &&
-      this.bodyTags.hasOwnProperty(currentTag) &&
-      this.node.tag
-    ) {
+    if (currentTag && bodyTags.hasOwnProperty(currentTag.tag)) {
       insertNode(
         this.page,
         {
-          tag: currentTag,
+          tag: currentTag.tag,
           parent: 0,
           left: 0,
           right: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          length: 0,
+          lineFeedCount: 0,
+          nodeType: NodeType.EndTag,
+          id: currentTag.id,
         },
         this.length,
       );
+      fixInsert(this.page, this.page.nodes.length - 1);
     }
   }
 
   private attributeName(chunk: string): void {
-    if (this.node.tag === this.exteriorTags.meta && !this.metaFirstAttribute) {
+    if (this.node.tag === exteriorTags.meta && !this.metaFirstAttribute) {
       this.metaFirstAttribute = this.lastAttribute;
     }
     this.lastAttribute = chunk;
     if (
-      !this.exteriorTags.hasOwnProperty(this.node.tag as string) &&
-      this.bodyTags.hasOwnProperty(this.node.tag as string)
+      !exteriorTags.hasOwnProperty(this.node.tag as string) &&
+      bodyTags.hasOwnProperty(this.node.tag as string)
     ) {
       console.log({ lastAttribute: this.lastAttribute });
     }
@@ -167,12 +172,12 @@ export default class Parser {
 
   private attributeValue(chunk: string): void {
     switch (this.node.tag) {
-      case this.exteriorTags.html:
+      case exteriorTags.html:
         if (this.lastAttribute === "lang") {
           this.page.language = chunk;
         }
         break;
-      case this.exteriorTags.meta:
+      case exteriorTags.meta:
         if (this.lastAttribute === "content") {
           if (this.metaFirstAttribute === "http-equiv") {
             this.page.charset = chunk.split("=").pop();
@@ -181,7 +186,7 @@ export default class Parser {
           }
         }
         break;
-      case this.exteriorTags.body:
+      case exteriorTags.body:
         if (this.lastAttribute === STYLE) {
           const items = chunk.split(";");
           const attributes: KeyValue = items.reduce(
@@ -205,6 +210,9 @@ export default class Parser {
               acc[this.getAttributeName(key)] = value;
               return acc;
             }, {});
+        } else if (this.lastAttribute === ID) {
+          this.node.id = chunk;
+          this.tagStack[this.tagStack.length - 1].id = chunk;
         } else {
           if (!this.node.properties) {
             this.node.properties = {};
@@ -218,37 +226,52 @@ export default class Parser {
   }
 
   private data(chunk: string): void {
-    if (
-      this.bodyTags.hasOwnProperty(this.node.tag as string) &&
-      this.tagStack[this.tagStack.length - 1] === this.node.tag
-    ) {
+    const lastTag = this.tagStack[this.tagStack.length - 1];
+    if (lastTag && bodyTags.hasOwnProperty(lastTag.tag)) {
+      this.insertPreviousNode();
       const contentInsert: ContentInsert = {
         content: chunk,
         offset: this.length,
       };
       this.length += chunk.length;
+      const node = {
+        nodeType: NodeType.Content,
+        leftCharCount: 0,
+        leftLineFeedCount: 0,
+        left: 0,
+        right: 0,
+        parent: 0,
+      };
       if (
         this.page.buffers.length === 0 ||
         this.page.buffers[this.page.buffers.length - 1].content.length >=
           MAX_BUFFER_LENGTH
       ) {
-        createNodeCreateBuffer(contentInsert, this.page, this.node);
+        createNodeCreateBuffer(
+          contentInsert,
+          this.page,
+          node,
+          this.page.nodes.length - 1,
+        );
       } else {
-        createNodeAppendToBuffer(contentInsert, this.page, this.node);
+        createNodeAppendToBuffer(contentInsert, this.page, node);
       }
+      fixInsert(this.page, this.page.nodes.length - 1);
       (this.page.buffers[
         this.page.buffers.length - 1
       ] as BufferMutable).isReadOnly = true;
+      this.node = {};
     } else {
       const t = this.tagStack[this.tagStack.length - 1];
       if (
-        !this.bodyTags.hasOwnProperty(t) &&
-        !this.exteriorTags.hasOwnProperty(t)
+        t &&
+        !bodyTags.hasOwnProperty(t.tag) &&
+        !exteriorTags.hasOwnProperty(t.tag)
       ) {
         console.log({
           type: "data",
           chunk,
-          tag: this.tagStack[this.tagStack.length - 1],
+          tag: this.tagStack[this.tagStack.length - 1].tag,
         });
       }
     }
@@ -264,5 +287,28 @@ export default class Parser {
       return acc;
     }, "");
     return newName;
+  }
+
+  private insertPreviousNode(): void {
+    if (
+      this.node.nodeType === NodeType.StartTag ||
+      this.node.nodeType === NodeType.EndTag
+    ) {
+      this.insertTag();
+    }
+  }
+
+  private insertTag(): void {
+    if (bodyTags.hasOwnProperty(this.node.tag as string)) {
+      this.node.length = 0;
+      this.node.lineFeedCount = 0;
+      this.node.leftCharCount = 0;
+      this.node.leftLineFeedCount = 0;
+      this.node.left = 0;
+      this.node.right = 0;
+      this.node.parent = 0;
+      insertNode(this.page, this.node, this.length);
+      fixInsert(this.page, this.page.nodes.length - 1);
+    }
   }
 }
