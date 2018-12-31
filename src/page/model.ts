@@ -173,7 +173,7 @@ export interface Node {
   /**
    * The type of tag for this node.
    */
-  readonly nodeType?: NodeType;
+  readonly nodeType: NodeType;
 
   /**
    * The HTML properties for this node's tag.

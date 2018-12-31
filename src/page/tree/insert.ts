@@ -5,6 +5,7 @@ import {
   NodeMutable,
   PageContent,
   PageContentMutable,
+  NodeType,
 } from "../model";
 import { leftRotate, rightRotate } from "./rotate";
 import {
@@ -88,7 +89,6 @@ export function fixInsert(page: PageContentMutable, x: number): void {
 
   while (
     page.nodes[x].parent !== SENTINEL_INDEX &&
-    page.nodes[page.nodes[x].parent].parent !== SENTINEL_INDEX &&
     x !== page.root &&
     page.nodes[page.nodes[x].parent].color === Color.Red
   ) {
@@ -312,11 +312,13 @@ function insertAtNodeExtremity(
  * Creates a new node, and appends the content to an existing buffer.
  * @param content The content to insert into the page.
  * @param page The page to insert the content into.
+ * @param indexToInsertAfter The index of the node to insert the new node after.
  */
 export function createNodeAppendToBuffer(
   content: ContentInsert,
   page: PageContentMutable,
   node?: NodeMutable,
+  indexToInsertAfter?: number,
 ): void {
   const oldBuffer = page.buffers[page.buffers.length - 1];
   const newContent = oldBuffer.content + content.content;
@@ -352,9 +354,11 @@ export function createNodeAppendToBuffer(
   };
 
   page.buffers[page.buffers.length - 1] = updatedBuffer;
-  page.previouslyInsertedNodeIndex = page.nodes.length;
-  page.previouslyInsertedNodeOffset = content.offset;
-  insertNode(page, newNode, content.offset);
+  if (newNode.nodeType === NodeType.Content) {
+    page.previouslyInsertedNodeIndex = page.nodes.length;
+    page.previouslyInsertedNodeOffset = content.offset;
+  }
+  insertNode(page, newNode, content.offset, indexToInsertAfter);
 }
 
 /**
@@ -397,19 +401,7 @@ export function createNodeCreateBuffer(
   page.previouslyInsertedNodeIndex = page.nodes.length;
   page.previouslyInsertedNodeOffset = content.offset;
   page.buffers.push(newBuffer);
-  if (indexToInsertAfter) {
-    const next = nextNode(page as PageContent, indexToInsertAfter);
-    if (next.index === 0) {
-      (page.nodes[indexToInsertAfter] as NodeMutable).right = page.nodes.length;
-      newNode.parent = indexToInsertAfter;
-    } else {
-      (page.nodes[next.index] as NodeMutable).left = page.nodes.length;
-      newNode.parent = next.index;
-    }
-    page.nodes.push(newNode as Node);
-  } else {
-    insertNode(page, newNode, content.offset);
-  }
+  insertNode(page, newNode, content.offset, indexToInsertAfter);
 }
 
 /**
@@ -417,13 +409,29 @@ export function createNodeCreateBuffer(
  * @param page The page/piece table.
  * @param newNode Reference to the newly created node. The node already exists inside `page.nodes`.
  * @param offset The offset of the new node.
+ * @param indexToInsertAfter The index of the node to insert the new node after.
  */
 export function insertNode(
   page: PageContentMutable,
   newNode: NodeMutable,
   offset: number,
+  indexToInsertAfter?: number,
 ): void {
   page.nodes.push(newNode as Node);
+
+  if (indexToInsertAfter) {
+    const next = nextNode(page as PageContent, indexToInsertAfter);
+    if (next.index === 0) {
+      (page.nodes[indexToInsertAfter] as NodeMutable).right =
+        page.nodes.length - 1;
+      newNode.parent = indexToInsertAfter;
+    } else {
+      (page.nodes[next.index] as NodeMutable).left = page.nodes.length - 1;
+      newNode.parent = next.index;
+    }
+    return;
+  }
+
   let prevIndex = SENTINEL_INDEX;
 
   let currentIndex = page.root;

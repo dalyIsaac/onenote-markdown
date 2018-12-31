@@ -1,4 +1,4 @@
-import { Color, NEWLINE, NodeType } from "../model";
+import { Color, NEWLINE, NodeType, PageContent } from "../model";
 import Parser from "./parser";
 import { SENTINEL } from "./tree";
 
@@ -68,6 +68,7 @@ Newline.`,
           nodeType: NodeType.Content,
         },
         {
+          color: Color.Red,
           parent: 2,
           left: 0,
           right: 0,
@@ -85,5 +86,236 @@ Newline.`,
       root: 2,
       title: "This is the title",
     });
+  });
+
+  test("Headings and paragraph tags", () => {
+    const html = `<html lang="en-NZ">
+                <head>
+                    <title>This is the title</title>
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                    <meta name="created" content="2018-09-03T14:08:00.0000000" />
+                </head>
+                <body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">
+                    <p id="p:{6cb59116-8e61-03a9-39ef-edf64004790d}{62}" style="margin-top:0pt;margin-bottom:0pt"><span style="font-weight:bold">Bold</span> text which has <span style="font-style:italic">italics</span> and <span style="text-decoration:underline">underlines</span></p>
+                </body>
+            </html>`;
+    const page = new Parser(html).parse();
+    const expectedPage: PageContent = {
+      buffers: [
+        {
+          content: `Bold text which has italics and underlines`,
+          isReadOnly: true,
+          lineStarts: [0],
+        },
+      ],
+      charset: "utf-8",
+      created: "2018-09-03T14:08:00.0000000",
+      fontFamily: "Calibri",
+      fontSize: "11pt",
+      language: "en-NZ",
+      newlineFormat: NEWLINE.LF,
+      nodes: [
+        SENTINEL,
+        {
+          // 1
+          color: Color.Black,
+          id: "p:{6cb59116-8e61-03a9-39ef-edf64004790d}{62}",
+          tag: "p",
+          styles: {
+            marginTop: "0pt",
+            marginBottom: "0pt",
+          },
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          nodeType: NodeType.StartTag,
+          parent: 2,
+          left: 0,
+          right: 0,
+        },
+        {
+          // 2
+          color: Color.Black,
+          tag: "span",
+          styles: {
+            fontWeight: "bold",
+          },
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          nodeType: NodeType.StartTag,
+          parent: 4,
+          left: 1,
+          right: 3,
+        },
+        {
+          // 3
+          color: Color.Black,
+          bufferIndex: 0,
+          start: { line: 0, column: 0 },
+          end: { line: 0, column: 4 },
+          length: 4,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          nodeType: NodeType.Content,
+          parent: 2,
+          left: 0,
+          right: 0,
+        },
+        {
+          // 4
+          color: Color.Black,
+          tag: "span",
+          nodeType: NodeType.EndTag,
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 4,
+          leftLineFeedCount: 0,
+          parent: 0,
+          left: 2,
+          right: 8,
+        },
+        {
+          // 5
+          color: Color.Black,
+          nodeType: NodeType.Content,
+          bufferIndex: 0,
+          start: { line: 0, column: 4 },
+          end: { line: 0, column: 20 },
+          length: 16,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          parent: 6,
+          left: 0,
+          right: 0,
+        },
+        {
+          // 6
+          color: Color.Red,
+          nodeType: NodeType.StartTag,
+          tag: "span",
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 16,
+          leftLineFeedCount: 0,
+          styles: {
+            fontStyle: "italic",
+          },
+          parent: 8,
+          left: 5,
+          right: 7,
+        },
+        {
+          // 7
+          bufferIndex: 0,
+          color: Color.Black,
+          nodeType: NodeType.Content,
+          start: { line: 0, column: 20 },
+          end: { line: 0, column: 27 },
+          length: 7,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          parent: 6,
+          left: 0,
+          right: 0,
+        },
+        {
+          // 8
+          color: Color.Black,
+          nodeType: NodeType.EndTag,
+          tag: "span",
+          parent: 4,
+          left: 6,
+          right: 10,
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 23,
+          leftLineFeedCount: 0,
+        },
+        {
+          // 9
+          color: Color.Black,
+          nodeType: NodeType.Content,
+          bufferIndex: 0,
+          length: 5,
+          start: { line: 0, column: 27 },
+          end: { line: 0, column: 32 },
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          parent: 10,
+          left: 0,
+          right: 0,
+        },
+        {
+          // 10
+          color: Color.Red,
+          nodeType: NodeType.StartTag,
+          tag: "span",
+          styles: {
+            textDecoration: "underline",
+          },
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 5,
+          leftLineFeedCount: 0,
+          parent: 8,
+          left: 9,
+          right: 12,
+        },
+        {
+          // 11
+          nodeType: NodeType.Content,
+          color: Color.Red,
+          bufferIndex: 0,
+          start: { line: 0, column: 32 },
+          end: { line: 0, column: 42 },
+          length: 10,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          parent: 12,
+          left: 0,
+          right: 0,
+        },
+        {
+          // 12
+          nodeType: NodeType.EndTag,
+          color: Color.Black,
+          tag: "span",
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 10,
+          leftLineFeedCount: 0,
+          parent: 10,
+          left: 11,
+          right: 13,
+        },
+        {
+          // 13
+          nodeType: NodeType.EndTag,
+          color: Color.Red,
+          tag: "p",
+          id: "p:{6cb59116-8e61-03a9-39ef-edf64004790d}{62}",
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          parent: 12,
+          left: 0,
+          right: 0,
+        },
+      ],
+      previouslyInsertedNodeIndex: 11,
+      previouslyInsertedNodeOffset: 32,
+      root: 4,
+      title: "This is the title",
+    };
+    expect(page).toEqual(expectedPage);
   });
 });

@@ -2,6 +2,7 @@ import { chunks, TokenizeResult, tokens } from "tiny-html-lexer";
 import { KeyValue } from "../../common";
 import {
   BufferMutable,
+  Color,
   NodeMutable,
   NodeType,
   PageContent,
@@ -135,24 +136,23 @@ export default class Parser {
     const currentTag = this.tagStack.pop();
     this.lastAttribute = "";
     this.metaFirstAttribute = "";
-
     if (currentTag && bodyTags.hasOwnProperty(currentTag.tag)) {
-      insertNode(
-        this.page,
-        {
-          tag: currentTag.tag,
-          parent: 0,
-          left: 0,
-          right: 0,
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 0,
-          lineFeedCount: 0,
-          nodeType: NodeType.EndTag,
-          id: currentTag.id,
-        },
-        this.length,
-      );
+      const newNode: NodeMutable = {
+        tag: currentTag.tag,
+        parent: 0,
+        left: 0,
+        right: 0,
+        leftCharCount: 0,
+        leftLineFeedCount: 0,
+        length: 0,
+        lineFeedCount: 0,
+        nodeType: NodeType.EndTag,
+        color: Color.Red,
+      };
+      if (currentTag.id) {
+        newNode.id = currentTag.id;
+      }
+      insertNode(this.page, newNode, this.length, this.page.nodes.length - 1);
       fixInsert(this.page, this.page.nodes.length - 1);
     }
   }
@@ -241,10 +241,12 @@ export default class Parser {
         left: 0,
         right: 0,
         parent: 0,
+        color: Color.Red,
       };
       if (
         this.page.buffers.length === 0 ||
-        this.page.buffers[this.page.buffers.length - 1].content.length >=
+        this.page.buffers[this.page.buffers.length - 1].content.length +
+          chunk.length >=
           MAX_BUFFER_LENGTH
       ) {
         createNodeCreateBuffer(
@@ -254,7 +256,12 @@ export default class Parser {
           this.page.nodes.length - 1,
         );
       } else {
-        createNodeAppendToBuffer(contentInsert, this.page, node);
+        createNodeAppendToBuffer(
+          contentInsert,
+          this.page,
+          node,
+          this.page.nodes.length - 1,
+        );
       }
       fixInsert(this.page, this.page.nodes.length - 1);
       (this.page.buffers[
@@ -307,8 +314,10 @@ export default class Parser {
       this.node.left = 0;
       this.node.right = 0;
       this.node.parent = 0;
-      insertNode(this.page, this.node, this.length);
+      this.node.color = Color.Red;
+      insertNode(this.page, this.node, this.length, this.page.nodes.length - 1);
       fixInsert(this.page, this.page.nodes.length - 1);
+      this.node = {};
     }
   }
 }
