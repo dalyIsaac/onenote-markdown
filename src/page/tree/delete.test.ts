@@ -1,4 +1,4 @@
-import { Color, NEWLINE, PageContentMutable } from "../model";
+import { Color, NEWLINE, NodeType, PageContentMutable } from "../model";
 import { getStartPage } from "../reducer.test";
 import { deleteContent, deleteNode } from "./delete";
 import { SENTINEL, SENTINEL_INDEX } from "./tree";
@@ -7,6 +7,11 @@ describe("page/tree/delete", () => {
   describe("delete node", () => {
     test("Scenario 1: Simple case", () => {
       const page: PageContentMutable = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [],
         previouslyInsertedNodeIndex: null,
         previouslyInsertedNodeOffset: null,
@@ -16,6 +21,7 @@ describe("page/tree/delete", () => {
           SENTINEL,
           {
             // u
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: {
               line: 0,
@@ -36,6 +42,7 @@ describe("page/tree/delete", () => {
           },
           {
             // v
+            nodeType: NodeType.Content,
             bufferIndex: 2,
             start: {
               line: 0,
@@ -55,6 +62,7 @@ describe("page/tree/delete", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 3,
             start: {
               line: 0,
@@ -74,6 +82,7 @@ describe("page/tree/delete", () => {
             right: 4,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 4,
             start: {
               line: 0,
@@ -95,6 +104,11 @@ describe("page/tree/delete", () => {
         ],
       };
       const expectedPage: PageContentMutable = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [],
         previouslyInsertedNodeIndex: null,
         previouslyInsertedNodeOffset: null,
@@ -104,6 +118,7 @@ describe("page/tree/delete", () => {
           SENTINEL,
           {
             // u
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: {
               line: 0,
@@ -124,6 +139,7 @@ describe("page/tree/delete", () => {
           },
           {
             // v
+            nodeType: NodeType.Content,
             bufferIndex: 2,
             start: {
               line: 0,
@@ -143,6 +159,7 @@ describe("page/tree/delete", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 3,
             start: {
               line: 0,
@@ -162,6 +179,7 @@ describe("page/tree/delete", () => {
             right: 4,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 4,
             start: {
               line: 0,
@@ -189,6 +207,11 @@ describe("page/tree/delete", () => {
     describe("Sibling s is black and at least one of s's children is red", () => {
       test("Scenario 2: Right right case", () => {
         const page: PageContentMutable = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -197,6 +220,7 @@ describe("page/tree/delete", () => {
           nodes: [
             SENTINEL,
             {
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -216,6 +240,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -235,6 +260,7 @@ describe("page/tree/delete", () => {
               right: 4,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -254,6 +280,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -273,6 +300,7 @@ describe("page/tree/delete", () => {
               right: 5,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 5,
               start: {
                 line: 0,
@@ -294,6 +322,11 @@ describe("page/tree/delete", () => {
           ],
         };
         const expectedPage: PageContentMutable = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -302,6 +335,7 @@ describe("page/tree/delete", () => {
           nodes: [
             SENTINEL,
             {
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -321,6 +355,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -340,6 +375,7 @@ describe("page/tree/delete", () => {
               right: 3,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -359,6 +395,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -378,6 +415,7 @@ describe("page/tree/delete", () => {
               right: 5,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 5,
               start: {
                 line: 0,
@@ -404,6 +442,11 @@ describe("page/tree/delete", () => {
 
       test("Scenario 3: Right left case", () => {
         const page: PageContentMutable = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -412,6 +455,7 @@ describe("page/tree/delete", () => {
           nodes: [
             SENTINEL,
             {
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -432,6 +476,7 @@ describe("page/tree/delete", () => {
             },
 
             {
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -452,6 +497,7 @@ describe("page/tree/delete", () => {
             },
 
             {
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -471,6 +517,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -492,6 +539,11 @@ describe("page/tree/delete", () => {
           ],
         };
         const expectedPage: PageContentMutable = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -500,6 +552,7 @@ describe("page/tree/delete", () => {
           nodes: [
             SENTINEL,
             {
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -519,6 +572,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -538,6 +592,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -557,6 +612,7 @@ describe("page/tree/delete", () => {
               right: 4,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -583,6 +639,11 @@ describe("page/tree/delete", () => {
 
       test("Scenario 4: Left left case", () => {
         const page: PageContentMutable = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -591,6 +652,7 @@ describe("page/tree/delete", () => {
           nodes: [
             SENTINEL,
             {
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -610,6 +672,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -629,6 +692,7 @@ describe("page/tree/delete", () => {
               right: 3,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -648,6 +712,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -667,6 +732,7 @@ describe("page/tree/delete", () => {
               right: 5,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 5,
               start: {
                 line: 0,
@@ -688,6 +754,11 @@ describe("page/tree/delete", () => {
           ],
         };
         const expectedPage: PageContentMutable = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -696,6 +767,7 @@ describe("page/tree/delete", () => {
           nodes: [
             SENTINEL,
             {
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -715,6 +787,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -734,6 +807,7 @@ describe("page/tree/delete", () => {
               right: 4,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -753,6 +827,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -772,6 +847,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 5,
               start: {
                 line: 0,
@@ -798,6 +874,11 @@ describe("page/tree/delete", () => {
 
       test("Scenario 5: Left right case", () => {
         const page: PageContentMutable = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -806,6 +887,7 @@ describe("page/tree/delete", () => {
           nodes: [
             SENTINEL,
             {
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -825,6 +907,7 @@ describe("page/tree/delete", () => {
               right: 2,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -844,6 +927,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -863,6 +947,7 @@ describe("page/tree/delete", () => {
               right: 4,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -884,6 +969,11 @@ describe("page/tree/delete", () => {
           ],
         };
         const expectedPage: PageContentMutable = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -892,6 +982,7 @@ describe("page/tree/delete", () => {
           nodes: [
             SENTINEL,
             {
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -911,6 +1002,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -930,6 +1022,7 @@ describe("page/tree/delete", () => {
               right: 3,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -949,6 +1042,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -976,6 +1070,11 @@ describe("page/tree/delete", () => {
 
     test("Scenario 6: Sibling s is black, and both its children are black", () => {
       const page: PageContentMutable = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [],
         previouslyInsertedNodeIndex: null,
         previouslyInsertedNodeOffset: null,
@@ -984,6 +1083,7 @@ describe("page/tree/delete", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: {
               line: 0,
@@ -1003,6 +1103,7 @@ describe("page/tree/delete", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 2,
             start: {
               line: 0,
@@ -1022,6 +1123,7 @@ describe("page/tree/delete", () => {
             right: 3,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 3,
             start: {
               line: 0,
@@ -1043,6 +1145,11 @@ describe("page/tree/delete", () => {
         ],
       };
       const expectedPage: PageContentMutable = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [],
         previouslyInsertedNodeIndex: null,
         previouslyInsertedNodeOffset: null,
@@ -1051,6 +1158,7 @@ describe("page/tree/delete", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: {
               line: 0,
@@ -1070,6 +1178,7 @@ describe("page/tree/delete", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 2,
             start: {
               line: 0,
@@ -1089,6 +1198,7 @@ describe("page/tree/delete", () => {
             right: 3,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 3,
             start: {
               line: 0,
@@ -1116,6 +1226,11 @@ describe("page/tree/delete", () => {
     describe("Sibling s is red", () => {
       test("Scenario 7: sibling s is right child of its parent", () => {
         const page: PageContentMutable = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -1124,6 +1239,7 @@ describe("page/tree/delete", () => {
           nodes: [
             SENTINEL,
             {
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -1143,6 +1259,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -1162,6 +1279,7 @@ describe("page/tree/delete", () => {
               right: 4,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -1181,6 +1299,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -1200,6 +1319,7 @@ describe("page/tree/delete", () => {
               right: 5,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 5,
               start: {
                 line: 0,
@@ -1221,6 +1341,11 @@ describe("page/tree/delete", () => {
           ],
         };
         const expectedPage: PageContentMutable = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -1229,6 +1354,7 @@ describe("page/tree/delete", () => {
           nodes: [
             SENTINEL,
             {
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -1248,6 +1374,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -1267,6 +1394,7 @@ describe("page/tree/delete", () => {
               right: 3,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -1286,6 +1414,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -1305,6 +1434,7 @@ describe("page/tree/delete", () => {
               right: 5,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 5,
               start: {
                 line: 0,
@@ -1331,6 +1461,11 @@ describe("page/tree/delete", () => {
 
       test("Scenario 8: sibling s is left child of its parent", () => {
         const page: PageContentMutable = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -1339,6 +1474,7 @@ describe("page/tree/delete", () => {
           nodes: [
             SENTINEL,
             {
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -1358,6 +1494,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -1377,6 +1514,7 @@ describe("page/tree/delete", () => {
               right: 3,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -1396,6 +1534,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -1415,6 +1554,7 @@ describe("page/tree/delete", () => {
               right: 5,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 5,
               start: {
                 line: 0,
@@ -1436,6 +1576,11 @@ describe("page/tree/delete", () => {
           ],
         };
         const expectedPage: PageContentMutable = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -1444,6 +1589,7 @@ describe("page/tree/delete", () => {
           nodes: [
             SENTINEL,
             {
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -1463,6 +1609,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -1482,6 +1629,7 @@ describe("page/tree/delete", () => {
               right: 4,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -1501,6 +1649,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -1520,6 +1669,7 @@ describe("page/tree/delete", () => {
               right: SENTINEL_INDEX,
             },
             {
+              nodeType: NodeType.Content,
               bufferIndex: 5,
               start: {
                 line: 0,
@@ -1547,6 +1697,11 @@ describe("page/tree/delete", () => {
 
     test("Scenario 9: delete root", () => {
       const page: PageContentMutable = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [],
         previouslyInsertedNodeIndex: null,
         previouslyInsertedNodeOffset: null,
@@ -1555,6 +1710,7 @@ describe("page/tree/delete", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: {
               line: 0,
@@ -1576,6 +1732,11 @@ describe("page/tree/delete", () => {
         ],
       };
       const expectedPage: PageContentMutable = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [],
         previouslyInsertedNodeIndex: null,
         previouslyInsertedNodeOffset: null,
@@ -1584,6 +1745,7 @@ describe("page/tree/delete", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: {
               line: 0,
@@ -1614,6 +1776,11 @@ describe("page/tree/delete", () => {
       describe("Scenario 1a: delete the content from an entire node", () => {
         test("Scenario 1a: Test 1", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -1625,6 +1792,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -1638,6 +1806,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -1656,6 +1825,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -1667,6 +1841,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -1680,6 +1855,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -1706,6 +1882,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1a: Test 2", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -1717,6 +1898,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -1730,6 +1912,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -1748,6 +1931,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -1759,6 +1947,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -1772,6 +1961,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -1798,6 +1988,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1a: Test 3", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -1809,6 +2004,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -1822,6 +2018,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -1840,6 +2037,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -1851,6 +2053,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -1864,6 +2067,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -1890,6 +2094,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1a: Test 4", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -1901,6 +2110,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -1914,6 +2124,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -1932,6 +2143,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -1943,6 +2159,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -1956,6 +2173,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -1984,6 +2202,11 @@ describe("page/tree/delete", () => {
       describe("Scenario 1b: delete from the start of a node to a point in the node", () => {
         test("Scenario 1b: Test 1", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -1995,6 +2218,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -2008,6 +2232,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2026,6 +2251,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2037,6 +2267,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 0 },
                 end: { line: 1, column: 1 },
@@ -2050,6 +2281,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2076,6 +2308,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1b: Test 2", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2087,6 +2324,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -2100,6 +2338,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2118,6 +2357,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2129,6 +2373,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 0 },
                 end: { line: 1, column: 1 },
@@ -2142,6 +2387,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2168,6 +2414,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1b: Test 3", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2179,6 +2430,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -2192,6 +2444,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2210,6 +2463,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2221,6 +2479,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 3 },
                 end: { line: 1, column: 1 },
@@ -2234,6 +2493,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2260,6 +2520,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1b: Test 4", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2271,6 +2536,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -2284,6 +2550,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2302,6 +2569,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2313,6 +2585,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 2 },
                 end: { line: 1, column: 1 },
@@ -2326,6 +2599,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2352,6 +2626,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1b: Test 5", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2363,6 +2642,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -2376,6 +2656,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2394,6 +2675,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2405,6 +2691,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -2418,6 +2705,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 2 },
                 end: { line: 1, column: 3 },
@@ -2444,6 +2732,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1b: Test 6", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2455,6 +2748,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -2468,6 +2762,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2486,6 +2781,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2497,6 +2797,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -2510,6 +2811,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 2 },
                 end: { line: 1, column: 3 },
@@ -2538,6 +2840,11 @@ describe("page/tree/delete", () => {
       describe("Scenario 1c: delete from a point in a node to the end of the node", () => {
         test("Scenario 1c: Test 1", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2549,6 +2856,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -2562,6 +2870,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2580,6 +2889,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2591,6 +2905,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 2 },
@@ -2604,6 +2919,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2630,6 +2946,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1c: Test 2", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2641,6 +2962,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -2654,6 +2976,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2672,6 +2995,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2683,6 +3011,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 3 },
@@ -2696,6 +3025,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2722,6 +3052,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1c: Test 3", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2733,6 +3068,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -2746,6 +3082,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2764,6 +3101,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2775,6 +3117,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 4 },
@@ -2788,6 +3131,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2814,6 +3158,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1c: Test 4", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndzef",
@@ -2825,6 +3174,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 2 },
@@ -2838,6 +3188,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 2 },
                 end: { line: 1, column: 4 },
@@ -2856,6 +3207,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndzef",
@@ -2867,6 +3223,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -2880,6 +3237,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 2 },
                 end: { line: 1, column: 4 },
@@ -2906,6 +3264,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1c: Test 5", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2917,6 +3280,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -2930,6 +3294,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2948,6 +3313,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -2959,6 +3329,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 2 },
@@ -2972,6 +3343,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -2998,6 +3370,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1c: Test 6", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -3009,6 +3386,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -3022,6 +3400,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -3040,6 +3419,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -3051,6 +3435,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -3064,6 +3449,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 2 },
@@ -3090,6 +3476,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1c: Test 7", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -3101,6 +3492,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -3114,6 +3506,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -3132,6 +3525,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -3143,6 +3541,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -3156,6 +3555,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 2 },
@@ -3184,6 +3584,11 @@ describe("page/tree/delete", () => {
       describe("Scenario 1d: delete from a point in a node to another point in the node", () => {
         test("Scenario 1d: Test 1", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -3195,6 +3600,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -3208,6 +3614,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -3226,6 +3633,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -3237,6 +3649,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 2 },
@@ -3250,6 +3663,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -3263,6 +3677,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 0 },
                 end: { line: 1, column: 1 },
@@ -3289,6 +3704,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1d: Test 2", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -3300,6 +3720,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -3313,6 +3734,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -3331,6 +3753,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -3342,6 +3769,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 3 },
@@ -3355,6 +3783,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -3368,6 +3797,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 0 },
                 end: { line: 1, column: 1 },
@@ -3394,6 +3824,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1d: Test 3", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -3405,6 +3840,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -3418,6 +3854,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -3436,6 +3873,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -3447,6 +3889,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 2 },
@@ -3460,6 +3903,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -3473,6 +3917,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 3 },
                 end: { line: 1, column: 1 },
@@ -3499,6 +3944,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1d: Test 4", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -3510,6 +3960,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -3523,6 +3974,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -3541,6 +3993,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: null,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -3552,6 +4009,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 2 },
@@ -3565,6 +4023,7 @@ describe("page/tree/delete", () => {
                 right: 3,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -3578,6 +4037,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 0 },
                 end: { line: 1, column: 1 },
@@ -3604,6 +4064,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1d: Test 5", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -3615,6 +4080,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -3628,6 +4094,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -3646,6 +4113,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: null,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndef",
@@ -3657,6 +4129,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 2 },
@@ -3670,6 +4143,7 @@ describe("page/tree/delete", () => {
                 right: 3,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 3 },
@@ -3683,6 +4157,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 3 },
                 end: { line: 1, column: 1 },
@@ -3709,6 +4184,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1d: Test 6", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndefgh",
@@ -3720,6 +4200,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -3733,6 +4214,7 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 5 },
@@ -3751,6 +4233,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: null,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndefgh",
@@ -3762,6 +4249,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -3775,6 +4263,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 2 },
@@ -3788,6 +4277,7 @@ describe("page/tree/delete", () => {
                 right: 3,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 4 },
                 end: { line: 1, column: 5 },
@@ -3814,6 +4304,11 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1d: Test 7", () => {
           const page: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndefgh",
@@ -3825,6 +4320,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -3838,6 +4334,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 5 },
@@ -3856,6 +4353,11 @@ describe("page/tree/delete", () => {
             previouslyInsertedNodeOffset: null,
           };
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 content: "abc\ndefgh",
@@ -3867,6 +4369,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 1 },
@@ -3880,6 +4383,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 1 },
                 end: { line: 1, column: 2 },
@@ -3893,6 +4397,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 4 },
                 end: { line: 1, column: 5 },
@@ -3924,6 +4429,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2a: Test 1", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -3943,6 +4453,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -3957,6 +4468,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -3971,6 +4483,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -3985,6 +4498,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -3999,6 +4513,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -4013,6 +4528,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -4027,6 +4543,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -4041,6 +4558,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -4055,6 +4573,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -4069,6 +4588,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -4083,6 +4603,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -4110,6 +4631,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2a: Test 2", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -4129,6 +4655,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -4143,6 +4670,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -4157,6 +4685,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -4171,6 +4700,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -4185,6 +4715,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -4199,6 +4730,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -4213,6 +4745,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -4227,6 +4760,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -4241,6 +4775,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -4255,6 +4790,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -4269,6 +4805,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -4296,6 +4833,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2a: Test 3", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -4315,6 +4857,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -4329,6 +4872,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -4343,6 +4887,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -4357,6 +4902,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -4371,6 +4917,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -4385,6 +4932,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -4399,6 +4947,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -4413,6 +4962,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -4427,6 +4977,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -4441,6 +4992,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -4455,6 +5007,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -4482,6 +5035,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2a: Test 4", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -4501,6 +5059,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -4515,6 +5074,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -4529,6 +5089,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -4543,6 +5104,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -4557,6 +5119,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -4571,6 +5134,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -4585,6 +5149,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -4599,6 +5164,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -4613,6 +5179,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -4627,6 +5194,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -4641,6 +5209,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -4668,6 +5237,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2a: Test 5", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -4687,6 +5261,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -4701,6 +5276,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -4715,6 +5291,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -4729,6 +5306,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -4743,6 +5321,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -4757,6 +5336,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -4771,6 +5351,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -4785,6 +5366,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -4799,6 +5381,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -4813,6 +5396,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -4827,6 +5411,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -4854,6 +5439,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2a: Test 6", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -4873,6 +5463,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -4887,6 +5478,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -4901,6 +5493,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -4915,6 +5508,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -4929,6 +5523,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -4943,6 +5538,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -4957,6 +5553,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -4971,6 +5568,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -4985,6 +5583,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -4999,6 +5598,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -5013,6 +5613,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -5040,6 +5641,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2a: Test 7", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -5059,6 +5665,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -5073,6 +5680,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -5087,6 +5695,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -5101,6 +5710,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -5115,6 +5725,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -5129,6 +5740,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -5143,6 +5755,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -5157,6 +5770,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -5171,6 +5785,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -5185,6 +5800,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -5199,6 +5815,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -5226,6 +5843,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2a: Test 8", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -5245,6 +5867,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -5259,6 +5882,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -5273,6 +5897,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -5287,6 +5912,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -5301,6 +5927,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -5315,6 +5942,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -5329,6 +5957,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -5343,6 +5972,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -5357,6 +5987,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -5371,6 +6002,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -5385,6 +6017,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -5414,6 +6047,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2b: Test 1", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -5433,6 +6071,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -5447,6 +6086,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -5461,6 +6101,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -5475,6 +6116,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -5489,6 +6131,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -5503,6 +6146,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -5517,6 +6161,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -5531,6 +6176,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 9 },
                 end: { line: 0, column: 12 },
@@ -5545,6 +6191,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -5559,6 +6206,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -5573,6 +6221,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -5600,6 +6249,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2b: Test 2", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -5618,6 +6272,7 @@ describe("page/tree/delete", () => {
             nodes: [
               SENTINEL,
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -5631,6 +6286,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -5644,6 +6300,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -5657,6 +6314,7 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
               {
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -5671,6 +6329,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 46 },
                 end: { line: 1, column: 47 },
@@ -5685,6 +6344,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -5699,6 +6359,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -5713,6 +6374,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -5727,6 +6389,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -5741,6 +6404,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -5755,6 +6419,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -5782,6 +6447,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2b: Test 3", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -5801,6 +6471,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -5815,6 +6486,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -5829,6 +6501,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 32 },
                 end: { line: 1, column: 42 },
@@ -5843,6 +6516,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -5857,6 +6531,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -5871,6 +6546,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -5885,6 +6561,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -5899,6 +6576,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -5913,6 +6591,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -5927,6 +6606,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -5941,6 +6621,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -5968,6 +6649,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2b: Test 4", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -5987,6 +6673,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -6001,6 +6688,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -6015,6 +6703,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -6029,6 +6718,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -6043,6 +6733,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -6057,6 +6748,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -6071,6 +6763,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -6085,6 +6778,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 9 },
                 end: { line: 0, column: 12 },
@@ -6099,6 +6793,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -6113,6 +6808,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -6127,6 +6823,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -6156,6 +6853,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2c: Test 1", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -6175,6 +6877,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 31 },
@@ -6189,6 +6892,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -6203,6 +6907,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -6217,6 +6922,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -6231,6 +6937,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -6245,6 +6952,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -6259,6 +6967,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -6273,6 +6982,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -6287,6 +6997,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -6301,6 +7012,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -6315,6 +7027,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -6342,6 +7055,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2c: Test 2", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -6361,6 +7079,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -6375,6 +7094,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -6389,6 +7109,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -6403,6 +7124,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 2 },
@@ -6417,6 +7139,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -6431,6 +7154,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -6445,6 +7169,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -6459,6 +7184,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -6473,6 +7199,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -6487,6 +7214,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -6501,6 +7229,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -6528,6 +7257,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2c: Test 3", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -6547,6 +7281,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -6561,6 +7296,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -6575,6 +7311,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -6589,6 +7326,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -6603,6 +7341,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 46 },
@@ -6617,6 +7356,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -6631,6 +7371,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -6645,6 +7386,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -6659,6 +7401,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -6673,6 +7416,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -6687,6 +7431,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -6714,6 +7459,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2c: Test 4", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -6733,6 +7483,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -6747,6 +7498,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -6761,6 +7513,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -6775,6 +7528,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -6789,6 +7543,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -6803,6 +7558,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -6817,6 +7573,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -6831,6 +7588,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -6845,6 +7603,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -6859,6 +7618,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 39 },
@@ -6873,6 +7633,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -6900,6 +7661,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2c: Test 5", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -6919,6 +7685,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -6933,6 +7700,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -6947,6 +7715,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -6961,6 +7730,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -6975,6 +7745,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -6989,6 +7760,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -7003,6 +7775,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -7017,6 +7790,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 9 },
@@ -7031,6 +7805,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -7045,6 +7820,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -7059,6 +7835,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -7086,6 +7863,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2c: Test 6", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -7105,6 +7887,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 21 },
@@ -7119,6 +7902,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -7133,6 +7917,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -7147,6 +7932,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -7161,6 +7947,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -7175,6 +7962,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -7189,6 +7977,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -7203,6 +7992,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -7217,6 +8007,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -7231,6 +8022,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -7245,6 +8037,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -7274,6 +8067,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2d: Test 1", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -7293,6 +8091,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 21 },
@@ -7307,6 +8106,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -7321,6 +8121,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 32 },
                 end: { line: 1, column: 42 },
@@ -7335,6 +8136,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -7349,6 +8151,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -7363,6 +8166,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -7377,6 +8181,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -7391,6 +8196,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -7405,6 +8211,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -7419,6 +8226,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -7433,6 +8241,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -7460,6 +8269,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2d: Test 2", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -7479,6 +8293,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 30 },
@@ -7493,6 +8308,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -7507,6 +8323,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 32 },
                 end: { line: 1, column: 42 },
@@ -7521,6 +8338,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -7535,6 +8353,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -7549,6 +8368,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -7563,6 +8383,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -7577,6 +8398,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -7591,6 +8413,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -7605,6 +8428,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -7619,6 +8443,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -7646,6 +8471,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2d: Test 3", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -7665,6 +8495,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -7679,6 +8510,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -7693,6 +8525,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -7707,6 +8540,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -7721,6 +8555,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 46 },
@@ -7735,6 +8570,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -7749,6 +8585,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -7763,6 +8600,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 8 },
                 end: { line: 0, column: 12 },
@@ -7777,6 +8615,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -7791,6 +8630,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -7805,6 +8645,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -7832,6 +8673,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2d: Test 4", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -7851,6 +8697,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -7865,6 +8712,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -7879,6 +8727,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -7893,6 +8742,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 2 },
@@ -7907,6 +8757,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -7921,6 +8772,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 5 },
                 end: { line: 0, column: 6 },
@@ -7935,6 +8787,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -7949,6 +8802,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 12 },
@@ -7963,6 +8817,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -7977,6 +8832,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 13 },
                 end: { line: 0, column: 45 },
@@ -7991,6 +8847,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },
@@ -8018,6 +8875,11 @@ describe("page/tree/delete", () => {
         test("Scenario 2d: Test 5", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            title: "",
+            charset: "",
+            created: "",
+            fontFamily: "",
+            fontSize: "",
             buffers: [
               {
                 isReadOnly: true,
@@ -8037,6 +8899,7 @@ describe("page/tree/delete", () => {
               SENTINEL,
               {
                 // 1
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
                 end: { line: 1, column: 26 },
@@ -8051,6 +8914,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 2
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 0 },
                 end: { line: 0, column: 1 },
@@ -8065,6 +8929,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 3
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 28 },
                 end: { line: 1, column: 42 },
@@ -8079,6 +8944,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 4
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 1 },
                 end: { line: 0, column: 4 },
@@ -8093,6 +8959,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 5
+                nodeType: NodeType.Content,
                 bufferIndex: 0,
                 start: { line: 1, column: 45 },
                 end: { line: 1, column: 47 },
@@ -8107,6 +8974,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 6
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 4 },
                 end: { line: 0, column: 6 },
@@ -8121,6 +8989,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 7
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 45 },
                 end: { line: 0, column: 46 },
@@ -8135,6 +9004,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 8
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 7 },
                 end: { line: 0, column: 8 },
@@ -8149,6 +9019,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 9
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 46 },
                 end: { line: 0, column: 47 },
@@ -8163,6 +9034,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 10
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 19 },
                 end: { line: 0, column: 45 },
@@ -8177,6 +9049,7 @@ describe("page/tree/delete", () => {
               },
               {
                 // 11
+                nodeType: NodeType.Content,
                 bufferIndex: 1,
                 start: { line: 0, column: 47 },
                 end: { line: 0, column: 48 },

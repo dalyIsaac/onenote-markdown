@@ -11,6 +11,7 @@ import {
   NodeMutable,
   PageContent,
   PageContentMutable,
+  NodeType,
 } from "../model";
 
 /**
@@ -297,6 +298,7 @@ export const SENTINEL_INDEX = 0;
  * The sentinel node of red-black trees.
  */
 export const SENTINEL: Node = {
+  nodeType: NodeType.Sentinel,
   bufferIndex: 0,
   start: { column: 0, line: 0 },
   end: { column: 0, line: 0 },
@@ -335,7 +337,10 @@ export function resetSentinel(page: PageContentMutable): void {
  * @param page The piece table/page.
  * @param x The index from which to find the minimum of that subtree.
  */
-export function treeMinimum(page: PageContent, x: number): NodePosition {
+export function treeMinimum(
+  page: PageContent | PageContentMutable,
+  x: number,
+): NodePosition {
   while (page.nodes[x].left !== SENTINEL_INDEX) {
     x = page.nodes[x].left;
   }
@@ -347,7 +352,10 @@ export function treeMinimum(page: PageContent, x: number): NodePosition {
  * @param page The piece table/page.
  * @param x The index from which to find the maximum of that subtree.
  */
-export function treeMaximum(page: PageContent, x: number): NodePosition {
+export function treeMaximum(
+  page: PageContent | PageContentMutable,
+  x: number,
+): NodePosition {
   while (page.nodes[x].right !== SENTINEL_INDEX) {
     x = page.nodes[x].right;
   }
@@ -389,7 +397,10 @@ export function updateTreeMetadata(
  * @param page The page/piece table.
  * @param currentNode The index of the current node in the `page.nodes` array.
  */
-export function nextNode(page: PageContent, currentNode: number): NodePosition {
+export function nextNode(
+  page: PageContent | PageContentMutable,
+  currentNode: number,
+): NodePosition {
   if (page.nodes[currentNode].right !== SENTINEL_INDEX) {
     return treeMinimum(page, page.nodes[currentNode].right);
   }
@@ -417,7 +428,10 @@ export function nextNode(page: PageContent, currentNode: number): NodePosition {
  * @param page The page/piece table.
  * @param currentNode The index of the current node in the `page.nodes` array.
  */
-export function prevNode(page: PageContent, currentNode: number): NodePosition {
+export function prevNode(
+  page: PageContent | PageContentMutable,
+  currentNode: number,
+): NodePosition {
   if (page.nodes[currentNode].left !== SENTINEL_INDEX) {
     return treeMaximum(page, page.nodes[currentNode].left);
   }

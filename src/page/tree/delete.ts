@@ -2,6 +2,7 @@ import {
   Color,
   Node,
   NodeMutable,
+  NodeType,
   PageContent,
   PageContentMutable,
 } from "../model";
@@ -84,7 +85,11 @@ export function deleteContent(
     (page.nodes[
       oldNodeStartPosition.nodeIndex
     ] as NodeMutable) = nodeBeforeContent;
-    insertNode(page, nodeAfterContent, deleteRange.startOffset);
+    insertNode(
+      page,
+      { ...nodeAfterContent, nodeType: NodeType.Content },
+      deleteRange.startOffset,
+    );
     fixInsert(page, page.nodes.length - 1);
   } else if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
     // delete from a point in a node to the end of another node
@@ -140,7 +145,8 @@ function updateNode(
   newNode.left = page.nodes[index].left;
   newNode.right = page.nodes[index].right;
   newNode.color = page.nodes[index].color;
-  page.nodes[index] = newNode;
+  newNode.nodeType = NodeType.Content;
+  page.nodes[index] = newNode as Node;
   recomputeTreeMetadata(page, index);
 }
 
@@ -151,7 +157,7 @@ function updateNode(
  * @param nodePosition The position of the old node before the content to delete.
  */
 function getNodeBeforeContent(
-  page: PageContent,
+  page: PageContent | PageContentMutable,
   deleteRange: ContentDelete,
   nodePosition: NodePositionOffset,
 ): Node {
@@ -197,7 +203,7 @@ function getNodeBeforeContent(
  * @param nodePosition The position of the old node after the content to delete.
  */
 function getNodeAfterContent(
-  page: PageContent,
+  page: PageContent | PageContentMutable,
   deleteRange: ContentDelete,
   nodePosition: NodePositionOffset,
 ): Node {

@@ -3,9 +3,9 @@ import {
   Color,
   Node,
   NodeMutable,
+  NodeType,
   PageContent,
   PageContentMutable,
-  NodeType,
 } from "../model";
 import { leftRotate, rightRotate } from "./rotate";
 import {
@@ -216,7 +216,7 @@ function insertAtEndPreviouslyInsertedNode(
     // scenario 2: cannot fit inside the previous buffer
     // creates a new node
     // creates a new buffer
-    createNodeCreateBuffer(content, page);
+    createNodeCreateBuffer(content, page, { nodeType: NodeType.Content });
   }
 }
 
@@ -252,6 +252,7 @@ function insertInsideNode(
     },
     length: firstPartContent.length,
     lineFeedCount: firstPartLineStarts.length - 1,
+    nodeType: NodeType.Content,
   };
 
   page.nodes[nodePosition.nodeIndex] = firstPartNode;
@@ -268,6 +269,7 @@ function insertInsideNode(
     parent: SENTINEL_INDEX,
     left: SENTINEL_INDEX,
     right: SENTINEL_INDEX,
+    nodeType: NodeType.Content,
   };
 
   insertNode(page, secondPartNode, content.offset);
@@ -299,12 +301,12 @@ function insertAtNodeExtremity(
     // scenario 3 and 5: it can fit inside the previous buffer
     // creates a new node
     // appends to the previous buffer
-    createNodeAppendToBuffer(content, page);
+    createNodeAppendToBuffer(content, page, { nodeType: NodeType.Content });
   } else {
     // scenario 4 and 6: it cannot fit inside the previous buffer
     // creates a new node
     // creates a new buffer
-    createNodeCreateBuffer(content, page);
+    createNodeCreateBuffer(content, page, { nodeType: NodeType.Content });
   }
 }
 

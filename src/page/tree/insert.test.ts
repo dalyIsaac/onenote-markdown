@@ -3,6 +3,7 @@ import {
   Color,
   NEWLINE,
   NodeMutable,
+  NodeType,
   PageContent,
   PageContentMutable,
 } from "../model";
@@ -24,6 +25,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: {
               line: 0,
@@ -80,6 +82,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: {
               line: 0,
@@ -111,6 +114,7 @@ describe("page/tree/insert", () => {
       });
       ((expectedPage.nodes[1] as NodeMutable) as NodeMutable).right = 2;
       expectedPage.nodes.push({
+        nodeType: NodeType.Content,
         bufferIndex: 1,
         start: {
           line: 0,
@@ -158,6 +162,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: {
               line: 0,
@@ -177,6 +182,7 @@ describe("page/tree/insert", () => {
             right: 3,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: { line: 0, column: 0 },
             end: { line: 0, column: 2 },
@@ -190,6 +196,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: { line: 0, column: 2 },
             end: { line: 0, column: 4 },
@@ -216,6 +223,7 @@ describe("page/tree/insert", () => {
       (expectedPage.nodes[1] as NodeMutable).leftCharCount = 6;
       (expectedPage.nodes[1] as NodeMutable).leftLineFeedCount = 1;
       expectedPage.nodes.push({
+        nodeType: NodeType.Content,
         bufferIndex: 1,
         start: { line: 0, column: 4 },
         end: { line: 1, column: 1 },
@@ -259,6 +267,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: {
               line: 0,
@@ -278,6 +287,7 @@ describe("page/tree/insert", () => {
             right: 2,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: { line: 0, column: 0 },
             end: { line: 0, column: 2 },
@@ -291,6 +301,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: { line: 0, column: 2 },
             end: { line: 0, column: 4 },
@@ -314,6 +325,7 @@ describe("page/tree/insert", () => {
       (expectedPage.buffers[1] as BufferMutable).content += "ij\nk";
       (expectedPage.buffers[1] as BufferMutable).lineStarts.push(7);
       expectedPage.nodes.push({
+        nodeType: NodeType.Content,
         bufferIndex: 1,
         start: { line: 0, column: 4 },
         end: { line: 1, column: 1 },
@@ -357,6 +369,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: {
               line: 0,
@@ -376,6 +389,7 @@ describe("page/tree/insert", () => {
             right: 3,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: { line: 0, column: 0 },
             end: { line: 0, column: 2 },
@@ -389,6 +403,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: { line: 0, column: 2 },
             end: { line: 0, column: 4 },
@@ -415,6 +430,7 @@ describe("page/tree/insert", () => {
         content: "ij\nkl",
       });
       expectedPage.nodes.push({
+        nodeType: NodeType.Content,
         bufferIndex: 2,
         start: { line: 0, column: 0 },
         end: { line: 1, column: 2 },
@@ -455,6 +471,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: {
               line: 0,
@@ -486,6 +503,7 @@ describe("page/tree/insert", () => {
         content: "ef",
       });
       expectedPage.nodes.push({
+        nodeType: NodeType.Content,
         bufferIndex: 1,
         start: { line: 0, column: 0 },
         end: { line: 0, column: 2 },
@@ -513,6 +531,11 @@ describe("page/tree/insert", () => {
 
     test("Scenario 5: insert at the start of the content", () => {
       const page: PageContent = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [
           {
             isReadOnly: true,
@@ -528,6 +551,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: {
               line: 0,
@@ -547,6 +571,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: { line: 0, column: 0 },
             end: { line: 0, column: 2 },
@@ -566,6 +591,11 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeOffset: 0,
       };
       const expectedPage: PageContent = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [
           {
             isReadOnly: true,
@@ -581,6 +611,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: {
               line: 0,
@@ -600,6 +631,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: { line: 0, column: 0 },
             end: { line: 0, column: 2 },
@@ -613,6 +645,7 @@ describe("page/tree/insert", () => {
             right: 1,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: { line: 0, column: 2 },
             end: { line: 1, column: 2 },
@@ -642,6 +675,11 @@ describe("page/tree/insert", () => {
 
     test("Scenario 6: insert at the start of the content (test 1)", () => {
       const page: PageContent = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [
           {
             isReadOnly: false,
@@ -652,6 +690,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: {
               line: 0,
@@ -671,6 +710,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 1, column: 1 },
             end: { line: 1, column: 3 },
@@ -690,6 +730,11 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeOffset: 0,
       };
       const expectedPage: PageContent = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [
           {
             isReadOnly: false,
@@ -705,6 +750,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: {
               line: 0,
@@ -724,6 +770,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 1, column: 1 },
             end: { line: 1, column: 3 },
@@ -737,6 +784,7 @@ describe("page/tree/insert", () => {
             right: 1,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: { line: 0, column: 0 },
             end: { line: 1, column: 2 },
@@ -766,6 +814,11 @@ describe("page/tree/insert", () => {
 
     test("Scenario 6: insert at the start of the content (test 2)", () => {
       const page: PageContent = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [
           {
             isReadOnly: true,
@@ -776,6 +829,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: {
               line: 0,
@@ -801,6 +855,11 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeOffset: null,
       };
       const expectedPage: PageContent = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [
           {
             isReadOnly: true,
@@ -816,6 +875,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: {
               line: 0,
@@ -835,6 +895,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: { line: 0, column: 0 },
             end: { line: 0, column: 2 },
@@ -864,6 +925,11 @@ describe("page/tree/insert", () => {
 
     test("Scenario 7: insert inside a node's content", () => {
       const page: PageContent = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [
           {
             isReadOnly: false,
@@ -874,6 +940,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 0, column: 0 },
             end: { line: 1, column: 1 },
@@ -887,6 +954,7 @@ describe("page/tree/insert", () => {
             right: 3,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 1, column: 1 },
             end: { line: 1, column: 3 },
@@ -900,6 +968,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 1, column: 3 },
             end: { line: 1, column: 5 },
@@ -919,6 +988,11 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeOffset: 7,
       };
       const expectedPage: PageContent = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [
           {
             isReadOnly: false,
@@ -929,6 +1003,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 0, column: 0 },
             end: { line: 0, column: 3 },
@@ -942,6 +1017,7 @@ describe("page/tree/insert", () => {
             right: 4,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 1, column: 1 },
             end: { line: 1, column: 3 },
@@ -955,6 +1031,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 1, column: 3 },
             end: { line: 1, column: 5 },
@@ -968,6 +1045,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 0, column: 3 },
             end: { line: 1, column: 1 },
@@ -981,6 +1059,7 @@ describe("page/tree/insert", () => {
             right: 3,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 1, column: 5 },
             end: { line: 2, column: 2 },
@@ -1010,6 +1089,11 @@ describe("page/tree/insert", () => {
 
     test("Scenario 8: insert inside a node's content (test 1)", () => {
       const page: PageContent = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [
           {
             isReadOnly: false,
@@ -1020,6 +1104,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 0, column: 0 },
             end: { line: 1, column: 1 },
@@ -1033,6 +1118,7 @@ describe("page/tree/insert", () => {
             right: 3,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 1, column: 1 },
             end: { line: 1, column: 3 },
@@ -1046,6 +1132,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 1, column: 3 },
             end: { line: 1, column: 5 },
@@ -1065,6 +1152,11 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeOffset: 7,
       };
       const expectedPage: PageContent = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [
           {
             isReadOnly: false,
@@ -1080,6 +1172,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 0, column: 0 },
             end: { line: 1, column: 1 },
@@ -1093,6 +1186,7 @@ describe("page/tree/insert", () => {
             right: 5,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 1, column: 1 },
             end: { line: 1, column: 3 },
@@ -1106,6 +1200,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 1, column: 3 },
             end: { line: 1, column: 4 },
@@ -1119,6 +1214,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 1, column: 4 },
             end: { line: 1, column: 5 },
@@ -1132,6 +1228,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: { line: 0, column: 0 },
             end: { line: 2, column: 2 },
@@ -1161,6 +1258,11 @@ describe("page/tree/insert", () => {
 
     test("Scenario 8: insert inside a node's content (test 2", () => {
       const page: PageContent = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [
           {
             isReadOnly: true,
@@ -1171,6 +1273,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 0, column: 0 },
             end: { line: 1, column: 1 },
@@ -1190,6 +1293,11 @@ describe("page/tree/insert", () => {
         previouslyInsertedNodeOffset: null,
       };
       const expectedPage: PageContent = {
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [
           {
             isReadOnly: true,
@@ -1205,6 +1313,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 0, column: 0 },
             end: { line: 0, column: 1 },
@@ -1218,6 +1327,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: { line: 0, column: 1 },
             end: { line: 1, column: 1 },
@@ -1231,6 +1341,7 @@ describe("page/tree/insert", () => {
             right: SENTINEL_INDEX,
           },
           {
+            nodeType: NodeType.Content,
             bufferIndex: 1,
             start: { line: 0, column: 0 },
             end: { line: 0, column: 2 },
@@ -1263,6 +1374,11 @@ describe("page/tree/insert", () => {
     describe("black uncle cases", () => {
       test("Scenario 1: Left left case", () => {
         const page: PageContent = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           root: 1,
           newlineFormat: NEWLINE.LF,
@@ -1272,6 +1388,7 @@ describe("page/tree/insert", () => {
             SENTINEL,
             {
               // g
+              nodeType: NodeType.Content,
               bufferIndex: 0,
               start: {
                 line: 0,
@@ -1292,6 +1409,7 @@ describe("page/tree/insert", () => {
             },
             {
               // p,
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -1312,6 +1430,7 @@ describe("page/tree/insert", () => {
             },
             {
               // u
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -1332,6 +1451,7 @@ describe("page/tree/insert", () => {
             },
             {
               // x
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -1352,6 +1472,7 @@ describe("page/tree/insert", () => {
             },
             {
               // T3
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -1373,6 +1494,11 @@ describe("page/tree/insert", () => {
           ],
         };
         const expectedPage: PageContent = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           root: 2,
           newlineFormat: NEWLINE.LF,
@@ -1382,6 +1508,7 @@ describe("page/tree/insert", () => {
             SENTINEL,
             {
               // g
+              nodeType: NodeType.Content,
               bufferIndex: 0,
               start: {
                 line: 0,
@@ -1402,6 +1529,7 @@ describe("page/tree/insert", () => {
             },
             {
               // p
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -1422,6 +1550,7 @@ describe("page/tree/insert", () => {
             },
             {
               // u
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -1442,6 +1571,7 @@ describe("page/tree/insert", () => {
             },
             {
               // x
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -1462,6 +1592,7 @@ describe("page/tree/insert", () => {
             },
             {
               // T3
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -1488,6 +1619,11 @@ describe("page/tree/insert", () => {
 
       test("Scenario 2: Left right case", () => {
         const page: PageContent = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -1497,6 +1633,7 @@ describe("page/tree/insert", () => {
             SENTINEL,
             {
               // g
+              nodeType: NodeType.Content,
               bufferIndex: 0,
               start: {
                 line: 0,
@@ -1517,6 +1654,7 @@ describe("page/tree/insert", () => {
             },
             {
               // p
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -1537,6 +1675,7 @@ describe("page/tree/insert", () => {
             },
             {
               // u
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -1557,6 +1696,7 @@ describe("page/tree/insert", () => {
             },
             {
               // T1
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -1577,6 +1717,7 @@ describe("page/tree/insert", () => {
             },
             {
               // x
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -1598,6 +1739,11 @@ describe("page/tree/insert", () => {
           ],
         };
         const expectedPage: PageContent = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -1607,6 +1753,7 @@ describe("page/tree/insert", () => {
             SENTINEL,
             {
               // g
+              nodeType: NodeType.Content,
               bufferIndex: 0,
               start: {
                 line: 0,
@@ -1627,6 +1774,7 @@ describe("page/tree/insert", () => {
             },
             {
               // p
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -1647,6 +1795,7 @@ describe("page/tree/insert", () => {
             },
             {
               // u
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -1667,6 +1816,7 @@ describe("page/tree/insert", () => {
             },
             {
               // T1
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -1687,6 +1837,7 @@ describe("page/tree/insert", () => {
             },
             {
               // x
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -1713,6 +1864,11 @@ describe("page/tree/insert", () => {
 
       test("Scenario 3: Right right case", () => {
         const page: PageContent = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -1722,6 +1878,7 @@ describe("page/tree/insert", () => {
             SENTINEL,
             {
               // g
+              nodeType: NodeType.Content,
               bufferIndex: 0,
               start: {
                 line: 0,
@@ -1742,6 +1899,7 @@ describe("page/tree/insert", () => {
             },
             {
               // u
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -1762,6 +1920,7 @@ describe("page/tree/insert", () => {
             },
             {
               // p
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -1782,6 +1941,7 @@ describe("page/tree/insert", () => {
             },
             {
               // T3
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -1802,6 +1962,7 @@ describe("page/tree/insert", () => {
             },
             {
               // x
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -1823,6 +1984,11 @@ describe("page/tree/insert", () => {
           ],
         };
         const expectedPage: PageContent = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -1832,6 +1998,7 @@ describe("page/tree/insert", () => {
             SENTINEL,
             {
               // g
+              nodeType: NodeType.Content,
               bufferIndex: 0,
               start: {
                 line: 0,
@@ -1852,6 +2019,7 @@ describe("page/tree/insert", () => {
             },
             {
               // u
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -1872,6 +2040,7 @@ describe("page/tree/insert", () => {
             },
             {
               // p
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -1892,6 +2061,7 @@ describe("page/tree/insert", () => {
             },
             {
               // T3
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -1912,6 +2082,7 @@ describe("page/tree/insert", () => {
             },
             {
               // x
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -1938,6 +2109,11 @@ describe("page/tree/insert", () => {
 
       test("Scenario 4: Right left case", () => {
         const page: PageContent = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -1947,6 +2123,7 @@ describe("page/tree/insert", () => {
             SENTINEL,
             {
               // g
+              nodeType: NodeType.Content,
               bufferIndex: 0,
               start: {
                 line: 0,
@@ -1967,6 +2144,7 @@ describe("page/tree/insert", () => {
             },
             {
               // u
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -1987,6 +2165,7 @@ describe("page/tree/insert", () => {
             },
             {
               // p
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -2007,6 +2186,7 @@ describe("page/tree/insert", () => {
             },
             {
               // x
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -2027,6 +2207,7 @@ describe("page/tree/insert", () => {
             },
             {
               // T5
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -2048,6 +2229,11 @@ describe("page/tree/insert", () => {
           ],
         };
         const expectedPage: PageContent = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           previouslyInsertedNodeIndex: null,
           previouslyInsertedNodeOffset: null,
@@ -2057,6 +2243,7 @@ describe("page/tree/insert", () => {
             SENTINEL,
             {
               // g
+              nodeType: NodeType.Content,
               bufferIndex: 0,
               start: {
                 line: 0,
@@ -2077,6 +2264,7 @@ describe("page/tree/insert", () => {
             },
             {
               // u
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -2097,6 +2285,7 @@ describe("page/tree/insert", () => {
             },
             {
               // p
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -2117,6 +2306,7 @@ describe("page/tree/insert", () => {
             },
             {
               // x
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -2137,6 +2327,7 @@ describe("page/tree/insert", () => {
             },
             {
               // T5
+              nodeType: NodeType.Content,
               bufferIndex: 4,
               start: {
                 line: 0,
@@ -2165,11 +2356,17 @@ describe("page/tree/insert", () => {
     describe("red uncle cases", () => {
       test("Right red uncle", () => {
         const page: PageContent = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           nodes: [
             SENTINEL,
             {
               // g
+              nodeType: NodeType.Content,
               bufferIndex: 0,
               start: {
                 line: 0,
@@ -2190,6 +2387,7 @@ describe("page/tree/insert", () => {
             },
             {
               // p
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -2210,6 +2408,7 @@ describe("page/tree/insert", () => {
             },
             {
               // u
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -2230,6 +2429,7 @@ describe("page/tree/insert", () => {
             },
             {
               // x
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -2255,11 +2455,17 @@ describe("page/tree/insert", () => {
           newlineFormat: NEWLINE.LF,
         };
         const expectedPage: PageContent = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           nodes: [
             SENTINEL,
             {
               // g
+              nodeType: NodeType.Content,
               bufferIndex: 0,
               start: {
                 line: 0,
@@ -2280,6 +2486,7 @@ describe("page/tree/insert", () => {
             },
             {
               // p
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -2300,6 +2507,7 @@ describe("page/tree/insert", () => {
             },
             {
               // u
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -2320,6 +2528,7 @@ describe("page/tree/insert", () => {
             },
             {
               // x
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -2350,11 +2559,17 @@ describe("page/tree/insert", () => {
 
       test("Left red uncle", () => {
         const page: PageContent = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           nodes: [
             SENTINEL,
             {
               // g
+              nodeType: NodeType.Content,
               bufferIndex: 0,
               start: {
                 line: 0,
@@ -2375,6 +2590,7 @@ describe("page/tree/insert", () => {
             },
             {
               // u
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -2395,6 +2611,7 @@ describe("page/tree/insert", () => {
             },
             {
               // p
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -2415,6 +2632,7 @@ describe("page/tree/insert", () => {
             },
             {
               // x
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -2440,11 +2658,17 @@ describe("page/tree/insert", () => {
           newlineFormat: NEWLINE.LF,
         };
         const expectedPage: PageContent = {
+          title: "",
+          charset: "",
+          created: "",
+          fontFamily: "",
+          fontSize: "",
           buffers: [],
           nodes: [
             SENTINEL,
             {
               // g
+              nodeType: NodeType.Content,
               bufferIndex: 0,
               start: {
                 line: 0,
@@ -2465,6 +2689,7 @@ describe("page/tree/insert", () => {
             },
             {
               // u
+              nodeType: NodeType.Content,
               bufferIndex: 1,
               start: {
                 line: 0,
@@ -2485,6 +2710,7 @@ describe("page/tree/insert", () => {
             },
             {
               // p
+              nodeType: NodeType.Content,
               bufferIndex: 2,
               start: {
                 line: 0,
@@ -2505,6 +2731,7 @@ describe("page/tree/insert", () => {
             },
             {
               // x
+              nodeType: NodeType.Content,
               bufferIndex: 3,
               start: {
                 line: 0,
@@ -2536,6 +2763,11 @@ describe("page/tree/insert", () => {
 
     test("Inserted node is root", () => {
       const getPage = (): PageContentMutable => ({
+        title: "",
+        charset: "",
+        created: "",
+        fontFamily: "",
+        fontSize: "",
         buffers: [
           {
             isReadOnly: false,
@@ -2547,6 +2779,7 @@ describe("page/tree/insert", () => {
         nodes: [
           SENTINEL,
           {
+            nodeType: NodeType.Content,
             bufferIndex: 0,
             start: {
               line: 0,

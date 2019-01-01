@@ -102,6 +102,7 @@ export enum NodeType {
   EndTag = 1,
   StartEndTag = 2,
   Content = 3,
+  Sentinel = -1,
 }
 
 //#region Node

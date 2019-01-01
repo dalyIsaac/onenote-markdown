@@ -7,12 +7,24 @@ import {
   REPLACE_CONTENT,
   ReplaceContentAction,
 } from "./actions";
-import { Color, NEWLINE, PageContent, PageContentMutable, StatePages } from "./model";
+import {
+  Color,
+  NEWLINE,
+  NodeType,
+  PageContent,
+  PageContentMutable,
+  StatePages,
+} from "./model";
 import pageReducer from "./reducer";
 import { LF, LF_CONTENT, pageReducerTest } from "./tree/createNewPage.test";
 import { SENTINEL, SENTINEL_INDEX } from "./tree/tree";
 
 export const getStartPage = (): PageContentMutable => ({
+  title: "",
+  charset: "",
+  created: "",
+  fontFamily: "",
+  fontSize: "",
   buffers: [
     {
       isReadOnly: true,
@@ -32,6 +44,7 @@ export const getStartPage = (): PageContentMutable => ({
     SENTINEL,
     {
       // 1
+      nodeType: NodeType.Content,
       bufferIndex: 0,
       start: { line: 0, column: 0 },
       end: { line: 1, column: 26 },
@@ -46,6 +59,7 @@ export const getStartPage = (): PageContentMutable => ({
     },
     {
       // 2
+      nodeType: NodeType.Content,
       bufferIndex: 1,
       start: { line: 0, column: 0 },
       end: { line: 0, column: 1 },
@@ -60,6 +74,7 @@ export const getStartPage = (): PageContentMutable => ({
     },
     {
       // 3
+      nodeType: NodeType.Content,
       bufferIndex: 0,
       start: { line: 1, column: 28 },
       end: { line: 1, column: 42 },
@@ -74,6 +89,7 @@ export const getStartPage = (): PageContentMutable => ({
     },
     {
       // 4
+      nodeType: NodeType.Content,
       bufferIndex: 1,
       start: { line: 0, column: 1 },
       end: { line: 0, column: 4 },
@@ -88,6 +104,7 @@ export const getStartPage = (): PageContentMutable => ({
     },
     {
       // 5
+      nodeType: NodeType.Content,
       bufferIndex: 0,
       start: { line: 1, column: 45 },
       end: { line: 1, column: 47 },
@@ -102,6 +119,7 @@ export const getStartPage = (): PageContentMutable => ({
     },
     {
       // 6
+      nodeType: NodeType.Content,
       bufferIndex: 1,
       start: { line: 0, column: 4 },
       end: { line: 0, column: 6 },
@@ -116,6 +134,7 @@ export const getStartPage = (): PageContentMutable => ({
     },
     {
       // 7
+      nodeType: NodeType.Content,
       bufferIndex: 1,
       start: { line: 0, column: 45 },
       end: { line: 0, column: 46 },
@@ -130,6 +149,7 @@ export const getStartPage = (): PageContentMutable => ({
     },
     {
       // 8
+      nodeType: NodeType.Content,
       bufferIndex: 1,
       start: { line: 0, column: 7 },
       end: { line: 0, column: 12 },
@@ -144,6 +164,7 @@ export const getStartPage = (): PageContentMutable => ({
     },
     {
       // 9
+      nodeType: NodeType.Content,
       bufferIndex: 1,
       start: { line: 0, column: 46 },
       end: { line: 0, column: 47 },
@@ -158,6 +179,7 @@ export const getStartPage = (): PageContentMutable => ({
     },
     {
       // 10
+      nodeType: NodeType.Content,
       bufferIndex: 1,
       start: { line: 0, column: 13 },
       end: { line: 0, column: 45 },
@@ -172,6 +194,7 @@ export const getStartPage = (): PageContentMutable => ({
     },
     {
       // 11
+      nodeType: NodeType.Content,
       bufferIndex: 1,
       start: { line: 0, column: 47 },
       end: { line: 0, column: 48 },
@@ -195,7 +218,7 @@ const PAGE_ID = "pageId";
 describe("page/reducer", () => {
   const getState = (): StatePages => {
     const state: StatePages = {
-      [PAGE_ID]: getStartPage(),
+      [PAGE_ID]: getStartPage() as PageContent,
     };
     return state;
   };
@@ -227,6 +250,11 @@ describe("page/reducer", () => {
       previouslyInsertedNodeIndex: 12,
       previouslyInsertedNodeOffset: 127,
       newlineFormat: NEWLINE.LF,
+      title: "",
+      charset: "",
+      created: "",
+      fontFamily: "",
+      fontSize: "",
       buffers: [
         {
           isReadOnly: true,
@@ -246,6 +274,7 @@ describe("page/reducer", () => {
         SENTINEL,
         {
           // 1
+          nodeType: NodeType.Content,
           bufferIndex: 0,
           start: { line: 0, column: 0 },
           end: { line: 1, column: 26 },
@@ -260,6 +289,7 @@ describe("page/reducer", () => {
         },
         {
           // 2
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 0 },
           end: { line: 0, column: 1 },
@@ -274,6 +304,7 @@ describe("page/reducer", () => {
         },
         {
           // 3
+          nodeType: NodeType.Content,
           bufferIndex: 0,
           start: { line: 1, column: 28 },
           end: { line: 1, column: 42 },
@@ -288,6 +319,7 @@ describe("page/reducer", () => {
         },
         {
           // 4
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 1 },
           end: { line: 0, column: 4 },
@@ -302,6 +334,7 @@ describe("page/reducer", () => {
         },
         {
           // 5
+          nodeType: NodeType.Content,
           bufferIndex: 0,
           start: { line: 1, column: 45 },
           end: { line: 1, column: 47 },
@@ -316,6 +349,7 @@ describe("page/reducer", () => {
         },
         {
           // 6
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 4 },
           end: { line: 0, column: 6 },
@@ -330,6 +364,7 @@ describe("page/reducer", () => {
         },
         {
           // 7
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 45 },
           end: { line: 0, column: 46 },
@@ -344,6 +379,7 @@ describe("page/reducer", () => {
         },
         {
           // 8
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 7 },
           end: { line: 0, column: 12 },
@@ -358,6 +394,7 @@ describe("page/reducer", () => {
         },
         {
           // 9
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 46 },
           end: { line: 0, column: 47 },
@@ -372,6 +409,7 @@ describe("page/reducer", () => {
         },
         {
           // 10
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 13 },
           end: { line: 0, column: 45 },
@@ -386,6 +424,7 @@ describe("page/reducer", () => {
         },
         {
           // 11
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 47 },
           end: { line: 0, column: 48 },
@@ -400,6 +439,7 @@ describe("page/reducer", () => {
         },
         {
           // 12
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           leftCharCount: 0,
           leftLineFeedCount: 0,
@@ -437,6 +477,11 @@ describe("page/reducer", () => {
     const result = pageReducer(state, action);
 
     const expectedPage: PageContent = {
+      title: "",
+      charset: "",
+      created: "",
+      fontFamily: "",
+      fontSize: "",
       buffers: [
         {
           isReadOnly: true,
@@ -456,6 +501,7 @@ describe("page/reducer", () => {
         SENTINEL,
         {
           // 1
+          nodeType: NodeType.Content,
           bufferIndex: 0,
           start: { line: 0, column: 0 },
           end: { line: 1, column: 26 },
@@ -470,6 +516,7 @@ describe("page/reducer", () => {
         },
         {
           // 2
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 0 },
           end: { line: 0, column: 1 },
@@ -484,6 +531,7 @@ describe("page/reducer", () => {
         },
         {
           // 3
+          nodeType: NodeType.Content,
           bufferIndex: 0,
           start: { line: 1, column: 28 },
           end: { line: 1, column: 42 },
@@ -498,6 +546,7 @@ describe("page/reducer", () => {
         },
         {
           // 4
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 1 },
           end: { line: 0, column: 4 },
@@ -512,6 +561,7 @@ describe("page/reducer", () => {
         },
         {
           // 5
+          nodeType: NodeType.Content,
           bufferIndex: 0,
           start: { line: 1, column: 45 },
           end: { line: 1, column: 47 },
@@ -526,6 +576,7 @@ describe("page/reducer", () => {
         },
         {
           // 6
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 4 },
           end: { line: 0, column: 6 },
@@ -540,6 +591,7 @@ describe("page/reducer", () => {
         },
         {
           // 7
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 45 },
           end: { line: 0, column: 46 },
@@ -554,6 +606,7 @@ describe("page/reducer", () => {
         },
         {
           // 8
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 7 },
           end: { line: 0, column: 12 },
@@ -568,6 +621,7 @@ describe("page/reducer", () => {
         },
         {
           // 9
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 46 },
           end: { line: 0, column: 47 },
@@ -582,6 +636,7 @@ describe("page/reducer", () => {
         },
         {
           // 10
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 13 },
           end: { line: 0, column: 45 },
@@ -596,6 +651,7 @@ describe("page/reducer", () => {
         },
         {
           // 11
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 47 },
           end: { line: 0, column: 48 },
@@ -633,6 +689,11 @@ describe("page/reducer", () => {
     const result = pageReducer(state, action);
 
     const expectedPage: PageContent = {
+      title: "",
+      charset: "",
+      created: "",
+      fontFamily: "",
+      fontSize: "",
       buffers: [
         {
           isReadOnly: true,
@@ -653,6 +714,7 @@ describe("page/reducer", () => {
         SENTINEL,
         {
           // 1
+          nodeType: NodeType.Content,
           bufferIndex: 0,
           start: { line: 0, column: 0 },
           end: { line: 1, column: 26 },
@@ -667,6 +729,7 @@ describe("page/reducer", () => {
         },
         {
           // 2
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 0 },
           end: { line: 0, column: 1 },
@@ -681,6 +744,7 @@ describe("page/reducer", () => {
         },
         {
           // 3
+          nodeType: NodeType.Content,
           bufferIndex: 0,
           start: { line: 1, column: 28 },
           end: { line: 1, column: 42 },
@@ -695,6 +759,7 @@ describe("page/reducer", () => {
         },
         {
           // 4
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 1 },
           end: { line: 0, column: 4 },
@@ -709,6 +774,7 @@ describe("page/reducer", () => {
         },
         {
           // 5
+          nodeType: NodeType.Content,
           bufferIndex: 0,
           start: { line: 1, column: 45 },
           end: { line: 1, column: 47 },
@@ -723,6 +789,7 @@ describe("page/reducer", () => {
         },
         {
           // 6
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 4 },
           end: { line: 0, column: 6 },
@@ -737,6 +804,7 @@ describe("page/reducer", () => {
         },
         {
           // 7
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 45 },
           end: { line: 0, column: 46 },
@@ -751,6 +819,7 @@ describe("page/reducer", () => {
         },
         {
           // 8
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 7 },
           end: { line: 0, column: 12 },
@@ -765,6 +834,7 @@ describe("page/reducer", () => {
         },
         {
           // 9
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 46 },
           end: { line: 0, column: 47 },
@@ -779,6 +849,7 @@ describe("page/reducer", () => {
         },
         {
           // 10
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 13 },
           end: { line: 0, column: 45 },
@@ -793,6 +864,7 @@ describe("page/reducer", () => {
         },
         {
           // 11
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           start: { line: 0, column: 47 },
           end: { line: 0, column: 48 },
@@ -807,6 +879,7 @@ describe("page/reducer", () => {
         },
         {
           // 12
+          nodeType: NodeType.Content,
           bufferIndex: 1,
           leftCharCount: 0,
           leftLineFeedCount: 0,
