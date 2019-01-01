@@ -549,4 +549,117 @@ Newline.`,
     };
     expect(page).toEqual(expectedPage);
   });
+
+  test("Citation", () => {
+    const html = `<html lang="en-NZ">
+                <head>
+                    <title>This is the title</title>
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                    <meta name="created" content="2018-09-03T14:08:00.0000000" />
+                </head>
+                <body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">
+                  <p id="p:{6cb59116-8e61-03a9-39ef-edf64004790d}{120}" style="margin-top:0pt;margin-bottom:0pt"><span style="background-color:yellow">Highlighted</span></p>
+                </body>
+            </html>`;
+    const page = new Parser(html).parse();
+    const expectedPage: PageContent = {
+      buffers: [
+        {
+          content: `Highlighted`,
+          isReadOnly: true,
+          lineStarts: [0],
+        },
+      ],
+      charset: "utf-8",
+      created: "2018-09-03T14:08:00.0000000",
+      fontFamily: "Calibri",
+      fontSize: "11pt",
+      language: "en-NZ",
+      newlineFormat: NEWLINE.LF,
+      nodes: [
+        SENTINEL,
+        {
+          // 1
+          color: Color.Black,
+          id: "p:{6cb59116-8e61-03a9-39ef-edf64004790d}{120}",
+          tag: "p",
+          styles: {
+            marginTop: "0pt",
+            marginBottom: "0pt",
+          },
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          nodeType: NodeType.StartTag,
+          parent: 2,
+          left: 0,
+          right: 0,
+        },
+        {
+          // 2
+          color: Color.Black,
+          tag: "span",
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          nodeType: NodeType.StartTag,
+          styles: {
+            backgroundColor: "yellow",
+          },
+          parent: 0,
+          left: 1,
+          right: 4,
+        },
+        {
+          // 3
+          color: Color.Red,
+          bufferIndex: 0,
+          start: { line: 0, column: 0 },
+          end: { line: 0, column: 11 },
+          length: 11,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          nodeType: NodeType.Content,
+          parent: 4,
+          left: 0,
+          right: 0,
+        },
+        {
+          // 4
+          color: Color.Black,
+          tag: "span",
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 11,
+          leftLineFeedCount: 0,
+          nodeType: NodeType.EndTag,
+          parent: 2,
+          left: 3,
+          right: 5,
+        },
+        {
+          // 5
+          color: Color.Red,
+          tag: "p",
+          id: "p:{6cb59116-8e61-03a9-39ef-edf64004790d}{120}",
+          nodeType: NodeType.EndTag,
+          parent: 4,
+          left: 0,
+          right: 0,
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+        },
+      ],
+      previouslyInsertedNodeIndex: 3,
+      previouslyInsertedNodeOffset: 0,
+      root: 2,
+      title: "This is the title",
+    };
+    expect(page).toEqual(expectedPage);
+  });
 });
