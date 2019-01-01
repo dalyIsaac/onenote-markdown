@@ -88,7 +88,7 @@ Newline.`,
     });
   });
 
-  test("Headings and paragraph tags", () => {
+  test("Paragraph tags with formatting", () => {
     const html = `<html lang="en-NZ">
                 <head>
                     <title>This is the title</title>
@@ -314,6 +314,151 @@ Newline.`,
       previouslyInsertedNodeIndex: 11,
       previouslyInsertedNodeOffset: 32,
       root: 4,
+      title: "This is the title",
+    };
+    expect(page).toEqual(expectedPage);
+  });
+
+  test("Headings", () => {
+    const html = `<html lang="en-NZ">
+                <head>
+                    <title>This is the title</title>
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                    <meta name="created" content="2018-09-03T14:08:00.0000000" />
+                </head>
+                <body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">
+                  <h1 id="h1:{6cb59116-8e61-03a9-39ef-edf64004790d}{69}" style="font-size:16pt;color:#1e4e79;margin-top:0pt;margin-bottom:0pt">This is <span style="font-weight:bold">heading</span> 1</h1>
+                </body>
+            </html>`;
+    const page = new Parser(html).parse();
+    const expectedPage: PageContent = {
+      buffers: [
+        {
+          content: `This is heading 1`,
+          isReadOnly: true,
+          lineStarts: [0],
+        },
+      ],
+      charset: "utf-8",
+      created: "2018-09-03T14:08:00.0000000",
+      fontFamily: "Calibri",
+      fontSize: "11pt",
+      language: "en-NZ",
+      newlineFormat: NEWLINE.LF,
+      nodes: [
+        SENTINEL,
+        {
+          // 1
+          color: Color.Black,
+          id: "h1:{6cb59116-8e61-03a9-39ef-edf64004790d}{69}",
+          tag: "h1",
+          styles: {
+            marginTop: "0pt",
+            marginBottom: "0pt",
+            fontSize: "16pt",
+            color: "#1e4e79",
+          },
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          nodeType: NodeType.StartTag,
+          parent: 2,
+          left: 0,
+          right: 0,
+        },
+        {
+          // 2
+          color: Color.Black,
+          bufferIndex: 0,
+          start: { line: 0, column: 0 },
+          end: { line: 0, column: 8 },
+          length: 8,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          nodeType: NodeType.Content,
+          parent: 0,
+          left: 1,
+          right: 4,
+        },
+        {
+          // 3
+          color: Color.Black,
+          tag: "span",
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          nodeType: NodeType.StartTag,
+          styles: {
+            fontWeight: "bold",
+          },
+          parent: 4,
+          left: 0,
+          right: 0,
+        },
+        {
+          // 4
+          color: Color.Red,
+          length: 7,
+          bufferIndex: 0,
+          start: { line: 0, column: 8 },
+          end: { line: 0, column: 15 },
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          nodeType: NodeType.Content,
+          parent: 2,
+          left: 3,
+          right: 6,
+        },
+        {
+          // 5
+          color: Color.Red,
+          tag: "span",
+          nodeType: NodeType.EndTag,
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          parent: 6,
+          left: 0,
+          right: 0,
+        },
+        {
+          // 6
+          color: Color.Black,
+          nodeType: NodeType.Content,
+          length: 2,
+          bufferIndex: 0,
+          start: { line: 0, column: 15 },
+          end: { line: 0, column: 17 },
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          parent: 4,
+          left: 5,
+          right: 7,
+        },
+        {
+          // 7
+          color: Color.Red,
+          tag: "h1",
+          nodeType: NodeType.EndTag,
+          id: "h1:{6cb59116-8e61-03a9-39ef-edf64004790d}{69}",
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          parent: 6,
+          left: 0,
+          right: 0,
+        },
+      ],
+      previouslyInsertedNodeIndex: 6,
+      previouslyInsertedNodeOffset: 15,
+      root: 2,
       title: "This is the title",
     };
     expect(page).toEqual(expectedPage);
