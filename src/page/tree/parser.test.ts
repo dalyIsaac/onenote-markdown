@@ -463,4 +463,90 @@ Newline.`,
     };
     expect(page).toEqual(expectedPage);
   });
+
+  test("Citation", () => {
+    const html = `<html lang="en-NZ">
+                <head>
+                    <title>This is the title</title>
+                    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+                    <meta name="created" content="2018-09-03T14:08:00.0000000" />
+                </head>
+                <body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">
+                  <cite id="cite:{6cb59116-8e61-03a9-39ef-edf64004790d}{105}" style="font-size:9pt;color:#595959;margin-top:0pt;margin-bottom:0pt">Citation</cite>
+                </body>
+            </html>`;
+    const page = new Parser(html).parse();
+    const expectedPage: PageContent = {
+      buffers: [
+        {
+          content: `Citation`,
+          isReadOnly: true,
+          lineStarts: [0],
+        },
+      ],
+      charset: "utf-8",
+      created: "2018-09-03T14:08:00.0000000",
+      fontFamily: "Calibri",
+      fontSize: "11pt",
+      language: "en-NZ",
+      newlineFormat: NEWLINE.LF,
+      nodes: [
+        SENTINEL,
+        {
+          // 1
+          color: Color.Red,
+          id: "cite:{6cb59116-8e61-03a9-39ef-edf64004790d}{105}",
+          tag: "cite",
+          styles: {
+            fontSize: "9pt",
+            marginTop: "0pt",
+            marginBottom: "0pt",
+            color: "#595959",
+          },
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          nodeType: NodeType.StartTag,
+          parent: 2,
+          left: 0,
+          right: 0,
+        },
+        {
+          // 2
+          color: Color.Black,
+          bufferIndex: 0,
+          start: { line: 0, column: 0 },
+          end: { line: 0, column: 8 },
+          length: 8,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          nodeType: NodeType.Content,
+          parent: 0,
+          left: 1,
+          right: 3,
+        },
+        {
+          // 3
+          color: Color.Red,
+          id: "cite:{6cb59116-8e61-03a9-39ef-edf64004790d}{105}",
+          tag: "cite",
+          length: 0,
+          lineFeedCount: 0,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          nodeType: NodeType.EndTag,
+          parent: 2,
+          left: 0,
+          right: 0,
+        },
+      ],
+      previouslyInsertedNodeIndex: 2,
+      previouslyInsertedNodeOffset: 0,
+      root: 2,
+      title: "This is the title",
+    };
+    expect(page).toEqual(expectedPage);
+  });
 });
