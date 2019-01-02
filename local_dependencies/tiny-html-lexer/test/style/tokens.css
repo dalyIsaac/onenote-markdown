@@ -1,0 +1,67 @@
+html, body {
+	color:white;
+	background:#202020;
+	font-family:Helvetica, Arial, Sans;
+}
+
+pre, code { 
+	font-family:Menlo, Monaco, Monospace;
+	font-size:12px;
+	line-height:16px;
+	tab-size:2;
+	padding:1px 4px;
+	margin:0 0 16px 0;
+}
+
+/* html colors */
+
+.comment-start,
+.comment-start-bogus,
+.comment-data,
+.comment-end,
+.comment-end-bogus,
+.space {
+	color:#746D74;
+}
+
+.attribute-value-start,
+.attribute-value-data,
+.attribute-value-end {
+	color: #8F9D6A;
+}
+
+.charRef-decimal,
+.charRef-hex,
+.charRef-named {
+	color: #DDF7AC;
+}
+
+.charRef-decimal,
+.charRef-hex,
+.charRef-named {
+	/* color:#E9784F; */
+}
+
+.startTag-start,
+.endTag-start,
+.tag-end,
+.tag-end-autoclose {
+	color:#B38243;
+}
+
+.attribute-equals,
+.attribute-name {
+	color: #D4BD7F;
+}
+
+
+
+/* .data,
+.rcdata,
+.rawtext,
+.plaintext */
+
+
+.unescaped {
+	background:#60315A;
+}
