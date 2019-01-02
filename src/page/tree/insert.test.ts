@@ -1,6 +1,7 @@
 import {
   BufferMutable,
   Color,
+  ContentNodeMutable,
   NEWLINE,
   NodeMutable,
   NodeType,
@@ -51,8 +52,8 @@ describe("page/tree/insert", () => {
       });
       const expectedPage = getPage();
       (expectedPage.buffers[0] as BufferMutable).content += "b";
-      (expectedPage.nodes[1] as NodeMutable) = {
-        ...(expectedPage.nodes[1] as NodeMutable),
+      (expectedPage.nodes[1] as ContentNodeMutable) = {
+        ...(expectedPage.nodes[1] as ContentNodeMutable),
         end: {
           line: 0,
           column: 2,

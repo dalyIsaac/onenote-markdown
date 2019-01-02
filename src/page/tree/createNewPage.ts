@@ -1,5 +1,5 @@
 import { OnenotePage } from "@microsoft/microsoft-graph-types";
-import { Buffer, Color, Node, PageContent } from "../model";
+import { Buffer, Color, ContentNode, NodeType, PageContent } from "../model";
 import {
   getLineStarts,
   getNewlineFormat,
@@ -22,7 +22,8 @@ export function createNewPage(receivedPage: OnenotePage): PageContent {
   const finalLineInitialCharIndex = buffer.lineStarts[finalLine];
   const finalCharColumn =
     receivedPage.content.length - finalLineInitialCharIndex;
-  const node: Node = {
+  const node: ContentNode = {
+    nodeType: NodeType.Content,
     bufferIndex: 0,
     start: { line: 0, column: 0 },
     end: { line: finalLine, column: finalCharColumn },
@@ -36,6 +37,11 @@ export function createNewPage(receivedPage: OnenotePage): PageContent {
     right: SENTINEL_INDEX,
   };
   return {
+    title: "",
+    charset: "",
+    fontFamily: "",
+    fontSize: "",
+    created: "",
     buffers: [buffer],
     newlineFormat,
     nodes: [SENTINEL, node],

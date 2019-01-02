@@ -108,24 +108,9 @@ export enum NodeType {
 //#region Node
 
 /**
- * Represents a "piece" inside the piece table.
+ * Represents a node inside the red-black tree.
  */
 export interface Node {
-  /**
-   * The index of the buffer which this node refers to.
-   */
-  readonly bufferIndex?: number;
-
-  /**
-   * The start cursor for this piece, within the buffer.
-   */
-  readonly start?: BufferCursor;
-
-  /**
-   * The end cursor for this piece, within the buffer.
-   */
-  readonly end?: BufferCursor;
-
   /**
    * The count of the number of characters in the left subtree of this node.
    */
@@ -167,14 +152,39 @@ export interface Node {
   readonly right: number;
 
   /**
-   * The HTML tag for this node.
-   */
-  readonly tag?: string;
-
-  /**
    * The type of tag for this node.
    */
   readonly nodeType: NodeType;
+}
+
+/**
+ * Represents a "piece" inside the piece table and red-black tree.
+ */
+export interface ContentNode extends Node {
+  /**
+   * The index of the buffer which this node refers to.
+   */
+  readonly bufferIndex: number;
+
+  /**
+   * The start cursor for this piece, within the buffer.
+   */
+  readonly start: BufferCursor;
+
+  /**
+   * The end cursor for this piece, within the buffer.
+   */
+  readonly end: BufferCursor;
+}
+
+/**
+ * Represents an HTML tag inside the red-black tree.
+ */
+export interface TagNode extends Node {
+  /**
+   * The HTML tag for this node.
+   */
+  readonly tag: string;
 
   /**
    * The HTML properties for this node's tag.
@@ -194,69 +204,79 @@ export interface Node {
 
 export interface NodeMutable {
   /**
-   * The index of the buffer which this node refers to.
-   */
-  bufferIndex?: number;
-
-  /**
-   * The start cursor for this piece, within the buffer.
-   */
-  start?: BufferCursor;
-
-  /**
-   * The end cursor for this piece, within the buffer.
-   */
-  end?: BufferCursor;
-
-  /**
    * The count of the number of characters in the left subtree of this node.
    */
-  leftCharCount?: number;
+  leftCharCount: number;
 
   /**
    * The count of the number of line feeds in the left subtree of this node.
    */
-  leftLineFeedCount?: number;
+  leftLineFeedCount: number;
 
   /**
    * The number of characters in this node/piece.
    */
-  length?: number;
+  length: number;
 
   /**
    * The count of the number of line feeds in this node/piece.
    */
-  lineFeedCount?: number;
+  lineFeedCount: number;
 
   /**
    * The color of this node in the tree.
    */
-  color?: Color;
+  color: Color;
 
   /**
    * The index of the parent to this node, in the piece table's `nodes` array.
    */
-  parent?: number;
+  parent: number;
 
   /**
    * The index of the left child to this node, in the piece table's `nodes` array.
    */
-  left?: number;
+  left: number;
 
   /**
    * The index of the right child to this node, in the piece table's `nodes` array.
    */
-  right?: number;
-
-  /**
-   * The HTML tag for this node.
-   */
-  tag?: string;
+  right: number;
 
   /**
    * The type of tag for this node.
    */
-  nodeType?: NodeType;
+  nodeType: NodeType;
+}
+
+/**
+ * Represents a "piece" inside the piece table and red-black tree.
+ */
+export interface ContentNodeMutable extends NodeMutable {
+  /**
+   * The index of the buffer which this node refers to.
+   */
+  bufferIndex: number;
+
+  /**
+   * The start cursor for this piece, within the buffer.
+   */
+  start: BufferCursor;
+
+  /**
+   * The end cursor for this piece, within the buffer.
+   */
+  end: BufferCursor;
+}
+
+/**
+ * Represents an HTML tag inside the red-black tree.
+ */
+export interface TagNodeMutable extends NodeMutable {
+  /**
+   * The HTML tag for this node.
+   */
+  tag: string;
 
   /**
    * The HTML properties for this node's tag.
@@ -295,7 +315,7 @@ export interface PageContent {
   /**
    * The nodes of the piece table. The first node is always the `SENTINEL` node.
    */
-  readonly nodes: ReadonlyArray<Node>;
+  readonly nodes: ReadonlyArray<ContentNode | TagNode>;
 
   /**
    * The index of the root node for the piece table for this page.
@@ -360,7 +380,7 @@ export interface PageContentMutable {
   /**
    * The nodes of the piece table. The first node is always the `SENTINEL` node.
    */
-  nodes: Node[];
+  nodes: Array<ContentNode | TagNode>;
 
   /**
    * The index of the root node for the piece table for this page.

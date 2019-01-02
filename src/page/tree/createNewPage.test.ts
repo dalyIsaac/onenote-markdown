@@ -4,7 +4,8 @@ import {
   Buffer,
   BufferCursor,
   Color,
-  Node,
+  ContentNode,
+  NodeType,
   PageContent,
   StatePages,
 } from "../model";
@@ -70,6 +71,11 @@ export const constructExpectedNewPageState = (
 ): StatePages => {
   const expectedState: StatePages = {
     [id]: {
+      title: "",
+      charset: "",
+      created: "",
+      fontFamily: "",
+      fontSize: "",
       buffers: [constructExpectedNewPageBuffer(content, newline)],
       newlineFormat: constructExpectedNewPageNewlineFormat(content, newline),
       nodes: [SENTINEL, constructExpectedNewPageNode(content, newline)],
@@ -126,7 +132,7 @@ const getExpectedLineStarts = (content: string, newline: string): number[] => {
 const constructExpectedNewPageNode = (
   content: string,
   newline: string,
-): Node => {
+): ContentNode => {
   const start: BufferCursor = { column: 0, line: 0 };
   const lines = content.split(newline);
   const rowIndex = lines.length - 1;
@@ -137,6 +143,7 @@ const constructExpectedNewPageNode = (
   };
 
   return {
+    nodeType: NodeType.Content,
     bufferIndex: 0,
     start,
     end,

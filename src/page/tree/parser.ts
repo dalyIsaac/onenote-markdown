@@ -3,10 +3,12 @@ import { KeyValue } from "../../common";
 import {
   BufferMutable,
   Color,
+  ContentNodeMutable,
   NodeMutable,
   NodeType,
   PageContent,
   PageContentMutable,
+  TagNodeMutable,
 } from "../model";
 import {
   ContentInsert,
@@ -52,7 +54,7 @@ export default class Parser {
   private content: string;
   private lastAttribute = "";
   private metaFirstAttribute = "";
-  private node: NodeMutable = {};
+  private node: ContentNodeMutable | TagNodeMutable | {} = {};
   private tagStack: Array<{ tag: string; id?: string }> = [];
   private length = 0;
   private writtenTo = false;
@@ -94,7 +96,7 @@ export default class Parser {
           this.attributeValue(chunk);
           break;
         case tokens.T_rcdata:
-          if (this.node.tag === exteriorTags.title) {
+          if ((this.node as TagNodeMutable).tag === exteriorTags.title) {
             this.page.title = chunk;
           } else {
             console.log({ type, chunk });
@@ -119,17 +121,17 @@ export default class Parser {
 
   private startTag(chunk: string): void {
     this.insertPreviousNode();
-    this.node.tag = chunk.slice(1);
-    this.node.nodeType = NodeType.StartTag;
-    this.tagStack.push({ tag: this.node.tag });
-    if (this.node.tag === exteriorTags.meta) {
+    (this.node as TagNodeMutable).tag = chunk.slice(1);
+    (this.node as TagNodeMutable).nodeType = NodeType.StartTag;
+    this.tagStack.push({ tag: (this.node as TagNodeMutable).tag });
+    if ((this.node as TagNodeMutable).tag === exteriorTags.meta) {
       this.metaFirstAttribute = "";
     }
     if (
-      !exteriorTags.hasOwnProperty(this.node.tag) &&
-      !bodyTags.hasOwnProperty(this.node.tag)
+      !exteriorTags.hasOwnProperty((this.node as TagNodeMutable).tag) &&
+      !bodyTags.hasOwnProperty((this.node as TagNodeMutable).tag)
     ) {
-      console.log({ lastTag: this.node.tag });
+      console.log({ lastTag: (this.node as TagNodeMutable).tag });
     }
   }
 
@@ -139,7 +141,7 @@ export default class Parser {
     this.lastAttribute = "";
     this.metaFirstAttribute = "";
     if (currentTag && bodyTags.hasOwnProperty(currentTag.tag)) {
-      const newNode: NodeMutable = {
+      const newNode: TagNodeMutable = {
         tag: currentTag.tag,
         parent: 0,
         left: 0,
@@ -160,20 +162,25 @@ export default class Parser {
   }
 
   private attributeName(chunk: string): void {
-    if (this.node.tag === exteriorTags.meta && !this.metaFirstAttribute) {
+    if (
+      (this.node as TagNodeMutable).tag === exteriorTags.meta &&
+      !this.metaFirstAttribute
+    ) {
       this.metaFirstAttribute = this.lastAttribute;
     }
     this.lastAttribute = chunk;
     if (
-      !exteriorTags.hasOwnProperty(this.node.tag as string) &&
-      bodyTags.hasOwnProperty(this.node.tag as string)
+      !exteriorTags.hasOwnProperty((this.node as TagNodeMutable)
+        .tag as string) &&
+      !bodyTags.hasOwnProperty((this.node as TagNodeMutable).tag as string)
     ) {
       console.log({ lastAttribute: this.lastAttribute });
     }
   }
 
   private attributeValue(chunk: string): void {
-    switch (this.node.tag) {
+    const node = this.node as TagNodeMutable;
+    switch (node.tag) {
       case exteriorTags.html:
         if (this.lastAttribute === "lang") {
           this.page.language = chunk;
@@ -205,7 +212,7 @@ export default class Parser {
         break;
       default:
         if (this.lastAttribute === STYLE) {
-          this.node.styles = chunk
+          node.styles = chunk
             .split(";")
             .reduce((acc: KeyValue, curr: string) => {
               const [key, value] = curr.trim().split(":");
@@ -213,15 +220,13 @@ export default class Parser {
               return acc;
             }, {});
         } else if (this.lastAttribute === ID) {
-          this.node.id = chunk;
+          node.id = chunk;
           this.tagStack[this.tagStack.length - 1].id = chunk;
         } else {
-          if (!this.node.properties) {
-            this.node.properties = {};
+          if (!node.properties) {
+            node.properties = {};
           }
-          this.node.properties[
-            this.getAttributeName(this.lastAttribute)
-          ] = chunk;
+          node.properties[this.getAttributeName(this.lastAttribute)] = chunk;
         }
         break;
     }
@@ -236,15 +241,6 @@ export default class Parser {
         offset: this.length,
       };
       this.length += chunk.length;
-      const node = {
-        nodeType: NodeType.Content,
-        leftCharCount: 0,
-        leftLineFeedCount: 0,
-        left: 0,
-        right: 0,
-        parent: 0,
-        color: Color.Red,
-      };
       if (
         this.page.buffers.length === 0 ||
         this.page.buffers[this.page.buffers.length - 1].content.length +
@@ -254,14 +250,12 @@ export default class Parser {
         createNodeCreateBuffer(
           contentInsert,
           this.page,
-          node,
           this.page.nodes.length - 1,
         );
       } else {
         createNodeAppendToBuffer(
           contentInsert,
           this.page,
-          node,
           this.page.nodes.length - 1,
         );
       }
@@ -299,25 +293,27 @@ export default class Parser {
   }
 
   private insertPreviousNode(): void {
+    const node = this.node as Node;
     if (
-      this.node.nodeType === NodeType.StartTag ||
-      this.node.nodeType === NodeType.EndTag
+      node.nodeType === NodeType.StartTag ||
+      node.nodeType === NodeType.EndTag
     ) {
       this.insertTag();
     }
   }
 
   private insertTag(): void {
-    if (bodyTags.hasOwnProperty(this.node.tag as string)) {
-      this.node.length = 0;
-      this.node.lineFeedCount = 0;
-      this.node.leftCharCount = 0;
-      this.node.leftLineFeedCount = 0;
-      this.node.left = 0;
-      this.node.right = 0;
-      this.node.parent = 0;
-      this.node.color = Color.Red;
-      insertNode(this.page, this.node, this.length, this.page.nodes.length - 1);
+    const node = this.node as TagNodeMutable;
+    if (bodyTags.hasOwnProperty(node.tag as string)) {
+      node.length = 0;
+      node.lineFeedCount = 0;
+      node.leftCharCount = 0;
+      node.leftLineFeedCount = 0;
+      node.left = 0;
+      node.right = 0;
+      node.parent = 0;
+      node.color = Color.Red;
+      insertNode(this.page, node, this.length, this.page.nodes.length - 1);
       fixInsert(this.page, this.page.nodes.length - 1);
       this.node = {};
     }

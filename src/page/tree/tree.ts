@@ -6,12 +6,15 @@ import {
   BufferCursor,
   CharValues,
   Color,
+  ContentNode,
+  ContentNodeMutable,
   NEWLINE,
   Node,
   NodeMutable,
+  NodeType,
   PageContent,
   PageContentMutable,
-  NodeType,
+  TagNode,
 } from "../model";
 
 /**
@@ -26,7 +29,7 @@ export interface NodePositionOffset {
   /**
    * Piece Index
    */
-  readonly node: Node;
+  readonly node: TagNode | ContentNode;
 
   /**
    * The index of the node inside the array.
@@ -48,7 +51,7 @@ export interface NodePositionOffset {
  * Contains a node and its index in a page/piece table.
  */
 export interface NodePosition {
-  readonly node: Node;
+  readonly node: ContentNode | TagNode;
   readonly index: number;
 }
 
@@ -60,7 +63,7 @@ export interface NodePosition {
  */
 export function findNodeAtOffset(
   offset: number,
-  nodes: ReadonlyArray<Node>,
+  nodes: ReadonlyArray<ContentNode | TagNode>,
   root: number,
 ): NodePositionOffset {
   let x = root;
@@ -168,16 +171,23 @@ export function getLineStarts(
  * @param nodeIndex The index of the node in `page.nodes`.
  * @param page The page/piece table.
  */
-export function getNodeContent(nodeIndex: number, page: PageContent): string {
+export function getNodeContent(
+  nodeIndex: number,
+  page: PageContent | PageContentMutable,
+): string {
   if (nodeIndex === SENTINEL_INDEX) {
     return "";
   }
-  const node = page.nodes[nodeIndex];
-  const buffer = page.buffers[node.bufferIndex];
-  const startOffset = getOffsetInBuffer(node.bufferIndex, node.start, page);
-  const endOffset = getOffsetInBuffer(node.bufferIndex, node.end, page);
-  const currentContent = buffer.content.slice(startOffset, endOffset);
-  return currentContent;
+  const node = page.nodes[nodeIndex] as ContentNode;
+  if (node.bufferIndex !== undefined) {
+    const buffer = page.buffers[node.bufferIndex];
+    const startOffset = getOffsetInBuffer(node.bufferIndex, node.start, page);
+    const endOffset = getOffsetInBuffer(node.bufferIndex, node.end, page);
+    const currentContent = buffer.content.slice(startOffset, endOffset);
+    return currentContent;
+  } else {
+    return "";
+  }
 }
 
 /**
@@ -189,7 +199,7 @@ export function getNodeContent(nodeIndex: number, page: PageContent): string {
 export function getOffsetInBuffer(
   bufferIndex: number,
   cursor: BufferCursor,
-  page: PageContent,
+  page: PageContent | PageContentMutable,
 ): number {
   const lineStarts = page.buffers[bufferIndex].lineStarts;
   return lineStarts[cursor.line] + cursor.column;
@@ -259,7 +269,10 @@ export function recomputeTreeMetadata(
  * @param page The page/piece table
  * @param index The index of the node in the `node` array of the page/piece table to find the character count for.
  */
-export function calculateCharCount(page: PageContent, index: number): number {
+export function calculateCharCount(
+  page: PageContent | PageContentMutable,
+  index: number,
+): number {
   if (index === SENTINEL_INDEX) {
     return 0;
   }
@@ -275,7 +288,7 @@ export function calculateCharCount(page: PageContent, index: number): number {
  * @param index The index of the node in the `node` array of the page/piece table to find the line feed count for.
  */
 export function calculateLineFeedCount(
-  page: PageContent,
+  page: PageContent | PageContentMutable,
   index: number,
 ): number {
   if (index === SENTINEL_INDEX) {
@@ -297,7 +310,7 @@ export const SENTINEL_INDEX = 0;
 /**
  * The sentinel node of red-black trees.
  */
-export const SENTINEL: Node = {
+export const SENTINEL: ContentNode = {
   nodeType: NodeType.Sentinel,
   bufferIndex: 0,
   start: { column: 0, line: 0 },
@@ -318,18 +331,18 @@ export const SENTINEL: Node = {
  * @param page The page/piece table which contains the `SENTINEL` node.
  */
 export function resetSentinel(page: PageContentMutable): void {
-  (SENTINEL as NodeMutable).bufferIndex = 0;
-  (SENTINEL as NodeMutable).start = { column: 0, line: 0 };
-  (SENTINEL as NodeMutable).end = { column: 0, line: 0 };
-  (SENTINEL as NodeMutable).leftCharCount = 0;
-  (SENTINEL as NodeMutable).leftLineFeedCount = 0;
-  (SENTINEL as NodeMutable).length = 0;
-  (SENTINEL as NodeMutable).lineFeedCount = 0;
-  (SENTINEL as NodeMutable).color = Color.Black;
-  (SENTINEL as NodeMutable).parent = SENTINEL_INDEX;
-  (SENTINEL as NodeMutable).left = SENTINEL_INDEX;
-  (SENTINEL as NodeMutable).right = SENTINEL_INDEX;
-  page.nodes[0] = SENTINEL;
+  (SENTINEL as ContentNodeMutable).bufferIndex = 0;
+  (SENTINEL as ContentNodeMutable).start = { column: 0, line: 0 };
+  (SENTINEL as ContentNodeMutable).end = { column: 0, line: 0 };
+  (SENTINEL as ContentNodeMutable).leftCharCount = 0;
+  (SENTINEL as ContentNodeMutable).leftLineFeedCount = 0;
+  (SENTINEL as ContentNodeMutable).length = 0;
+  (SENTINEL as ContentNodeMutable).lineFeedCount = 0;
+  (SENTINEL as ContentNodeMutable).color = Color.Black;
+  (SENTINEL as ContentNodeMutable).parent = SENTINEL_INDEX;
+  (SENTINEL as ContentNodeMutable).left = SENTINEL_INDEX;
+  (SENTINEL as ContentNodeMutable).right = SENTINEL_INDEX;
+  page.nodes[0] = SENTINEL as ContentNode;
 }
 
 /**

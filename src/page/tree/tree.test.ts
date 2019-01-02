@@ -1,8 +1,9 @@
 import {
   Color,
+  ContentNode,
   NEWLINE,
-  Node,
   NodeMutable,
+  NodeType,
   PageContentMutable,
 } from "../model";
 import {
@@ -17,11 +18,12 @@ import {
 } from "./tree";
 
 describe("page/tree/tree", () => {
-  const getFinalTree = (): { nodes: Node[]; root: number } => ({
+  const getFinalTree = (): { nodes: ContentNode[]; root: number } => ({
     nodes: [
       SENTINEL,
       {
         // 1
+        nodeType: NodeType.Content,
         bufferIndex: 1,
         start: { line: 0, column: 0 },
         end: { line: 2, column: 6 },
@@ -36,6 +38,7 @@ describe("page/tree/tree", () => {
       },
       {
         // 2
+        nodeType: NodeType.Content,
         bufferIndex: 0,
         start: { line: 0, column: 1 },
         end: { line: 0, column: 12 },
@@ -50,6 +53,7 @@ describe("page/tree/tree", () => {
       },
       {
         // 3
+        nodeType: NodeType.Content,
         bufferIndex: 0,
         start: { line: 0, column: 55 },
         end: { line: 0, column: 65 },
@@ -64,6 +68,7 @@ describe("page/tree/tree", () => {
       },
       {
         // 4
+        nodeType: NodeType.Content,
         bufferIndex: 0,
         start: { line: 0, column: 12 },
         end: { line: 0, column: 14 },
@@ -78,6 +83,7 @@ describe("page/tree/tree", () => {
       },
       {
         // 5
+        nodeType: NodeType.Content,
         bufferIndex: 0,
         start: { line: 0, column: 66 },
         end: { line: 0, column: 76 },
@@ -92,6 +98,7 @@ describe("page/tree/tree", () => {
       },
       {
         // 6
+        nodeType: NodeType.Content,
         bufferIndex: 1,
         start: { line: 2, column: 6 },
         end: { line: 2, column: 22 },
@@ -106,6 +113,7 @@ describe("page/tree/tree", () => {
       },
       {
         // 7
+        nodeType: NodeType.Content,
         bufferIndex: 0,
         start: { line: 0, column: 14 },
         end: { line: 0, column: 55 },

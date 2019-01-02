@@ -4,7 +4,7 @@
     "jsx-wrap-multiline": false,
     "jsx-alignment": true,
     "no-implicit-dependencies": false,
-    "object-literal-sort-keys": false,
+    "object-literal-sort-keys": [true, "match-declaration-order"],
     "variable-name": [
       true,
       "ban-keywords",

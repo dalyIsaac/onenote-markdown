@@ -1,12 +1,19 @@
-import { Color, NEWLINE, Node, PageContentMutable } from "../model";
+import {
+  Color,
+  ContentNode,
+  NEWLINE,
+  NodeType,
+  PageContentMutable,
+} from "../model";
 import { leftRotate, rightRotate } from "./rotate";
 import { SENTINEL, SENTINEL_INDEX } from "./tree";
 
 describe("page/tree/rotate", () => {
   const constructSimplePieceTableBeforeLeftRotate = (): PageContentMutable => {
-    const nodes: Node[] = [
+    const nodes: ContentNode[] = [
       SENTINEL,
       {
+        nodeType: NodeType.Content,
         bufferIndex: 0,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -20,6 +27,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 1,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -33,6 +41,7 @@ describe("page/tree/rotate", () => {
         right: 4,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 2,
         start: { column: 0, line: 0 },
         end: { column: 5, line: 1 },
@@ -46,6 +55,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 3,
         start: { column: 0, line: 0 },
         end: { column: 5, line: 1 },
@@ -59,6 +69,7 @@ describe("page/tree/rotate", () => {
         right: 5,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 4,
         start: { column: 0, line: 0 },
         end: { column: 5, line: 1 },
@@ -85,9 +96,10 @@ describe("page/tree/rotate", () => {
   const constructSimplePieceTableAfterRightRotate = constructSimplePieceTableBeforeLeftRotate;
 
   const constructSimplePieceTableAfterLeftRotate = (): PageContentMutable => {
-    const nodes: Node[] = [
+    const nodes: ContentNode[] = [
       SENTINEL,
       {
+        nodeType: NodeType.Content,
         bufferIndex: 0,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -101,6 +113,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 1,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -114,6 +127,7 @@ describe("page/tree/rotate", () => {
         right: 3,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 2,
         start: { column: 0, line: 0 },
         end: { column: 5, line: 1 },
@@ -127,6 +141,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 3,
         start: { column: 0, line: 0 },
         end: { column: 5, line: 1 },
@@ -140,6 +155,7 @@ describe("page/tree/rotate", () => {
         right: 5,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 4,
         start: { column: 0, line: 0 },
         end: { column: 5, line: 1 },
@@ -166,9 +182,10 @@ describe("page/tree/rotate", () => {
   const constructSimplePieceTableBeforeRightRotate = constructSimplePieceTableAfterLeftRotate;
 
   const constructComplexPieceTableBeforeLeftRotate = (): PageContentMutable => {
-    const nodes: Node[] = [
+    const nodes: ContentNode[] = [
       SENTINEL,
       {
+        nodeType: NodeType.Content,
         bufferIndex: 0,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -182,6 +199,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 1,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -195,6 +213,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 2,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -208,6 +227,7 @@ describe("page/tree/rotate", () => {
         right: 4,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 3,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -221,6 +241,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 4,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -234,6 +255,7 @@ describe("page/tree/rotate", () => {
         right: 7,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 5,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -247,6 +269,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 6,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -260,6 +283,7 @@ describe("page/tree/rotate", () => {
         right: 11,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 7,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -273,6 +297,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 8,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -286,6 +311,7 @@ describe("page/tree/rotate", () => {
         right: 10,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 9,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -299,6 +325,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 10,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -312,6 +339,7 @@ describe("page/tree/rotate", () => {
         right: 12,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 11,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -325,6 +353,7 @@ describe("page/tree/rotate", () => {
         right: 14,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 12,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -338,6 +367,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 13,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -364,9 +394,10 @@ describe("page/tree/rotate", () => {
   const constructComplexPieceTableAfterRightRotate = constructComplexPieceTableBeforeLeftRotate;
 
   const constructComplexPieceTableAfterLeftRotate = (): PageContentMutable => {
-    const nodes: Node[] = [
+    const nodes: ContentNode[] = [
       SENTINEL,
       {
+        nodeType: NodeType.Content,
         bufferIndex: 0,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -380,6 +411,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 1,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -393,6 +425,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 2,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -406,6 +439,7 @@ describe("page/tree/rotate", () => {
         right: 4,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 3,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -419,6 +453,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 4,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -432,6 +467,7 @@ describe("page/tree/rotate", () => {
         right: 11,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 5,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -445,6 +481,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 6,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -458,6 +495,7 @@ describe("page/tree/rotate", () => {
         right: 9,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 7,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -471,6 +509,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 8,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -484,6 +523,7 @@ describe("page/tree/rotate", () => {
         right: 10,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 9,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -497,6 +537,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 10,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -510,6 +551,7 @@ describe("page/tree/rotate", () => {
         right: 12,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 11,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -523,6 +565,7 @@ describe("page/tree/rotate", () => {
         right: 14,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 12,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -536,6 +579,7 @@ describe("page/tree/rotate", () => {
         right: SENTINEL_INDEX,
       },
       {
+        nodeType: NodeType.Content,
         bufferIndex: 13,
         start: { column: 0, line: 0 },
         end: { column: 10, line: 2 },
@@ -566,6 +610,7 @@ describe("page/tree/rotate", () => {
     nodes: [
       SENTINEL,
       {
+        nodeType: NodeType.Content,
         bufferIndex: 0,
         start: { column: 0, line: 0 },
         end: { column: 0, line: 0 },

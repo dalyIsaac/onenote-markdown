@@ -1,10 +1,12 @@
 import {
   Color,
+  ContentNode,
   Node,
   NodeMutable,
   NodeType,
   PageContent,
   PageContentMutable,
+  TagNode,
 } from "../model";
 import { fixInsert, insertNode } from "./insert";
 import { leftRotate, rightRotate } from "./rotate";
@@ -50,7 +52,7 @@ export function deleteContent(
     oldNodeStartPosition,
   );
   const deleteLength = deleteRange.endOffset - deleteRange.startOffset;
-  let nodeAfterContent: Node;
+  let nodeAfterContent: ContentNode;
   if (
     oldNodeStartPosition.remainder + deleteLength <=
     oldNodeStartPosition.node.length
@@ -85,11 +87,7 @@ export function deleteContent(
     (page.nodes[
       oldNodeStartPosition.nodeIndex
     ] as NodeMutable) = nodeBeforeContent;
-    insertNode(
-      page,
-      { ...nodeAfterContent, nodeType: NodeType.Content },
-      deleteRange.startOffset,
-    );
+    insertNode(page, nodeAfterContent, deleteRange.startOffset);
     fixInsert(page, page.nodes.length - 1);
   } else if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
     // delete from a point in a node to the end of another node
@@ -146,7 +144,7 @@ function updateNode(
   newNode.right = page.nodes[index].right;
   newNode.color = page.nodes[index].color;
   newNode.nodeType = NodeType.Content;
-  page.nodes[index] = newNode as Node;
+  page.nodes[index] = newNode as ContentNode | TagNode;
   recomputeTreeMetadata(page, index);
 }
 
@@ -161,12 +159,11 @@ function getNodeBeforeContent(
   deleteRange: ContentDelete,
   nodePosition: NodePositionOffset,
 ): Node {
+  const node = nodePosition.node as ContentNode;
   // "local" offsets refer to local within the buffer
   const localStartOffset =
-    page.buffers[nodePosition.node.bufferIndex].lineStarts[
-      nodePosition.node.start.line
-    ] +
-    nodePosition.node.start.column +
+    page.buffers[node.bufferIndex].lineStarts[node.start.line] +
+    node.start.column +
     nodePosition.remainder;
   const deletedLength = deleteRange.endOffset - deleteRange.startOffset;
   const localEndOffset = localStartOffset + deletedLength + 1;
@@ -179,14 +176,14 @@ function getNodeBeforeContent(
     localStartOffset,
     localEndOffset,
   );
-  const nodeBeforeContent: Node = {
-    ...nodePosition.node,
+  const nodeBeforeContent: ContentNode = {
+    ...node,
     end: {
       line:
         lineFeedCountBeforeNodeStart + lineFeedCountAfterNodeStartBeforeStart,
       column:
         localStartOffset -
-        page.buffers[nodePosition.node.bufferIndex].lineStarts[
+        page.buffers[node.bufferIndex].lineStarts[
           lineFeedCountBeforeNodeStart + lineFeedCountAfterNodeStartBeforeStart
         ],
     },
@@ -206,12 +203,12 @@ function getNodeAfterContent(
   page: PageContent | PageContentMutable,
   deleteRange: ContentDelete,
   nodePosition: NodePositionOffset,
-): Node {
+): ContentNode {
+  const node = nodePosition.node as ContentNode;
   // localStartOffset is the index of nodePosition.startOffset inside the buffer
   const localStartOffset =
-    page.buffers[nodePosition.node.bufferIndex].lineStarts[
-      nodePosition.node.start.line
-    ] + nodePosition.node.start.column;
+    page.buffers[node.bufferIndex].lineStarts[node.start.line] +
+    node.start.column;
   const deletedLength = deleteRange.endOffset - deleteRange.startOffset;
 
   const firstSection = nodePosition.nodeStartOffset - deleteRange.startOffset;
@@ -220,9 +217,7 @@ function getNodeAfterContent(
   const localEndOffset = localStartOffset + secondSection + 1;
 
   const length =
-    nodePosition.nodeStartOffset +
-    nodePosition.node.length -
-    deleteRange.endOffset;
+    nodePosition.nodeStartOffset + node.length - deleteRange.endOffset;
   const {
     lineFeedCountAfterNodeStartBeforeStart,
     lineFeedCountBetweenOffset,
@@ -233,18 +228,17 @@ function getNodeAfterContent(
     localEndOffset + length,
   );
   const nodeAfterContentStartLine =
-    nodePosition.node.start.line + lineFeedCountAfterNodeStartBeforeStart;
+    node.start.line + lineFeedCountAfterNodeStartBeforeStart;
   const lineStartOffset =
-    page.buffers[nodePosition.node.bufferIndex].lineStarts[
-      nodeAfterContentStartLine
-    ];
-  const nodeAfterContent: Node = {
-    bufferIndex: nodePosition.node.bufferIndex,
+    page.buffers[node.bufferIndex].lineStarts[nodeAfterContentStartLine];
+  const nodeAfterContent: ContentNode = {
+    nodeType: NodeType.Content,
+    bufferIndex: node.bufferIndex,
     start: {
       line: nodeAfterContentStartLine,
       column: localEndOffset - lineStartOffset - 1,
     },
-    end: nodePosition.node.end,
+    end: node.end,
     length,
     lineFeedCount: lineFeedCountBetweenOffset,
     leftCharCount: 0,
@@ -574,7 +568,7 @@ function fixDelete(page: PageContentMutable, x: number): void {
  * @param endLocalOffset The logical offset inside the entire piece table.
  */
 function getLineFeedCountsForOffsets(
-  page: PageContent,
+  page: PageContent | PageContentMutable,
   nodePosition: NodePositionOffset,
   startLocalOffset: number,
   endLocalOffset: number,
@@ -584,11 +578,11 @@ function getLineFeedCountsForOffsets(
   lineFeedCountBetweenOffset: number;
   lineFeedCountAfterEnd: number;
 } {
-  const buffer = page.buffers[nodePosition.node.bufferIndex];
+  const node = nodePosition.node as ContentNode;
+  const buffer = page.buffers[node.bufferIndex];
   const nodeStartOffset =
-    page.buffers[nodePosition.node.bufferIndex].lineStarts[
-      nodePosition.node.start.line
-    ] + nodePosition.node.start.column;
+    page.buffers[node.bufferIndex].lineStarts[node.start.line] +
+    node.start.column;
   let lineFeedCountBeforeNodeStart = 0;
   let lineFeedCountAfterNodeStartBeforeStart = 0;
   let lineFeedCountBetweenOffset = 0;

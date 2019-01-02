@@ -1,11 +1,14 @@
 import {
   Buffer,
   Color,
+  ContentNode,
+  ContentNodeMutable,
   Node,
   NodeMutable,
   NodeType,
   PageContent,
   PageContentMutable,
+  TagNodeMutable,
 } from "../model";
 import { leftRotate, rightRotate } from "./rotate";
 import {
@@ -198,8 +201,8 @@ function insertAtEndPreviouslyInsertedNode(
       lineStarts: getLineStarts(newContent, page.newlineFormat),
     };
 
-    const node: NodeMutable = {
-      ...page.nodes[page.nodes.length - 1],
+    const node: ContentNodeMutable = {
+      ...(page.nodes[page.nodes.length - 1] as ContentNode),
       end: {
         line: buffer.lineStarts.length - 1,
         column:
@@ -211,12 +214,12 @@ function insertAtEndPreviouslyInsertedNode(
     node.length += content.content.length;
 
     page.buffers[page.buffers.length - 1] = buffer;
-    page.nodes[page.nodes.length - 1] = node;
+    page.nodes[page.nodes.length - 1] = node as ContentNode;
   } else {
     // scenario 2: cannot fit inside the previous buffer
     // creates a new node
     // creates a new buffer
-    createNodeCreateBuffer(content, page, { nodeType: NodeType.Content });
+    createNodeCreateBuffer(content, page);
   }
 }
 
@@ -233,7 +236,7 @@ function insertInsideNode(
   maxBufferLength: number,
   nodePosition: NodePositionOffset,
 ): void {
-  const oldNode = nodePosition.node;
+  const oldNode = nodePosition.node as ContentNode;
   const nodeContent = getNodeContent(nodePosition.nodeIndex, page);
   const firstPartContent = nodeContent.slice(0, nodePosition.remainder);
   const firstPartLineStarts = getLineStarts(
@@ -241,7 +244,7 @@ function insertInsideNode(
     page.newlineFormat,
   );
 
-  const firstPartNode: Node = {
+  const firstPartNode: ContentNode = {
     ...oldNode,
     end: {
       line: firstPartLineStarts.length - 1 + oldNode.start.line,
@@ -257,7 +260,7 @@ function insertInsideNode(
 
   page.nodes[nodePosition.nodeIndex] = firstPartNode;
 
-  const secondPartNode: Node = {
+  const secondPartNode: ContentNode = {
     bufferIndex: oldNode.bufferIndex,
     start: firstPartNode.end,
     end: oldNode.end,
@@ -301,12 +304,12 @@ function insertAtNodeExtremity(
     // scenario 3 and 5: it can fit inside the previous buffer
     // creates a new node
     // appends to the previous buffer
-    createNodeAppendToBuffer(content, page, { nodeType: NodeType.Content });
+    createNodeAppendToBuffer(content, page);
   } else {
     // scenario 4 and 6: it cannot fit inside the previous buffer
     // creates a new node
     // creates a new buffer
-    createNodeCreateBuffer(content, page, { nodeType: NodeType.Content });
+    createNodeCreateBuffer(content, page);
   }
 }
 
@@ -319,7 +322,6 @@ function insertAtNodeExtremity(
 export function createNodeAppendToBuffer(
   content: ContentInsert,
   page: PageContentMutable,
-  node?: NodeMutable,
   indexToInsertAfter?: number,
 ): void {
   const oldBuffer = page.buffers[page.buffers.length - 1];
@@ -329,8 +331,8 @@ export function createNodeAppendToBuffer(
     content: newContent,
     lineStarts: getLineStarts(newContent, page.newlineFormat),
   };
-  const newNode: Node = {
-    ...node,
+  const newNode: ContentNodeMutable = {
+    nodeType: NodeType.Content,
     bufferIndex: page.buffers.length - 1,
     start: {
       line: oldBuffer.lineStarts.length - 1,
@@ -373,7 +375,6 @@ export function createNodeAppendToBuffer(
 export function createNodeCreateBuffer(
   content: ContentInsert,
   page: PageContentMutable,
-  node?: NodeMutable,
   indexToInsertAfter?: number,
 ): void {
   const newBuffer: Buffer = {
@@ -381,8 +382,8 @@ export function createNodeCreateBuffer(
     lineStarts: getLineStarts(content.content, page.newlineFormat),
     content: content.content,
   };
-  const newNode: NodeMutable = {
-    ...node,
+  const newNode: ContentNodeMutable = {
+    nodeType: NodeType.Content,
     bufferIndex: page.buffers.length,
     start: { line: 0, column: 0 },
     end: {
@@ -415,11 +416,11 @@ export function createNodeCreateBuffer(
  */
 export function insertNode(
   page: PageContentMutable,
-  newNode: NodeMutable,
+  newNode: ContentNodeMutable | TagNodeMutable,
   offset: number,
   indexToInsertAfter?: number,
 ): void {
-  page.nodes.push(newNode as Node);
+  page.nodes.push(newNode);
 
   if (indexToInsertAfter) {
     const next = nextNode(page as PageContent, indexToInsertAfter);

@@ -4,14 +4,16 @@ import { SENTINEL } from "./tree";
 
 describe("Parser tests", () => {
   test("One line content in page", () => {
-    const html = `<html lang="en-NZ">
+    const html =
+      `<html lang="en-NZ">
             <head>
                 <title>This is the title</title>
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                 <meta name="created" content="2018-09-03T14:08:00.0000000" />
             </head>
             <body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">
-                <span id="spanId" style="font-size:10pt;color:#ffffff" data-render-src="source">Text between a span. 
+                <span id="spanId" style="font-size:10pt;color:#ffffff" data-render-src="source">Text between a span. ` +
+      `
 Newline.</span>
             </body>
         </html>`;
@@ -19,7 +21,9 @@ Newline.</span>
     expect(page).toEqual({
       buffers: [
         {
-          content: `Text between a span. 
+          content:
+            `Text between a span. ` +
+            `
 Newline.`,
           isReadOnly: true,
           lineStarts: [0, 22],
@@ -89,14 +93,17 @@ Newline.`,
   });
 
   test("Paragraph tags with formatting", () => {
-    const html = `<html lang="en-NZ">
+    const html =
+      `<html lang="en-NZ">
                 <head>
                     <title>This is the title</title>
                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                     <meta name="created" content="2018-09-03T14:08:00.0000000" />
                 </head>
                 <body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">
-                    <p id="p:{6cb59116-8e61-03a9-39ef-edf64004790d}{62}" style="margin-top:0pt;margin-bottom:0pt"><span style="font-weight:bold">Bold</span> text which has <span style="font-style:italic">italics</span> and <span style="text-decoration:underline">underlines</span></p>
+                    <p id="p:{6cb59116-8e61-03a9-39ef-edf64004790d}{62}" style="margin-top:0pt;margin-bottom:0pt">` +
+      `<span style="font-weight:bold">Bold</span> text which has <span style="font-style:italic">italics</span> and ` +
+      `<span style="text-decoration:underline">underlines</span></p>
                 </body>
             </html>`;
     const page = new Parser(html).parse();
@@ -320,14 +327,16 @@ Newline.`,
   });
 
   test("Headings", () => {
-    const html = `<html lang="en-NZ">
+    const html =
+      `<html lang="en-NZ">
                 <head>
                     <title>This is the title</title>
                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                     <meta name="created" content="2018-09-03T14:08:00.0000000" />
                 </head>
                 <body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">
-                  <h1 id="h1:{6cb59116-8e61-03a9-39ef-edf64004790d}{69}" style="font-size:16pt;color:#1e4e79;margin-top:0pt;margin-bottom:0pt">This is <span style="font-weight:bold">heading</span> 1</h1>
+                  <h1 id="h1:{6cb59116-8e61-03a9-39ef-edf64004790d}{69}" style="font-size:16pt;color:#1e4e79;` +
+      `margin-top:0pt;margin-bottom:0pt">This is <span style="font-weight:bold">heading</span> 1</h1>
                 </body>
             </html>`;
     const page = new Parser(html).parse();
@@ -465,14 +474,16 @@ Newline.`,
   });
 
   test("Citation", () => {
-    const html = `<html lang="en-NZ">
+    const html =
+      `<html lang="en-NZ">
                 <head>
                     <title>This is the title</title>
                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                     <meta name="created" content="2018-09-03T14:08:00.0000000" />
                 </head>
                 <body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">
-                  <cite id="cite:{6cb59116-8e61-03a9-39ef-edf64004790d}{105}" style="font-size:9pt;color:#595959;margin-top:0pt;margin-bottom:0pt">Citation</cite>
+                  <cite id="cite:{6cb59116-8e61-03a9-39ef-edf64004790d}{105}" style="font-size:9pt;` +
+      `color:#595959;margin-top:0pt;margin-bottom:0pt">Citation</cite>
                 </body>
             </html>`;
     const page = new Parser(html).parse();
@@ -551,14 +562,16 @@ Newline.`,
   });
 
   test("Citation", () => {
-    const html = `<html lang="en-NZ">
+    const html =
+      `<html lang="en-NZ">
                 <head>
                     <title>This is the title</title>
                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                     <meta name="created" content="2018-09-03T14:08:00.0000000" />
                 </head>
                 <body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">
-                  <p id="p:{6cb59116-8e61-03a9-39ef-edf64004790d}{120}" style="margin-top:0pt;margin-bottom:0pt"><span style="background-color:yellow">Highlighted</span></p>
+                  <p id="p:{6cb59116-8e61-03a9-39ef-edf64004790d}{120}" style="margin-top:0pt;` +
+      `margin-bottom:0pt"><span style="background-color:yellow">Highlighted</span></p>
                 </body>
             </html>`;
     const page = new Parser(html).parse();
@@ -664,14 +677,16 @@ Newline.`,
   });
 
   test("Superscript", () => {
-    const html = `<html lang="en-NZ">
+    const html =
+      `<html lang="en-NZ">
                 <head>
                     <title>This is the title</title>
                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                     <meta name="created" content="2018-09-03T14:08:00.0000000" />
                 </head>
                 <body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">
-            			<p id="p:{6cb59116-8e61-03a9-39ef-edf64004790d}{130}" style="margin-top:0pt;margin-bottom:0pt">Superscript x<sup>2</sup></p>
+            			<p id="p:{6cb59116-8e61-03a9-39ef-edf64004790d}{130}" style="margin-top:0pt;` +
+      `margin-bottom:0pt">Superscript x<sup>2</sup></p>
                 </body>
             </html>`;
     const page = new Parser(html).parse();
@@ -789,14 +804,16 @@ Newline.`,
   });
 
   test("Subscript", () => {
-    const html = `<html lang="en-NZ">
+    const html =
+      `<html lang="en-NZ">
                 <head>
                     <title>This is the title</title>
                     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
                     <meta name="created" content="2018-09-03T14:08:00.0000000" />
                 </head>
                 <body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">
-            			<p id="p:{6cb59116-8e61-03a9-39ef-edf64004790d}{130}" style="margin-top:0pt;margin-bottom:0pt">Superscript x<sup>2</sup></p>
+            			<p id="p:{6cb59116-8e61-03a9-39ef-edf64004790d}{130}" style="margin-top:0pt;` +
+      `margin-bottom:0pt">Superscript x<sup>2</sup></p>
                 </body>
             </html>`;
     const page = new Parser(html).parse();
