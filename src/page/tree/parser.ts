@@ -3,9 +3,8 @@ import { KeyValue } from "../../common";
 import {
   BufferMutable,
   Color,
-  ContentNodeMutable,
-  NodeMutable,
   NodeType,
+  NodeUnionMutable,
   PageContent,
   PageContentMutable,
   TagNodeMutable,
@@ -54,7 +53,7 @@ export default class Parser {
   private content: string;
   private lastAttribute = "";
   private metaFirstAttribute = "";
-  private node: ContentNodeMutable | TagNodeMutable | {} = {};
+  private node: NodeUnionMutable | {} = {};
   private tagStack: Array<{ tag: string; id?: string }> = [];
   private length = 0;
   private writtenTo = false;

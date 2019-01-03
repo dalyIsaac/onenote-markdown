@@ -202,6 +202,11 @@ export interface TagNode extends Node {
   readonly id?: string;
 }
 
+/**
+ * Union of all the node interfaces.
+ */
+export type NodeUnion = ContentNode | TagNode;
+
 export interface NodeMutable {
   /**
    * The count of the number of characters in the left subtree of this node.
@@ -293,6 +298,11 @@ export interface TagNodeMutable extends NodeMutable {
    */
   id?: string;
 }
+
+/**
+ * Union of all the mutable node interfaces.
+ */
+export type NodeUnionMutable = ContentNodeMutable | TagNodeMutable;
 
 //#endregion Node
 

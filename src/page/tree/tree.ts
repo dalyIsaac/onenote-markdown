@@ -9,12 +9,11 @@ import {
   ContentNode,
   ContentNodeMutable,
   NEWLINE,
-  Node,
   NodeMutable,
   NodeType,
+  NodeUnion,
   PageContent,
   PageContentMutable,
-  TagNode,
 } from "../model";
 
 /**
@@ -29,7 +28,7 @@ export interface NodePositionOffset {
   /**
    * Piece Index
    */
-  readonly node: TagNode | ContentNode;
+  readonly node: NodeUnion;
 
   /**
    * The index of the node inside the array.
@@ -51,7 +50,7 @@ export interface NodePositionOffset {
  * Contains a node and its index in a page/piece table.
  */
 export interface NodePosition {
-  readonly node: ContentNode | TagNode;
+  readonly node: NodeUnion;
   readonly index: number;
 }
 
@@ -63,7 +62,7 @@ export interface NodePosition {
  */
 export function findNodeAtOffset(
   offset: number,
-  nodes: ReadonlyArray<ContentNode | TagNode>,
+  nodes: ReadonlyArray<NodeUnion>,
   root: number,
 ): NodePositionOffset {
   let x = root;

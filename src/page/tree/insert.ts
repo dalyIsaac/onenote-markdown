@@ -6,9 +6,9 @@ import {
   Node,
   NodeMutable,
   NodeType,
+  NodeUnionMutable,
   PageContent,
   PageContentMutable,
-  TagNodeMutable,
 } from "../model";
 import { leftRotate, rightRotate } from "./rotate";
 import {
@@ -416,7 +416,7 @@ export function createNodeCreateBuffer(
  */
 export function insertNode(
   page: PageContentMutable,
-  newNode: ContentNodeMutable | TagNodeMutable,
+  newNode: NodeUnionMutable,
   offset: number,
   indexToInsertAfter?: number,
 ): void {
