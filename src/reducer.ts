@@ -1,6 +1,6 @@
 import { combineReducers } from "redux";
-import { StatePages } from "./page/model";
-import pageReducer from "./page/reducer";
+import { StatePages } from "./editor/page/model";
+import pageReducer from "./editor/page/reducer";
 
 export interface State {
   readonly pages: StatePages;

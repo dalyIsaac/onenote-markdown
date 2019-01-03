@@ -1,5 +1,5 @@
 import { chunks, TokenizeResult, tokens } from "tiny-html-lexer";
-import { KeyValue } from "../../common";
+import { KeyValue } from "../../../common";
 import {
   BufferMutable,
   Color,

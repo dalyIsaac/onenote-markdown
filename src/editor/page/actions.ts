@@ -1,5 +1,5 @@
 import { OnenotePage } from "@microsoft/microsoft-graph-types";
-import { Action } from "../common";
+import { Action } from "../../common";
 import { ContentDelete } from "./tree/delete";
 import { ContentInsert } from "./tree/insert";
 

@@ -1,4 +1,4 @@
-import { KeyValue } from "../common";
+import { KeyValue } from "../../common";
 
 /**
  * Mutable objects are only used in constructing the next state.

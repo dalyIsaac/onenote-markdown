@@ -1,3 +1,5 @@
+import { FluentCustomizations } from "@uifabric/fluent-theme";
+import { Customizer } from "office-ui-fabric-react";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -11,7 +13,9 @@ const store = createStore(rootReducer, composeWithDevTools());
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <Customizer {...FluentCustomizations}>
+      <App />
+    </Customizer>
   </Provider>,
   document.getElementById("root"),
 );
