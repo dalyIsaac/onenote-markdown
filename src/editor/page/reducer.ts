@@ -4,20 +4,18 @@ import {
   INSERT_CONTENT,
   InsertContentAction,
   PageActionPartial,
+  PARSE_HTML_CONTENT,
+  ParseHtmlAction,
   REPLACE_CONTENT,
   ReplaceContentAction,
   STORE_RECEIVED_PAGE,
   StoreReceivedPageAction,
 } from "./actions";
-import {
-  NodeMutable,
-  PageContent,
-  PageContentMutable,
-  StatePages,
-} from "./model";
+import { PageContent, PageContentMutable, StatePages } from "./model";
 import { createNewPage } from "./tree/createNewPage";
 import { deleteContent } from "./tree/delete";
 import { insertContent } from "./tree/insert";
+import Parser from "./tree/parser";
 import { MAX_BUFFER_LENGTH } from "./tree/tree";
 
 /**
@@ -39,7 +37,9 @@ export default function pageReducer(
     return state;
   } else if (
     !(
-      state.hasOwnProperty(action.pageId) || action.type === STORE_RECEIVED_PAGE
+      state.hasOwnProperty(action.pageId) ||
+      action.type === STORE_RECEIVED_PAGE ||
+      action.type === PARSE_HTML_CONTENT
     )
   ) {
     console.error(`The state does not contain the key ${action.pageId}`);
@@ -48,6 +48,14 @@ export default function pageReducer(
   }
 
   switch (action.type) {
+    case PARSE_HTML_CONTENT:
+      const content = (action as ParseHtmlAction).content;
+      newPage = new Parser(content).parse();
+      newState = {
+        ...state,
+        [(action as ParseHtmlAction).pageId]: newPage,
+      };
+      return newState;
     case STORE_RECEIVED_PAGE:
       const receivedPage = (action as StoreReceivedPageAction).receivedPage;
       newPage = createNewPage(receivedPage);

@@ -1,10 +1,12 @@
 import {
-  DELETE_CONTENT,
+  deleteContent,
   DeleteContentAction,
   INSERT_CONTENT,
+  insertContent,
   InsertContentAction,
   PageActionPartial,
-  REPLACE_CONTENT,
+  parseHtmlContent,
+  replaceContent,
   ReplaceContentAction,
 } from "./actions";
 import {
@@ -17,6 +19,10 @@ import {
 } from "./model";
 import pageReducer from "./reducer";
 import { LF, LF_CONTENT, pageReducerTest } from "./tree/createNewPage.test";
+import {
+  paragraphTagsHtmlContent,
+  paragraphTagsHtmlExpectedPage,
+} from "./tree/parser.test";
 import { SENTINEL, SENTINEL_INDEX } from "./tree/tree";
 
 export const getStartPage = (): PageContentMutable => ({
@@ -238,12 +244,11 @@ describe("page/reducer", () => {
   });
 
   test("Insertion", () => {
-    const action: InsertContentAction = {
-      type: INSERT_CONTENT,
-      pageId: PAGE_ID,
-      content: "Hello world",
-      offset: 127,
-    };
+    const action: InsertContentAction = insertContent(
+      PAGE_ID,
+      "Hello world",
+      127,
+    );
 
     const expectedPage: PageContent = {
       root: 6,
@@ -467,12 +472,7 @@ describe("page/reducer", () => {
   });
 
   test("Deletion", () => {
-    const action: DeleteContentAction = {
-      type: DELETE_CONTENT,
-      pageId: PAGE_ID,
-      startOffset: 126,
-      endOffset: 127,
-    };
+    const action: DeleteContentAction = deleteContent(PAGE_ID, 126, 127);
     const state = getState();
     const result = pageReducer(state, action);
 
@@ -678,13 +678,12 @@ describe("page/reducer", () => {
   });
 
   test("Replacement", () => {
-    const action: ReplaceContentAction = {
-      type: REPLACE_CONTENT,
-      pageId: PAGE_ID,
-      startOffset: 126,
-      endOffset: 127,
-      content: "Hello world",
-    };
+    const action: ReplaceContentAction = replaceContent(
+      PAGE_ID,
+      126,
+      127,
+      "Hello world",
+    );
     const state = getState();
     const result = pageReducer(state, action);
 
@@ -907,5 +906,15 @@ describe("page/reducer", () => {
 
   test("Create new page", () => {
     pageReducerTest(LF_CONTENT, LF);
+  });
+
+  test("Parse HTML page", () => {
+    const state = {};
+    const action = parseHtmlContent(PAGE_ID, paragraphTagsHtmlContent);
+    const result = pageReducer(state, action);
+    const expectedState = {
+      [PAGE_ID]: paragraphTagsHtmlExpectedPage,
+    };
+    expect(result).toEqual(expectedState);
   });
 });

@@ -10,6 +10,23 @@ export interface PageActionPartial extends Action {
   readonly pageId: string;
 }
 
+//#region Parse HTML content
+export const PARSE_HTML_CONTENT = "PARSE_HTML_CONTENT";
+
+export interface ParseHtmlAction extends PageActionPartial {
+  readonly content: string;
+}
+
+export const parseHtmlContent = (
+  pageId: string,
+  content: string,
+): ParseHtmlAction => ({
+  type: PARSE_HTML_CONTENT,
+  pageId,
+  content,
+});
+//#endregion
+
 //#region Store received page
 export const STORE_RECEIVED_PAGE = "STORE_RECEIVED_PAGE";
 
