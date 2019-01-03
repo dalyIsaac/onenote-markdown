@@ -1,6 +1,6 @@
 .htmlEditor {
   float: right;
   width: 50%;
-  height: 100vh;
+  height: calc(100vh - 40px);
   background-color: pink;
 }

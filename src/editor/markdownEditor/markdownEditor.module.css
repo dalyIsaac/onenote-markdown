@@ -1,6 +1,6 @@
 .markdownEditor {
   float: left;
   width: 50%;
-  height: 100vh;
+  height: calc(100vh - 40px);
   background-color: aquamarine;
 }
