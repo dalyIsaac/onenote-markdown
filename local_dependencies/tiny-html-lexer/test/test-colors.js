@@ -1,6 +1,6 @@
 "use strict"
 
-const tokenize = require ('../lib/tiny-lexer')
+const tokenize = require ('../lib/tiny-lexer').tokenize
   , data = require ('./data/samples')
   , { head, renderTokens, flush, flatten } = require ('./templates')
 

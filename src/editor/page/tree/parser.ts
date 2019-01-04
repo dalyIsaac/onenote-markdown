@@ -1,4 +1,4 @@
-import { chunks, TokenizeResult, tokens } from "tiny-html-lexer";
+import { chunks, TokenStream } from "tiny-html-lexer";
 import { KeyValue } from "../../../common";
 import {
   BufferMutable,
@@ -49,7 +49,7 @@ const exteriorTags = {
 
 export default class Parser {
   private page: PageContentMutable;
-  private stream: TokenizeResult;
+  private stream: TokenStream;
   private content: string;
   private lastAttribute = "";
   private metaFirstAttribute = "";
@@ -77,38 +77,38 @@ export default class Parser {
     }
     for (const [type, chunk] of this.stream) {
       switch (type) {
-        case tokens.T_startTag_start:
+        case "startTag-start":
           this.startTag(chunk);
           break;
-        case tokens.T_endTag_start:
+        case "endTag-start":
           if (this.tagStack[this.tagStack.length - 1].tag === chunk.slice(2)) {
             this.endTag();
           }
           break;
-        case tokens.T_tag_end_close:
+        case "tag-end-autoclose":
           this.endTag();
           break;
-        case tokens.T_att_name:
+        case "attribute-name":
           this.attributeName(chunk);
           break;
-        case tokens.T_att_value_data:
+        case "attribute-value-data":
           this.attributeValue(chunk);
           break;
-        case tokens.T_rcdata:
+        case "rcdata":
           if ((this.node as TagNodeMutable).tag === exteriorTags.title) {
             this.page.title = chunk;
           } else {
             console.log({ type, chunk });
           }
           break;
-        case tokens.T_data:
+        case "data":
           this.data(chunk);
           break;
-        case tokens.T_space:
-        case tokens.T_att_value_start:
-        case tokens.T_att_equals:
-        case tokens.T_att_value_end:
-        case tokens.T_tag_end:
+        case "space":
+        case "attribute-value-start":
+        case "attribute-assign":
+        case "attribute-value-end":
+        case "tag-end":
           break;
         default:
           console.log({ type, chunk });

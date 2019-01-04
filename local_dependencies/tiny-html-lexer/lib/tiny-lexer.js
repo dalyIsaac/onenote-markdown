@@ -7,31 +7,32 @@ const log = console.log.bind (console)
 
 // ### The tokens
 
-const tokens = {
-  T_att_name: 'attribute-name'
-  , T_att_equals: 'attribute-equals'
-  , T_att_value_start: 'attribute-value-start'
-  , T_att_value_data: 'attribute-value-data'
-  , T_att_value_end: 'attribute-value-end'
-  , T_comment_start: 'comment-start'
-  , T_comment_start_bogus: 'comment-start-bogus'
-  , T_comment_data: 'comment-data'
-  , T_comment_end: 'comment-end'
-  , T_comment_end_bogus: 'comment-end-bogus'
-  , T_startTag_start: 'startTag-start'
-  , T_endTag_start: 'endTag-start'
-  , T_tag_end: 'tag-end'
-  , T_tag_end_close: 'tag-end-autoclose'
-  , T_charRef_decimal: 'charRef-decimal'
-  , T_charRef_hex: 'charRef-hex'
-  , T_charRef_named: 'charRef-named'
-  , T_unescaped: 'unescaped'
-  , T_space: 'space'
-  , T_data: 'data'
-  , T_rcdata: 'rcdata'
-  , T_rawtext: 'rawtext'
-  , T_plaintext: 'plaintext'
+const tokenTypes = {
+  attributeName: 'attribute-name',
+  attributeAssign: 'attribute-assign',
+  attributeValueStart: 'attribute-value-start',
+  attributeValueData : 'attribute-value-data',
+  attributeValueEnd: 'attribute-value-end',
+  commentStart: 'comment-start',
+  commentStartBogus: 'comment-start-bogus',
+  commentData: 'comment-data',
+  commentEnd: 'comment-end',
+  commentEndBogus: 'comment-end-bogus',
+  startTagStart: 'startTag-start',
+  endTagStart: 'endTag-start',
+  tagEnd: 'tag-end',
+  tagEndClose: 'tag-end-autoclose',
+  charRefDecimal: 'charRef-decimal',
+  charRefHex: 'charRef-hex',
+  charRefNamed: 'charRef-named',
+  unescaped: 'unescaped',
+  space: 'space',
+  data: 'data',
+  rcdata: 'rcdata',
+  rawtext: 'rawtext',
+  plaintext: 'plaintext'
 }
+
 
 //### The grammar
 
@@ -44,89 +45,89 @@ const ATTNAME = '.[^>/\t\n\f =]*' /* '[^>/\t\n\f ][^>/\t\n\f =]*' */
 const ATT_UNQUOT = '[^&>\t\n\f ]+'
 const DOCTYPE_START = '<![Dd][Oo][Cc][Tt][Yy][Pp][Ee]'
 
-
+const T = tokenTypes
 const grammar = 
 { data: [
-  { if: STARTTAG_START,   emit: tokens.T_startTag_start,     goto: startTag      },
-  { if: ENDTAG_START,     emit: tokens.T_endTag_start,       goto:'beforeAtt'    },
-//{ if: DOCTYPE_START,    emit: tokens.T_doctype_start,      goto:'beforeName'   }, // before doctype name
-  { if: '<!--',           emit: tokens.T_comment_start,      goto:'commentStart' },
-  { if: '<[/!?]',         emit: tokens.T_comment_start_bogus,goto:'bogusComment' },
-  { if: '[^<&]+',         emit: tokens.T_data                                    },
-  { if: '<',              emit: tokens.T_unescaped                               },
-  {                       emit: tokens.T_data,               goto: charRefIn     }],
+  { if: STARTTAG_START,   emit: T.startTagStart,       goto: startTag      },
+  { if: ENDTAG_START,     emit: T.endTagStart,         goto:'beforeAtt'    },
+//{ if: DOCTYPE_START,    emit: T.doctype_start,       goto:'beforeName'   }, // before doctype name
+  { if: '<!--',           emit: T.commentStart,        goto:'commentStart' },
+  { if: '<[/!?]',         emit: T.commentStartBogus,   goto:'bogusComment' },
+  { if: '[^<&]+',         emit: T.data                                     },
+  { if: '<',              emit: T.unescaped                                },
+  {                       emit: T.data,                goto: charRefIn     }],
 
 rawtext: [
-  { if: ENDTAG_START,     emit: maybeEndTagT,         goto: maybeEndTag   },
-  { if: '.[^<]*',         emit: tokens.T_rawtext                                 }],
+  { if: ENDTAG_START,     emit: maybeEndTagT,          goto: maybeEndTag   },
+  { if: '.[^<]*',         emit: T.rawtext                                  }],
 
 rcdata: [
-  { if: ENDTAG_START,     emit: maybeEndTagT,         goto: maybeEndTag   },
-  { if: '<',              emit: tokens.T_unescaped                               },
-  { if: '[^<&]+',         emit: tokens.T_rcdata                                  },
-  {                       emit: tokens.T_rcdata,             goto: charRefIn     }],
+  { if: ENDTAG_START,     emit: maybeEndTagT,          goto: maybeEndTag   },
+  { if: '<',              emit: T.unescaped                                },
+  { if: '[^<&]+',         emit: T.rcdata                                   },
+  {                       emit: T.rcdata,              goto: charRefIn     }],
 
 plaintext: [
-  { if:'.+',              emit: tokens.T_plaintext                               }],
+  { if:'.+',              emit: T.plaintext                                }],
 
 charRef: [
-  { if: CHARREF_DEC,      emit: tokens.T_charRef_decimal,    goto: context       },
-  { if: CHARREF_HEX,      emit: tokens.T_charRef_hex,        goto: context       },
-  { if: CHARREF_NAME,     emit: tokens.T_charRef_named,      goto: context       },
-  { if: '&',              emit: tokens.T_unescaped,          goto: context       }],
+  { if: CHARREF_DEC,      emit: T.charRefDecimal,      goto: context       },
+  { if: CHARREF_HEX,      emit: T.charRefHex,          goto: context       },
+  { if: CHARREF_NAME,     emit: T.charRefNamed,        goto: context       },
+  { if: '&',              emit: T.unescaped,           goto: context       }],
 
 beforeAtt: [
-  { if: '>',              emit: tokens.T_tag_end,            goto: content       },
-  { if: '/>',             emit: tokens.T_tag_end_close,      goto: content       },
-  { if: '[\t\n\f ]+',     emit: tokens.T_space,                                  },
-  { if: '/+(?!>)',        emit: tokens.T_space,                                  }, // TODO, test / check with spec
-  { if: ATTNAME,          emit: tokens.T_att_name,           goto:'afterAttName' }],
+  { if: '>',              emit: T.tagEnd,              goto: content       },
+  { if: '/>',             emit: T.tagEndClose,         goto: content       },
+  { if: '[\t\n\f ]+',     emit: T.space,                                   },
+  { if: '/+(?!>)',        emit: T.space,                                   }, // TODO, test / check with spec
+  { if: ATTNAME,          emit: T.attributeName,       goto:'afterAttName' }],
 
 afterAttName: [
-  { if: '>',              emit: tokens.T_tag_end,            goto: content       },
-  { if: '/>',             emit: tokens.T_tag_end_close,      goto: content       },
-  { if: '=[\t\n\f ]*',    emit: tokens.T_att_equals,         goto:'attValue'     },
-  { if: '/+(?!>)',        emit: tokens.T_space,              goto:'beforeAtt'    },
-  { if: '[\t\n\f ]+',     emit: tokens.T_space                                   },
-  { if: ATTNAME,          emit: tokens.T_att_name                                }],
+  { if: '>',              emit: T.tagEnd,              goto: content       },
+  { if: '/>',             emit: T.tagEndClose,         goto: content       },
+  { if: '=[\t\n\f ]*',    emit: T.attributeAssign,     goto:'attValue'     },
+  { if: '/+(?!>)',        emit: T.space,               goto:'beforeAtt'    },
+  { if: '[\t\n\f ]+',     emit: T.space                                    },
+  { if: ATTNAME,          emit: T.attributeName                            }],
 
 attValue: [ // 'equals' has eaten all the space
-  { if: '>' ,             emit: tokens.T_tag_end,            goto: content       },
-  { if: '"' ,             emit: tokens.T_att_value_start,    goto:'doubleQuoted' },
-  { if: "'" ,             emit: tokens.T_att_value_start,    goto:'singleQuoted' },
-  {                       emit: tokens.T_att_value_start,    goto:'unquoted'     }],
+  { if: '>' ,             emit: T.tagEnd,              goto: content       },
+  { if: '"' ,             emit: T.attributeValueStart, goto:'doubleQuoted' },
+  { if: "'" ,             emit: T.attributeValueStart, goto:'singleQuoted' },
+  {                       emit: T.attributeValueStart, goto:'unquoted'     }],
 
 unquoted: [
-  { if: ATT_UNQUOT,       emit: tokens.T_att_value_data                          },
-  { if: '(?=[>\t\n\f ])', emit: tokens.T_att_value_end,      goto:'beforeAtt'    },
-  {                       emit: tokens.T_att_value_data,     goto: charRefIn     }],
+  { if: ATT_UNQUOT,       emit: T.attributeValueData                       },
+  { if: '(?=[>\t\n\f ])', emit: T.attributeValueEnd,   goto:'beforeAtt'    },
+  {                       emit: T.attributeValueData,  goto: charRefIn     }],
 
 doubleQuoted: [
-  { if: '[^"&]+',         emit: tokens.T_att_value_data                          },
-  { if: '"',              emit: tokens.T_att_value_end,      goto:'beforeAtt'    },
-  {                       emit: tokens.T_att_value_data,     goto: charRefIn     }],
+  { if: '[^"&]+',         emit: T.attributeValueData                       },
+  { if: '"',              emit: T.attributeValueEnd,   goto:'beforeAtt'    },
+  {                       emit: T.attributeValueData,  goto: charRefIn     }],
 
 singleQuoted: [
-  { if: "[^'&]+",         emit: tokens.T_att_value_data                          },
-  { if: "'",              emit: tokens.T_att_value_end,      goto:'beforeAtt'    },
-  {                       emit: tokens.T_att_value_data,     goto: charRefIn     }],
+  { if: "[^'&]+",         emit: T.attributeValueData                       },
+  { if: "'",              emit: T.attributeValueEnd,   goto:'beforeAtt'    },
+  {                       emit: T.attributeValueData,  goto: charRefIn     }],
 
 bogusComment: [
-  { if: '[^>]+',          emit: tokens.T_comment_data,       goto:'bogusComment' },
-  { if: '>',              emit: tokens.T_comment_end_bogus,  goto: content       }],
+  { if: '[^>]+',          emit: T.commentData,         goto:'bogusComment' },
+  { if: '>',              emit: T.commentEndBogus,     goto: content       }],
 
 commentStart: [
-  { if: '-?>',            emit: tokens.T_comment_end,        goto: content       },
-  { if: '--!?>',          emit: tokens.T_comment_end,        goto: content       },
-  { if: '--!',            emit: tokens.T_comment_data,       goto:'comment'      },
-  { if: '--?',            emit: tokens.T_comment_data,       goto:'comment'      },
-  { if: '[^>-][^-]*',     emit: tokens.T_comment_data,       goto:'comment'      }],
+  { if: '-?>',            emit: T.commentEnd,          goto: content       },
+  { if: '--!?>',          emit: T.commentEnd,          goto: content       },
+  { if: '--!',            emit: T.commentData,         goto:'comment'      },
+  { if: '--?',            emit: T.commentData,         goto:'comment'      },
+  { if: '[^>-][^-]*',     emit: T.commentData,         goto:'comment'      }],
 
 comment: [
-  { if: '--!?>',          emit: tokens.T_comment_end,        goto: content       },
-  { if: '--!'  ,          emit: tokens.T_comment_data                            },
-  { if: '--?'  ,          emit: tokens.T_comment_data                            },
-  { if: '[^-]+',          emit: tokens.T_comment_data                            }]
+  { if: '--!?>',          emit: T.commentEnd,          goto: content       },
+  { if: '--!'  ,          emit: T.commentData                              },
+  { if: '--?'  ,          emit: T.commentData                              },
+  { if: '[^-]+',          emit: T.commentData                              }]
 }
 
 
@@ -146,8 +147,9 @@ const content_map =
   //, noscript: 'rawtext' // if scripting is enabled in a UA
   }
 
-function CustomState () {
+function PrivateState () {
   this.content = 'data' // one of { data, rcdata, rawtext, unquoted, doubleQuoted, singleQuoted }
+  this.context = 'data' // likewise
   this.tagName // the last seen 'startTag-start' name 
 }
 
@@ -169,14 +171,15 @@ function context () {
 function maybeEndTagT (_, chunk) {
   if (chunk.substr (2) === this.tagName) {
     this.content = 'data'
-    return tokens.T_endTag_start }
+    return T.endTagStart
+  }
   else return this.content // TODO careful, this is a token type, not a state!
 }
 
 function maybeEndTag (symbol, chunk) {
   if (chunk.substr (2) === this.tagName) {
     this.content = 'data'
-    return 'beforeAtt'       
+    return 'beforeAtt'
   }
   else return symbol
 }
@@ -231,7 +234,7 @@ function TinyLexer (grammar, start, CustomState) {
       , position = 0
 
     const self = { value: null, done: false, next: next, state: custom }
-    self [Symbol.iterator] = function () { return self }
+    self [Symbol.iterator] = function () { return self } // TODO: decide on API
     return self
 
     function next () {
@@ -301,7 +304,7 @@ function fst (row) {
 
 //
 
-const chunker = new TinyLexer (grammar, 'data', CustomState)
+const chunker = new TinyLexer (grammar, 'data', PrivateState)
 
 function tokenize (input) {
   return chunker.tokenize (input)
@@ -310,4 +313,4 @@ function tokenize (input) {
 
 // Exports
 module.exports.tokenize = tokenize
-module.exports.tokens = tokens
+module.exports.tokenTypes = tokenTypes
