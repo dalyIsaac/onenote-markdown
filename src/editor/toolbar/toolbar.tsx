@@ -3,7 +3,13 @@ import React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
 import { ParseHtmlAction, parseHtmlContent } from "../page/actions";
+import {
+  updateSelectedPage,
+  UpdateSelectedPageAction,
+} from "../selectedPage/actions";
 import styles from "./toolbar.module.css";
+
+const PAGE_ID = "pageId";
 
 class ToolbarComponent extends React.Component<ToolbarProps, ToolbarState> {
   constructor(props: ToolbarProps) {
@@ -28,6 +34,7 @@ class ToolbarComponent extends React.Component<ToolbarProps, ToolbarState> {
 
   private loadSample(): void {
     this.props.loadSampleContent();
+    this.props.loadPageId();
     this.setState({ enabled: false });
   }
 }
@@ -48,6 +55,7 @@ const sampleTextHtml =
 
 interface ToolbarProps {
   loadSampleContent: () => ParseHtmlAction;
+  loadPageId: () => UpdateSelectedPageAction;
 }
 
 interface ToolbarState {
@@ -56,7 +64,8 @@ interface ToolbarState {
 
 const mapDispatchToProps = (dispatch: Dispatch): ToolbarProps => ({
   loadSampleContent: (): ParseHtmlAction =>
-    dispatch(parseHtmlContent("pageId", sampleTextHtml)),
+    dispatch(parseHtmlContent(PAGE_ID, sampleTextHtml)),
+  loadPageId: () => dispatch(updateSelectedPage(PAGE_ID)),
 });
 
 export default connect(

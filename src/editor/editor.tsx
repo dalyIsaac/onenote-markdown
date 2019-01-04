@@ -1,5 +1,5 @@
 import React from "react";
-import { HtmlEditorComponent } from "./htmlEditor/htmlEditor";
+import HtmlEditor from "./htmlEditor/htmlEditor";
 import { MarkdownEditorComponent } from "./markdownEditor/markdownEditor";
 import Toolbar from "./toolbar/toolbar";
 
@@ -10,7 +10,7 @@ export class EditorComponent extends React.Component {
         <Toolbar />
         <div>
           <MarkdownEditorComponent />
-          <HtmlEditorComponent />
+          <HtmlEditor />
         </div>
       </div>
     );
