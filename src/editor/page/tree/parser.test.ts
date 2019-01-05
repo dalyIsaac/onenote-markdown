@@ -562,7 +562,7 @@ Newline.`,
     expect(page).toEqual(expectedPage);
   });
 
-  test("Citation", () => {
+  test("Highlighted text", () => {
     const html =
       `<html lang="en-NZ">
                 <head>
