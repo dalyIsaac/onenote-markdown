@@ -32,8 +32,6 @@ export default function pageReducer(
   let newState: StatePages;
 
   if (!action.hasOwnProperty("pageId")) {
-    console.error("The action does not contain the property pageId");
-    console.error(action);
     return state;
   } else if (
     !(

@@ -36,7 +36,7 @@ export const paragraphTagsHtmlExpectedPage: PageContent = {
       color: Color.Black,
       id: "p:{6cb59116-8e61-03a9-39ef-edf64004790d}{62}",
       tag: "p",
-      styles: {
+      style: {
         marginTop: "0pt",
         marginBottom: "0pt",
       },
@@ -53,7 +53,7 @@ export const paragraphTagsHtmlExpectedPage: PageContent = {
       // 2
       color: Color.Black,
       tag: "span",
-      styles: {
+      style: {
         fontWeight: "bold",
       },
       length: 0,
@@ -117,7 +117,7 @@ export const paragraphTagsHtmlExpectedPage: PageContent = {
       lineFeedCount: 0,
       leftCharCount: 16,
       leftLineFeedCount: 0,
-      styles: {
+      style: {
         fontStyle: "italic",
       },
       parent: 8,
@@ -172,7 +172,7 @@ export const paragraphTagsHtmlExpectedPage: PageContent = {
       color: Color.Red,
       nodeType: NodeType.StartTag,
       tag: "span",
-      styles: {
+      style: {
         textDecoration: "underline",
       },
       length: 0,
@@ -280,7 +280,7 @@ Newline.`,
             dataRenderSrc: "source",
           },
           id: "spanId",
-          styles: {
+          style: {
             color: "#ffffff",
             fontSize: "10pt",
           },
@@ -362,7 +362,7 @@ Newline.`,
           color: Color.Black,
           id: "h1:{6cb59116-8e61-03a9-39ef-edf64004790d}{69}",
           tag: "h1",
-          styles: {
+          style: {
             marginTop: "0pt",
             marginBottom: "0pt",
             fontSize: "16pt",
@@ -401,7 +401,7 @@ Newline.`,
           leftCharCount: 0,
           leftLineFeedCount: 0,
           nodeType: NodeType.StartTag,
-          styles: {
+          style: {
             fontWeight: "bold",
           },
           parent: 4,
@@ -509,7 +509,7 @@ Newline.`,
           color: Color.Red,
           id: "cite:{6cb59116-8e61-03a9-39ef-edf64004790d}{105}",
           tag: "cite",
-          styles: {
+          style: {
             fontSize: "9pt",
             marginTop: "0pt",
             marginBottom: "0pt",
@@ -597,7 +597,7 @@ Newline.`,
           color: Color.Black,
           id: "p:{6cb59116-8e61-03a9-39ef-edf64004790d}{120}",
           tag: "p",
-          styles: {
+          style: {
             marginTop: "0pt",
             marginBottom: "0pt",
           },
@@ -619,7 +619,7 @@ Newline.`,
           leftCharCount: 0,
           leftLineFeedCount: 0,
           nodeType: NodeType.StartTag,
-          styles: {
+          style: {
             backgroundColor: "yellow",
           },
           parent: 0,
@@ -712,7 +712,7 @@ Newline.`,
           color: Color.Black,
           id: "p:{6cb59116-8e61-03a9-39ef-edf64004790d}{130}",
           tag: "p",
-          styles: {
+          style: {
             marginTop: "0pt",
             marginBottom: "0pt",
           },
@@ -839,7 +839,7 @@ Newline.`,
           color: Color.Black,
           id: "p:{6cb59116-8e61-03a9-39ef-edf64004790d}{130}",
           tag: "p",
-          styles: {
+          style: {
             marginTop: "0pt",
             marginBottom: "0pt",
           },

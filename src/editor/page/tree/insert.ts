@@ -10,11 +10,11 @@ import {
   PageContent,
   PageContentMutable,
 } from "../model";
+import { getNodeContent } from "./node";
 import { leftRotate, rightRotate } from "./rotate";
 import {
   findNodeAtOffset,
   getLineStarts,
-  getNodeContent,
   nextNode,
   NodePositionOffset,
   recomputeTreeMetadata,
@@ -237,7 +237,7 @@ function insertInsideNode(
   nodePosition: NodePositionOffset,
 ): void {
   const oldNode = nodePosition.node as ContentNode;
-  const nodeContent = getNodeContent(nodePosition.nodeIndex, page);
+  const nodeContent = getNodeContent(page, nodePosition.nodeIndex);
   const firstPartContent = nodeContent.slice(0, nodePosition.remainder);
   const firstPartLineStarts = getLineStarts(
     firstPartContent,

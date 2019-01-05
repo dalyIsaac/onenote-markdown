@@ -194,7 +194,7 @@ export interface TagNode extends Node {
   /**
    * The inline CSS styles for this node's tag.
    */
-  readonly styles?: KeyValue;
+  readonly style?: KeyValue;
 
   /**
    * The id for this node's tag.
@@ -291,7 +291,7 @@ export interface TagNodeMutable extends NodeMutable {
   /**
    * The inline CSS styles for this node's tag.
    */
-  styles?: KeyValue;
+  style?: KeyValue;
 
   /**
    * The id for this node's tag.

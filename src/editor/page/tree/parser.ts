@@ -211,7 +211,7 @@ export default class Parser {
         break;
       default:
         if (this.lastAttribute === STYLE) {
-          node.styles = chunk
+          node.style = chunk
             .split(";")
             .reduce((acc: KeyValue, curr: string) => {
               const [key, value] = curr.trim().split(":");

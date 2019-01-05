@@ -166,30 +166,6 @@ export function getLineStarts(
 }
 
 /**
- * Gets the contents of a node.
- * @param nodeIndex The index of the node in `page.nodes`.
- * @param page The page/piece table.
- */
-export function getNodeContent(
-  nodeIndex: number,
-  page: PageContent | PageContentMutable,
-): string {
-  if (nodeIndex === SENTINEL_INDEX) {
-    return "";
-  }
-  const node = page.nodes[nodeIndex] as ContentNode;
-  if (node.bufferIndex !== undefined) {
-    const buffer = page.buffers[node.bufferIndex];
-    const startOffset = getOffsetInBuffer(node.bufferIndex, node.start, page);
-    const endOffset = getOffsetInBuffer(node.bufferIndex, node.end, page);
-    const currentContent = buffer.content.slice(startOffset, endOffset);
-    return currentContent;
-  } else {
-    return "";
-  }
-}
-
-/**
  * Gets the offset of a cursor inside a buffer.
  * @param bufferIndex The buffer for which the cursor is located in.
  * @param cursor The cursor for which the offset is desired.
@@ -463,5 +439,19 @@ export function prevNode(
       index: page.nodes[currentNode].parent,
       node: page.nodes[page.nodes[currentNode].parent],
     };
+  }
+}
+
+/**
+ * Performs an in-order traversal of the red-black tree of the nodes (piece table) for a page.
+ * @param page The page for which to provide the traversal.
+ */
+export function* inorderTreeTraversal(
+  page: PageContent | PageContentMutable,
+): IterableIterator<NodePosition> {
+  let value = treeMinimum(page, page.root);
+  while (value.index !== SENTINEL_INDEX) {
+    yield value;
+    value = nextNode(page, value.index);
   }
 }
