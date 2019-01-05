@@ -1,6 +1,15 @@
 pool:
   vmImage: 'ubuntu-16.04'
 
+trigger:
+  branches:
+    include:
+    - master
+    - features/*
+  paths:
+    exclude:
+    - README.md
+
 steps:
 
 - script: npm install --only=dev
