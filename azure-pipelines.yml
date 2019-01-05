@@ -2,8 +2,13 @@ pool:
   vmImage: 'ubuntu-16.04'
 
 trigger:
-- master
-- features/*
+  branches:
+    include:
+    - master
+    - features/*
+  paths:
+    exclude:
+    - README.md
 
 steps:
 
