@@ -1,16 +1,20 @@
 import {
   Color,
   ContentNode,
+  ContentNodeMutable,
   NEWLINE,
   NodeMutable,
   NodeType,
   PageContentMutable,
 } from "../model";
+import { getStartPage as getBigPage } from "../reducer.test";
 import {
   calculateCharCount,
   calculateLineFeedCount,
   findNodeAtOffset,
+  inorderTreeTraversal,
   nextNode,
+  NodePosition,
   prevNode,
   recomputeTreeMetadata,
   SENTINEL,
@@ -353,6 +357,52 @@ describe("editor/page/tree/tree", () => {
     expect(prevNode(getPage(), 1)).toStrictEqual({
       node: page.nodes[0],
       index: 0,
+    });
+  });
+
+  describe("inOrderTreeTraversal", () => {
+    test("Tree which is already in order", () => {
+      const page = getPage();
+      let i = 1;
+      for (const result of inorderTreeTraversal(page)) {
+        expect(result).toEqual({ node: page.nodes[i], index: i });
+        i++;
+      }
+    });
+
+    test("Big tree which is already in order", () => {
+      const page = getBigPage();
+      let i = 1;
+      for (const result of inorderTreeTraversal(page)) {
+        expect(result).toEqual({ node: page.nodes[i], index: i });
+        i++;
+      }
+    });
+
+    test("Big tree which has its order adjusted", () => {
+      const page = getBigPage();
+      (page.nodes[7] as ContentNodeMutable).parent = 3;
+      (page.nodes[8] as ContentNodeMutable).left = 0;
+      (page.nodes[3] as ContentNodeMutable).right = 7;
+      const expectedResult: NodePosition[] = [
+        { node: page.nodes[1], index: 1 },
+        { node: page.nodes[2], index: 2 },
+        { node: page.nodes[3], index: 3 },
+        { node: page.nodes[7], index: 7 },
+        { node: page.nodes[4], index: 4 },
+        { node: page.nodes[5], index: 5 },
+        { node: page.nodes[6], index: 6 },
+        { node: page.nodes[8], index: 8 },
+        { node: page.nodes[9], index: 9 },
+        { node: page.nodes[10], index: 10 },
+        { node: page.nodes[11], index: 11 },
+      ];
+
+      let i = 0;
+      for (const result of inorderTreeTraversal(page)) {
+        expect(result).toEqual(expectedResult[i]);
+        i++;
+      }
     });
   });
 });
