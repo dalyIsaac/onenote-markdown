@@ -50,7 +50,10 @@ export function areTagEnds(
   ) {
     return false;
   }
-  if ((start as TagNode).id !== (end as TagNode).id) {
+  if (
+    (start as TagNode).id !== (end as TagNode).id ||
+    (start as TagNode).tag !== (end as TagNode).tag
+  ) {
     return false;
   }
   return true;

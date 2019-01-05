@@ -8,7 +8,7 @@ import {
 import { leftRotate, rightRotate } from "./rotate";
 import { SENTINEL, SENTINEL_INDEX } from "./tree";
 
-describe("page/tree/rotate", () => {
+describe("editor/page/tree/rotate", () => {
   const constructSimplePieceTableBeforeLeftRotate = (): PageContentMutable => {
     const nodes: ContentNode[] = [
       SENTINEL,

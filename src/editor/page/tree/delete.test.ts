@@ -3,7 +3,7 @@ import { getStartPage } from "../reducer.test";
 import { deleteContent, deleteNode } from "./delete";
 import { SENTINEL, SENTINEL_INDEX } from "./tree";
 
-describe("page/tree/delete", () => {
+describe("editor/page/tree/delete", () => {
   describe("delete node", () => {
     test("Scenario 1: Simple case", () => {
       const page: PageContentMutable = {
@@ -4485,8 +4485,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 14,
@@ -4687,8 +4687,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 65,
                 leftLineFeedCount: 1,
                 length: 14,
@@ -4889,8 +4889,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 14,
@@ -5091,8 +5091,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 14,
@@ -5293,8 +5293,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 14,
@@ -5495,8 +5495,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 14,
@@ -5697,8 +5697,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 14,
@@ -5899,8 +5899,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 14,
@@ -6103,8 +6103,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 14,
@@ -6302,8 +6302,8 @@ describe("page/tree/delete", () => {
               {
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 14,
@@ -6503,8 +6503,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 32 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 31 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 65,
                 leftLineFeedCount: 1,
                 length: 10,
@@ -6705,8 +6705,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 14,
@@ -6909,8 +6909,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 31,
                 leftLineFeedCount: 0,
                 length: 14,
@@ -7111,8 +7111,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 14,
@@ -7313,8 +7313,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 14,
@@ -7515,8 +7515,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 14,
@@ -7717,8 +7717,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 14,
@@ -7919,8 +7919,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 60,
                 leftLineFeedCount: 1,
                 length: 14,
@@ -8123,8 +8123,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 32 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 31 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 60,
                 leftLineFeedCount: 1,
                 length: 10,
@@ -8325,8 +8325,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 32 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 31 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 30,
                 leftLineFeedCount: 0,
                 length: 10,
@@ -8527,8 +8527,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 14,
@@ -8729,8 +8729,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 14,
@@ -8931,8 +8931,8 @@ describe("page/tree/delete", () => {
                 // 3
                 nodeType: NodeType.Content,
                 bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
+                start: { line: 1, column: 27 },
+                end: { line: 1, column: 41 },
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
                 length: 14,

@@ -82,8 +82,8 @@ export const getStartPage = (): PageContentMutable => ({
       // 3
       nodeType: NodeType.Content,
       bufferIndex: 0,
-      start: { line: 1, column: 28 },
-      end: { line: 1, column: 42 },
+      start: { line: 1, column: 27 },
+      end: { line: 1, column: 41 },
       leftCharCount: 0,
       leftLineFeedCount: 0,
       length: 14,
@@ -221,7 +221,7 @@ export const getStartPage = (): PageContentMutable => ({
 
 const PAGE_ID = "pageId";
 
-describe("page/reducer", () => {
+describe("editor/page/reducer", () => {
   const getState = (): StatePages => {
     const state: StatePages = {
       [PAGE_ID]: getStartPage() as PageContent,
@@ -311,8 +311,8 @@ describe("page/reducer", () => {
           // 3
           nodeType: NodeType.Content,
           bufferIndex: 0,
-          start: { line: 1, column: 28 },
-          end: { line: 1, column: 42 },
+          start: { line: 1, column: 27 },
+          end: { line: 1, column: 41 },
           leftCharCount: 0,
           leftLineFeedCount: 0,
           length: 14,
@@ -533,8 +533,8 @@ describe("page/reducer", () => {
           // 3
           nodeType: NodeType.Content,
           bufferIndex: 0,
-          start: { line: 1, column: 28 },
-          end: { line: 1, column: 42 },
+          start: { line: 1, column: 27 },
+          end: { line: 1, column: 41 },
           leftCharCount: 0,
           leftLineFeedCount: 0,
           length: 14,
@@ -745,8 +745,8 @@ describe("page/reducer", () => {
           // 3
           nodeType: NodeType.Content,
           bufferIndex: 0,
-          start: { line: 1, column: 28 },
-          end: { line: 1, column: 42 },
+          start: { line: 1, column: 27 },
+          end: { line: 1, column: 41 },
           leftCharCount: 0,
           leftLineFeedCount: 0,
           length: 14,

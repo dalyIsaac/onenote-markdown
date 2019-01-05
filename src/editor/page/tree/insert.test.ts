@@ -11,7 +11,7 @@ import {
 import { ContentInsert, fixInsert, insertContent } from "./insert";
 import { MAX_BUFFER_LENGTH, SENTINEL, SENTINEL_INDEX } from "./tree";
 
-describe("page/tree/insert", () => {
+describe("editor/page/tree/insert", () => {
   describe("insert functions", () => {
     test("Scenario 1: insert at the end of the previously inserted node", () => {
       const getPage = (): PageContentMutable => ({

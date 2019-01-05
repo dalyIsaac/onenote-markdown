@@ -17,7 +17,7 @@ import {
   SENTINEL_INDEX,
 } from "./tree";
 
-describe("page/tree/tree", () => {
+describe("editor/page/tree/tree", () => {
   const getFinalTree = (): { nodes: ContentNode[]; root: number } => ({
     nodes: [
       SENTINEL,
