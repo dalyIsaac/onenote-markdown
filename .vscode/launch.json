@@ -15,6 +15,24 @@
       "port": 9222,
       "url": "localhost:3000",
       "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch to Chrome Dev against localhost on Windows",
+      "program": "C:\\Program Files (x86)\\Google\\Chrome Dev\\Application\\chrome.exe",
+      "port": 9222,
+      "url": "localhost:3000",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
+      "type": "chrome",
+      "request": "attach",
+      "name": "Attach to Chrome Dev against localhost on Windows",
+      "program": "C:\\Program Files (x86)\\Google\\Chrome Dev\\Application\\chrome.exe",
+      "port": 9222,
+      "url": "localhost:3000",
+      "webRoot": "${workspaceFolder}"
     }
   ]
 }
