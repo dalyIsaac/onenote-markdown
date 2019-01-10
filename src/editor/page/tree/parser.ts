@@ -34,6 +34,7 @@ const bodyTags = {
   h6: "h6",
   cite: "cite",
   sup: "sup",
+  sub: "sub",
 };
 
 /**
@@ -215,7 +216,7 @@ export default class Parser {
             .split(";")
             .reduce((acc: KeyValue, curr: string) => {
               const [key, value] = curr.trim().split(":");
-              acc[this.getAttributeName(key)] = value;
+              acc[this.getAttributeName(key, true)] = value;
               return acc;
             }, {});
         } else if (this.lastAttribute === ID) {
@@ -279,14 +280,18 @@ export default class Parser {
     }
   }
 
-  private getAttributeName(name: string): string {
+  private getAttributeName(name: string, isStyleProperty = false): string {
     const newName = name.split("-").reduce((acc: string, curr: string) => {
-      if (acc) {
-        acc += curr[0].toUpperCase() + curr.slice(1);
+      if (isStyleProperty) {
+        if (acc) {
+          acc += curr[0].toUpperCase() + curr.slice(1);
+        } else {
+          acc = curr;
+        }
+        return acc;
       } else {
-        acc = curr;
+        return acc + curr;
       }
-      return acc;
     }, "");
     return newName;
   }
