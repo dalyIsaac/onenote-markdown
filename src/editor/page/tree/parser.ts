@@ -1,3 +1,4 @@
+import he from "he";
 import { chunks, TokenStream } from "tiny-html-lexer";
 import { KeyValue } from "../../../common";
 import {
@@ -49,14 +50,49 @@ const exteriorTags = {
 };
 
 export default class Parser {
+  /**
+   * The page being created from the HTML content.
+   */
   private page: PageContentMutable;
+
+  /**
+   * The stream of tokens from the HTML lexer.
+   */
   private stream: TokenStream;
+
+  /**
+   * The HTML content passed to the parser.
+   */
   private content: string;
+
+  /**
+   * The name of the last attribute.
+   */
   private lastAttribute = "";
+
+  /**
+   * The first meta attribute.
+   */
   private metaFirstAttribute = "";
-  private node: NodeUnionMutable | {} = {};
+
+  /**
+   * The latest tag or node found.
+   */
+  private tagNode: NodeUnionMutable | {} = {};
+
+  /**
+   * The stack of tags.
+   */
   private tagStack: Array<{ tag: string; id?: string }> = [];
+
+  /**
+   * The length of the content so far, in terms of content characters (not HTML length).
+   */
   private length = 0;
+
+  /**
+   * Prevents unnecessary processing. If `.parse()` is called more than once, it returns the previously acquired page.
+   */
   private writtenTo = false;
 
   constructor(content: string) {
@@ -96,7 +132,7 @@ export default class Parser {
           this.attributeValue(chunk);
           break;
         case "rcdata":
-          if ((this.node as TagNodeMutable).tag === exteriorTags.title) {
+          if ((this.tagNode as TagNodeMutable).tag === exteriorTags.title) {
             this.page.title = chunk;
           } else {
             console.log({ type, chunk });
@@ -104,6 +140,11 @@ export default class Parser {
           break;
         case "data":
           this.data(chunk);
+          break;
+        case "charRef-decimal":
+        case "charRef-hex":
+        case "charRef-named":
+          this.charRef(chunk);
           break;
         case "space":
         case "attribute-value-start":
@@ -121,17 +162,17 @@ export default class Parser {
 
   private startTag(chunk: string): void {
     this.insertPreviousNode();
-    (this.node as TagNodeMutable).tag = chunk.slice(1);
-    (this.node as TagNodeMutable).nodeType = NodeType.StartTag;
-    this.tagStack.push({ tag: (this.node as TagNodeMutable).tag });
-    if ((this.node as TagNodeMutable).tag === exteriorTags.meta) {
+    (this.tagNode as TagNodeMutable).tag = chunk.slice(1);
+    (this.tagNode as TagNodeMutable).nodeType = NodeType.StartTag;
+    this.tagStack.push({ tag: (this.tagNode as TagNodeMutable).tag });
+    if ((this.tagNode as TagNodeMutable).tag === exteriorTags.meta) {
       this.metaFirstAttribute = "";
     }
     if (
-      !exteriorTags.hasOwnProperty((this.node as TagNodeMutable).tag) &&
-      !bodyTags.hasOwnProperty((this.node as TagNodeMutable).tag)
+      !exteriorTags.hasOwnProperty((this.tagNode as TagNodeMutable).tag) &&
+      !bodyTags.hasOwnProperty((this.tagNode as TagNodeMutable).tag)
     ) {
-      console.log({ lastTag: (this.node as TagNodeMutable).tag });
+      console.log({ lastTag: (this.tagNode as TagNodeMutable).tag });
     }
   }
 
@@ -163,23 +204,23 @@ export default class Parser {
 
   private attributeName(chunk: string): void {
     if (
-      (this.node as TagNodeMutable).tag === exteriorTags.meta &&
+      (this.tagNode as TagNodeMutable).tag === exteriorTags.meta &&
       !this.metaFirstAttribute
     ) {
       this.metaFirstAttribute = this.lastAttribute;
     }
     this.lastAttribute = chunk;
     if (
-      !exteriorTags.hasOwnProperty((this.node as TagNodeMutable)
+      !exteriorTags.hasOwnProperty((this.tagNode as TagNodeMutable)
         .tag as string) &&
-      !bodyTags.hasOwnProperty((this.node as TagNodeMutable).tag as string)
+      !bodyTags.hasOwnProperty((this.tagNode as TagNodeMutable).tag as string)
     ) {
       console.log({ lastAttribute: this.lastAttribute });
     }
   }
 
   private attributeValue(chunk: string): void {
-    const node = this.node as TagNodeMutable;
+    const node = this.tagNode as TagNodeMutable;
     switch (node.tag) {
       case exteriorTags.html:
         if (this.lastAttribute === "lang") {
@@ -241,29 +282,7 @@ export default class Parser {
         offset: this.length,
       };
       this.length += chunk.length;
-      if (
-        this.page.buffers.length === 0 ||
-        this.page.buffers[this.page.buffers.length - 1].content.length +
-          chunk.length >=
-          MAX_BUFFER_LENGTH
-      ) {
-        createNodeCreateBuffer(
-          contentInsert,
-          this.page,
-          this.page.nodes.length - 1,
-        );
-      } else {
-        createNodeAppendToBuffer(
-          contentInsert,
-          this.page,
-          this.page.nodes.length - 1,
-        );
-      }
-      fixInsert(this.page, this.page.nodes.length - 1);
-      (this.page.buffers[
-        this.page.buffers.length - 1
-      ] as BufferMutable).isReadOnly = true;
-      this.node = {};
+      this.insertContent(contentInsert);
     } else {
       const t = this.tagStack[this.tagStack.length - 1];
       if (
@@ -274,10 +293,36 @@ export default class Parser {
         console.log({
           type: "data",
           chunk,
-          tag: this.tagStack[this.tagStack.length - 1].tag,
+          tag: t.tag,
         });
       }
     }
+  }
+
+  private insertContent(contentInsert: ContentInsert): void {
+    if (
+      this.page.buffers.length === 0 ||
+      this.page.buffers[this.page.buffers.length - 1].content.length +
+        contentInsert.content.length >=
+        MAX_BUFFER_LENGTH
+    ) {
+      createNodeCreateBuffer(
+        contentInsert,
+        this.page,
+        this.page.nodes.length - 1,
+      );
+    } else {
+      createNodeAppendToBuffer(
+        contentInsert,
+        this.page,
+        this.page.nodes.length - 1,
+      );
+    }
+    fixInsert(this.page, this.page.nodes.length - 1);
+    (this.page.buffers[
+      this.page.buffers.length - 1
+    ] as BufferMutable).isReadOnly = true;
+    this.tagNode = {};
   }
 
   private getAttributeName(name: string, isStyleProperty = false): string {
@@ -297,7 +342,7 @@ export default class Parser {
   }
 
   private insertPreviousNode(): void {
-    const node = this.node as Node;
+    const node = this.tagNode as Node;
     if (
       node.nodeType === NodeType.StartTag ||
       node.nodeType === NodeType.EndTag
@@ -307,7 +352,7 @@ export default class Parser {
   }
 
   private insertTag(): void {
-    const node = this.node as TagNodeMutable;
+    const node = this.tagNode as TagNodeMutable;
     if (bodyTags.hasOwnProperty(node.tag as string)) {
       node.length = 0;
       node.lineFeedCount = 0;
@@ -319,7 +364,15 @@ export default class Parser {
       node.color = Color.Red;
       insertNode(this.page, node, this.length, this.page.nodes.length - 1);
       fixInsert(this.page, this.page.nodes.length - 1);
-      this.node = {};
+      this.tagNode = {};
     }
+  }
+
+  private charRef(chunk: string): void {
+    const contentInsert: ContentInsert = {
+      content: he.decode(chunk),
+      offset: this.length,
+    };
+    this.insertContent(contentInsert);
   }
 }
