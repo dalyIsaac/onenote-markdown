@@ -277,7 +277,7 @@ Newline.`,
           leftCharCount: 0,
           leftLineFeedCount: 0,
           properties: {
-            dataRenderSrc: "source",
+            datarendersrc: "source",
           },
           id: "spanId",
           style: {
