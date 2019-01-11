@@ -25,29 +25,29 @@ const ID = "id";
 /**
  * Tags which reside inside the body of the HTML content.
  */
-const bodyTags = {
-  span: "span",
-  p: "p",
-  h1: "h1",
-  h2: "h2",
-  h3: "h3",
-  h4: "h5",
-  h6: "h6",
-  cite: "cite",
-  sup: "sup",
-  sub: "sub",
-};
+enum BodyTags {
+  span = "span",
+  p = "p",
+  h1 = "h1",
+  h2 = "h2",
+  h3 = "h3",
+  h4 = "h5",
+  h6 = "h6",
+  cite = "cite",
+  sup = "sup",
+  sub = "sub",
+}
 
 /**
  * Tags which do not reside inside the body of the HTML content.
  */
-const exteriorTags = {
-  html: "html",
-  head: "head",
-  title: "title",
-  meta: "meta",
-  body: "body",
-};
+enum ExteriorTags {
+  html = "html",
+  head = "head",
+  title = "title",
+  meta = "meta",
+  body = "body",
+}
 
 export default class Parser {
   /**
@@ -132,7 +132,7 @@ export default class Parser {
           this.attributeValue(chunk);
           break;
         case "rcdata":
-          if ((this.tagNode as TagNodeMutable).tag === exteriorTags.title) {
+          if ((this.tagNode as TagNodeMutable).tag === ExteriorTags.title) {
             this.page.title = chunk;
           } else {
             console.log({ type, chunk });
@@ -165,12 +165,12 @@ export default class Parser {
     (this.tagNode as TagNodeMutable).tag = chunk.slice(1);
     (this.tagNode as TagNodeMutable).nodeType = NodeType.StartTag;
     this.tagStack.push({ tag: (this.tagNode as TagNodeMutable).tag });
-    if ((this.tagNode as TagNodeMutable).tag === exteriorTags.meta) {
+    if ((this.tagNode as TagNodeMutable).tag === ExteriorTags.meta) {
       this.metaFirstAttribute = "";
     }
     if (
-      !exteriorTags.hasOwnProperty((this.tagNode as TagNodeMutable).tag) &&
-      !bodyTags.hasOwnProperty((this.tagNode as TagNodeMutable).tag)
+      !ExteriorTags.hasOwnProperty((this.tagNode as TagNodeMutable).tag) &&
+      !BodyTags.hasOwnProperty((this.tagNode as TagNodeMutable).tag)
     ) {
       console.log({ lastTag: (this.tagNode as TagNodeMutable).tag });
     }
@@ -181,7 +181,7 @@ export default class Parser {
     const currentTag = this.tagStack.pop();
     this.lastAttribute = "";
     this.metaFirstAttribute = "";
-    if (currentTag && bodyTags.hasOwnProperty(currentTag.tag)) {
+    if (currentTag && BodyTags.hasOwnProperty(currentTag.tag)) {
       const newNode: TagNodeMutable = {
         tag: currentTag.tag,
         parent: 0,
@@ -204,16 +204,16 @@ export default class Parser {
 
   private attributeName(chunk: string): void {
     if (
-      (this.tagNode as TagNodeMutable).tag === exteriorTags.meta &&
+      (this.tagNode as TagNodeMutable).tag === ExteriorTags.meta &&
       !this.metaFirstAttribute
     ) {
       this.metaFirstAttribute = this.lastAttribute;
     }
     this.lastAttribute = chunk;
     if (
-      !exteriorTags.hasOwnProperty((this.tagNode as TagNodeMutable)
+      !ExteriorTags.hasOwnProperty((this.tagNode as TagNodeMutable)
         .tag as string) &&
-      !bodyTags.hasOwnProperty((this.tagNode as TagNodeMutable).tag as string)
+      !BodyTags.hasOwnProperty((this.tagNode as TagNodeMutable).tag as string)
     ) {
       console.log({ lastAttribute: this.lastAttribute });
     }
@@ -222,12 +222,12 @@ export default class Parser {
   private attributeValue(chunk: string): void {
     const node = this.tagNode as TagNodeMutable;
     switch (node.tag) {
-      case exteriorTags.html:
+      case ExteriorTags.html:
         if (this.lastAttribute === "lang") {
           this.page.language = chunk;
         }
         break;
-      case exteriorTags.meta:
+      case ExteriorTags.meta:
         if (this.lastAttribute === "content") {
           if (this.metaFirstAttribute === "http-equiv") {
             this.page.charset = chunk.split("=").pop();
@@ -236,7 +236,7 @@ export default class Parser {
           }
         }
         break;
-      case exteriorTags.body:
+      case ExteriorTags.body:
         if (this.lastAttribute === STYLE) {
           const items = chunk.split(";");
           const attributes: KeyValue = items.reduce(
@@ -275,7 +275,7 @@ export default class Parser {
 
   private data(chunk: string): void {
     const lastTag = this.tagStack[this.tagStack.length - 1];
-    if (lastTag && bodyTags.hasOwnProperty(lastTag.tag)) {
+    if (lastTag && BodyTags.hasOwnProperty(lastTag.tag)) {
       this.insertPreviousNode();
       const contentInsert: ContentInsert = {
         content: chunk,
@@ -287,8 +287,8 @@ export default class Parser {
       const t = this.tagStack[this.tagStack.length - 1];
       if (
         t &&
-        !bodyTags.hasOwnProperty(t.tag) &&
-        !exteriorTags.hasOwnProperty(t.tag)
+        !BodyTags.hasOwnProperty(t.tag) &&
+        !ExteriorTags.hasOwnProperty(t.tag)
       ) {
         console.log({
           type: "data",
@@ -342,7 +342,7 @@ export default class Parser {
   }
 
   private insertPreviousNode(): void {
-    const node = this.tagNode as Node;
+    const node = this.tagNode as TagNodeMutable;
     if (
       node.nodeType === NodeType.StartTag ||
       node.nodeType === NodeType.EndTag
@@ -353,7 +353,7 @@ export default class Parser {
 
   private insertTag(): void {
     const node = this.tagNode as TagNodeMutable;
-    if (bodyTags.hasOwnProperty(node.tag as string)) {
+    if (BodyTags.hasOwnProperty(node.tag as string)) {
       node.length = 0;
       node.lineFeedCount = 0;
       node.leftCharCount = 0;

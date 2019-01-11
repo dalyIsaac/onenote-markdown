@@ -93,16 +93,16 @@ export interface BufferCursorMutable {
  * Possible node colors, inside the red and black tree.
  */
 export enum Color {
-  Red = 0,
-  Black = 1,
+  Red = "Red",
+  Black = "Black",
 }
 
 export enum NodeType {
-  StartTag = 0,
-  EndTag = 1,
-  StartEndTag = 2,
-  Content = 3,
-  Sentinel = -1,
+  StartTag = "StartTag",
+  EndTag = "EndTag",
+  StartEndTag = "StartEndTag",
+  Content = "Content",
+  Sentinel = "Sentinel",
 }
 
 //#region Node
