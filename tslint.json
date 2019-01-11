@@ -15,6 +15,7 @@
     "interface-name": [true, "never-prefix"],
     "prefer-conditional-expression": false,
     "typedef": [true, "call-signature"],
-    "no-console": [true, "log", "warn", "info"]
+    "no-console": [true, "log", "warn", "info"],
+    "semicolon": [true, "always", "strict-bound-class-methods"]
   }
 }
