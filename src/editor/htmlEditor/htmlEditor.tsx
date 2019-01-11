@@ -117,11 +117,13 @@ class HtmlEditorComponent extends React.Component<HtmlEditorProps> {
   private onKeyUp = (e: React.KeyboardEvent): void => {
     console.log("Key up");
     if (e.ctrlKey || e.altKey || e.shiftKey || e.metaKey) {
-      console.log("Shortcut");
+      console.log("\tShortcut");
       if (HtmlEditorComponent.arrowKeys.has(e.key as Key)) {
-        console.log("Arrow");
+        console.log("\t\tArrow (selection)");
         this.updateSelection(e);
       }
+    } else if (HtmlEditorComponent.arrowKeys.has(e.key as Key)) {
+      console.log(`\tArrow key movement: ${e.key}`);
     } else {
       e.preventDefault();
     }
