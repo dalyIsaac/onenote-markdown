@@ -139,7 +139,9 @@ export default class Parser {
           }
           break;
         case "data":
-          this.data(chunk);
+          if (chunk !== "") {
+            this.data(chunk);
+          }
           break;
         case "charRef-decimal":
         case "charRef-hex":
@@ -369,6 +371,7 @@ export default class Parser {
   }
 
   private charRef(chunk: string): void {
+    this.insertPreviousNode();
     const contentInsert: ContentInsert = {
       content: he.decode(chunk),
       offset: this.length,

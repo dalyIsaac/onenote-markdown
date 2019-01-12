@@ -29,11 +29,11 @@ interface RenderStackItem {
   index: number;
 }
 
-interface HtmlEditorProps {
+export interface HtmlEditorProps {
   page: PageContent;
 }
 
-class HtmlEditorComponent extends React.Component<HtmlEditorProps> {
+export class HtmlEditorComponent extends React.Component<HtmlEditorProps> {
   private static readonly arrowKeys = new Set([
     Key.ArrowDown,
     Key.ArrowUp,
@@ -88,7 +88,7 @@ class HtmlEditorComponent extends React.Component<HtmlEditorProps> {
                 key: lastStartNode.node.id,
                 onPointerDown: this.pointerDown,
                 onPointerUp: this.pointerUp,
-                editornodetype: NodeType.EndTag,
+                editornodetype: NodeType.StartTag,
               },
               ...elements,
             );

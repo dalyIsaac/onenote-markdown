@@ -50,7 +50,14 @@ export interface NodePositionOffset {
  * Contains a node and its index in a page/piece table.
  */
 export interface NodePosition {
+  /**
+   * Node in the piece table.
+   */
   readonly node: NodeUnion;
+
+  /**
+   * The index of the node inside the `nodes` array, for the piece table.
+   */
   readonly index: number;
 }
 
