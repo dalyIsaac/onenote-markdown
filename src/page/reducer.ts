@@ -9,16 +9,16 @@ import {
   STORE_RECEIVED_PAGE,
   StoreReceivedPageAction,
 } from "./actions";
+import { createNewPage } from "./internalTree/createNewPage";
+import { deleteContent } from "./internalTree/delete";
+import { insertContent } from "./internalTree/insert";
+import { MAX_BUFFER_LENGTH } from "./internalTree/tree";
 import {
   NodeMutable,
   PageContent,
   PageContentMutable,
   StatePages,
 } from "./model";
-import { createNewPage } from "./tree/createNewPage";
-import { deleteContent } from "./tree/delete";
-import { insertContent } from "./tree/insert";
-import { MAX_BUFFER_LENGTH } from "./tree/tree";
 
 /**
  * Reducer for the slice of the state referring to the storage of a page.

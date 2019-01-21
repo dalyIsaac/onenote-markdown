@@ -7,10 +7,20 @@ import {
   REPLACE_CONTENT,
   ReplaceContentAction,
 } from "./actions";
-import { Color, NEWLINE, PageContent, PageContentMutable, StatePages } from "./model";
+import {
+  LF,
+  LF_CONTENT,
+  pageReducerTest,
+} from "./internalTree/createNewPage.test";
+import { SENTINEL, SENTINEL_INDEX } from "./internalTree/tree";
+import {
+  Color,
+  NEWLINE,
+  PageContent,
+  PageContentMutable,
+  StatePages,
+} from "./model";
 import pageReducer from "./reducer";
-import { LF, LF_CONTENT, pageReducerTest } from "./tree/createNewPage.test";
-import { SENTINEL, SENTINEL_INDEX } from "./tree/tree";
 
 export const getStartPage = (): PageContentMutable => ({
   buffers: [
