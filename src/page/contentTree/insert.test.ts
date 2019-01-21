@@ -1,16 +1,16 @@
 import { Color, PageContent, PageContentMutable } from "../pageModel";
-import {
-  BufferMutable,
-  ContentNodeMutable,
-  NEWLINE,
-} from "./contentModel";
+import { SENTINEL_STRUCTURE } from "../structureTree/tree";
+import { SENTINEL_INDEX } from "../tree";
+import { BufferMutable, ContentNodeMutable, NEWLINE } from "./contentModel";
 import { ContentInsert, fixInsert, insertContent } from "./insert";
-import { MAX_BUFFER_LENGTH, SENTINEL, SENTINEL_INDEX } from "./tree";
+import { MAX_BUFFER_LENGTH, SENTINEL_CONTENT } from "./tree";
 
 describe("Functions for inserting content into the piece table/red-black tree.", () => {
   describe("insert functions", () => {
     test("Scenario 1: insert at the end of the previously inserted node", () => {
       const getPage = (): PageContentMutable => ({
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: false,
@@ -19,8 +19,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           },
         ],
         newlineFormat: NEWLINE.LF,
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: {
@@ -41,14 +41,14 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             right: SENTINEL_INDEX,
           },
         ],
-        root: 1,
+        contentRoot: 1,
         previouslyInsertedContentNodeIndex: 1,
         previouslyInsertedContentNodeOffset: 0,
       });
       const expectedPage = getPage();
       (expectedPage.buffers[0] as BufferMutable).content += "b";
-      (expectedPage.nodes[1] as ContentNodeMutable) = {
-        ...(expectedPage.nodes[1] as ContentNodeMutable),
+      (expectedPage.contentNodes[1] as ContentNodeMutable) = {
+        ...(expectedPage.contentNodes[1] as ContentNodeMutable),
         end: {
           line: 0,
           column: 2,
@@ -67,6 +67,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
 
     test("Scenario 2: insert at the end of the previously inserted node", () => {
       const getPage = (): PageContentMutable => ({
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: false,
@@ -75,8 +77,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           },
         ],
         newlineFormat: NEWLINE.LF,
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: {
@@ -97,7 +99,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             right: SENTINEL_INDEX,
           },
         ],
-        root: 1,
+        contentRoot: 1,
         previouslyInsertedContentNodeIndex: 1,
         previouslyInsertedContentNodeOffset: 0,
       });
@@ -108,8 +110,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         content: "ef",
       });
       ((expectedPage
-        .nodes[1] as ContentNodeMutable) as ContentNodeMutable).right = 2;
-      expectedPage.nodes.push({
+        .contentNodes[1] as ContentNodeMutable) as ContentNodeMutable).right = 2;
+      expectedPage.contentNodes.push({
         bufferIndex: 1,
         start: {
           line: 0,
@@ -142,6 +144,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
 
     test("Scenario 3: insert at the end of a node (test 1)", () => {
       const getPage = (): PageContentMutable => ({
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: true,
@@ -154,8 +158,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             content: "efgh",
           },
         ],
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: {
@@ -203,7 +207,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           },
         ],
         newlineFormat: NEWLINE.LF,
-        root: 1,
+        contentRoot: 1,
         previouslyInsertedContentNodeIndex: 3,
         previouslyInsertedContentNodeOffset: 5,
       });
@@ -212,9 +216,10 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       ((expectedPage.buffers[1] as BufferMutable) as BufferMutable).content +=
         "ij\nk";
       (expectedPage.buffers[1] as BufferMutable).lineStarts.push(7);
-      (expectedPage.nodes[1] as ContentNodeMutable).leftCharCount = 6;
-      (expectedPage.nodes[1] as ContentNodeMutable).leftLineFeedCount = 1;
-      expectedPage.nodes.push({
+      (expectedPage.contentNodes[1] as ContentNodeMutable).leftCharCount = 6;
+      (expectedPage
+        .contentNodes[1] as ContentNodeMutable).leftLineFeedCount = 1;
+      expectedPage.contentNodes.push({
         bufferIndex: 1,
         start: { line: 0, column: 4 },
         end: { line: 1, column: 1 },
@@ -227,9 +232,9 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       });
-      (expectedPage.nodes[2] as ContentNodeMutable).right = 4;
-      (expectedPage.nodes[2] as ContentNodeMutable).color = Color.Black;
-      (expectedPage.nodes[3] as ContentNodeMutable).color = Color.Black;
+      (expectedPage.contentNodes[2] as ContentNodeMutable).right = 4;
+      (expectedPage.contentNodes[2] as ContentNodeMutable).color = Color.Black;
+      (expectedPage.contentNodes[3] as ContentNodeMutable).color = Color.Black;
       expectedPage.previouslyInsertedContentNodeIndex = 4;
       expectedPage.previouslyInsertedContentNodeOffset = 2;
       const content: ContentInsert = {
@@ -243,6 +248,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
 
     test("Scenario 3: insert at the end of a node (test 2)", () => {
       const getPage = (): PageContentMutable => ({
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: true,
@@ -255,8 +262,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             content: "efgh",
           },
         ],
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: {
@@ -304,7 +311,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           },
         ],
         newlineFormat: NEWLINE.LF,
-        root: 1,
+        contentRoot: 1,
         previouslyInsertedContentNodeIndex: 2,
         previouslyInsertedContentNodeOffset: 0,
       });
@@ -312,7 +319,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       const expectedPage = getPage();
       (expectedPage.buffers[1] as BufferMutable).content += "ij\nk";
       (expectedPage.buffers[1] as BufferMutable).lineStarts.push(7);
-      expectedPage.nodes.push({
+      expectedPage.contentNodes.push({
         bufferIndex: 1,
         start: { line: 0, column: 4 },
         end: { line: 1, column: 1 },
@@ -325,9 +332,9 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       });
-      (expectedPage.nodes[2] as ContentNodeMutable).right = 4;
-      (expectedPage.nodes[2] as ContentNodeMutable).color = Color.Black;
-      (expectedPage.nodes[3] as ContentNodeMutable).color = Color.Black;
+      (expectedPage.contentNodes[2] as ContentNodeMutable).right = 4;
+      (expectedPage.contentNodes[2] as ContentNodeMutable).color = Color.Black;
+      (expectedPage.contentNodes[3] as ContentNodeMutable).color = Color.Black;
       expectedPage.previouslyInsertedContentNodeIndex = 4;
       expectedPage.previouslyInsertedContentNodeOffset = 9;
       const content: ContentInsert = {
@@ -341,6 +348,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
 
     test("Scenario 4: insert at the end of a node (test 1)", () => {
       const getPage = (): PageContentMutable => ({
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: true,
@@ -353,8 +362,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             content: "efgh",
           },
         ],
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: {
@@ -402,7 +411,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           },
         ],
         newlineFormat: NEWLINE.LF,
-        root: 1,
+        contentRoot: 1,
         previouslyInsertedContentNodeIndex: 3,
         previouslyInsertedContentNodeOffset: 7,
       });
@@ -413,7 +422,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         lineStarts: [0, 3],
         content: "ij\nkl",
       });
-      expectedPage.nodes.push({
+      expectedPage.contentNodes.push({
         bufferIndex: 2,
         start: { line: 0, column: 0 },
         end: { line: 1, column: 2 },
@@ -426,11 +435,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       });
-      (expectedPage.nodes[1] as ContentNodeMutable).leftCharCount = 7;
-      (expectedPage.nodes[1] as ContentNodeMutable).leftLineFeedCount = 1;
-      (expectedPage.nodes[2] as ContentNodeMutable).right = 4;
-      (expectedPage.nodes[2] as ContentNodeMutable).color = Color.Black;
-      (expectedPage.nodes[3] as ContentNodeMutable).color = Color.Black;
+      (expectedPage.contentNodes[1] as ContentNodeMutable).leftCharCount = 7;
+      (expectedPage
+        .contentNodes[1] as ContentNodeMutable).leftLineFeedCount = 1;
+      (expectedPage.contentNodes[2] as ContentNodeMutable).right = 4;
+      (expectedPage.contentNodes[2] as ContentNodeMutable).color = Color.Black;
+      (expectedPage.contentNodes[3] as ContentNodeMutable).color = Color.Black;
       expectedPage.previouslyInsertedContentNodeIndex = 4;
       expectedPage.previouslyInsertedContentNodeOffset = 2;
       const content: ContentInsert = {
@@ -444,6 +454,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
 
     test("Scenario 4: insert at the end of a node (test 2)", () => {
       const getPage = (): PageContentMutable => ({
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: true,
@@ -451,8 +463,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             content: "abc\nd",
           },
         ],
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: {
@@ -474,7 +486,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           },
         ],
         newlineFormat: NEWLINE.LF,
-        root: 1,
+        contentRoot: 1,
         previouslyInsertedContentNodeIndex: 1,
         previouslyInsertedContentNodeOffset: 5,
       });
@@ -484,7 +496,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         lineStarts: [0],
         content: "ef",
       });
-      expectedPage.nodes.push({
+      expectedPage.contentNodes.push({
         bufferIndex: 1,
         start: { line: 0, column: 0 },
         end: { line: 0, column: 2 },
@@ -497,7 +509,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       });
-      (expectedPage.nodes[1] as ContentNodeMutable).right = 2;
+      (expectedPage.contentNodes[1] as ContentNodeMutable).right = 2;
       const page = getPage();
       const content: ContentInsert = {
         content: "ef",
@@ -512,6 +524,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
 
     test("Scenario 5: insert at the start of the content", () => {
       const page: PageContent = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: true,
@@ -524,8 +538,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             content: "ef",
           },
         ],
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: {
@@ -560,11 +574,13 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           },
         ],
         newlineFormat: NEWLINE.LF,
-        root: 1,
+        contentRoot: 1,
         previouslyInsertedContentNodeIndex: 2,
         previouslyInsertedContentNodeOffset: 0,
       };
       const expectedPage: PageContent = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: true,
@@ -577,8 +593,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             content: "efgh\nij",
           },
         ],
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: {
@@ -626,7 +642,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           },
         ],
         newlineFormat: NEWLINE.LF,
-        root: 2,
+        contentRoot: 2,
         previouslyInsertedContentNodeIndex: 3,
         previouslyInsertedContentNodeOffset: 0,
       };
@@ -641,6 +657,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
 
     test("Scenario 6: insert at the start of the content (test 1)", () => {
       const page: PageContent = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: false,
@@ -648,8 +666,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             content: "abc\ndef",
           },
         ],
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: {
@@ -684,11 +702,13 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           },
         ],
         newlineFormat: NEWLINE.LF,
-        root: 1,
+        contentRoot: 1,
         previouslyInsertedContentNodeIndex: 2,
         previouslyInsertedContentNodeOffset: 0,
       };
       const expectedPage: PageContent = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: false,
@@ -701,8 +721,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             content: "gh\nij",
           },
         ],
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: {
@@ -750,7 +770,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           },
         ],
         newlineFormat: NEWLINE.LF,
-        root: 2,
+        contentRoot: 2,
         previouslyInsertedContentNodeIndex: 3,
         previouslyInsertedContentNodeOffset: 0,
       };
@@ -765,6 +785,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
 
     test("Scenario 6: insert at the start of the content (test 2)", () => {
       const page: PageContent = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: true,
@@ -772,8 +794,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             content: "abc\nd",
           },
         ],
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: {
@@ -795,11 +817,14 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           },
         ],
         newlineFormat: NEWLINE.LF,
-        root: 1,
+        contentRoot: 1,
+
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
       };
       const expectedPage: PageContent = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: true,
@@ -812,8 +837,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             content: "ef",
           },
         ],
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: {
@@ -848,7 +873,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           },
         ],
         newlineFormat: NEWLINE.LF,
-        root: 1,
+        contentRoot: 1,
         previouslyInsertedContentNodeIndex: 2,
         previouslyInsertedContentNodeOffset: 0,
       };
@@ -863,6 +888,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
 
     test("Scenario 7: insert inside a node's content", () => {
       const page: PageContent = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: false,
@@ -870,8 +897,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             content: "abc\ndefgh",
           },
         ],
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: { line: 0, column: 0 },
@@ -912,12 +939,14 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             right: SENTINEL_INDEX,
           },
         ],
-        root: 1,
+        contentRoot: 1,
         newlineFormat: NEWLINE.LF,
         previouslyInsertedContentNodeIndex: 3,
         previouslyInsertedContentNodeOffset: 7,
       };
       const expectedPage: PageContent = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: false,
@@ -925,8 +954,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             content: "abc\ndefghij\nkl",
           },
         ],
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: { line: 0, column: 0 },
@@ -993,7 +1022,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             right: SENTINEL_INDEX,
           },
         ],
-        root: 1,
+        contentRoot: 1,
         newlineFormat: NEWLINE.LF,
         previouslyInsertedContentNodeIndex: 5,
         previouslyInsertedContentNodeOffset: 5,
@@ -1009,6 +1038,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
 
     test("Scenario 8: insert inside a node's content (test 1)", () => {
       const page: PageContent = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: false,
@@ -1016,8 +1047,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             content: "abc\ndefgh",
           },
         ],
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: { line: 0, column: 0 },
@@ -1058,12 +1089,14 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             right: SENTINEL_INDEX,
           },
         ],
-        root: 1,
+        contentRoot: 1,
         newlineFormat: NEWLINE.LF,
         previouslyInsertedContentNodeIndex: 3,
         previouslyInsertedContentNodeOffset: 7,
       };
       const expectedPage: PageContent = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: false,
@@ -1076,8 +1109,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             content: "ij\nkl\nmn",
           },
         ],
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: { line: 0, column: 0 },
@@ -1147,7 +1180,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         newlineFormat: NEWLINE.LF,
         previouslyInsertedContentNodeIndex: 5,
         previouslyInsertedContentNodeOffset: 8,
-        root: 1,
+        contentRoot: 1,
       };
       const content: ContentInsert = {
         offset: 8,
@@ -1160,6 +1193,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
 
     test("Scenario 8: insert inside a node's content (test 2", () => {
       const page: PageContent = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: true,
@@ -1167,8 +1202,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             content: "abc\ndefgh",
           },
         ],
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: { line: 0, column: 0 },
@@ -1183,12 +1218,15 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             right: SENTINEL_INDEX,
           },
         ],
-        root: 1,
+        contentRoot: 1,
         newlineFormat: NEWLINE.LF,
+
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
       };
       const expectedPage: PageContent = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: true,
@@ -1201,8 +1239,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             content: "ef",
           },
         ],
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: { line: 0, column: 0 },
@@ -1246,7 +1284,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         previouslyInsertedContentNodeIndex: 3,
         previouslyInsertedContentNodeOffset: 1,
         newlineFormat: NEWLINE.LF,
-        root: 3,
+        contentRoot: 3,
       };
       const content: ContentInsert = {
         offset: 1,
@@ -1262,13 +1300,16 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     describe("black uncle cases", () => {
       test("Scenario 1: Left left case", () => {
         const page: PageContent = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
-          root: 1,
+          contentRoot: 1,
           newlineFormat: NEWLINE.LF,
+
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-          nodes: [
-            SENTINEL,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               // g
               bufferIndex: 0,
@@ -1372,13 +1413,16 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           ],
         };
         const expectedPage: PageContent = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
-          root: 2,
+          contentRoot: 2,
           newlineFormat: NEWLINE.LF,
+
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-          nodes: [
-            SENTINEL,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               // g
               bufferIndex: 0,
@@ -1487,13 +1531,16 @@ describe("Functions for inserting content into the piece table/red-black tree.",
 
       test("Scenario 2: Left right case", () => {
         const page: PageContent = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
+
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 1,
-          nodes: [
-            SENTINEL,
+          contentRoot: 1,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               // g
               bufferIndex: 0,
@@ -1597,13 +1644,16 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           ],
         };
         const expectedPage: PageContent = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
+
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 5,
-          nodes: [
-            SENTINEL,
+          contentRoot: 5,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               // g
               bufferIndex: 0,
@@ -1712,13 +1762,16 @@ describe("Functions for inserting content into the piece table/red-black tree.",
 
       test("Scenario 3: Right right case", () => {
         const page: PageContent = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
+
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 1,
-          nodes: [
-            SENTINEL,
+          contentRoot: 1,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               // g
               bufferIndex: 0,
@@ -1822,13 +1875,16 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           ],
         };
         const expectedPage: PageContent = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
+
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 3,
-          nodes: [
-            SENTINEL,
+          contentRoot: 3,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               // g
               bufferIndex: 0,
@@ -1937,13 +1993,16 @@ describe("Functions for inserting content into the piece table/red-black tree.",
 
       test("Scenario 4: Right left case", () => {
         const page: PageContent = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
+
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 1,
-          nodes: [
-            SENTINEL,
+          contentRoot: 1,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               // g
               bufferIndex: 0,
@@ -2047,13 +2106,16 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           ],
         };
         const expectedPage: PageContent = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
+
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 4,
-          nodes: [
-            SENTINEL,
+          contentRoot: 4,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               // g
               bufferIndex: 0,
@@ -2164,9 +2226,11 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     describe("red uncle cases", () => {
       test("Right red uncle", () => {
         const page: PageContent = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
-          nodes: [
-            SENTINEL,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               // g
               bufferIndex: 0,
@@ -2248,15 +2312,18 @@ describe("Functions for inserting content into the piece table/red-black tree.",
               right: SENTINEL_INDEX,
             },
           ],
-          root: 1,
+          contentRoot: 1,
+
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
         };
         const expectedPage: PageContent = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
-          nodes: [
-            SENTINEL,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               // g
               bufferIndex: 0,
@@ -2338,7 +2405,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
               right: SENTINEL_INDEX,
             },
           ],
-          root: 1,
+          contentRoot: 1,
+
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
@@ -2349,9 +2417,11 @@ describe("Functions for inserting content into the piece table/red-black tree.",
 
       test("Left red uncle", () => {
         const page: PageContent = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
-          nodes: [
-            SENTINEL,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               // g
               bufferIndex: 0,
@@ -2433,15 +2503,18 @@ describe("Functions for inserting content into the piece table/red-black tree.",
               right: SENTINEL_INDEX,
             },
           ],
-          root: 1,
+          contentRoot: 1,
+
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
         };
         const expectedPage: PageContent = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
-          nodes: [
-            SENTINEL,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               // g
               bufferIndex: 0,
@@ -2523,7 +2596,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
               right: SENTINEL_INDEX,
             },
           ],
-          root: 1,
+          contentRoot: 1,
+
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
@@ -2535,6 +2609,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
 
     test("Inserted node is root", () => {
       const getPage = (): PageContentMutable => ({
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [
           {
             isReadOnly: false,
@@ -2543,8 +2619,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           },
         ],
         newlineFormat: NEWLINE.LF,
-        nodes: [
-          SENTINEL,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 0,
             start: {
@@ -2565,12 +2641,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             right: SENTINEL_INDEX,
           },
         ],
-        root: 1,
+        contentRoot: 1,
         previouslyInsertedContentNodeIndex: 1,
         previouslyInsertedContentNodeOffset: 0,
       });
       const expectedPage = getPage();
-      (expectedPage.nodes[1] as ContentNodeMutable).color = Color.Black;
+      (expectedPage.contentNodes[1] as ContentNodeMutable).color = Color.Black;
       const page = getPage();
       fixInsert(page, 1);
       expect(page).toStrictEqual(expectedPage);

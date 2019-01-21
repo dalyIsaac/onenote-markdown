@@ -1,6 +1,6 @@
 import { PageContentMutable } from "../pageModel";
+import { SENTINEL_INDEX } from "../tree";
 import { ContentNodeMutable } from "./contentModel";
-import { SENTINEL_INDEX } from "./tree";
 
 /**
  * Performs a left rotation on the red-black tree, on the given node.
@@ -10,51 +10,53 @@ import { SENTINEL_INDEX } from "./tree";
 export function leftRotate(page: PageContentMutable, nodeIndex: number): void {
   const x = nodeIndex;
 
-  if (page.nodes[x].right === SENTINEL_INDEX) {
+  if (page.contentNodes[x].right === SENTINEL_INDEX) {
     //  you can't left rotate
     return;
   }
 
-  page.nodes[x] = { ...page.nodes[x] };
+  page.contentNodes[x] = { ...page.contentNodes[x] };
 
-  const y = page.nodes[x].right;
-  page.nodes[y] = {
-    ...page.nodes[y],
+  const y = page.contentNodes[x].right;
+  page.contentNodes[y] = {
+    ...page.contentNodes[y],
     leftCharCount:
-      page.nodes[y].leftCharCount +
-      page.nodes[x].leftCharCount +
-      page.nodes[x].length,
+      page.contentNodes[y].leftCharCount +
+      page.contentNodes[x].leftCharCount +
+      page.contentNodes[x].length,
     leftLineFeedCount:
-      page.nodes[y].leftLineFeedCount +
-      page.nodes[x].leftLineFeedCount +
-      page.nodes[x].lineFeedCount,
+      page.contentNodes[y].leftLineFeedCount +
+      page.contentNodes[x].leftLineFeedCount +
+      page.contentNodes[x].lineFeedCount,
   };
 
-  (page.nodes[x] as ContentNodeMutable).right = page.nodes[y].left;
-  if (page.nodes[y].left !== SENTINEL_INDEX) {
-    page.nodes[page.nodes[y].left] = {
-      ...page.nodes[page.nodes[y].left],
+  (page.contentNodes[x] as ContentNodeMutable).right =
+    page.contentNodes[y].left;
+  if (page.contentNodes[y].left !== SENTINEL_INDEX) {
+    page.contentNodes[page.contentNodes[y].left] = {
+      ...page.contentNodes[page.contentNodes[y].left],
       parent: x,
     };
   }
 
-  (page.nodes[y] as ContentNodeMutable).parent = page.nodes[x].parent;
-  if (page.nodes[x].parent === SENTINEL_INDEX) {
-    page.root = y;
-  } else if (x === page.nodes[page.nodes[x].parent].left) {
-    page.nodes[page.nodes[x].parent] = {
-      ...page.nodes[page.nodes[x].parent],
+  (page.contentNodes[y] as ContentNodeMutable).parent =
+    page.contentNodes[x].parent;
+  if (page.contentNodes[x].parent === SENTINEL_INDEX) {
+    page.contentRoot = y;
+  } else if (x === page.contentNodes[page.contentNodes[x].parent].left) {
+    page.contentNodes[page.contentNodes[x].parent] = {
+      ...page.contentNodes[page.contentNodes[x].parent],
       left: y,
     };
   } else {
-    page.nodes[page.nodes[x].parent] = {
-      ...page.nodes[page.nodes[x].parent],
+    page.contentNodes[page.contentNodes[x].parent] = {
+      ...page.contentNodes[page.contentNodes[x].parent],
       right: y,
     };
   }
 
-  (page.nodes[y] as ContentNodeMutable).left = x;
-  (page.nodes[x] as ContentNodeMutable).parent = y;
+  (page.contentNodes[y] as ContentNodeMutable).left = x;
+  (page.contentNodes[x] as ContentNodeMutable).parent = y;
 }
 
 /**
@@ -65,46 +67,48 @@ export function leftRotate(page: PageContentMutable, nodeIndex: number): void {
 export function rightRotate(page: PageContentMutable, nodeIndex: number): void {
   const y = nodeIndex;
 
-  if (page.nodes[y].left === SENTINEL_INDEX) {
+  if (page.contentNodes[y].left === SENTINEL_INDEX) {
     // you can't right rotate
     return;
   }
 
-  page.nodes[y] = { ...page.nodes[y] };
+  page.contentNodes[y] = { ...page.contentNodes[y] };
 
-  const x = page.nodes[y].left;
-  page.nodes[x] = { ...page.nodes[x] };
+  const x = page.contentNodes[y].left;
+  page.contentNodes[x] = { ...page.contentNodes[x] };
 
-  (page.nodes[y] as ContentNodeMutable).left = page.nodes[x].right;
-  if (page.nodes[x].right !== SENTINEL_INDEX) {
-    page.nodes[page.nodes[x].right] = {
-      ...page.nodes[page.nodes[x].right],
+  (page.contentNodes[y] as ContentNodeMutable).left =
+    page.contentNodes[x].right;
+  if (page.contentNodes[x].right !== SENTINEL_INDEX) {
+    page.contentNodes[page.contentNodes[x].right] = {
+      ...page.contentNodes[page.contentNodes[x].right],
       parent: y,
     };
   }
-  (page.nodes[x] as ContentNodeMutable).parent = page.nodes[y].parent;
+  (page.contentNodes[x] as ContentNodeMutable).parent =
+    page.contentNodes[y].parent;
 
-  (page.nodes[y] as ContentNodeMutable).leftCharCount -=
-    page.nodes[x].leftCharCount + page.nodes[x].length;
-  (page.nodes[y] as ContentNodeMutable).leftLineFeedCount -=
-    page.nodes[x].leftLineFeedCount + page.nodes[x].lineFeedCount;
+  (page.contentNodes[y] as ContentNodeMutable).leftCharCount -=
+    page.contentNodes[x].leftCharCount + page.contentNodes[x].length;
+  (page.contentNodes[y] as ContentNodeMutable).leftLineFeedCount -=
+    page.contentNodes[x].leftLineFeedCount + page.contentNodes[x].lineFeedCount;
 
-  if (page.nodes[y].parent === SENTINEL_INDEX) {
-    page.root = x;
-  } else if (y === page.nodes[page.nodes[y].parent].right) {
-    page.nodes[page.nodes[y].parent] = {
-      ...page.nodes[page.nodes[y].parent],
+  if (page.contentNodes[y].parent === SENTINEL_INDEX) {
+    page.contentRoot = x;
+  } else if (y === page.contentNodes[page.contentNodes[y].parent].right) {
+    page.contentNodes[page.contentNodes[y].parent] = {
+      ...page.contentNodes[page.contentNodes[y].parent],
       right: x,
     };
   } else {
-    page.nodes[page.nodes[y].parent] = {
-      ...page.nodes[page.nodes[y].parent],
+    page.contentNodes[page.contentNodes[y].parent] = {
+      ...page.contentNodes[page.contentNodes[y].parent],
       left: x,
     };
   }
-  (page.nodes[x] as ContentNodeMutable).right = y;
-  (page.nodes[y] as ContentNodeMutable).parent = x;
+  (page.contentNodes[x] as ContentNodeMutable).right = y;
+  (page.contentNodes[y] as ContentNodeMutable).parent = x;
 
-  page.nodes[y] = page.nodes[y];
-  page.nodes[x] = page.nodes[x];
+  page.contentNodes[y] = page.contentNodes[y];
+  page.contentNodes[x] = page.contentNodes[x];
 }

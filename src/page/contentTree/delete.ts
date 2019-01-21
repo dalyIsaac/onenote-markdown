@@ -1,5 +1,5 @@
 import { Color, PageContent, PageContentMutable } from "../pageModel";
-import { nextNode, treeMinimum } from "../tree";
+import { nextNode, SENTINEL_INDEX, treeMinimum } from "../tree";
 import { ContentNode, ContentNodeMutable } from "./contentModel";
 import { fixInsert, insertNode } from "./insert";
 import { leftRotate, rightRotate } from "./rotate";
@@ -10,7 +10,6 @@ import {
   NodePositionOffset,
   recomputeTreeMetadata,
   resetSentinel,
-  SENTINEL_INDEX,
   updateTreeMetadata,
 } from "./tree";
 
@@ -33,8 +32,8 @@ export function deleteContent(
 ): void {
   const oldNodeStartPosition = findNodeAtOffset(
     deleteRange.startOffset,
-    page.nodes,
-    page.root,
+    page.contentNodes,
+    page.contentRoot,
   );
   let oldNodeEndPosition: NodePositionOffset;
   const nodeBeforeContent = getNodeBeforeContent(
@@ -57,8 +56,8 @@ export function deleteContent(
   } else {
     oldNodeEndPosition = findNodeAtOffset(
       deleteRange.endOffset,
-      page.nodes,
-      page.root,
+      page.contentNodes,
+      page.contentRoot,
     );
     nodeAfterContent = getNodeAfterContent(
       page,
@@ -75,26 +74,26 @@ export function deleteContent(
     nodeAfterContent.length > 0
   ) {
     // delete from a point in the node to another point in the node
-    (page.nodes[
+    (page.contentNodes[
       oldNodeStartPosition.nodeIndex
     ] as ContentNodeMutable) = nodeBeforeContent;
     insertNode(page, nodeAfterContent, deleteRange.startOffset);
-    fixInsert(page, page.nodes.length - 1);
+    fixInsert(page, page.contentNodes.length - 1);
   } else if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
     // delete from a point in a node to the end of another node
     updateNode(page, oldNodeStartPosition.nodeIndex, nodeBeforeContent);
     updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
-    firstNodeToDelete = nextNode(page.nodes, firstNodeToDelete).index;
+    firstNodeToDelete = nextNode(page.contentNodes, firstNodeToDelete).index;
   } else if (nodeBeforeContent.length > 0) {
     // delete from a point in the node to the end of the node
-    (page.nodes[
+    (page.contentNodes[
       oldNodeStartPosition.nodeIndex
     ] as ContentNodeMutable) = nodeBeforeContent;
     if (oldNodeStartPosition !== oldNodeEndPosition) {
       // deleting from a point in a node to the end of the content
       deleteNode(page, oldNodeEndPosition.nodeIndex);
       nodeAfterLastNodeToDelete = SENTINEL_INDEX;
-      firstNodeToDelete = nextNode(page.nodes, firstNodeToDelete).index;
+      firstNodeToDelete = nextNode(page.contentNodes, firstNodeToDelete).index;
     }
   } else if (nodeAfterContent.length > 0) {
     // delete from the start of the node to a point in the node
@@ -104,7 +103,7 @@ export function deleteContent(
     deleteNode(page, oldNodeStartPosition.nodeIndex);
   } else {
     // deleting up to and including the last node
-    nodeAfterLastNodeToDelete = nextNode(page.nodes, nodeAfterLastNodeToDelete)
+    nodeAfterLastNodeToDelete = nextNode(page.contentNodes, nodeAfterLastNodeToDelete)
       .index;
   }
 
@@ -129,13 +128,13 @@ function updateNode(
   index: number,
   newNode: ContentNodeMutable,
 ): void {
-  newNode.leftCharCount = page.nodes[index].leftCharCount;
-  newNode.leftLineFeedCount = page.nodes[index].leftLineFeedCount;
-  newNode.parent = page.nodes[index].parent;
-  newNode.left = page.nodes[index].left;
-  newNode.right = page.nodes[index].right;
-  newNode.color = page.nodes[index].color;
-  page.nodes[index] = newNode;
+  newNode.leftCharCount = page.contentNodes[index].leftCharCount;
+  newNode.leftLineFeedCount = page.contentNodes[index].leftLineFeedCount;
+  newNode.parent = page.contentNodes[index].parent;
+  newNode.left = page.contentNodes[index].left;
+  newNode.right = page.contentNodes[index].right;
+  newNode.color = page.contentNodes[index].color;
+  page.contentNodes[index] = newNode;
   recomputeTreeMetadata(page, index);
 }
 
@@ -262,7 +261,7 @@ function deleteBetweenNodes(
   let nextIndex = currentIndex;
   while (nextIndex !== endIndex) {
     currentIndex = nextIndex;
-    nextIndex = nextNode(page.nodes, currentIndex).index;
+    nextIndex = nextNode(page.contentNodes, currentIndex).index;
     deleteNode(page, currentIndex);
   }
 }
@@ -274,137 +273,137 @@ function deleteBetweenNodes(
  * @param z The index of the node to delete.
  */
 export function deleteNode(page: PageContentMutable, z: number): void {
-  page.nodes[z] = { ...page.nodes[z] };
+  page.contentNodes[z] = { ...page.contentNodes[z] };
   let xTemp: number;
   let yTemp: number;
 
-  if (page.nodes[z].left === SENTINEL_INDEX) {
+  if (page.contentNodes[z].left === SENTINEL_INDEX) {
     yTemp = z;
-    page.nodes[yTemp] = page.nodes[z];
-    xTemp = page.nodes[yTemp].right;
-  } else if (page.nodes[z].right === SENTINEL_INDEX) {
+    page.contentNodes[yTemp] = page.contentNodes[z];
+    xTemp = page.contentNodes[yTemp].right;
+  } else if (page.contentNodes[z].right === SENTINEL_INDEX) {
     yTemp = z;
-    page.nodes[yTemp] = page.nodes[z];
-    xTemp = page.nodes[yTemp].left;
+    page.contentNodes[yTemp] = page.contentNodes[z];
+    xTemp = page.contentNodes[yTemp].left;
   } else {
-    const result = treeMinimum(page.nodes, page.nodes[z].right);
+    const result = treeMinimum(page.contentNodes, page.contentNodes[z].right);
     yTemp = result.index;
-    page.nodes[yTemp] = { ...(result.node as ContentNode) };
-    xTemp = page.nodes[yTemp].right;
+    page.contentNodes[yTemp] = { ...(result.node as ContentNode) };
+    xTemp = page.contentNodes[yTemp].right;
   }
 
   // This ensures that x and y don't change after this point
   const x = xTemp;
   const y = yTemp;
 
-  page.nodes[x] = { ...page.nodes[x] };
+  page.contentNodes[x] = { ...page.contentNodes[x] };
 
-  if (y === page.root) {
-    page.root = x;
+  if (y === page.contentRoot) {
+    page.contentRoot = x;
 
     // if page.nodes[x] is null, we are removing the only node
-    (page.nodes[x] as ContentNodeMutable).color = Color.Black;
+    (page.contentNodes[x] as ContentNodeMutable).color = Color.Black;
     detach(page, z);
-    page.nodes[page.root] = {
-      ...page.nodes[page.root],
+    page.contentNodes[page.contentRoot] = {
+      ...page.contentNodes[page.contentRoot],
       parent: SENTINEL_INDEX,
     };
     resetSentinel(page);
     return;
   }
 
-  const yWasRed = page.nodes[y].color === Color.Red;
+  const yWasRed = page.contentNodes[y].color === Color.Red;
 
-  if (y === page.nodes[page.nodes[y].parent].left) {
-    page.nodes[page.nodes[y].parent] = {
-      ...page.nodes[page.nodes[y].parent],
+  if (y === page.contentNodes[page.contentNodes[y].parent].left) {
+    page.contentNodes[page.contentNodes[y].parent] = {
+      ...page.contentNodes[page.contentNodes[y].parent],
       left: x,
     };
   } else {
-    page.nodes[page.nodes[y].parent] = {
-      ...page.nodes[page.nodes[y].parent],
+    page.contentNodes[page.contentNodes[y].parent] = {
+      ...page.contentNodes[page.contentNodes[y].parent],
       right: x,
     };
   }
 
   if (y === z) {
-    (page.nodes[x] as ContentNodeMutable).parent = page.nodes[y].parent;
+    (page.contentNodes[x] as ContentNodeMutable).parent = page.contentNodes[y].parent;
     recomputeTreeMetadata(page, x);
   } else {
-    if (page.nodes[y].parent === z) {
-      (page.nodes[x] as ContentNodeMutable).parent = y;
+    if (page.contentNodes[y].parent === z) {
+      (page.contentNodes[x] as ContentNodeMutable).parent = y;
     } else {
-      (page.nodes[x] as ContentNodeMutable).parent = page.nodes[y].parent;
+      (page.contentNodes[x] as ContentNodeMutable).parent = page.contentNodes[y].parent;
     }
 
     // as we make changes to page.nodes[x]'s hierarchy, update leftCharCount of subtree first
     recomputeTreeMetadata(page, x);
 
-    (page.nodes[y] as ContentNodeMutable).left = page.nodes[z].left;
-    (page.nodes[y] as ContentNodeMutable).right = page.nodes[z].right;
-    (page.nodes[y] as ContentNodeMutable).parent = page.nodes[z].parent;
-    (page.nodes[y] as ContentNodeMutable).color = page.nodes[z].color;
+    (page.contentNodes[y] as ContentNodeMutable).left = page.contentNodes[z].left;
+    (page.contentNodes[y] as ContentNodeMutable).right = page.contentNodes[z].right;
+    (page.contentNodes[y] as ContentNodeMutable).parent = page.contentNodes[z].parent;
+    (page.contentNodes[y] as ContentNodeMutable).color = page.contentNodes[z].color;
 
-    if (z === page.root) {
-      page.root = y;
+    if (z === page.contentRoot) {
+      page.contentRoot = y;
     } else {
-      if (z === page.nodes[page.nodes[z].parent].left) {
-        page.nodes[page.nodes[z].parent] = {
-          ...page.nodes[page.nodes[z].parent],
+      if (z === page.contentNodes[page.contentNodes[z].parent].left) {
+        page.contentNodes[page.contentNodes[z].parent] = {
+          ...page.contentNodes[page.contentNodes[z].parent],
           left: y,
         };
       } else {
-        page.nodes[page.nodes[z].parent] = {
-          ...page.nodes[page.nodes[z].parent],
+        page.contentNodes[page.contentNodes[z].parent] = {
+          ...page.contentNodes[page.contentNodes[z].parent],
           right: y,
         };
       }
     }
 
-    if (page.nodes[y].left !== SENTINEL_INDEX) {
-      page.nodes[page.nodes[y].left] = {
-        ...page.nodes[page.nodes[y].left],
+    if (page.contentNodes[y].left !== SENTINEL_INDEX) {
+      page.contentNodes[page.contentNodes[y].left] = {
+        ...page.contentNodes[page.contentNodes[y].left],
         parent: y,
       };
     }
-    if (page.nodes[y].right !== SENTINEL_INDEX) {
-      page.nodes[page.nodes[y].right] = {
-        ...page.nodes[page.nodes[y].right],
+    if (page.contentNodes[y].right !== SENTINEL_INDEX) {
+      page.contentNodes[page.contentNodes[y].right] = {
+        ...page.contentNodes[page.contentNodes[y].right],
         parent: y,
       };
     }
     // update metadata
     // we replace page.nodes[z] with page.nodes[y], so in this sub tree, the length change is page.nodes[z].item.length
-    (page.nodes[y] as ContentNodeMutable).leftCharCount =
-      page.nodes[z].leftCharCount;
-    (page.nodes[y] as ContentNodeMutable).leftLineFeedCount =
-      page.nodes[z].leftLineFeedCount;
+    (page.contentNodes[y] as ContentNodeMutable).leftCharCount =
+      page.contentNodes[z].leftCharCount;
+    (page.contentNodes[y] as ContentNodeMutable).leftLineFeedCount =
+      page.contentNodes[z].leftLineFeedCount;
     recomputeTreeMetadata(page, y);
   }
 
   detach(page, z);
 
-  if (page.nodes[page.nodes[x].parent].left === x) {
+  if (page.contentNodes[page.contentNodes[x].parent].left === x) {
     const newSizeLeft = calculateCharCount(page, x);
     const newLFLeft = calculateLineFeedCount(page, x);
     if (
-      newSizeLeft !== page.nodes[page.nodes[x].parent].leftCharCount ||
-      newLFLeft !== page.nodes[page.nodes[x].parent].leftLineFeedCount
+      newSizeLeft !== page.contentNodes[page.contentNodes[x].parent].leftCharCount ||
+      newLFLeft !== page.contentNodes[page.contentNodes[x].parent].leftLineFeedCount
     ) {
       const charDelta =
-        newSizeLeft - page.nodes[page.nodes[x].parent].leftCharCount;
+        newSizeLeft - page.contentNodes[page.contentNodes[x].parent].leftCharCount;
       const lineFeedDelta =
-        newLFLeft - page.nodes[page.nodes[x].parent].leftLineFeedCount;
-      page.nodes[page.nodes[x].parent] = {
-        ...page.nodes[page.nodes[x].parent],
+        newLFLeft - page.contentNodes[page.contentNodes[x].parent].leftLineFeedCount;
+      page.contentNodes[page.contentNodes[x].parent] = {
+        ...page.contentNodes[page.contentNodes[x].parent],
         leftCharCount: newSizeLeft,
         leftLineFeedCount: newSizeLeft,
       };
-      updateTreeMetadata(page, page.nodes[x].parent, charDelta, lineFeedDelta);
+      updateTreeMetadata(page, page.contentNodes[x].parent, charDelta, lineFeedDelta);
     }
   }
 
-  recomputeTreeMetadata(page, page.nodes[x].parent);
+  recomputeTreeMetadata(page, page.contentNodes[x].parent);
 
   if (yWasRed) {
     resetSentinel(page);
@@ -422,20 +421,20 @@ export function deleteNode(page: PageContentMutable, z: number): void {
  * @param node The index of the node to detach.
  */
 function detach(page: PageContentMutable, node: number): void {
-  const parent = page.nodes[page.nodes[node].parent]; // NEVER ASSIGN TO THIS
+  const parent = page.contentNodes[page.contentNodes[node].parent]; // NEVER ASSIGN TO THIS
   if (parent.left === node) {
-    page.nodes[page.nodes[node].parent] = {
-      ...page.nodes[page.nodes[node].parent],
+    page.contentNodes[page.contentNodes[node].parent] = {
+      ...page.contentNodes[page.contentNodes[node].parent],
       left: SENTINEL_INDEX,
     };
   } else if (parent.right === node) {
-    page.nodes[page.nodes[node].parent] = {
-      ...page.nodes[page.nodes[node].parent],
+    page.contentNodes[page.contentNodes[node].parent] = {
+      ...page.contentNodes[page.contentNodes[node].parent],
       right: SENTINEL_INDEX,
     };
   }
-  page.nodes[node] = {
-    ...page.nodes[node],
+  page.contentNodes[node] = {
+    ...page.contentNodes[node],
     color: Color.Black,
     parent: SENTINEL_INDEX,
     left: SENTINEL_INDEX,
@@ -451,106 +450,106 @@ function detach(page: PageContentMutable, node: number): void {
 function fixDelete(page: PageContentMutable, x: number): void {
   let w: number;
 
-  while (x !== page.root && page.nodes[x].color === Color.Black) {
-    if (x === page.nodes[page.nodes[x].parent].left) {
-      w = page.nodes[page.nodes[x].parent].right;
-      (page.nodes[w] as ContentNodeMutable) = { ...page.nodes[w] };
+  while (x !== page.contentRoot && page.contentNodes[x].color === Color.Black) {
+    if (x === page.contentNodes[page.contentNodes[x].parent].left) {
+      w = page.contentNodes[page.contentNodes[x].parent].right;
+      (page.contentNodes[w] as ContentNodeMutable) = { ...page.contentNodes[w] };
 
-      if ((page.nodes[w] as ContentNodeMutable).color === Color.Red) {
-        (page.nodes[w] as ContentNodeMutable).color = Color.Black;
-        (page.nodes[page.nodes[x].parent] as ContentNodeMutable) = {
-          ...page.nodes[page.nodes[x].parent],
+      if ((page.contentNodes[w] as ContentNodeMutable).color === Color.Red) {
+        (page.contentNodes[w] as ContentNodeMutable).color = Color.Black;
+        (page.contentNodes[page.contentNodes[x].parent] as ContentNodeMutable) = {
+          ...page.contentNodes[page.contentNodes[x].parent],
           color: Color.Red,
         };
-        leftRotate(page, page.nodes[x].parent);
-        w = page.nodes[page.nodes[x].parent].right;
-        (page.nodes[w] as ContentNodeMutable) = { ...page.nodes[w] };
+        leftRotate(page, page.contentNodes[x].parent);
+        w = page.contentNodes[page.contentNodes[x].parent].right;
+        (page.contentNodes[w] as ContentNodeMutable) = { ...page.contentNodes[w] };
       }
 
       if (
-        page.nodes[page.nodes[w].left].color === Color.Black &&
-        page.nodes[page.nodes[w].right].color === Color.Black
+        page.contentNodes[page.contentNodes[w].left].color === Color.Black &&
+        page.contentNodes[page.contentNodes[w].right].color === Color.Black
       ) {
-        (page.nodes[w] as ContentNodeMutable).color = Color.Red;
-        x = page.nodes[x].parent;
-        (page.nodes[x] as ContentNodeMutable) = { ...page.nodes[x] };
+        (page.contentNodes[w] as ContentNodeMutable).color = Color.Red;
+        x = page.contentNodes[x].parent;
+        (page.contentNodes[x] as ContentNodeMutable) = { ...page.contentNodes[x] };
       } else {
-        if (page.nodes[page.nodes[w].right].color === Color.Black) {
-          (page.nodes[page.nodes[w].left] as ContentNodeMutable) = {
-            ...page.nodes[page.nodes[w].left],
+        if (page.contentNodes[page.contentNodes[w].right].color === Color.Black) {
+          (page.contentNodes[page.contentNodes[w].left] as ContentNodeMutable) = {
+            ...page.contentNodes[page.contentNodes[w].left],
             color: Color.Black,
           };
-          (page.nodes[w] as ContentNodeMutable).color = Color.Red;
+          (page.contentNodes[w] as ContentNodeMutable).color = Color.Red;
           rightRotate(page, w);
-          w = page.nodes[page.nodes[x].parent].right;
-          (page.nodes[w] as ContentNodeMutable) = { ...page.nodes[w] };
+          w = page.contentNodes[page.contentNodes[x].parent].right;
+          (page.contentNodes[w] as ContentNodeMutable) = { ...page.contentNodes[w] };
         }
 
-        (page.nodes[w] as ContentNodeMutable).color =
-          page.nodes[page.nodes[x].parent].color;
-        (page.nodes[page.nodes[x].parent] as ContentNodeMutable) = {
-          ...page.nodes[page.nodes[x].parent],
+        (page.contentNodes[w] as ContentNodeMutable).color =
+          page.contentNodes[page.contentNodes[x].parent].color;
+        (page.contentNodes[page.contentNodes[x].parent] as ContentNodeMutable) = {
+          ...page.contentNodes[page.contentNodes[x].parent],
           color: Color.Black,
         };
-        (page.nodes[page.nodes[w].right] as ContentNodeMutable) = {
-          ...page.nodes[page.nodes[w].right],
+        (page.contentNodes[page.contentNodes[w].right] as ContentNodeMutable) = {
+          ...page.contentNodes[page.contentNodes[w].right],
           color: Color.Black,
         };
-        leftRotate(page, page.nodes[x].parent);
-        x = page.root;
-        (page.nodes[x] as ContentNodeMutable) = { ...page.nodes[x] };
+        leftRotate(page, page.contentNodes[x].parent);
+        x = page.contentRoot;
+        (page.contentNodes[x] as ContentNodeMutable) = { ...page.contentNodes[x] };
       }
     } else {
-      w = page.nodes[page.nodes[x].parent].left;
-      (page.nodes[w] as ContentNodeMutable) = { ...page.nodes[w] };
+      w = page.contentNodes[page.contentNodes[x].parent].left;
+      (page.contentNodes[w] as ContentNodeMutable) = { ...page.contentNodes[w] };
 
-      if (page.nodes[w].color === Color.Red) {
-        (page.nodes[w] as ContentNodeMutable).color = Color.Black;
-        (page.nodes[page.nodes[x].parent] as ContentNodeMutable) = {
-          ...page.nodes[page.nodes[x].parent],
+      if (page.contentNodes[w].color === Color.Red) {
+        (page.contentNodes[w] as ContentNodeMutable).color = Color.Black;
+        (page.contentNodes[page.contentNodes[x].parent] as ContentNodeMutable) = {
+          ...page.contentNodes[page.contentNodes[x].parent],
           color: Color.Red,
         };
-        rightRotate(page, page.nodes[x].parent);
-        w = page.nodes[page.nodes[x].parent].left;
-        (page.nodes[w] as ContentNodeMutable) = { ...page.nodes[w] };
+        rightRotate(page, page.contentNodes[x].parent);
+        w = page.contentNodes[page.contentNodes[x].parent].left;
+        (page.contentNodes[w] as ContentNodeMutable) = { ...page.contentNodes[w] };
       }
 
       if (
-        page.nodes[page.nodes[w].left].color === Color.Black &&
-        page.nodes[page.nodes[w].right].color === Color.Black
+        page.contentNodes[page.contentNodes[w].left].color === Color.Black &&
+        page.contentNodes[page.contentNodes[w].right].color === Color.Black
       ) {
-        (page.nodes[w] as ContentNodeMutable).color = Color.Red;
-        x = page.nodes[x].parent;
-        (page.nodes[x] as ContentNodeMutable) = { ...page.nodes[x] };
+        (page.contentNodes[w] as ContentNodeMutable).color = Color.Red;
+        x = page.contentNodes[x].parent;
+        (page.contentNodes[x] as ContentNodeMutable) = { ...page.contentNodes[x] };
       } else {
-        if (page.nodes[page.nodes[w].left].color === Color.Black) {
-          (page.nodes[page.nodes[w].right] as ContentNodeMutable) = {
-            ...page.nodes[page.nodes[w].right],
+        if (page.contentNodes[page.contentNodes[w].left].color === Color.Black) {
+          (page.contentNodes[page.contentNodes[w].right] as ContentNodeMutable) = {
+            ...page.contentNodes[page.contentNodes[w].right],
             color: Color.Black,
           };
-          (page.nodes[w] as ContentNodeMutable).color = Color.Red;
+          (page.contentNodes[w] as ContentNodeMutable).color = Color.Red;
           leftRotate(page, w);
-          w = page.nodes[page.nodes[x].parent].left;
+          w = page.contentNodes[page.contentNodes[x].parent].left;
         }
 
-        (page.nodes[w] as ContentNodeMutable).color =
-          page.nodes[page.nodes[x].parent].color;
-        (page.nodes[page.nodes[x].parent] as ContentNodeMutable) = {
-          ...page.nodes[page.nodes[x].parent],
+        (page.contentNodes[w] as ContentNodeMutable).color =
+          page.contentNodes[page.contentNodes[x].parent].color;
+        (page.contentNodes[page.contentNodes[x].parent] as ContentNodeMutable) = {
+          ...page.contentNodes[page.contentNodes[x].parent],
           color: Color.Black,
         };
-        (page.nodes[page.nodes[w].left] as ContentNodeMutable) = {
-          ...page.nodes[page.nodes[w].left],
+        (page.contentNodes[page.contentNodes[w].left] as ContentNodeMutable) = {
+          ...page.contentNodes[page.contentNodes[w].left],
           color: Color.Black,
         };
-        rightRotate(page, page.nodes[x].parent);
-        x = page.root;
-        (page.nodes[x] as ContentNodeMutable) = { ...page.nodes[x] };
+        rightRotate(page, page.contentNodes[x].parent);
+        x = page.contentRoot;
+        (page.contentNodes[x] as ContentNodeMutable) = { ...page.contentNodes[x] };
       }
     }
   }
-  (page.nodes[x] as ContentNodeMutable) = {
-    ...page.nodes[x],
+  (page.contentNodes[x] as ContentNodeMutable) = {
+    ...page.contentNodes[x],
     color: Color.Black,
   };
 }

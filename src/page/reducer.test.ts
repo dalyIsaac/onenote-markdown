@@ -13,7 +13,7 @@ import {
   LF_CONTENT,
   pageReducerTest,
 } from "./contentTree/createNewPage.test";
-import { SENTINEL, SENTINEL_INDEX } from "./contentTree/tree";
+import { SENTINEL_CONTENT } from "./contentTree/tree";
 import {
   Color,
   PageContent,
@@ -21,8 +21,12 @@ import {
   StatePages,
 } from "./pageModel";
 import pageReducer from "./reducer";
+import { SENTINEL_STRUCTURE } from "./structureTree/tree";
+import { SENTINEL_INDEX } from "./tree";
 
 export const getStartPage = (): PageContentMutable => ({
+  structureNodes: [SENTINEL_STRUCTURE],
+  structureRoot: SENTINEL_INDEX,
   buffers: [
     {
       isReadOnly: true,
@@ -38,8 +42,8 @@ export const getStartPage = (): PageContentMutable => ({
     },
   ],
   newlineFormat: NEWLINE.LF,
-  nodes: [
-    SENTINEL,
+  contentNodes: [
+    SENTINEL_CONTENT,
     {
       // 1
       bufferIndex: 0,
@@ -195,7 +199,8 @@ export const getStartPage = (): PageContentMutable => ({
       right: SENTINEL_INDEX,
     },
   ],
-  root: 6,
+  contentRoot: 6,
+
   previouslyInsertedContentNodeIndex: null,
   previouslyInsertedContentNodeOffset: null,
 });
@@ -233,10 +238,12 @@ describe("page/reducer", () => {
     };
 
     const expectedPage: PageContent = {
-      root: 6,
+      contentRoot: 6,
       previouslyInsertedContentNodeIndex: 12,
       previouslyInsertedContentNodeOffset: 127,
       newlineFormat: NEWLINE.LF,
+      structureNodes: [SENTINEL_STRUCTURE],
+      structureRoot: SENTINEL_INDEX,
       buffers: [
         {
           isReadOnly: true,
@@ -252,8 +259,8 @@ describe("page/reducer", () => {
             "vdayRave, rave against the dying of the lightgg.Hello world",
         },
       ],
-      nodes: [
-        SENTINEL,
+      contentNodes: [
+        SENTINEL_CONTENT,
         {
           // 1
           bufferIndex: 0,
@@ -447,6 +454,8 @@ describe("page/reducer", () => {
     const result = pageReducer(state, action);
 
     const expectedPage: PageContent = {
+      structureNodes: [SENTINEL_STRUCTURE],
+      structureRoot: SENTINEL_INDEX,
       buffers: [
         {
           isReadOnly: true,
@@ -462,8 +471,8 @@ describe("page/reducer", () => {
         },
       ],
       newlineFormat: NEWLINE.LF,
-      nodes: [
-        SENTINEL,
+      contentNodes: [
+        SENTINEL_CONTENT,
         {
           // 1
           bufferIndex: 0,
@@ -619,7 +628,8 @@ describe("page/reducer", () => {
           right: SENTINEL_INDEX,
         },
       ],
-      root: 6,
+      contentRoot: 6,
+
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
     };
@@ -643,6 +653,8 @@ describe("page/reducer", () => {
     const result = pageReducer(state, action);
 
     const expectedPage: PageContent = {
+      structureNodes: [SENTINEL_STRUCTURE],
+      structureRoot: SENTINEL_INDEX,
       buffers: [
         {
           isReadOnly: true,
@@ -659,8 +671,8 @@ describe("page/reducer", () => {
         },
       ],
       newlineFormat: NEWLINE.LF,
-      nodes: [
-        SENTINEL,
+      contentNodes: [
+        SENTINEL_CONTENT,
         {
           // 1
           bufferIndex: 0,
@@ -830,7 +842,7 @@ describe("page/reducer", () => {
           parent: 10,
         },
       ],
-      root: 6,
+      contentRoot: 6,
       previouslyInsertedContentNodeIndex: 12,
       previouslyInsertedContentNodeOffset: 126,
     };

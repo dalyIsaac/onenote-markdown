@@ -1,32 +1,32 @@
 import { Color, PageContentMutable } from "../pageModel";
-import {
-  ContentNode,
-  ContentNodeMutable,
-  NEWLINE,
-} from "./contentModel";
+import { SENTINEL_STRUCTURE } from "../structureTree/tree";
+import { SENTINEL_INDEX } from "../tree";
+import { ContentNode, ContentNodeMutable, NEWLINE } from "./contentModel";
 import {
   calculateCharCount,
   calculateLineFeedCount,
   findNodeAtOffset,
   recomputeTreeMetadata,
-  SENTINEL,
-  SENTINEL_INDEX,
+  SENTINEL_CONTENT,
 } from "./tree";
 
 export const getPage = (): PageContentMutable => ({
+  structureNodes: [SENTINEL_STRUCTURE],
+  structureRoot: SENTINEL_INDEX,
   buffers: [],
   ...getFinalTree(),
   newlineFormat: NEWLINE.LF,
+
   previouslyInsertedContentNodeIndex: null,
   previouslyInsertedContentNodeOffset: null,
 });
 
 export const getFinalTree = (): {
-  nodes: ContentNode[];
-  root: number;
+  contentNodes: ContentNode[];
+  contentRoot: number;
 } => ({
-  nodes: [
-    SENTINEL,
+  contentNodes: [
+    SENTINEL_CONTENT,
     {
       // 1
       bufferIndex: 1,
@@ -126,15 +126,15 @@ export const getFinalTree = (): {
       right: SENTINEL_INDEX,
     },
   ],
-  root: 2,
+  contentRoot: 2,
 });
 
 describe("Functions for common tree operations on the piece table/red-black tree.", () => {
   test("findNodeAtOffset", () => {
-    const { nodes, root } = getFinalTree();
+    const { contentNodes: nodes, contentRoot: root } = getFinalTree();
 
     expect(findNodeAtOffset(-1, nodes, root)).toStrictEqual({
-      node: SENTINEL,
+      node: SENTINEL_CONTENT,
       nodeIndex: 1,
       remainder: 0,
       nodeStartOffset: 0,
@@ -256,12 +256,12 @@ describe("Functions for common tree operations on the piece table/red-black tree
 
   test("Calculate line feed count", () => {
     const page = getPage();
-    expect(calculateLineFeedCount(page, page.root)).toBe(2);
+    expect(calculateLineFeedCount(page, page.contentRoot)).toBe(2);
   });
 
   test("Calculate character count", () => {
     const page = getPage();
-    expect(calculateCharCount(page, page.root)).toBe(121);
+    expect(calculateCharCount(page, page.contentRoot)).toBe(121);
   });
 
   test("Recompute tree metadata: add a node to the end", () => {
@@ -272,11 +272,11 @@ describe("Functions for common tree operations on the piece table/red-black tree
 
   test("Recompute tree metadata: add a node in the middle", () => {
     const page = getPage(); // hypothetically added node 5
-    (page.nodes[6] as ContentNodeMutable).leftCharCount = 12;
-    (page.nodes[5] as ContentNodeMutable).lineFeedCount = 5;
+    (page.contentNodes[6] as ContentNodeMutable).leftCharCount = 12;
+    (page.contentNodes[5] as ContentNodeMutable).lineFeedCount = 5;
     const expectedPage = getPage();
-    (expectedPage.nodes[6] as ContentNodeMutable).leftLineFeedCount += 5;
-    (expectedPage.nodes[5] as ContentNodeMutable).lineFeedCount += 5;
+    (expectedPage.contentNodes[6] as ContentNodeMutable).leftLineFeedCount += 5;
+    (expectedPage.contentNodes[5] as ContentNodeMutable).lineFeedCount += 5;
 
     recomputeTreeMetadata(page, 4);
     expect(page).toStrictEqual(expectedPage);

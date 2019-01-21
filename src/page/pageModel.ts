@@ -1,8 +1,8 @@
+import { Buffer, CharValues, ContentNode } from "./contentTree/contentModel";
 import {
-  Buffer,
-  CharValues,
-  ContentNode,
-} from "./contentTree/contentModel";
+  StructureNode,
+  StructureNodeMutable,
+} from "./structureTree/structureModel";
 
 //#region Node
 
@@ -71,13 +71,23 @@ export interface PageContent {
   /**
    * The nodes of the piece table. The first node is always the `SENTINEL` node.
    */
-  readonly nodes: ReadonlyArray<ContentNode>;
+  readonly contentNodes: ReadonlyArray<ContentNode>;
 
   /**
    * The index of the root node for the piece table for this page.
    * When the tree is empty, the root will be `SENTINEL_INDEX`.
    */
-  readonly root: number;
+  readonly contentRoot: number;
+
+  /**
+   * The nodes of the red-black tree for the HTML structure.
+   */
+  readonly structureNodes: ReadonlyArray<StructureNode>;
+
+  /**
+   * The root of the red-black tree for the HTML structure.
+   */
+  readonly structureRoot: number;
 
   /**
    * The index of the last node which had content inserted into it.
@@ -106,13 +116,23 @@ export interface PageContentMutable {
   /**
    * The nodes of the piece table. The first node is always the `SENTINEL` node.
    */
-  nodes: ContentNode[];
+  contentNodes: ContentNode[];
 
   /**
    * The index of the root node for the piece table for this page.
    * When the tree is empty, the root will be `SENTINEL_INDEX`.
    */
-  root: number;
+  contentRoot: number;
+
+  /**
+   * The nodes of the red-black tree for the HTML structure.
+   */
+  structureNodes: StructureNodeMutable[];
+
+  /**
+   * The root of the red-black tree for the HTML structure.
+   */
+  structureRoot: number;
 
   /**
    * The index of the last node which had content inserted into it.

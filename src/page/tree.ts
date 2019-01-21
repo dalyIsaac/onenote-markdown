@@ -1,5 +1,10 @@
-import { SENTINEL, SENTINEL_INDEX } from "./contentTree/tree";
+import { SENTINEL_CONTENT } from "./contentTree/tree";
 import { Node } from "./pageModel";
+
+/**
+ * The index of the sentinel node in the `nodes` array of a page/piece table.
+ */
+export const SENTINEL_INDEX = 0;
 
 /**
  * Contains a node and its index in a page/piece table.
@@ -61,7 +66,7 @@ export function nextNode(
   }
 
   if (nodes[currentNode].parent === SENTINEL_INDEX) {
-    return { node: SENTINEL, index: SENTINEL_INDEX };
+    return { node: SENTINEL_CONTENT, index: SENTINEL_INDEX };
   } else {
     return {
       index: nodes[currentNode].parent,
@@ -92,7 +97,7 @@ export function prevNode(
   }
 
   if (nodes[currentNode].parent === SENTINEL_INDEX) {
-    return { node: SENTINEL, index: SENTINEL_INDEX };
+    return { node: SENTINEL_CONTENT, index: SENTINEL_INDEX };
   } else {
     return {
       index: nodes[currentNode].parent,

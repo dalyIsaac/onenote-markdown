@@ -2,9 +2,11 @@ import { OnenotePage } from "@microsoft/microsoft-graph-types";
 import { STORE_RECEIVED_PAGE, StoreReceivedPageAction } from "../actions";
 import { Color, PageContent, StatePages } from "../pageModel";
 import pageReducer from "../reducer";
+import { SENTINEL_STRUCTURE } from "../structureTree/tree";
+import { SENTINEL_INDEX } from "../tree";
 import { Buffer, BufferCursor, ContentNode } from "./contentModel";
 import { createNewPage } from "./createNewPage";
-import { SENTINEL, SENTINEL_INDEX } from "./tree";
+import { SENTINEL_CONTENT } from "./tree";
 
 export const LF_CONTENT = `<html lang="en-NZ">
     <head>
@@ -64,10 +66,16 @@ export const constructExpectedNewPageState = (
 ): StatePages => {
   const expectedState: StatePages = {
     [id]: {
+      structureNodes: [SENTINEL_STRUCTURE],
+      structureRoot: SENTINEL_INDEX,
       buffers: [constructExpectedNewPageBuffer(content, newline)],
       newlineFormat: constructExpectedNewPageNewlineFormat(content, newline),
-      nodes: [SENTINEL, constructExpectedNewPageNode(content, newline)],
-      root: constructExpectedNewPageRoot(),
+      contentNodes: [
+        SENTINEL_CONTENT,
+        constructExpectedNewPageNode(content, newline),
+      ],
+      contentRoot: constructExpectedNewPageRoot(),
+
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
     },
@@ -206,7 +214,7 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
   const nodesTest = (content: string, newline: string) => {
     const { storedPage } = variables(content);
     const expectedNode = constructExpectedNewPageNode(content, newline);
-    const node = storedPage.nodes[1];
+    const node = storedPage.contentNodes[1];
     expect(node).toStrictEqual(expectedNode);
   };
 
@@ -217,7 +225,7 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
   const rootTest = (content: string) => {
     const { storedPage } = variables(content);
     const expectedRoot = constructExpectedNewPageRoot();
-    expect(storedPage.root).toBe(expectedRoot);
+    expect(storedPage.contentRoot).toBe(expectedRoot);
   };
 
   /**

@@ -1,12 +1,9 @@
 import { OnenotePage } from "@microsoft/microsoft-graph-types";
 import { Color, PageContent } from "../pageModel";
+import { SENTINEL_STRUCTURE } from "../structureTree/tree";
+import { SENTINEL_INDEX } from "../tree";
 import { Buffer, ContentNode } from "./contentModel";
-import {
-  getLineStarts,
-  getNewlineFormat,
-  SENTINEL,
-  SENTINEL_INDEX,
-} from "./tree";
+import { getLineStarts, getNewlineFormat, SENTINEL_CONTENT } from "./tree";
 
 /**
  * Creates a new page, and its associated piece table.
@@ -37,10 +34,12 @@ export function createNewPage(receivedPage: OnenotePage): PageContent {
     right: SENTINEL_INDEX,
   };
   return {
+    structureNodes: [SENTINEL_STRUCTURE],
+    structureRoot: SENTINEL_INDEX,
     buffers: [buffer],
     newlineFormat,
-    nodes: [SENTINEL, node],
-    root: 0,
+    contentNodes: [SENTINEL_CONTENT, node],
+    contentRoot: 0,
     previouslyInsertedContentNodeIndex: null,
     previouslyInsertedContentNodeOffset: null,
   };

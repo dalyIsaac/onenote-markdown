@@ -1,20 +1,24 @@
 import { Color, PageContentMutable } from "../pageModel";
 import { getStartPage } from "../reducer.test";
+import { SENTINEL_STRUCTURE } from "../structureTree/tree";
+import { SENTINEL_INDEX } from "../tree";
 import { NEWLINE } from "./contentModel";
 import { deleteContent, deleteNode } from "./delete";
-import { SENTINEL, SENTINEL_INDEX } from "./tree";
+import { SENTINEL_CONTENT } from "./tree";
 
 describe("page/tree/delete", () => {
   describe("delete node", () => {
     test("Scenario 1: Simple case", () => {
       const page: PageContentMutable = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [],
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         newlineFormat: NEWLINE.LF,
-        root: 3,
-        nodes: [
-          SENTINEL,
+        contentRoot: 3,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             // u
             bufferIndex: 1,
@@ -96,13 +100,15 @@ describe("page/tree/delete", () => {
         ],
       };
       const expectedPage: PageContentMutable = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [],
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         newlineFormat: NEWLINE.LF,
-        root: 3,
-        nodes: [
-          SENTINEL,
+        contentRoot: 3,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             // u
             bufferIndex: 1,
@@ -190,13 +196,15 @@ describe("page/tree/delete", () => {
     describe("Sibling s is black and at least one of s's children is red", () => {
       test("Scenario 2: Right right case", () => {
         const page: PageContentMutable = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 2,
-          nodes: [
-            SENTINEL,
+          contentRoot: 2,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               bufferIndex: 1,
               start: {
@@ -295,13 +303,15 @@ describe("page/tree/delete", () => {
           ],
         };
         const expectedPage: PageContentMutable = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 4,
-          nodes: [
-            SENTINEL,
+          contentRoot: 4,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               bufferIndex: 1,
               start: {
@@ -405,13 +415,15 @@ describe("page/tree/delete", () => {
 
       test("Scenario 3: Right left case", () => {
         const page: PageContentMutable = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 2,
-          nodes: [
-            SENTINEL,
+          contentRoot: 2,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               bufferIndex: 1,
               start: {
@@ -493,13 +505,15 @@ describe("page/tree/delete", () => {
           ],
         };
         const expectedPage: PageContentMutable = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 3,
-          nodes: [
-            SENTINEL,
+          contentRoot: 3,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               bufferIndex: 1,
               start: {
@@ -584,13 +598,15 @@ describe("page/tree/delete", () => {
 
       test("Scenario 4: Left left case", () => {
         const page: PageContentMutable = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 4,
-          nodes: [
-            SENTINEL,
+          contentRoot: 4,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               bufferIndex: 1,
               start: {
@@ -689,13 +705,15 @@ describe("page/tree/delete", () => {
           ],
         };
         const expectedPage: PageContentMutable = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 2,
-          nodes: [
-            SENTINEL,
+          contentRoot: 2,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               bufferIndex: 1,
               start: {
@@ -799,13 +817,15 @@ describe("page/tree/delete", () => {
 
       test("Scenario 5: Left right case", () => {
         const page: PageContentMutable = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 3,
-          nodes: [
-            SENTINEL,
+          contentRoot: 3,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               bufferIndex: 1,
               start: {
@@ -885,13 +905,15 @@ describe("page/tree/delete", () => {
           ],
         };
         const expectedPage: PageContentMutable = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 2,
-          nodes: [
-            SENTINEL,
+          contentRoot: 2,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               bufferIndex: 1,
               start: {
@@ -977,13 +999,15 @@ describe("page/tree/delete", () => {
 
     test("Scenario 6: Sibling s is black, and both its children are black", () => {
       const page: PageContentMutable = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [],
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         newlineFormat: NEWLINE.LF,
-        root: 2,
-        nodes: [
-          SENTINEL,
+        contentRoot: 2,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 1,
             start: {
@@ -1044,13 +1068,15 @@ describe("page/tree/delete", () => {
         ],
       };
       const expectedPage: PageContentMutable = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [],
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         newlineFormat: NEWLINE.LF,
-        root: 2,
-        nodes: [
-          SENTINEL,
+        contentRoot: 2,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 1,
             start: {
@@ -1117,13 +1143,15 @@ describe("page/tree/delete", () => {
     describe("Sibling s is red", () => {
       test("Scenario 7: sibling s is right child of its parent", () => {
         const page: PageContentMutable = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 2,
-          nodes: [
-            SENTINEL,
+          contentRoot: 2,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               bufferIndex: 1,
               start: {
@@ -1222,13 +1250,15 @@ describe("page/tree/delete", () => {
           ],
         };
         const expectedPage: PageContentMutable = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 4,
-          nodes: [
-            SENTINEL,
+          contentRoot: 4,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               bufferIndex: 1,
               start: {
@@ -1332,13 +1362,15 @@ describe("page/tree/delete", () => {
 
       test("Scenario 8: sibling s is left child of its parent", () => {
         const page: PageContentMutable = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 4,
-          nodes: [
-            SENTINEL,
+          contentRoot: 4,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               bufferIndex: 1,
               start: {
@@ -1437,13 +1469,15 @@ describe("page/tree/delete", () => {
           ],
         };
         const expectedPage: PageContentMutable = {
+          structureNodes: [SENTINEL_STRUCTURE],
+          structureRoot: SENTINEL_INDEX,
           buffers: [],
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
-          root: 2,
-          nodes: [
-            SENTINEL,
+          contentRoot: 2,
+          contentNodes: [
+            SENTINEL_CONTENT,
             {
               bufferIndex: 1,
               start: {
@@ -1548,13 +1582,15 @@ describe("page/tree/delete", () => {
 
     test("Scenario 9: delete root", () => {
       const page: PageContentMutable = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [],
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         newlineFormat: NEWLINE.LF,
-        root: 1,
-        nodes: [
-          SENTINEL,
+        contentRoot: 1,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 1,
             start: {
@@ -1577,13 +1613,15 @@ describe("page/tree/delete", () => {
         ],
       };
       const expectedPage: PageContentMutable = {
+        structureNodes: [SENTINEL_STRUCTURE],
+        structureRoot: SENTINEL_INDEX,
         buffers: [],
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         newlineFormat: NEWLINE.LF,
-        root: SENTINEL_INDEX,
-        nodes: [
-          SENTINEL,
+        contentRoot: SENTINEL_INDEX,
+        contentNodes: [
+          SENTINEL_CONTENT,
           {
             bufferIndex: 1,
             start: {
@@ -1615,6 +1653,8 @@ describe("page/tree/delete", () => {
       describe("Scenario 1a: delete the content from an entire node", () => {
         test("Scenario 1a: Test 1", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -1623,8 +1663,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -1652,11 +1692,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -1665,8 +1707,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -1694,7 +1736,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -1707,6 +1750,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1a: Test 2", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -1715,8 +1760,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -1744,11 +1789,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -1757,8 +1804,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -1786,7 +1833,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -1799,6 +1847,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1a: Test 3", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -1807,8 +1857,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -1836,11 +1886,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -1849,8 +1901,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -1878,7 +1930,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 2,
+            contentRoot: 2,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -1891,6 +1944,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1a: Test 4", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -1899,8 +1954,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -1928,11 +1983,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -1941,8 +1998,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -1970,7 +2027,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 2,
+            contentRoot: 2,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -1985,6 +2043,8 @@ describe("page/tree/delete", () => {
       describe("Scenario 1b: delete from the start of a node to a point in the node", () => {
         test("Scenario 1b: Test 1", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -1993,8 +2053,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2022,11 +2082,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2035,8 +2097,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 1, column: 0 },
@@ -2064,7 +2126,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -2077,6 +2140,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1b: Test 2", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2085,8 +2150,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2114,11 +2179,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2127,8 +2194,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 1, column: 0 },
@@ -2156,7 +2223,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -2169,6 +2237,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1b: Test 3", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2177,8 +2247,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2206,11 +2276,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2219,8 +2291,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 3 },
@@ -2248,7 +2320,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -2261,6 +2334,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1b: Test 4", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2269,8 +2344,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2298,11 +2373,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2311,8 +2388,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 2 },
@@ -2340,7 +2417,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -2353,6 +2431,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1b: Test 5", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2361,8 +2441,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2390,11 +2470,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2403,8 +2485,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2432,7 +2514,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -2445,6 +2528,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1b: Test 6", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2453,8 +2538,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2482,11 +2567,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2495,8 +2582,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2524,7 +2611,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -2539,6 +2627,8 @@ describe("page/tree/delete", () => {
       describe("Scenario 1c: delete from a point in a node to the end of the node", () => {
         test("Scenario 1c: Test 1", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2547,8 +2637,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2576,11 +2666,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2589,8 +2681,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2618,7 +2710,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -2631,6 +2724,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1c: Test 2", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2639,8 +2734,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2668,11 +2763,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2681,8 +2778,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2710,7 +2807,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -2723,6 +2821,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1c: Test 3", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2731,8 +2831,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2760,11 +2860,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2773,8 +2875,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2802,7 +2904,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -2815,6 +2918,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1c: Test 4", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndzef",
@@ -2823,8 +2928,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2852,11 +2957,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndzef",
@@ -2865,8 +2972,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2894,7 +3001,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -2907,6 +3015,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1c: Test 5", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2915,8 +3025,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2944,11 +3054,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -2957,8 +3069,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -2986,7 +3098,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -2999,6 +3112,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1c: Test 6", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -3007,8 +3122,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3036,11 +3151,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -3049,8 +3166,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3078,7 +3195,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -3091,6 +3209,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1c: Test 7", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -3099,8 +3219,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3128,11 +3248,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -3141,8 +3263,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3170,7 +3292,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -3185,6 +3308,8 @@ describe("page/tree/delete", () => {
       describe("Scenario 1d: delete from a point in a node to another point in the node", () => {
         test("Scenario 1d: Test 1", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -3193,8 +3318,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3222,11 +3347,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -3235,8 +3362,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3277,7 +3404,8 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
             ],
-            root: 3,
+            contentRoot: 3,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -3290,6 +3418,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1d: Test 2", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -3298,8 +3428,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3327,11 +3457,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -3340,8 +3472,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3382,7 +3514,8 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
             ],
-            root: 3,
+            contentRoot: 3,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -3395,6 +3528,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1d: Test 3", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -3403,8 +3538,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3432,11 +3567,13 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
             previouslyInsertedContentNodeIndex: 1,
             previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -3445,8 +3582,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3487,7 +3624,8 @@ describe("page/tree/delete", () => {
                 right: 2,
               },
             ],
-            root: 3,
+            contentRoot: 3,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -3500,6 +3638,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1d: Test 4", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -3508,8 +3648,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3537,11 +3677,14 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -3550,8 +3693,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3592,7 +3735,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -3605,6 +3749,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1d: Test 5", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -3613,8 +3759,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3642,11 +3788,14 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndef",
@@ -3655,8 +3804,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3697,7 +3846,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -3710,6 +3860,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1d: Test 6", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndefgh",
@@ -3718,8 +3870,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3747,11 +3899,14 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndefgh",
@@ -3760,8 +3915,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3802,7 +3957,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 2,
+            contentRoot: 2,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -3815,6 +3971,8 @@ describe("page/tree/delete", () => {
 
         test("Scenario 1d: Test 7", () => {
           const page: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndefgh",
@@ -3823,8 +3981,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3852,11 +4010,14 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 content: "abc\ndefgh",
@@ -3865,8 +4026,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -3907,7 +4068,8 @@ describe("page/tree/delete", () => {
                 right: 1,
               },
             ],
-            root: 3,
+            contentRoot: 3,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -3925,6 +4087,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2a: Test 1", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -3940,8 +4104,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -4097,7 +4261,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 10,
+            contentRoot: 10,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -4111,6 +4276,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2a: Test 2", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -4126,8 +4293,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -4283,7 +4450,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 10,
+            contentRoot: 10,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -4297,6 +4465,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2a: Test 3", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -4312,8 +4482,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -4469,7 +4639,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 10,
+            contentRoot: 10,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -4483,6 +4654,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2a: Test 4", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -4498,8 +4671,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -4655,7 +4828,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 8,
+            contentRoot: 8,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -4669,6 +4843,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2a: Test 5", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -4684,8 +4860,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -4841,7 +5017,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 2,
+            contentRoot: 2,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -4855,6 +5032,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2a: Test 6", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -4870,8 +5049,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -5027,7 +5206,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 6,
+            contentRoot: 6,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -5041,6 +5221,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2a: Test 7", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -5056,8 +5238,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -5213,7 +5395,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 6,
+            contentRoot: 6,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -5227,6 +5410,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2a: Test 8", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -5242,8 +5427,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -5399,7 +5584,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 6,
+            contentRoot: 6,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -5415,6 +5601,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2b: Test 1", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -5430,8 +5618,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -5587,7 +5775,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 8,
+            contentRoot: 8,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -5601,6 +5790,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2b: Test 2", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -5616,8 +5807,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 bufferIndex: 0,
                 start: { line: 0, column: 0 },
@@ -5769,7 +5960,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 6,
+            contentRoot: 6,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -5783,6 +5975,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2b: Test 3", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -5798,8 +5992,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -5955,7 +6149,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 6,
+            contentRoot: 6,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -5969,6 +6164,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2b: Test 4", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -5984,8 +6181,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -6141,7 +6338,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 6,
+            contentRoot: 6,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -6157,6 +6355,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2c: Test 1", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -6172,8 +6372,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -6329,7 +6529,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 6,
+            contentRoot: 6,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -6343,6 +6544,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2c: Test 2", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -6358,8 +6561,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -6515,7 +6718,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 6,
+            contentRoot: 6,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -6529,6 +6733,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2c: Test 3", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -6544,8 +6750,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -6701,7 +6907,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 7,
+            contentRoot: 7,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -6715,6 +6922,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2c: Test 4", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -6730,8 +6939,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -6887,7 +7096,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 6,
+            contentRoot: 6,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -6901,6 +7111,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2c: Test 5", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -6916,8 +7128,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -7073,7 +7285,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 6,
+            contentRoot: 6,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -7087,6 +7300,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2c: Test 6", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -7102,8 +7317,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -7259,7 +7474,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 1,
+            contentRoot: 1,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -7275,6 +7491,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2d: Test 1", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -7290,8 +7508,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -7447,7 +7665,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 6,
+            contentRoot: 6,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -7461,6 +7680,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2d: Test 2", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -7476,8 +7697,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -7633,7 +7854,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 6,
+            contentRoot: 6,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -7647,6 +7869,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2d: Test 3", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -7662,8 +7886,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -7819,7 +8043,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 8,
+            contentRoot: 8,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -7833,6 +8058,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2d: Test 4", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -7848,8 +8075,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -8005,7 +8232,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 6,
+            contentRoot: 6,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };
@@ -8019,6 +8247,8 @@ describe("page/tree/delete", () => {
         test("Scenario 2d: Test 5", () => {
           const page = getStartPage();
           const expectedPage: PageContentMutable = {
+            structureNodes: [SENTINEL_STRUCTURE],
+            structureRoot: SENTINEL_INDEX,
             buffers: [
               {
                 isReadOnly: true,
@@ -8034,8 +8264,8 @@ describe("page/tree/delete", () => {
               },
             ],
             newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
+            contentNodes: [
+              SENTINEL_CONTENT,
               {
                 // 1
                 bufferIndex: 0,
@@ -8191,7 +8421,8 @@ describe("page/tree/delete", () => {
                 right: SENTINEL_INDEX,
               },
             ],
-            root: 6,
+            contentRoot: 6,
+
             previouslyInsertedContentNodeIndex: null,
             previouslyInsertedContentNodeOffset: null,
           };

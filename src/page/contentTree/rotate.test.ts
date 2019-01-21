@@ -1,12 +1,14 @@
 import { Color, PageContentMutable } from "../pageModel";
+import { SENTINEL_STRUCTURE } from "../structureTree/tree";
+import { SENTINEL_INDEX } from "../tree";
 import { ContentNode, NEWLINE } from "./contentModel";
 import { leftRotate, rightRotate } from "./rotate";
-import { SENTINEL, SENTINEL_INDEX } from "./tree";
+import { SENTINEL_CONTENT } from "./tree";
 
 describe("Functions for performing rotations on the piece table/red-black tree.", () => {
   const constructSimplePieceTableBeforeLeftRotate = (): PageContentMutable => {
     const nodes: ContentNode[] = [
-      SENTINEL,
+      SENTINEL_CONTENT,
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -74,10 +76,10 @@ describe("Functions for performing rotations on the piece table/red-black tree."
       },
     ];
     const pieceTable: PageContentMutable = {
-      buffers: [],
+      structureNodes: [SENTINEL_STRUCTURE], structureRoot: SENTINEL_INDEX, buffers: [],
       newlineFormat: NEWLINE.LF,
-      nodes,
-      root: 2,
+      contentNodes: nodes,
+      contentRoot: 2,
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
     };
@@ -87,7 +89,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
 
   const constructSimplePieceTableAfterLeftRotate = (): PageContentMutable => {
     const nodes: ContentNode[] = [
-      SENTINEL,
+      SENTINEL_CONTENT,
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -155,10 +157,10 @@ describe("Functions for performing rotations on the piece table/red-black tree."
       },
     ];
     const pieceTable: PageContentMutable = {
-      buffers: [],
+      structureNodes: [SENTINEL_STRUCTURE], structureRoot: SENTINEL_INDEX, buffers: [],
       newlineFormat: NEWLINE.LF,
-      nodes,
-      root: 4,
+      contentNodes: nodes,
+      contentRoot: 4,
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
     };
@@ -168,7 +170,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
 
   const constructComplexPieceTableBeforeLeftRotate = (): PageContentMutable => {
     const nodes: ContentNode[] = [
-      SENTINEL,
+      SENTINEL_CONTENT,
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -353,10 +355,10 @@ describe("Functions for performing rotations on the piece table/red-black tree."
       },
     ];
     const pieceTable: PageContentMutable = {
-      buffers: [],
+      structureNodes: [SENTINEL_STRUCTURE], structureRoot: SENTINEL_INDEX, buffers: [],
       newlineFormat: NEWLINE.LF,
-      nodes,
-      root: 5,
+      contentNodes: nodes,
+      contentRoot: 5,
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
     };
@@ -366,7 +368,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
 
   const constructComplexPieceTableAfterLeftRotate = (): PageContentMutable => {
     const nodes: ContentNode[] = [
-      SENTINEL,
+      SENTINEL_CONTENT,
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -551,10 +553,10 @@ describe("Functions for performing rotations on the piece table/red-black tree."
       },
     ];
     const pieceTable: PageContentMutable = {
-      buffers: [],
+      structureNodes: [SENTINEL_STRUCTURE], structureRoot: SENTINEL_INDEX, buffers: [],
       newlineFormat: NEWLINE.LF,
-      nodes,
-      root: 5,
+      contentNodes: nodes,
+      contentRoot: 5,
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
     };
@@ -563,9 +565,9 @@ describe("Functions for performing rotations on the piece table/red-black tree."
   const constructComplexPieceTableBeforeRightRotate = constructComplexPieceTableAfterLeftRotate;
 
   const constructOneNodePieceTable = (): PageContentMutable => ({
-    buffers: [],
-    nodes: [
-      SENTINEL,
+    structureNodes: [SENTINEL_STRUCTURE], structureRoot: SENTINEL_INDEX, buffers: [],
+    contentNodes: [
+      SENTINEL_CONTENT,
       {
         bufferIndex: 0,
         start: { column: 0, line: 0 },
@@ -580,7 +582,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
         right: SENTINEL_INDEX,
       },
     ],
-    root: 1,
+    contentRoot: 1,
     newlineFormat: NEWLINE.LF,
     previouslyInsertedContentNodeIndex: 1,
     previouslyInsertedContentNodeOffset: 0,
