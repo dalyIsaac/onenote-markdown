@@ -84,7 +84,7 @@ export function deleteContent(
     // delete from a point in a node to the end of another node
     updateNode(page, oldNodeStartPosition.nodeIndex, nodeBeforeContent);
     updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
-    firstNodeToDelete = nextNode(page, firstNodeToDelete).index;
+    firstNodeToDelete = nextNode(page.nodes, firstNodeToDelete).index;
   } else if (nodeBeforeContent.length > 0) {
     // delete from a point in the node to the end of the node
     (page.nodes[
@@ -94,7 +94,7 @@ export function deleteContent(
       // deleting from a point in a node to the end of the content
       deleteNode(page, oldNodeEndPosition.nodeIndex);
       nodeAfterLastNodeToDelete = SENTINEL_INDEX;
-      firstNodeToDelete = nextNode(page, firstNodeToDelete).index;
+      firstNodeToDelete = nextNode(page.nodes, firstNodeToDelete).index;
     }
   } else if (nodeAfterContent.length > 0) {
     // delete from the start of the node to a point in the node
@@ -104,7 +104,8 @@ export function deleteContent(
     deleteNode(page, oldNodeStartPosition.nodeIndex);
   } else {
     // deleting up to and including the last node
-    nodeAfterLastNodeToDelete = nextNode(page, nodeAfterLastNodeToDelete).index;
+    nodeAfterLastNodeToDelete = nextNode(page.nodes, nodeAfterLastNodeToDelete)
+      .index;
   }
 
   page.previouslyInsertedNodeIndex = null;
@@ -261,7 +262,7 @@ function deleteBetweenNodes(
   let nextIndex = currentIndex;
   while (nextIndex !== endIndex) {
     currentIndex = nextIndex;
-    nextIndex = nextNode(page, currentIndex).index;
+    nextIndex = nextNode(page.nodes, currentIndex).index;
     deleteNode(page, currentIndex);
   }
 }
@@ -286,9 +287,9 @@ export function deleteNode(page: PageContentMutable, z: number): void {
     page.nodes[yTemp] = page.nodes[z];
     xTemp = page.nodes[yTemp].left;
   } else {
-    const result = treeMinimum(page, page.nodes[z].right);
+    const result = treeMinimum(page.nodes, page.nodes[z].right);
     yTemp = result.index;
-    page.nodes[yTemp] = { ...result.node };
+    page.nodes[yTemp] = { ...(result.node as InternalTreeNode) };
     xTemp = page.nodes[yTemp].right;
   }
 
