@@ -1,15 +1,9 @@
 import { OnenotePage } from "@microsoft/microsoft-graph-types";
 import { STORE_RECEIVED_PAGE, StoreReceivedPageAction } from "../actions";
-import {
-  Buffer,
-  BufferCursor,
-  Color,
-  Node,
-  PageContent,
-  StatePages,
-} from "../model";
+import { Color, PageContent, StatePages } from "../pageModel";
 import pageReducer from "../reducer";
 import { createNewPage } from "./createNewPage";
+import { Buffer, BufferCursor, InternalTreeNode } from "./internalTreeModel";
 import { SENTINEL, SENTINEL_INDEX } from "./tree";
 
 export const LF_CONTENT = `<html lang="en-NZ">
@@ -126,7 +120,7 @@ const getExpectedLineStarts = (content: string, newline: string): number[] => {
 const constructExpectedNewPageNode = (
   content: string,
   newline: string,
-): Node => {
+): InternalTreeNode => {
   const start: BufferCursor = { column: 0, line: 0 };
   const lines = content.split(newline);
   const rowIndex = lines.length - 1;

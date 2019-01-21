@@ -1,6 +1,7 @@
-import { Color, NEWLINE, PageContentMutable } from "../model";
+import { Color, PageContentMutable } from "../pageModel";
 import { getStartPage } from "../reducer.test";
 import { deleteContent, deleteNode } from "./delete";
+import { NEWLINE } from "./internalTreeModel";
 import { SENTINEL, SENTINEL_INDEX } from "./tree";
 
 describe("page/tree/delete", () => {

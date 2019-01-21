@@ -12,14 +12,9 @@ import {
   LF_CONTENT,
   pageReducerTest,
 } from "./internalTree/createNewPage.test";
+import { NEWLINE } from "./internalTree/internalTreeModel";
 import { SENTINEL, SENTINEL_INDEX } from "./internalTree/tree";
-import {
-  Color,
-  NEWLINE,
-  PageContent,
-  PageContentMutable,
-  StatePages,
-} from "./model";
+import { Color, PageContent, PageContentMutable, StatePages } from "./pageModel";
 import pageReducer from "./reducer";
 
 export const getStartPage = (): PageContentMutable => ({

@@ -13,12 +13,7 @@ import { createNewPage } from "./internalTree/createNewPage";
 import { deleteContent } from "./internalTree/delete";
 import { insertContent } from "./internalTree/insert";
 import { MAX_BUFFER_LENGTH } from "./internalTree/tree";
-import {
-  NodeMutable,
-  PageContent,
-  PageContentMutable,
-  StatePages,
-} from "./model";
+import { PageContent, PageContentMutable, StatePages } from "./pageModel";
 
 /**
  * Reducer for the slice of the state referring to the storage of a page.

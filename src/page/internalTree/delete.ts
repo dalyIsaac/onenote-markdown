@@ -1,22 +1,16 @@
-import {
-  Color,
-  Node,
-  NodeMutable,
-  PageContent,
-  PageContentMutable,
-} from "../model";
+import { Color, PageContent, PageContentMutable } from "../pageModel";
+import { nextNode, treeMinimum } from "../tree";
 import { fixInsert, insertNode } from "./insert";
+import { InternalTreeNode, InternalTreeNodeMutable } from "./internalTreeModel";
 import { leftRotate, rightRotate } from "./rotate";
 import {
   calculateCharCount,
   calculateLineFeedCount,
   findNodeAtOffset,
-  nextNode,
   NodePositionOffset,
   recomputeTreeMetadata,
   resetSentinel,
   SENTINEL_INDEX,
-  treeMinimum,
   updateTreeMetadata,
 } from "./tree";
 
@@ -49,7 +43,7 @@ export function deleteContent(
     oldNodeStartPosition,
   );
   const deleteLength = deleteRange.endOffset - deleteRange.startOffset;
-  let nodeAfterContent: Node;
+  let nodeAfterContent: InternalTreeNode;
   if (
     oldNodeStartPosition.remainder + deleteLength <=
     oldNodeStartPosition.node.length
@@ -83,7 +77,7 @@ export function deleteContent(
     // delete from a point in the node to another point in the node
     (page.nodes[
       oldNodeStartPosition.nodeIndex
-    ] as NodeMutable) = nodeBeforeContent;
+    ] as InternalTreeNodeMutable) = nodeBeforeContent;
     insertNode(page, nodeAfterContent, deleteRange.startOffset);
     fixInsert(page, page.nodes.length - 1);
   } else if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
@@ -95,7 +89,7 @@ export function deleteContent(
     // delete from a point in the node to the end of the node
     (page.nodes[
       oldNodeStartPosition.nodeIndex
-    ] as NodeMutable) = nodeBeforeContent;
+    ] as InternalTreeNodeMutable) = nodeBeforeContent;
     if (oldNodeStartPosition !== oldNodeEndPosition) {
       // deleting from a point in a node to the end of the content
       deleteNode(page, oldNodeEndPosition.nodeIndex);
@@ -132,7 +126,7 @@ export function deleteContent(
 function updateNode(
   page: PageContentMutable,
   index: number,
-  newNode: NodeMutable,
+  newNode: InternalTreeNodeMutable,
 ): void {
   newNode.leftCharCount = page.nodes[index].leftCharCount;
   newNode.leftLineFeedCount = page.nodes[index].leftLineFeedCount;
@@ -154,7 +148,7 @@ function getNodeBeforeContent(
   page: PageContent,
   deleteRange: ContentDelete,
   nodePosition: NodePositionOffset,
-): Node {
+): InternalTreeNode {
   // "local" offsets refer to local within the buffer
   const localStartOffset =
     page.buffers[nodePosition.node.bufferIndex].lineStarts[
@@ -173,7 +167,7 @@ function getNodeBeforeContent(
     localStartOffset,
     localEndOffset,
   );
-  const nodeBeforeContent: Node = {
+  const nodeBeforeContent: InternalTreeNode = {
     ...nodePosition.node,
     end: {
       line:
@@ -200,7 +194,7 @@ function getNodeAfterContent(
   page: PageContent,
   deleteRange: ContentDelete,
   nodePosition: NodePositionOffset,
-): Node {
+): InternalTreeNode {
   // localStartOffset is the index of nodePosition.startOffset inside the buffer
   const localStartOffset =
     page.buffers[nodePosition.node.bufferIndex].lineStarts[
@@ -232,7 +226,7 @@ function getNodeAfterContent(
     page.buffers[nodePosition.node.bufferIndex].lineStarts[
       nodeAfterContentStartLine
     ];
-  const nodeAfterContent: Node = {
+  const nodeAfterContent: InternalTreeNode = {
     bufferIndex: nodePosition.node.bufferIndex,
     start: {
       line: nodeAfterContentStartLine,
@@ -308,7 +302,7 @@ export function deleteNode(page: PageContentMutable, z: number): void {
     page.root = x;
 
     // if page.nodes[x] is null, we are removing the only node
-    (page.nodes[x] as NodeMutable).color = Color.Black;
+    (page.nodes[x] as InternalTreeNodeMutable).color = Color.Black;
     detach(page, z);
     page.nodes[page.root] = {
       ...page.nodes[page.root],
@@ -333,22 +327,22 @@ export function deleteNode(page: PageContentMutable, z: number): void {
   }
 
   if (y === z) {
-    (page.nodes[x] as NodeMutable).parent = page.nodes[y].parent;
+    (page.nodes[x] as InternalTreeNodeMutable).parent = page.nodes[y].parent;
     recomputeTreeMetadata(page, x);
   } else {
     if (page.nodes[y].parent === z) {
-      (page.nodes[x] as NodeMutable).parent = y;
+      (page.nodes[x] as InternalTreeNodeMutable).parent = y;
     } else {
-      (page.nodes[x] as NodeMutable).parent = page.nodes[y].parent;
+      (page.nodes[x] as InternalTreeNodeMutable).parent = page.nodes[y].parent;
     }
 
     // as we make changes to page.nodes[x]'s hierarchy, update leftCharCount of subtree first
     recomputeTreeMetadata(page, x);
 
-    (page.nodes[y] as NodeMutable).left = page.nodes[z].left;
-    (page.nodes[y] as NodeMutable).right = page.nodes[z].right;
-    (page.nodes[y] as NodeMutable).parent = page.nodes[z].parent;
-    (page.nodes[y] as NodeMutable).color = page.nodes[z].color;
+    (page.nodes[y] as InternalTreeNodeMutable).left = page.nodes[z].left;
+    (page.nodes[y] as InternalTreeNodeMutable).right = page.nodes[z].right;
+    (page.nodes[y] as InternalTreeNodeMutable).parent = page.nodes[z].parent;
+    (page.nodes[y] as InternalTreeNodeMutable).color = page.nodes[z].color;
 
     if (z === page.root) {
       page.root = y;
@@ -380,8 +374,9 @@ export function deleteNode(page: PageContentMutable, z: number): void {
     }
     // update metadata
     // we replace page.nodes[z] with page.nodes[y], so in this sub tree, the length change is page.nodes[z].item.length
-    (page.nodes[y] as NodeMutable).leftCharCount = page.nodes[z].leftCharCount;
-    (page.nodes[y] as NodeMutable).leftLineFeedCount =
+    (page.nodes[y] as InternalTreeNodeMutable).leftCharCount =
+      page.nodes[z].leftCharCount;
+    (page.nodes[y] as InternalTreeNodeMutable).leftLineFeedCount =
       page.nodes[z].leftLineFeedCount;
     recomputeTreeMetadata(page, y);
   }
@@ -458,102 +453,102 @@ function fixDelete(page: PageContentMutable, x: number): void {
   while (x !== page.root && page.nodes[x].color === Color.Black) {
     if (x === page.nodes[page.nodes[x].parent].left) {
       w = page.nodes[page.nodes[x].parent].right;
-      (page.nodes[w] as NodeMutable) = { ...page.nodes[w] };
+      (page.nodes[w] as InternalTreeNodeMutable) = { ...page.nodes[w] };
 
-      if ((page.nodes[w] as NodeMutable).color === Color.Red) {
-        (page.nodes[w] as NodeMutable).color = Color.Black;
-        (page.nodes[page.nodes[x].parent] as NodeMutable) = {
+      if ((page.nodes[w] as InternalTreeNodeMutable).color === Color.Red) {
+        (page.nodes[w] as InternalTreeNodeMutable).color = Color.Black;
+        (page.nodes[page.nodes[x].parent] as InternalTreeNodeMutable) = {
           ...page.nodes[page.nodes[x].parent],
           color: Color.Red,
         };
         leftRotate(page, page.nodes[x].parent);
         w = page.nodes[page.nodes[x].parent].right;
-        (page.nodes[w] as NodeMutable) = { ...page.nodes[w] };
+        (page.nodes[w] as InternalTreeNodeMutable) = { ...page.nodes[w] };
       }
 
       if (
         page.nodes[page.nodes[w].left].color === Color.Black &&
         page.nodes[page.nodes[w].right].color === Color.Black
       ) {
-        (page.nodes[w] as NodeMutable).color = Color.Red;
+        (page.nodes[w] as InternalTreeNodeMutable).color = Color.Red;
         x = page.nodes[x].parent;
-        (page.nodes[x] as NodeMutable) = { ...page.nodes[x] };
+        (page.nodes[x] as InternalTreeNodeMutable) = { ...page.nodes[x] };
       } else {
         if (page.nodes[page.nodes[w].right].color === Color.Black) {
-          (page.nodes[page.nodes[w].left] as NodeMutable) = {
+          (page.nodes[page.nodes[w].left] as InternalTreeNodeMutable) = {
             ...page.nodes[page.nodes[w].left],
             color: Color.Black,
           };
-          (page.nodes[w] as NodeMutable).color = Color.Red;
+          (page.nodes[w] as InternalTreeNodeMutable).color = Color.Red;
           rightRotate(page, w);
           w = page.nodes[page.nodes[x].parent].right;
-          (page.nodes[w] as NodeMutable) = { ...page.nodes[w] };
+          (page.nodes[w] as InternalTreeNodeMutable) = { ...page.nodes[w] };
         }
 
-        (page.nodes[w] as NodeMutable).color =
+        (page.nodes[w] as InternalTreeNodeMutable).color =
           page.nodes[page.nodes[x].parent].color;
-        (page.nodes[page.nodes[x].parent] as NodeMutable) = {
+        (page.nodes[page.nodes[x].parent] as InternalTreeNodeMutable) = {
           ...page.nodes[page.nodes[x].parent],
           color: Color.Black,
         };
-        (page.nodes[page.nodes[w].right] as NodeMutable) = {
+        (page.nodes[page.nodes[w].right] as InternalTreeNodeMutable) = {
           ...page.nodes[page.nodes[w].right],
           color: Color.Black,
         };
         leftRotate(page, page.nodes[x].parent);
         x = page.root;
-        (page.nodes[x] as NodeMutable) = { ...page.nodes[x] };
+        (page.nodes[x] as InternalTreeNodeMutable) = { ...page.nodes[x] };
       }
     } else {
       w = page.nodes[page.nodes[x].parent].left;
-      (page.nodes[w] as NodeMutable) = { ...page.nodes[w] };
+      (page.nodes[w] as InternalTreeNodeMutable) = { ...page.nodes[w] };
 
       if (page.nodes[w].color === Color.Red) {
-        (page.nodes[w] as NodeMutable).color = Color.Black;
-        (page.nodes[page.nodes[x].parent] as NodeMutable) = {
+        (page.nodes[w] as InternalTreeNodeMutable).color = Color.Black;
+        (page.nodes[page.nodes[x].parent] as InternalTreeNodeMutable) = {
           ...page.nodes[page.nodes[x].parent],
           color: Color.Red,
         };
         rightRotate(page, page.nodes[x].parent);
         w = page.nodes[page.nodes[x].parent].left;
-        (page.nodes[w] as NodeMutable) = { ...page.nodes[w] };
+        (page.nodes[w] as InternalTreeNodeMutable) = { ...page.nodes[w] };
       }
 
       if (
         page.nodes[page.nodes[w].left].color === Color.Black &&
         page.nodes[page.nodes[w].right].color === Color.Black
       ) {
-        (page.nodes[w] as NodeMutable).color = Color.Red;
+        (page.nodes[w] as InternalTreeNodeMutable).color = Color.Red;
         x = page.nodes[x].parent;
-        (page.nodes[x] as NodeMutable) = { ...page.nodes[x] };
+        (page.nodes[x] as InternalTreeNodeMutable) = { ...page.nodes[x] };
       } else {
         if (page.nodes[page.nodes[w].left].color === Color.Black) {
-          (page.nodes[page.nodes[w].right] as NodeMutable) = {
+          (page.nodes[page.nodes[w].right] as InternalTreeNodeMutable) = {
             ...page.nodes[page.nodes[w].right],
             color: Color.Black,
           };
-          (page.nodes[w] as NodeMutable).color = Color.Red;
+          (page.nodes[w] as InternalTreeNodeMutable).color = Color.Red;
           leftRotate(page, w);
           w = page.nodes[page.nodes[x].parent].left;
         }
 
-        (page.nodes[w] as NodeMutable).color =
+        (page.nodes[w] as InternalTreeNodeMutable).color =
           page.nodes[page.nodes[x].parent].color;
-        (page.nodes[page.nodes[x].parent] as NodeMutable) = {
+        (page.nodes[page.nodes[x].parent] as InternalTreeNodeMutable) = {
           ...page.nodes[page.nodes[x].parent],
           color: Color.Black,
         };
-        (page.nodes[page.nodes[w].left] as NodeMutable) = {
+        (page.nodes[page.nodes[w].left] as InternalTreeNodeMutable) = {
           ...page.nodes[page.nodes[w].left],
           color: Color.Black,
         };
         rightRotate(page, page.nodes[x].parent);
         x = page.root;
-        (page.nodes[x] as NodeMutable) = { ...page.nodes[x] };
+        (page.nodes[x] as InternalTreeNodeMutable) = { ...page.nodes[x] };
       }
     }
   }
-  (page.nodes[x] as NodeMutable) = {
+  (page.nodes[x] as InternalTreeNodeMutable) = {
     ...page.nodes[x],
     color: Color.Black,
   };

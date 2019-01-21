@@ -1,127 +1,135 @@
+import { Color, PageContentMutable } from "../pageModel";
 import {
-  Color,
+  InternalTreeNode,
+  InternalTreeNodeMutable,
   NEWLINE,
-  Node,
-  NodeMutable,
-  PageContentMutable,
-} from "../model";
+} from "./internalTreeModel";
 import {
   calculateCharCount,
   calculateLineFeedCount,
   findNodeAtOffset,
-  nextNode,
-  prevNode,
   recomputeTreeMetadata,
   SENTINEL,
   SENTINEL_INDEX,
 } from "./tree";
 
-describe("page/tree/tree", () => {
-  const getFinalTree = (): { nodes: Node[]; root: number } => ({
-    nodes: [
-      SENTINEL,
-      {
-        // 1
-        bufferIndex: 1,
-        start: { line: 0, column: 0 },
-        end: { line: 2, column: 6 },
-        leftCharCount: 0,
-        leftLineFeedCount: 0,
-        length: 31,
-        lineFeedCount: 2,
-        color: Color.Black,
-        parent: 2,
-        left: SENTINEL_INDEX,
-        right: SENTINEL_INDEX,
-      },
-      {
-        // 2
-        bufferIndex: 0,
-        start: { line: 0, column: 1 },
-        end: { line: 0, column: 12 },
-        leftCharCount: 31,
-        leftLineFeedCount: 2,
-        length: 11,
-        lineFeedCount: 0,
-        color: Color.Black,
-        parent: SENTINEL_INDEX,
-        left: 1,
-        right: 6,
-      },
-      {
-        // 3
-        bufferIndex: 0,
-        start: { line: 0, column: 55 },
-        end: { line: 0, column: 65 },
-        leftCharCount: 0,
-        leftLineFeedCount: 0,
-        length: 10,
-        lineFeedCount: 0,
-        color: Color.Black,
-        parent: 4,
-        left: SENTINEL_INDEX,
-        right: SENTINEL_INDEX,
-      },
-      {
-        // 4
-        bufferIndex: 0,
-        start: { line: 0, column: 12 },
-        end: { line: 0, column: 14 },
-        leftCharCount: 10,
-        leftLineFeedCount: 0,
-        length: 2,
-        lineFeedCount: 0,
-        color: Color.Black,
-        parent: 6,
-        left: 3,
-        right: 5,
-      },
-      {
-        // 5
-        bufferIndex: 0,
-        start: { line: 0, column: 66 },
-        end: { line: 0, column: 76 },
-        leftCharCount: 0,
-        leftLineFeedCount: 0,
-        length: 10,
-        lineFeedCount: 0,
-        color: Color.Black,
-        parent: 4,
-        left: SENTINEL_INDEX,
-        right: SENTINEL_INDEX,
-      },
-      {
-        // 6
-        bufferIndex: 1,
-        start: { line: 2, column: 6 },
-        end: { line: 2, column: 22 },
-        leftCharCount: 22,
-        leftLineFeedCount: 0,
-        length: 16,
-        lineFeedCount: 0,
-        color: Color.Black,
-        parent: 2,
-        left: 4,
-        right: 7,
-      },
-      {
-        // 7
-        bufferIndex: 0,
-        start: { line: 0, column: 14 },
-        end: { line: 0, column: 55 },
-        leftCharCount: 0,
-        leftLineFeedCount: 0,
-        length: 41,
-        lineFeedCount: 0,
-        color: Color.Black,
-        parent: 6,
-        left: SENTINEL_INDEX,
-        right: SENTINEL_INDEX,
-      },
-    ],
-    root: 2,
-  });
+export const getPage = (): PageContentMutable => ({
+  buffers: [],
+  ...getFinalTree(),
+  newlineFormat: NEWLINE.LF,
+  previouslyInsertedNodeIndex: null,
+  previouslyInsertedNodeOffset: null,
+});
 
+export const getFinalTree = (): {
+  nodes: InternalTreeNode[];
+  root: number;
+} => ({
+  nodes: [
+    SENTINEL,
+    {
+      // 1
+      bufferIndex: 1,
+      start: { line: 0, column: 0 },
+      end: { line: 2, column: 6 },
+      leftCharCount: 0,
+      leftLineFeedCount: 0,
+      length: 31,
+      lineFeedCount: 2,
+      color: Color.Black,
+      parent: 2,
+      left: SENTINEL_INDEX,
+      right: SENTINEL_INDEX,
+    },
+    {
+      // 2
+      bufferIndex: 0,
+      start: { line: 0, column: 1 },
+      end: { line: 0, column: 12 },
+      leftCharCount: 31,
+      leftLineFeedCount: 2,
+      length: 11,
+      lineFeedCount: 0,
+      color: Color.Black,
+      parent: SENTINEL_INDEX,
+      left: 1,
+      right: 6,
+    },
+    {
+      // 3
+      bufferIndex: 0,
+      start: { line: 0, column: 55 },
+      end: { line: 0, column: 65 },
+      leftCharCount: 0,
+      leftLineFeedCount: 0,
+      length: 10,
+      lineFeedCount: 0,
+      color: Color.Black,
+      parent: 4,
+      left: SENTINEL_INDEX,
+      right: SENTINEL_INDEX,
+    },
+    {
+      // 4
+      bufferIndex: 0,
+      start: { line: 0, column: 12 },
+      end: { line: 0, column: 14 },
+      leftCharCount: 10,
+      leftLineFeedCount: 0,
+      length: 2,
+      lineFeedCount: 0,
+      color: Color.Black,
+      parent: 6,
+      left: 3,
+      right: 5,
+    },
+    {
+      // 5
+      bufferIndex: 0,
+      start: { line: 0, column: 66 },
+      end: { line: 0, column: 76 },
+      leftCharCount: 0,
+      leftLineFeedCount: 0,
+      length: 10,
+      lineFeedCount: 0,
+      color: Color.Black,
+      parent: 4,
+      left: SENTINEL_INDEX,
+      right: SENTINEL_INDEX,
+    },
+    {
+      // 6
+      bufferIndex: 1,
+      start: { line: 2, column: 6 },
+      end: { line: 2, column: 22 },
+      leftCharCount: 22,
+      leftLineFeedCount: 0,
+      length: 16,
+      lineFeedCount: 0,
+      color: Color.Black,
+      parent: 2,
+      left: 4,
+      right: 7,
+    },
+    {
+      // 7
+      bufferIndex: 0,
+      start: { line: 0, column: 14 },
+      end: { line: 0, column: 55 },
+      leftCharCount: 0,
+      leftLineFeedCount: 0,
+      length: 41,
+      lineFeedCount: 0,
+      color: Color.Black,
+      parent: 6,
+      left: SENTINEL_INDEX,
+      right: SENTINEL_INDEX,
+    },
+  ],
+  root: 2,
+});
+
+describe("Functions for common tree operations on the piece table/red-black tree.", () => {
   test("findNodeAtOffset", () => {
     const { nodes, root } = getFinalTree();
 
@@ -246,14 +254,6 @@ describe("page/tree/tree", () => {
     });
   });
 
-  const getPage = (): PageContentMutable => ({
-    buffers: [],
-    ...getFinalTree(),
-    newlineFormat: NEWLINE.LF,
-    previouslyInsertedNodeIndex: null,
-    previouslyInsertedNodeOffset: null,
-  });
-
   test("Calculate line feed count", () => {
     const page = getPage();
     expect(calculateLineFeedCount(page, page.root)).toBe(2);
@@ -272,79 +272,13 @@ describe("page/tree/tree", () => {
 
   test("Recompute tree metadata: add a node in the middle", () => {
     const page = getPage(); // hypothetically added node 5
-    (page.nodes[6] as NodeMutable).leftCharCount = 12;
-    (page.nodes[5] as NodeMutable).lineFeedCount = 5;
+    (page.nodes[6] as InternalTreeNodeMutable).leftCharCount = 12;
+    (page.nodes[5] as InternalTreeNodeMutable).lineFeedCount = 5;
     const expectedPage = getPage();
-    (expectedPage.nodes[6] as NodeMutable).leftLineFeedCount += 5;
-    (expectedPage.nodes[5] as NodeMutable).lineFeedCount += 5;
+    (expectedPage.nodes[6] as InternalTreeNodeMutable).leftLineFeedCount += 5;
+    (expectedPage.nodes[5] as InternalTreeNodeMutable).lineFeedCount += 5;
 
     recomputeTreeMetadata(page, 4);
     expect(page).toStrictEqual(expectedPage);
-  });
-
-  test("nextNode", () => {
-    const page = getPage();
-
-    expect(nextNode(getPage(), 1)).toStrictEqual({
-      node: page.nodes[2],
-      index: 2,
-    });
-    expect(nextNode(getPage(), 2)).toStrictEqual({
-      node: page.nodes[3],
-      index: 3,
-    });
-    expect(nextNode(getPage(), 3)).toStrictEqual({
-      node: page.nodes[4],
-      index: 4,
-    });
-    expect(nextNode(getPage(), 4)).toStrictEqual({
-      node: page.nodes[5],
-      index: 5,
-    });
-    expect(nextNode(getPage(), 5)).toStrictEqual({
-      node: page.nodes[6],
-      index: 6,
-    });
-    expect(nextNode(getPage(), 6)).toStrictEqual({
-      node: page.nodes[7],
-      index: 7,
-    });
-    expect(nextNode(getPage(), 7)).toStrictEqual({
-      node: page.nodes[0],
-      index: 0,
-    });
-  });
-
-  test("prevNode", () => {
-    const page = getPage();
-
-    expect(prevNode(getPage(), 7)).toStrictEqual({
-      node: page.nodes[6],
-      index: 6,
-    });
-    expect(prevNode(getPage(), 6)).toStrictEqual({
-      node: page.nodes[5],
-      index: 5,
-    });
-    expect(prevNode(getPage(), 5)).toStrictEqual({
-      node: page.nodes[4],
-      index: 4,
-    });
-    expect(prevNode(getPage(), 4)).toStrictEqual({
-      node: page.nodes[3],
-      index: 3,
-    });
-    expect(prevNode(getPage(), 3)).toStrictEqual({
-      node: page.nodes[2],
-      index: 2,
-    });
-    expect(prevNode(getPage(), 2)).toStrictEqual({
-      node: page.nodes[1],
-      index: 1,
-    });
-    expect(prevNode(getPage(), 1)).toStrictEqual({
-      node: page.nodes[0],
-      index: 0,
-    });
   });
 });

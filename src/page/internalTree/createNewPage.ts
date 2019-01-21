@@ -1,5 +1,6 @@
 import { OnenotePage } from "@microsoft/microsoft-graph-types";
-import { Buffer, Color, Node, PageContent } from "../model";
+import { Color, PageContent } from "../pageModel";
+import { Buffer, InternalTreeNode } from "./internalTreeModel";
 import {
   getLineStarts,
   getNewlineFormat,
@@ -22,7 +23,7 @@ export function createNewPage(receivedPage: OnenotePage): PageContent {
   const finalLineInitialCharIndex = buffer.lineStarts[finalLine];
   const finalCharColumn =
     receivedPage.content.length - finalLineInitialCharIndex;
-  const node: Node = {
+  const node: InternalTreeNode = {
     bufferIndex: 0,
     start: { line: 0, column: 0 },
     end: { line: finalLine, column: finalCharColumn },

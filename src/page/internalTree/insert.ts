@@ -1,4 +1,5 @@
-import { Buffer, Color, Node, NodeMutable, PageContentMutable } from "../model";
+import { Color, PageContentMutable } from "../pageModel";
+import { Buffer, InternalTreeNode, InternalTreeNodeMutable } from "./internalTreeModel";
 import { leftRotate, rightRotate } from "./rotate";
 import {
   findNodeAtOffset,
@@ -28,7 +29,7 @@ export function insertContent(
   content: ContentInsert,
   maxBufferLength: number,
 ): void {
-  let previouslyInsertedNode: Node | undefined;
+  let previouslyInsertedNode: InternalTreeNode | undefined;
 
   if (
     page.previouslyInsertedNodeIndex != null &&
@@ -74,7 +75,7 @@ export function fixInsert(page: PageContentMutable, x: number): void {
   page.nodes[x] = { ...page.nodes[x] };
 
   if (x === page.root) {
-    (page.nodes[x] as NodeMutable).color = Color.Black;
+    (page.nodes[x] as InternalTreeNodeMutable).color = Color.Black;
     return;
   }
 
@@ -96,7 +97,7 @@ export function fixInsert(page: PageContentMutable, x: number): void {
           ...page.nodes[page.nodes[x].parent],
           color: Color.Black,
         };
-        (page.nodes[y] as NodeMutable).color = Color.Black;
+        (page.nodes[y] as InternalTreeNodeMutable).color = Color.Black;
         page.nodes[page.nodes[page.nodes[x].parent].parent] = {
           ...page.nodes[page.nodes[page.nodes[x].parent].parent],
           color: Color.Red,
@@ -129,7 +130,7 @@ export function fixInsert(page: PageContentMutable, x: number): void {
           ...page.nodes[page.nodes[x].parent],
           color: Color.Black,
         };
-        (page.nodes[y] as NodeMutable).color = Color.Black;
+        (page.nodes[y] as InternalTreeNodeMutable).color = Color.Black;
         page.nodes[page.nodes[page.nodes[x].parent].parent] = {
           ...page.nodes[page.nodes[page.nodes[x].parent].parent],
           color: Color.Red,
@@ -190,7 +191,7 @@ function insertAtEndPreviouslyInsertedNode(
       lineStarts: getLineStarts(newContent, page.newlineFormat),
     };
 
-    const node: NodeMutable = {
+    const node: InternalTreeNodeMutable = {
       ...page.nodes[page.nodes.length - 1],
       end: {
         line: buffer.lineStarts.length - 1,
@@ -233,7 +234,7 @@ function insertInsideNode(
     page.newlineFormat,
   );
 
-  const firstPartNode: Node = {
+  const firstPartNode: InternalTreeNode = {
     ...oldNode,
     end: {
       line: firstPartLineStarts.length - 1 + oldNode.start.line,
@@ -248,7 +249,7 @@ function insertInsideNode(
 
   page.nodes[nodePosition.nodeIndex] = firstPartNode;
 
-  const secondPartNode: Node = {
+  const secondPartNode: InternalTreeNode = {
     bufferIndex: oldNode.bufferIndex,
     start: firstPartNode.end,
     end: oldNode.end,
@@ -316,7 +317,7 @@ function createNodeAppendToBuffer(
     content: newContent,
     lineStarts: getLineStarts(newContent, page.newlineFormat),
   };
-  const newNode: Node = {
+  const newNode: InternalTreeNode = {
     bufferIndex: page.buffers.length - 1,
     start: {
       line: oldBuffer.lineStarts.length - 1,
@@ -361,7 +362,7 @@ function createNodeCreateBuffer(
     lineStarts: getLineStarts(content.content, page.newlineFormat),
     content: content.content,
   };
-  const newNode: Node = {
+  const newNode: InternalTreeNode = {
     bufferIndex: page.buffers.length,
     start: { line: 0, column: 0 },
     end: {
@@ -393,7 +394,7 @@ function createNodeCreateBuffer(
  */
 export function insertNode(
   page: PageContentMutable,
-  newNode: NodeMutable,
+  newNode: InternalTreeNodeMutable,
   offset: number,
 ): void {
   page.nodes.push(newNode);

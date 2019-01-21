@@ -1,5 +1,5 @@
 import { combineReducers } from "redux";
-import { StatePages } from "./page/model";
+import { StatePages } from "./page/pageModel";
 import pageReducer from "./page/reducer";
 
 export interface State {
