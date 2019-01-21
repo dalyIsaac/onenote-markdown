@@ -2,8 +2,8 @@ import { OnenotePage } from "@microsoft/microsoft-graph-types";
 import { STORE_RECEIVED_PAGE, StoreReceivedPageAction } from "../actions";
 import { Color, PageContent, StatePages } from "../pageModel";
 import pageReducer from "../reducer";
+import { Buffer, BufferCursor, InternalTreeNode } from "./contentModel";
 import { createNewPage } from "./createNewPage";
-import { Buffer, BufferCursor, InternalTreeNode } from "./internalTreeModel";
 import { SENTINEL, SENTINEL_INDEX } from "./tree";
 
 export const LF_CONTENT = `<html lang="en-NZ">
@@ -68,8 +68,8 @@ export const constructExpectedNewPageState = (
       newlineFormat: constructExpectedNewPageNewlineFormat(content, newline),
       nodes: [SENTINEL, constructExpectedNewPageNode(content, newline)],
       root: constructExpectedNewPageRoot(),
-      previouslyInsertedNodeIndex: null,
-      previouslyInsertedNodeOffset: null,
+      previouslyInsertedContentNodeIndex: null,
+      previouslyInsertedContentNodeOffset: null,
     },
   };
   return expectedState;

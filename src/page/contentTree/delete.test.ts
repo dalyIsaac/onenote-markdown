@@ -1,7 +1,7 @@
 import { Color, PageContentMutable } from "../pageModel";
 import { getStartPage } from "../reducer.test";
+import { NEWLINE } from "./contentModel";
 import { deleteContent, deleteNode } from "./delete";
-import { NEWLINE } from "./internalTreeModel";
 import { SENTINEL, SENTINEL_INDEX } from "./tree";
 
 describe("page/tree/delete", () => {
@@ -9,8 +9,8 @@ describe("page/tree/delete", () => {
     test("Scenario 1: Simple case", () => {
       const page: PageContentMutable = {
         buffers: [],
-        previouslyInsertedNodeIndex: null,
-        previouslyInsertedNodeOffset: null,
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
         newlineFormat: NEWLINE.LF,
         root: 3,
         nodes: [
@@ -97,8 +97,8 @@ describe("page/tree/delete", () => {
       };
       const expectedPage: PageContentMutable = {
         buffers: [],
-        previouslyInsertedNodeIndex: null,
-        previouslyInsertedNodeOffset: null,
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
         newlineFormat: NEWLINE.LF,
         root: 3,
         nodes: [
@@ -191,8 +191,8 @@ describe("page/tree/delete", () => {
       test("Scenario 2: Right right case", () => {
         const page: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 2,
           nodes: [
@@ -296,8 +296,8 @@ describe("page/tree/delete", () => {
         };
         const expectedPage: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 4,
           nodes: [
@@ -406,8 +406,8 @@ describe("page/tree/delete", () => {
       test("Scenario 3: Right left case", () => {
         const page: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 2,
           nodes: [
@@ -494,8 +494,8 @@ describe("page/tree/delete", () => {
         };
         const expectedPage: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 3,
           nodes: [
@@ -585,8 +585,8 @@ describe("page/tree/delete", () => {
       test("Scenario 4: Left left case", () => {
         const page: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 4,
           nodes: [
@@ -690,8 +690,8 @@ describe("page/tree/delete", () => {
         };
         const expectedPage: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 2,
           nodes: [
@@ -800,8 +800,8 @@ describe("page/tree/delete", () => {
       test("Scenario 5: Left right case", () => {
         const page: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 3,
           nodes: [
@@ -886,8 +886,8 @@ describe("page/tree/delete", () => {
         };
         const expectedPage: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 2,
           nodes: [
@@ -978,8 +978,8 @@ describe("page/tree/delete", () => {
     test("Scenario 6: Sibling s is black, and both its children are black", () => {
       const page: PageContentMutable = {
         buffers: [],
-        previouslyInsertedNodeIndex: null,
-        previouslyInsertedNodeOffset: null,
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
         newlineFormat: NEWLINE.LF,
         root: 2,
         nodes: [
@@ -1045,8 +1045,8 @@ describe("page/tree/delete", () => {
       };
       const expectedPage: PageContentMutable = {
         buffers: [],
-        previouslyInsertedNodeIndex: null,
-        previouslyInsertedNodeOffset: null,
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
         newlineFormat: NEWLINE.LF,
         root: 2,
         nodes: [
@@ -1118,8 +1118,8 @@ describe("page/tree/delete", () => {
       test("Scenario 7: sibling s is right child of its parent", () => {
         const page: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 2,
           nodes: [
@@ -1223,8 +1223,8 @@ describe("page/tree/delete", () => {
         };
         const expectedPage: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 4,
           nodes: [
@@ -1333,8 +1333,8 @@ describe("page/tree/delete", () => {
       test("Scenario 8: sibling s is left child of its parent", () => {
         const page: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 4,
           nodes: [
@@ -1438,8 +1438,8 @@ describe("page/tree/delete", () => {
         };
         const expectedPage: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 2,
           nodes: [
@@ -1549,8 +1549,8 @@ describe("page/tree/delete", () => {
     test("Scenario 9: delete root", () => {
       const page: PageContentMutable = {
         buffers: [],
-        previouslyInsertedNodeIndex: null,
-        previouslyInsertedNodeOffset: null,
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
         newlineFormat: NEWLINE.LF,
         root: 1,
         nodes: [
@@ -1578,8 +1578,8 @@ describe("page/tree/delete", () => {
       };
       const expectedPage: PageContentMutable = {
         buffers: [],
-        previouslyInsertedNodeIndex: null,
-        previouslyInsertedNodeOffset: null,
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
         newlineFormat: NEWLINE.LF,
         root: SENTINEL_INDEX,
         nodes: [
@@ -1653,8 +1653,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -1695,8 +1695,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 5,
@@ -1745,8 +1745,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -1787,8 +1787,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 0,
@@ -1837,8 +1837,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -1879,8 +1879,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 2,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 0,
@@ -1929,8 +1929,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -1971,8 +1971,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 2,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 2,
@@ -2023,8 +2023,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -2065,8 +2065,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 0,
@@ -2115,8 +2115,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -2157,8 +2157,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 2,
@@ -2207,8 +2207,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -2249,8 +2249,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 2,
@@ -2299,8 +2299,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -2341,8 +2341,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 2,
@@ -2391,8 +2391,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -2433,8 +2433,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 5,
@@ -2483,8 +2483,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -2525,8 +2525,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 0,
@@ -2577,8 +2577,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -2619,8 +2619,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 2,
@@ -2669,8 +2669,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -2711,8 +2711,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 3,
@@ -2761,8 +2761,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -2803,8 +2803,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 4,
@@ -2853,8 +2853,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -2895,8 +2895,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 5,
@@ -2945,8 +2945,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -2987,8 +2987,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 4,
@@ -3037,8 +3037,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -3079,8 +3079,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 6,
@@ -3129,8 +3129,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 0,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -3171,8 +3171,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 1,
@@ -3223,8 +3223,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -3278,8 +3278,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 3,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 2,
@@ -3328,8 +3328,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -3383,8 +3383,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 3,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 3,
@@ -3433,8 +3433,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
+            previouslyInsertedContentNodeIndex: 1,
+            previouslyInsertedContentNodeOffset: 5,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -3488,8 +3488,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 3,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 2,
@@ -3538,8 +3538,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -3593,8 +3593,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 4,
@@ -3643,8 +3643,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -3698,8 +3698,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 4,
@@ -3748,8 +3748,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -3803,8 +3803,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 2,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 6,
@@ -3853,8 +3853,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           const expectedPage: PageContentMutable = {
             buffers: [
@@ -3908,8 +3908,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 3,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 1,
@@ -4098,8 +4098,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 10,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 66,
@@ -4284,8 +4284,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 10,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 65,
@@ -4470,8 +4470,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 10,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 0,
@@ -4656,8 +4656,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 8,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 83,
@@ -4842,8 +4842,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 2,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 83,
@@ -5028,8 +5028,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 93,
@@ -5214,8 +5214,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 0,
@@ -5400,8 +5400,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 80,
@@ -5588,8 +5588,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 8,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 66,
@@ -5770,8 +5770,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 0,
@@ -5956,8 +5956,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 65,
@@ -6142,8 +6142,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 87,
@@ -6330,8 +6330,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 31,
@@ -6516,8 +6516,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 81,
@@ -6702,8 +6702,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 7,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 84,
@@ -6888,8 +6888,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 120,
@@ -7074,8 +7074,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 90,
@@ -7260,8 +7260,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 60,
@@ -7448,8 +7448,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 60,
@@ -7634,8 +7634,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 30,
@@ -7820,8 +7820,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 8,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 84,
@@ -8006,8 +8006,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 81,
@@ -8192,8 +8192,8 @@ describe("page/tree/delete", () => {
               },
             ],
             root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
+            previouslyInsertedContentNodeIndex: null,
+            previouslyInsertedContentNodeOffset: null,
           };
           deleteContent(page, {
             startOffset: 89,

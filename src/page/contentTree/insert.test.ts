@@ -1,10 +1,10 @@
 import { Color, PageContent, PageContentMutable } from "../pageModel";
-import { ContentInsert, fixInsert, insertContent } from "./insert";
 import {
   BufferMutable,
   InternalTreeNodeMutable,
   NEWLINE,
-} from "./internalTreeModel";
+} from "./contentModel";
+import { ContentInsert, fixInsert, insertContent } from "./insert";
 import { MAX_BUFFER_LENGTH, SENTINEL, SENTINEL_INDEX } from "./tree";
 
 describe("Functions for inserting content into the piece table/red-black tree.", () => {
@@ -42,8 +42,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           },
         ],
         root: 1,
-        previouslyInsertedNodeIndex: 1,
-        previouslyInsertedNodeOffset: 0,
+        previouslyInsertedContentNodeIndex: 1,
+        previouslyInsertedContentNodeOffset: 0,
       });
       const expectedPage = getPage();
       (expectedPage.buffers[0] as BufferMutable).content += "b";
@@ -98,8 +98,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           },
         ],
         root: 1,
-        previouslyInsertedNodeIndex: 1,
-        previouslyInsertedNodeOffset: 0,
+        previouslyInsertedContentNodeIndex: 1,
+        previouslyInsertedContentNodeOffset: 0,
       });
       const expectedPage = getPage();
       expectedPage.buffers.push({
@@ -128,8 +128,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       });
-      expectedPage.previouslyInsertedNodeIndex = 2;
-      expectedPage.previouslyInsertedNodeOffset = 5;
+      expectedPage.previouslyInsertedContentNodeIndex = 2;
+      expectedPage.previouslyInsertedContentNodeOffset = 5;
       const page = getPage();
       const content: ContentInsert = {
         content: "ef",
@@ -204,8 +204,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         ],
         newlineFormat: NEWLINE.LF,
         root: 1,
-        previouslyInsertedNodeIndex: 3,
-        previouslyInsertedNodeOffset: 5,
+        previouslyInsertedContentNodeIndex: 3,
+        previouslyInsertedContentNodeOffset: 5,
       });
       const page = getPage();
       const expectedPage = getPage();
@@ -230,8 +230,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       (expectedPage.nodes[2] as InternalTreeNodeMutable).right = 4;
       (expectedPage.nodes[2] as InternalTreeNodeMutable).color = Color.Black;
       (expectedPage.nodes[3] as InternalTreeNodeMutable).color = Color.Black;
-      expectedPage.previouslyInsertedNodeIndex = 4;
-      expectedPage.previouslyInsertedNodeOffset = 2;
+      expectedPage.previouslyInsertedContentNodeIndex = 4;
+      expectedPage.previouslyInsertedContentNodeOffset = 2;
       const content: ContentInsert = {
         content: "ij\nk",
         offset: 2,
@@ -305,8 +305,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         ],
         newlineFormat: NEWLINE.LF,
         root: 1,
-        previouslyInsertedNodeIndex: 2,
-        previouslyInsertedNodeOffset: 0,
+        previouslyInsertedContentNodeIndex: 2,
+        previouslyInsertedContentNodeOffset: 0,
       });
       const page = getPage();
       const expectedPage = getPage();
@@ -328,8 +328,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       (expectedPage.nodes[2] as InternalTreeNodeMutable).right = 4;
       (expectedPage.nodes[2] as InternalTreeNodeMutable).color = Color.Black;
       (expectedPage.nodes[3] as InternalTreeNodeMutable).color = Color.Black;
-      expectedPage.previouslyInsertedNodeIndex = 4;
-      expectedPage.previouslyInsertedNodeOffset = 9;
+      expectedPage.previouslyInsertedContentNodeIndex = 4;
+      expectedPage.previouslyInsertedContentNodeOffset = 9;
       const content: ContentInsert = {
         content: "ij\nk",
         offset: 9,
@@ -403,8 +403,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         ],
         newlineFormat: NEWLINE.LF,
         root: 1,
-        previouslyInsertedNodeIndex: 3,
-        previouslyInsertedNodeOffset: 7,
+        previouslyInsertedContentNodeIndex: 3,
+        previouslyInsertedContentNodeOffset: 7,
       });
       const page = getPage();
       const expectedPage = getPage();
@@ -431,8 +431,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       (expectedPage.nodes[2] as InternalTreeNodeMutable).right = 4;
       (expectedPage.nodes[2] as InternalTreeNodeMutable).color = Color.Black;
       (expectedPage.nodes[3] as InternalTreeNodeMutable).color = Color.Black;
-      expectedPage.previouslyInsertedNodeIndex = 4;
-      expectedPage.previouslyInsertedNodeOffset = 2;
+      expectedPage.previouslyInsertedContentNodeIndex = 4;
+      expectedPage.previouslyInsertedContentNodeOffset = 2;
       const content: ContentInsert = {
         content: "ij\nkl",
         offset: 2,
@@ -475,8 +475,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         ],
         newlineFormat: NEWLINE.LF,
         root: 1,
-        previouslyInsertedNodeIndex: 1,
-        previouslyInsertedNodeOffset: 5,
+        previouslyInsertedContentNodeIndex: 1,
+        previouslyInsertedContentNodeOffset: 5,
       });
       const expectedPage = getPage();
       expectedPage.buffers.push({
@@ -503,8 +503,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         content: "ef",
         offset: 5,
       };
-      expectedPage.previouslyInsertedNodeIndex = 2;
-      expectedPage.previouslyInsertedNodeOffset = 5;
+      expectedPage.previouslyInsertedContentNodeIndex = 2;
+      expectedPage.previouslyInsertedContentNodeOffset = 5;
       const maxBufferLength = 8;
       insertContent(page, content, maxBufferLength);
       expect(page).toStrictEqual(expectedPage);
@@ -561,8 +561,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         ],
         newlineFormat: NEWLINE.LF,
         root: 1,
-        previouslyInsertedNodeIndex: 2,
-        previouslyInsertedNodeOffset: 0,
+        previouslyInsertedContentNodeIndex: 2,
+        previouslyInsertedContentNodeOffset: 0,
       };
       const expectedPage: PageContent = {
         buffers: [
@@ -627,8 +627,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         ],
         newlineFormat: NEWLINE.LF,
         root: 2,
-        previouslyInsertedNodeIndex: 3,
-        previouslyInsertedNodeOffset: 0,
+        previouslyInsertedContentNodeIndex: 3,
+        previouslyInsertedContentNodeOffset: 0,
       };
       const content: ContentInsert = {
         content: "gh\nij",
@@ -685,8 +685,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         ],
         newlineFormat: NEWLINE.LF,
         root: 1,
-        previouslyInsertedNodeIndex: 2,
-        previouslyInsertedNodeOffset: 0,
+        previouslyInsertedContentNodeIndex: 2,
+        previouslyInsertedContentNodeOffset: 0,
       };
       const expectedPage: PageContent = {
         buffers: [
@@ -751,8 +751,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         ],
         newlineFormat: NEWLINE.LF,
         root: 2,
-        previouslyInsertedNodeIndex: 3,
-        previouslyInsertedNodeOffset: 0,
+        previouslyInsertedContentNodeIndex: 3,
+        previouslyInsertedContentNodeOffset: 0,
       };
       const content: ContentInsert = {
         content: "gh\nij",
@@ -796,8 +796,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         ],
         newlineFormat: NEWLINE.LF,
         root: 1,
-        previouslyInsertedNodeIndex: null,
-        previouslyInsertedNodeOffset: null,
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
       };
       const expectedPage: PageContent = {
         buffers: [
@@ -849,8 +849,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         ],
         newlineFormat: NEWLINE.LF,
         root: 1,
-        previouslyInsertedNodeIndex: 2,
-        previouslyInsertedNodeOffset: 0,
+        previouslyInsertedContentNodeIndex: 2,
+        previouslyInsertedContentNodeOffset: 0,
       };
       const content: ContentInsert = {
         content: "ef",
@@ -914,8 +914,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         ],
         root: 1,
         newlineFormat: NEWLINE.LF,
-        previouslyInsertedNodeIndex: 3,
-        previouslyInsertedNodeOffset: 7,
+        previouslyInsertedContentNodeIndex: 3,
+        previouslyInsertedContentNodeOffset: 7,
       };
       const expectedPage: PageContent = {
         buffers: [
@@ -995,8 +995,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         ],
         root: 1,
         newlineFormat: NEWLINE.LF,
-        previouslyInsertedNodeIndex: 5,
-        previouslyInsertedNodeOffset: 5,
+        previouslyInsertedContentNodeIndex: 5,
+        previouslyInsertedContentNodeOffset: 5,
       };
       const content: ContentInsert = {
         content: "ij\nkl",
@@ -1060,8 +1060,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         ],
         root: 1,
         newlineFormat: NEWLINE.LF,
-        previouslyInsertedNodeIndex: 3,
-        previouslyInsertedNodeOffset: 7,
+        previouslyInsertedContentNodeIndex: 3,
+        previouslyInsertedContentNodeOffset: 7,
       };
       const expectedPage: PageContent = {
         buffers: [
@@ -1145,8 +1145,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           },
         ],
         newlineFormat: NEWLINE.LF,
-        previouslyInsertedNodeIndex: 5,
-        previouslyInsertedNodeOffset: 8,
+        previouslyInsertedContentNodeIndex: 5,
+        previouslyInsertedContentNodeOffset: 8,
         root: 1,
       };
       const content: ContentInsert = {
@@ -1185,8 +1185,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         ],
         root: 1,
         newlineFormat: NEWLINE.LF,
-        previouslyInsertedNodeIndex: null,
-        previouslyInsertedNodeOffset: null,
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
       };
       const expectedPage: PageContent = {
         buffers: [
@@ -1243,8 +1243,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             right: 2,
           },
         ],
-        previouslyInsertedNodeIndex: 3,
-        previouslyInsertedNodeOffset: 1,
+        previouslyInsertedContentNodeIndex: 3,
+        previouslyInsertedContentNodeOffset: 1,
         newlineFormat: NEWLINE.LF,
         root: 3,
       };
@@ -1265,8 +1265,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           buffers: [],
           root: 1,
           newlineFormat: NEWLINE.LF,
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           nodes: [
             SENTINEL,
             {
@@ -1375,8 +1375,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           buffers: [],
           root: 2,
           newlineFormat: NEWLINE.LF,
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           nodes: [
             SENTINEL,
             {
@@ -1488,8 +1488,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       test("Scenario 2: Left right case", () => {
         const page: PageContent = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 1,
           nodes: [
@@ -1598,8 +1598,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         };
         const expectedPage: PageContent = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 5,
           nodes: [
@@ -1713,8 +1713,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       test("Scenario 3: Right right case", () => {
         const page: PageContent = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 1,
           nodes: [
@@ -1823,8 +1823,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         };
         const expectedPage: PageContent = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 3,
           nodes: [
@@ -1938,8 +1938,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       test("Scenario 4: Right left case", () => {
         const page: PageContent = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 1,
           nodes: [
@@ -2048,8 +2048,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         };
         const expectedPage: PageContent = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
           root: 4,
           nodes: [
@@ -2249,8 +2249,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             },
           ],
           root: 1,
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
         };
         const expectedPage: PageContent = {
@@ -2339,8 +2339,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             },
           ],
           root: 1,
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
         };
         fixInsert(page as PageContentMutable, 4);
@@ -2434,8 +2434,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             },
           ],
           root: 1,
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
         };
         const expectedPage: PageContent = {
@@ -2524,8 +2524,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
             },
           ],
           root: 1,
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
           newlineFormat: NEWLINE.LF,
         };
         fixInsert(page as PageContentMutable, 4);
@@ -2566,8 +2566,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
           },
         ],
         root: 1,
-        previouslyInsertedNodeIndex: 1,
-        previouslyInsertedNodeOffset: 0,
+        previouslyInsertedContentNodeIndex: 1,
+        previouslyInsertedContentNodeOffset: 0,
       });
       const expectedPage = getPage();
       (expectedPage.nodes[1] as InternalTreeNodeMutable).color = Color.Black;

@@ -1,5 +1,5 @@
 import { PageContentMutable } from "../pageModel";
-import { InternalTreeNodeMutable } from "./internalTreeModel";
+import { InternalTreeNodeMutable } from "./contentModel";
 import { SENTINEL_INDEX } from "./tree";
 
 /**

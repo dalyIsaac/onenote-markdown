@@ -1,6 +1,6 @@
 import { OnenotePage } from "@microsoft/microsoft-graph-types";
 import { Color, PageContent } from "../pageModel";
-import { Buffer, InternalTreeNode } from "./internalTreeModel";
+import { Buffer, InternalTreeNode } from "./contentModel";
 import {
   getLineStarts,
   getNewlineFormat,
@@ -41,7 +41,7 @@ export function createNewPage(receivedPage: OnenotePage): PageContent {
     newlineFormat,
     nodes: [SENTINEL, node],
     root: 0,
-    previouslyInsertedNodeIndex: null,
-    previouslyInsertedNodeOffset: null,
+    previouslyInsertedContentNodeIndex: null,
+    previouslyInsertedContentNodeOffset: null,
   };
 }

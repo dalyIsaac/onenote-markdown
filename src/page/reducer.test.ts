@@ -7,14 +7,19 @@ import {
   REPLACE_CONTENT,
   ReplaceContentAction,
 } from "./actions";
+import { NEWLINE } from "./contentTree/contentModel";
 import {
   LF,
   LF_CONTENT,
   pageReducerTest,
-} from "./internalTree/createNewPage.test";
-import { NEWLINE } from "./internalTree/internalTreeModel";
-import { SENTINEL, SENTINEL_INDEX } from "./internalTree/tree";
-import { Color, PageContent, PageContentMutable, StatePages } from "./pageModel";
+} from "./contentTree/createNewPage.test";
+import { SENTINEL, SENTINEL_INDEX } from "./contentTree/tree";
+import {
+  Color,
+  PageContent,
+  PageContentMutable,
+  StatePages,
+} from "./pageModel";
 import pageReducer from "./reducer";
 
 export const getStartPage = (): PageContentMutable => ({
@@ -191,8 +196,8 @@ export const getStartPage = (): PageContentMutable => ({
     },
   ],
   root: 6,
-  previouslyInsertedNodeIndex: null,
-  previouslyInsertedNodeOffset: null,
+  previouslyInsertedContentNodeIndex: null,
+  previouslyInsertedContentNodeOffset: null,
 });
 
 const PAGE_ID = "pageId";
@@ -229,8 +234,8 @@ describe("page/reducer", () => {
 
     const expectedPage: PageContent = {
       root: 6,
-      previouslyInsertedNodeIndex: 12,
-      previouslyInsertedNodeOffset: 127,
+      previouslyInsertedContentNodeIndex: 12,
+      previouslyInsertedContentNodeOffset: 127,
       newlineFormat: NEWLINE.LF,
       buffers: [
         {
@@ -615,8 +620,8 @@ describe("page/reducer", () => {
         },
       ],
       root: 6,
-      previouslyInsertedNodeIndex: null,
-      previouslyInsertedNodeOffset: null,
+      previouslyInsertedContentNodeIndex: null,
+      previouslyInsertedContentNodeOffset: null,
     };
     const expectedState: StatePages = {
       ...state,
@@ -826,8 +831,8 @@ describe("page/reducer", () => {
         },
       ],
       root: 6,
-      previouslyInsertedNodeIndex: 12,
-      previouslyInsertedNodeOffset: 126,
+      previouslyInsertedContentNodeIndex: 12,
+      previouslyInsertedContentNodeOffset: 126,
     };
     const expectedState: StatePages = {
       ...state,

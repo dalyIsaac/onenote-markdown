@@ -1,4 +1,4 @@
-import { Color, Node, NodeMutable } from "../pageModel";
+import { Node, NodeMutable } from "../pageModel";
 
 /**
  * Mutable objects are only used in constructing the next state.

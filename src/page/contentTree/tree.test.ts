@@ -3,7 +3,7 @@ import {
   InternalTreeNode,
   InternalTreeNodeMutable,
   NEWLINE,
-} from "./internalTreeModel";
+} from "./contentModel";
 import {
   calculateCharCount,
   calculateLineFeedCount,
@@ -17,8 +17,8 @@ export const getPage = (): PageContentMutable => ({
   buffers: [],
   ...getFinalTree(),
   newlineFormat: NEWLINE.LF,
-  previouslyInsertedNodeIndex: null,
-  previouslyInsertedNodeOffset: null,
+  previouslyInsertedContentNodeIndex: null,
+  previouslyInsertedContentNodeOffset: null,
 });
 
 export const getFinalTree = (): {

@@ -9,7 +9,7 @@ import {
   InternalTreeNode,
   InternalTreeNodeMutable,
   NEWLINE,
-} from "./internalTreeModel";
+} from "./contentModel";
 
 /**
  * The maximum length of a buffer string.

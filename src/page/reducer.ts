@@ -9,10 +9,10 @@ import {
   STORE_RECEIVED_PAGE,
   StoreReceivedPageAction,
 } from "./actions";
-import { createNewPage } from "./internalTree/createNewPage";
-import { deleteContent } from "./internalTree/delete";
-import { insertContent } from "./internalTree/insert";
-import { MAX_BUFFER_LENGTH } from "./internalTree/tree";
+import { createNewPage } from "./contentTree/createNewPage";
+import { deleteContent } from "./contentTree/delete";
+import { insertContent } from "./contentTree/insert";
+import { MAX_BUFFER_LENGTH } from "./contentTree/tree";
 import { PageContent, PageContentMutable, StatePages } from "./pageModel";
 
 /**

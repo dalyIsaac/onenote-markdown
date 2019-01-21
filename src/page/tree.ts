@@ -1,4 +1,4 @@
-import { SENTINEL, SENTINEL_INDEX } from "./internalTree/tree";
+import { SENTINEL, SENTINEL_INDEX } from "./contentTree/tree";
 import { Node } from "./pageModel";
 
 /**

@@ -1,5 +1,5 @@
 import { Color, PageContentMutable } from "../pageModel";
-import { Buffer, InternalTreeNode, InternalTreeNodeMutable } from "./internalTreeModel";
+import { Buffer, InternalTreeNode, InternalTreeNodeMutable } from "./contentModel";
 import { leftRotate, rightRotate } from "./rotate";
 import {
   findNodeAtOffset,
@@ -32,16 +32,16 @@ export function insertContent(
   let previouslyInsertedNode: InternalTreeNode | undefined;
 
   if (
-    page.previouslyInsertedNodeIndex != null &&
-    page.previouslyInsertedNodeOffset != null
+    page.previouslyInsertedContentNodeIndex != null &&
+    page.previouslyInsertedContentNodeOffset != null
   ) {
-    previouslyInsertedNode = page.nodes[page.previouslyInsertedNodeIndex];
+    previouslyInsertedNode = page.nodes[page.previouslyInsertedContentNodeIndex];
   }
 
   if (
     previouslyInsertedNode !== undefined &&
     content.offset ===
-      page.previouslyInsertedNodeOffset! + previouslyInsertedNode.length
+      page.previouslyInsertedContentNodeOffset! + previouslyInsertedNode.length
   ) {
     insertAtEndPreviouslyInsertedNode(content, page, maxBufferLength);
   } else {
@@ -266,8 +266,8 @@ function insertInsideNode(
   insertNode(page, secondPartNode, content.offset);
   fixInsert(page, page.nodes.length - 1);
   insertAtNodeExtremity(content, page, maxBufferLength);
-  page.previouslyInsertedNodeIndex = page.nodes.length - 1;
-  page.previouslyInsertedNodeOffset = content.offset;
+  page.previouslyInsertedContentNodeIndex = page.nodes.length - 1;
+  page.previouslyInsertedContentNodeOffset = content.offset;
 }
 
 /**
@@ -343,8 +343,8 @@ function createNodeAppendToBuffer(
   };
 
   page.buffers[page.buffers.length - 1] = updatedBuffer;
-  page.previouslyInsertedNodeIndex = page.nodes.length;
-  page.previouslyInsertedNodeOffset = content.offset;
+  page.previouslyInsertedContentNodeIndex = page.nodes.length;
+  page.previouslyInsertedContentNodeOffset = content.offset;
   insertNode(page, newNode, content.offset);
 }
 
@@ -380,8 +380,8 @@ function createNodeCreateBuffer(
     left: SENTINEL_INDEX,
     right: SENTINEL_INDEX,
   };
-  page.previouslyInsertedNodeIndex = page.nodes.length;
-  page.previouslyInsertedNodeOffset = content.offset;
+  page.previouslyInsertedContentNodeIndex = page.nodes.length;
+  page.previouslyInsertedContentNodeOffset = content.offset;
   page.buffers.push(newBuffer);
   insertNode(page, newNode, content.offset);
 }

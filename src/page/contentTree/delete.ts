@@ -1,7 +1,7 @@
 import { Color, PageContent, PageContentMutable } from "../pageModel";
 import { nextNode, treeMinimum } from "../tree";
+import { InternalTreeNode, InternalTreeNodeMutable } from "./contentModel";
 import { fixInsert, insertNode } from "./insert";
-import { InternalTreeNode, InternalTreeNodeMutable } from "./internalTreeModel";
 import { leftRotate, rightRotate } from "./rotate";
 import {
   calculateCharCount,
@@ -108,8 +108,8 @@ export function deleteContent(
       .index;
   }
 
-  page.previouslyInsertedNodeIndex = null;
-  page.previouslyInsertedNodeOffset = null;
+  page.previouslyInsertedContentNodeIndex = null;
+  page.previouslyInsertedContentNodeOffset = null;
 
   if (oldNodeStartPosition.nodeIndex !== oldNodeEndPosition.nodeIndex) {
     deleteBetweenNodes(page, firstNodeToDelete, nodeAfterLastNodeToDelete);

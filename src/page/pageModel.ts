@@ -2,7 +2,7 @@ import {
   Buffer,
   CharValues,
   InternalTreeNode,
-} from "./internalTree/internalTreeModel";
+} from "./contentTree/contentModel";
 
 //#region Node
 
@@ -83,13 +83,13 @@ export interface PageContent {
    * The index of the last node which had content inserted into it.
    * `null` if another operation which wasn't an insert was performed.
    */
-  readonly previouslyInsertedNodeIndex: number | null;
+  readonly previouslyInsertedContentNodeIndex: number | null;
 
   /**
    * The logical offset of the last node which had content inserted into it.
    * `null` if another operation which wasn't an insert was performed.
    */
-  readonly previouslyInsertedNodeOffset: number | null;
+  readonly previouslyInsertedContentNodeOffset: number | null;
 }
 
 export interface PageContentMutable {
@@ -118,13 +118,13 @@ export interface PageContentMutable {
    * The index of the last node which had content inserted into it.
    * `null` if another operation which wasn't an insert was performed.
    */
-  previouslyInsertedNodeIndex: number | null;
+  previouslyInsertedContentNodeIndex: number | null;
 
   /**
    * The logical offset of the last node which had content inserted into it.
    * `null` if another operation which wasn't an insert was performed.
    */
-  previouslyInsertedNodeOffset: number | null;
+  previouslyInsertedContentNodeOffset: number | null;
 }
 
 //#endregion

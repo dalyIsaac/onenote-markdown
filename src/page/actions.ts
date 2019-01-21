@@ -1,7 +1,7 @@
 import { OnenotePage } from "@microsoft/microsoft-graph-types";
 import { Action } from "../common";
-import { ContentDelete } from "./internalTree/delete";
-import { ContentInsert } from "./internalTree/insert";
+import { ContentDelete } from "./contentTree/delete";
+import { ContentInsert } from "./contentTree/insert";
 
 /**
  * Partial action which should be used to extend any action whihch interacts with a page.

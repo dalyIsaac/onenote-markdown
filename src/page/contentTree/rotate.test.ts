@@ -1,5 +1,5 @@
 import { Color, PageContentMutable } from "../pageModel";
-import { InternalTreeNode, NEWLINE } from "./internalTreeModel";
+import { InternalTreeNode, NEWLINE } from "./contentModel";
 import { leftRotate, rightRotate } from "./rotate";
 import { SENTINEL, SENTINEL_INDEX } from "./tree";
 
@@ -78,8 +78,8 @@ describe("Functions for performing rotations on the piece table/red-black tree."
       newlineFormat: NEWLINE.LF,
       nodes,
       root: 2,
-      previouslyInsertedNodeIndex: null,
-      previouslyInsertedNodeOffset: null,
+      previouslyInsertedContentNodeIndex: null,
+      previouslyInsertedContentNodeOffset: null,
     };
     return pieceTable;
   };
@@ -159,8 +159,8 @@ describe("Functions for performing rotations on the piece table/red-black tree."
       newlineFormat: NEWLINE.LF,
       nodes,
       root: 4,
-      previouslyInsertedNodeIndex: null,
-      previouslyInsertedNodeOffset: null,
+      previouslyInsertedContentNodeIndex: null,
+      previouslyInsertedContentNodeOffset: null,
     };
     return pieceTable;
   };
@@ -357,8 +357,8 @@ describe("Functions for performing rotations on the piece table/red-black tree."
       newlineFormat: NEWLINE.LF,
       nodes,
       root: 5,
-      previouslyInsertedNodeIndex: null,
-      previouslyInsertedNodeOffset: null,
+      previouslyInsertedContentNodeIndex: null,
+      previouslyInsertedContentNodeOffset: null,
     };
     return pieceTable;
   };
@@ -555,8 +555,8 @@ describe("Functions for performing rotations on the piece table/red-black tree."
       newlineFormat: NEWLINE.LF,
       nodes,
       root: 5,
-      previouslyInsertedNodeIndex: null,
-      previouslyInsertedNodeOffset: null,
+      previouslyInsertedContentNodeIndex: null,
+      previouslyInsertedContentNodeOffset: null,
     };
     return pieceTable;
   };
@@ -582,8 +582,8 @@ describe("Functions for performing rotations on the piece table/red-black tree."
     ],
     root: 1,
     newlineFormat: NEWLINE.LF,
-    previouslyInsertedNodeIndex: 1,
-    previouslyInsertedNodeOffset: 0,
+    previouslyInsertedContentNodeIndex: 1,
+    previouslyInsertedContentNodeOffset: 0,
   });
 
   describe("left rotate", () => {
