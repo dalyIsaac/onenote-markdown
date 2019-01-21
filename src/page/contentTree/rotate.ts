@@ -1,5 +1,5 @@
 import { PageContentMutable } from "../pageModel";
-import { InternalTreeNodeMutable } from "./contentModel";
+import { ContentNodeMutable } from "./contentModel";
 import { SENTINEL_INDEX } from "./tree";
 
 /**
@@ -30,7 +30,7 @@ export function leftRotate(page: PageContentMutable, nodeIndex: number): void {
       page.nodes[x].lineFeedCount,
   };
 
-  (page.nodes[x] as InternalTreeNodeMutable).right = page.nodes[y].left;
+  (page.nodes[x] as ContentNodeMutable).right = page.nodes[y].left;
   if (page.nodes[y].left !== SENTINEL_INDEX) {
     page.nodes[page.nodes[y].left] = {
       ...page.nodes[page.nodes[y].left],
@@ -38,7 +38,7 @@ export function leftRotate(page: PageContentMutable, nodeIndex: number): void {
     };
   }
 
-  (page.nodes[y] as InternalTreeNodeMutable).parent = page.nodes[x].parent;
+  (page.nodes[y] as ContentNodeMutable).parent = page.nodes[x].parent;
   if (page.nodes[x].parent === SENTINEL_INDEX) {
     page.root = y;
   } else if (x === page.nodes[page.nodes[x].parent].left) {
@@ -53,8 +53,8 @@ export function leftRotate(page: PageContentMutable, nodeIndex: number): void {
     };
   }
 
-  (page.nodes[y] as InternalTreeNodeMutable).left = x;
-  (page.nodes[x] as InternalTreeNodeMutable).parent = y;
+  (page.nodes[y] as ContentNodeMutable).left = x;
+  (page.nodes[x] as ContentNodeMutable).parent = y;
 }
 
 /**
@@ -75,18 +75,18 @@ export function rightRotate(page: PageContentMutable, nodeIndex: number): void {
   const x = page.nodes[y].left;
   page.nodes[x] = { ...page.nodes[x] };
 
-  (page.nodes[y] as InternalTreeNodeMutable).left = page.nodes[x].right;
+  (page.nodes[y] as ContentNodeMutable).left = page.nodes[x].right;
   if (page.nodes[x].right !== SENTINEL_INDEX) {
     page.nodes[page.nodes[x].right] = {
       ...page.nodes[page.nodes[x].right],
       parent: y,
     };
   }
-  (page.nodes[x] as InternalTreeNodeMutable).parent = page.nodes[y].parent;
+  (page.nodes[x] as ContentNodeMutable).parent = page.nodes[y].parent;
 
-  (page.nodes[y] as InternalTreeNodeMutable).leftCharCount -=
+  (page.nodes[y] as ContentNodeMutable).leftCharCount -=
     page.nodes[x].leftCharCount + page.nodes[x].length;
-  (page.nodes[y] as InternalTreeNodeMutable).leftLineFeedCount -=
+  (page.nodes[y] as ContentNodeMutable).leftLineFeedCount -=
     page.nodes[x].leftLineFeedCount + page.nodes[x].lineFeedCount;
 
   if (page.nodes[y].parent === SENTINEL_INDEX) {
@@ -102,8 +102,8 @@ export function rightRotate(page: PageContentMutable, nodeIndex: number): void {
       left: x,
     };
   }
-  (page.nodes[x] as InternalTreeNodeMutable).right = y;
-  (page.nodes[y] as InternalTreeNodeMutable).parent = x;
+  (page.nodes[x] as ContentNodeMutable).right = y;
+  (page.nodes[y] as ContentNodeMutable).parent = x;
 
   page.nodes[y] = page.nodes[y];
   page.nodes[x] = page.nodes[x];

@@ -1,7 +1,7 @@
 import { Color, PageContent, PageContentMutable } from "../pageModel";
 import {
   BufferMutable,
-  InternalTreeNodeMutable,
+  ContentNodeMutable,
   NEWLINE,
 } from "./contentModel";
 import { ContentInsert, fixInsert, insertContent } from "./insert";
@@ -47,8 +47,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       });
       const expectedPage = getPage();
       (expectedPage.buffers[0] as BufferMutable).content += "b";
-      (expectedPage.nodes[1] as InternalTreeNodeMutable) = {
-        ...(expectedPage.nodes[1] as InternalTreeNodeMutable),
+      (expectedPage.nodes[1] as ContentNodeMutable) = {
+        ...(expectedPage.nodes[1] as ContentNodeMutable),
         end: {
           line: 0,
           column: 2,
@@ -108,7 +108,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         content: "ef",
       });
       ((expectedPage
-        .nodes[1] as InternalTreeNodeMutable) as InternalTreeNodeMutable).right = 2;
+        .nodes[1] as ContentNodeMutable) as ContentNodeMutable).right = 2;
       expectedPage.nodes.push({
         bufferIndex: 1,
         start: {
@@ -212,8 +212,8 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       ((expectedPage.buffers[1] as BufferMutable) as BufferMutable).content +=
         "ij\nk";
       (expectedPage.buffers[1] as BufferMutable).lineStarts.push(7);
-      (expectedPage.nodes[1] as InternalTreeNodeMutable).leftCharCount = 6;
-      (expectedPage.nodes[1] as InternalTreeNodeMutable).leftLineFeedCount = 1;
+      (expectedPage.nodes[1] as ContentNodeMutable).leftCharCount = 6;
+      (expectedPage.nodes[1] as ContentNodeMutable).leftLineFeedCount = 1;
       expectedPage.nodes.push({
         bufferIndex: 1,
         start: { line: 0, column: 4 },
@@ -227,9 +227,9 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       });
-      (expectedPage.nodes[2] as InternalTreeNodeMutable).right = 4;
-      (expectedPage.nodes[2] as InternalTreeNodeMutable).color = Color.Black;
-      (expectedPage.nodes[3] as InternalTreeNodeMutable).color = Color.Black;
+      (expectedPage.nodes[2] as ContentNodeMutable).right = 4;
+      (expectedPage.nodes[2] as ContentNodeMutable).color = Color.Black;
+      (expectedPage.nodes[3] as ContentNodeMutable).color = Color.Black;
       expectedPage.previouslyInsertedContentNodeIndex = 4;
       expectedPage.previouslyInsertedContentNodeOffset = 2;
       const content: ContentInsert = {
@@ -325,9 +325,9 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       });
-      (expectedPage.nodes[2] as InternalTreeNodeMutable).right = 4;
-      (expectedPage.nodes[2] as InternalTreeNodeMutable).color = Color.Black;
-      (expectedPage.nodes[3] as InternalTreeNodeMutable).color = Color.Black;
+      (expectedPage.nodes[2] as ContentNodeMutable).right = 4;
+      (expectedPage.nodes[2] as ContentNodeMutable).color = Color.Black;
+      (expectedPage.nodes[3] as ContentNodeMutable).color = Color.Black;
       expectedPage.previouslyInsertedContentNodeIndex = 4;
       expectedPage.previouslyInsertedContentNodeOffset = 9;
       const content: ContentInsert = {
@@ -426,11 +426,11 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       });
-      (expectedPage.nodes[1] as InternalTreeNodeMutable).leftCharCount = 7;
-      (expectedPage.nodes[1] as InternalTreeNodeMutable).leftLineFeedCount = 1;
-      (expectedPage.nodes[2] as InternalTreeNodeMutable).right = 4;
-      (expectedPage.nodes[2] as InternalTreeNodeMutable).color = Color.Black;
-      (expectedPage.nodes[3] as InternalTreeNodeMutable).color = Color.Black;
+      (expectedPage.nodes[1] as ContentNodeMutable).leftCharCount = 7;
+      (expectedPage.nodes[1] as ContentNodeMutable).leftLineFeedCount = 1;
+      (expectedPage.nodes[2] as ContentNodeMutable).right = 4;
+      (expectedPage.nodes[2] as ContentNodeMutable).color = Color.Black;
+      (expectedPage.nodes[3] as ContentNodeMutable).color = Color.Black;
       expectedPage.previouslyInsertedContentNodeIndex = 4;
       expectedPage.previouslyInsertedContentNodeOffset = 2;
       const content: ContentInsert = {
@@ -497,7 +497,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         left: SENTINEL_INDEX,
         right: SENTINEL_INDEX,
       });
-      (expectedPage.nodes[1] as InternalTreeNodeMutable).right = 2;
+      (expectedPage.nodes[1] as ContentNodeMutable).right = 2;
       const page = getPage();
       const content: ContentInsert = {
         content: "ef",
@@ -2570,7 +2570,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         previouslyInsertedContentNodeOffset: 0,
       });
       const expectedPage = getPage();
-      (expectedPage.nodes[1] as InternalTreeNodeMutable).color = Color.Black;
+      (expectedPage.nodes[1] as ContentNodeMutable).color = Color.Black;
       const page = getPage();
       fixInsert(page, 1);
       expect(page).toStrictEqual(expectedPage);

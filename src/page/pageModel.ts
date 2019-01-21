@@ -1,7 +1,7 @@
 import {
   Buffer,
   CharValues,
-  InternalTreeNode,
+  ContentNode,
 } from "./contentTree/contentModel";
 
 //#region Node
@@ -71,7 +71,7 @@ export interface PageContent {
   /**
    * The nodes of the piece table. The first node is always the `SENTINEL` node.
    */
-  readonly nodes: ReadonlyArray<InternalTreeNode>;
+  readonly nodes: ReadonlyArray<ContentNode>;
 
   /**
    * The index of the root node for the piece table for this page.
@@ -106,7 +106,7 @@ export interface PageContentMutable {
   /**
    * The nodes of the piece table. The first node is always the `SENTINEL` node.
    */
-  nodes: InternalTreeNode[];
+  nodes: ContentNode[];
 
   /**
    * The index of the root node for the piece table for this page.

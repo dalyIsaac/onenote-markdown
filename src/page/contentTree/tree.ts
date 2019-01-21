@@ -6,8 +6,8 @@ import { Color, PageContent, PageContentMutable } from "../pageModel";
 import {
   BufferCursor,
   CharValues,
-  InternalTreeNode,
-  InternalTreeNodeMutable,
+  ContentNode,
+  ContentNodeMutable,
   NEWLINE,
 } from "./contentModel";
 
@@ -23,7 +23,7 @@ export interface NodePositionOffset {
   /**
    * Piece Index
    */
-  readonly node: InternalTreeNode;
+  readonly node: ContentNode;
 
   /**
    * The index of the node inside the array.
@@ -49,7 +49,7 @@ export interface NodePositionOffset {
  */
 export function findNodeAtOffset(
   offset: number,
-  nodes: ReadonlyArray<InternalTreeNode>,
+  nodes: ReadonlyArray<ContentNode>,
   root: number,
 ): NodePositionOffset {
   let x = root;
@@ -219,8 +219,8 @@ export function recomputeTreeMetadata(
   lineFeedDelta =
     calculateLineFeedCount(page, page.nodes[x].left) -
     page.nodes[x].leftLineFeedCount;
-  (page.nodes[x] as InternalTreeNodeMutable).leftCharCount += lengthDelta;
-  (page.nodes[x] as InternalTreeNodeMutable).leftLineFeedCount += lineFeedDelta;
+  (page.nodes[x] as ContentNodeMutable).leftCharCount += lengthDelta;
+  (page.nodes[x] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta;
 
   // go upwards till root. O(logN)
   while (x !== page.root && (lengthDelta !== 0 || lineFeedDelta !== 0)) {
@@ -230,10 +230,10 @@ export function recomputeTreeMetadata(
       };
       (page.nodes[
         page.nodes[x].parent
-      ] as InternalTreeNodeMutable).leftCharCount += lengthDelta;
+      ] as ContentNodeMutable).leftCharCount += lengthDelta;
       (page.nodes[
         page.nodes[x].parent
-      ] as InternalTreeNodeMutable).leftLineFeedCount += lineFeedDelta;
+      ] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta;
     }
 
     x = page.nodes[x].parent;
@@ -286,7 +286,7 @@ export const SENTINEL_INDEX = 0;
 /**
  * The sentinel node of red-black trees.
  */
-export const SENTINEL: InternalTreeNode = {
+export const SENTINEL: ContentNode = {
   bufferIndex: 0,
   start: { column: 0, line: 0 },
   end: { column: 0, line: 0 },
@@ -306,17 +306,17 @@ export const SENTINEL: InternalTreeNode = {
  * @param page The page/piece table which contains the `SENTINEL` node.
  */
 export function resetSentinel(page: PageContentMutable): void {
-  (SENTINEL as InternalTreeNodeMutable).bufferIndex = 0;
-  (SENTINEL as InternalTreeNodeMutable).start = { column: 0, line: 0 };
-  (SENTINEL as InternalTreeNodeMutable).end = { column: 0, line: 0 };
-  (SENTINEL as InternalTreeNodeMutable).leftCharCount = 0;
-  (SENTINEL as InternalTreeNodeMutable).leftLineFeedCount = 0;
-  (SENTINEL as InternalTreeNodeMutable).length = 0;
-  (SENTINEL as InternalTreeNodeMutable).lineFeedCount = 0;
-  (SENTINEL as InternalTreeNodeMutable).color = Color.Black;
-  (SENTINEL as InternalTreeNodeMutable).parent = SENTINEL_INDEX;
-  (SENTINEL as InternalTreeNodeMutable).left = SENTINEL_INDEX;
-  (SENTINEL as InternalTreeNodeMutable).right = SENTINEL_INDEX;
+  (SENTINEL as ContentNodeMutable).bufferIndex = 0;
+  (SENTINEL as ContentNodeMutable).start = { column: 0, line: 0 };
+  (SENTINEL as ContentNodeMutable).end = { column: 0, line: 0 };
+  (SENTINEL as ContentNodeMutable).leftCharCount = 0;
+  (SENTINEL as ContentNodeMutable).leftLineFeedCount = 0;
+  (SENTINEL as ContentNodeMutable).length = 0;
+  (SENTINEL as ContentNodeMutable).lineFeedCount = 0;
+  (SENTINEL as ContentNodeMutable).color = Color.Black;
+  (SENTINEL as ContentNodeMutable).parent = SENTINEL_INDEX;
+  (SENTINEL as ContentNodeMutable).left = SENTINEL_INDEX;
+  (SENTINEL as ContentNodeMutable).right = SENTINEL_INDEX;
   page.nodes[0] = SENTINEL;
 }
 

@@ -1,7 +1,7 @@
 import { Color, PageContentMutable } from "../pageModel";
 import {
-  InternalTreeNode,
-  InternalTreeNodeMutable,
+  ContentNode,
+  ContentNodeMutable,
   NEWLINE,
 } from "./contentModel";
 import {
@@ -22,7 +22,7 @@ export const getPage = (): PageContentMutable => ({
 });
 
 export const getFinalTree = (): {
-  nodes: InternalTreeNode[];
+  nodes: ContentNode[];
   root: number;
 } => ({
   nodes: [
@@ -272,11 +272,11 @@ describe("Functions for common tree operations on the piece table/red-black tree
 
   test("Recompute tree metadata: add a node in the middle", () => {
     const page = getPage(); // hypothetically added node 5
-    (page.nodes[6] as InternalTreeNodeMutable).leftCharCount = 12;
-    (page.nodes[5] as InternalTreeNodeMutable).lineFeedCount = 5;
+    (page.nodes[6] as ContentNodeMutable).leftCharCount = 12;
+    (page.nodes[5] as ContentNodeMutable).lineFeedCount = 5;
     const expectedPage = getPage();
-    (expectedPage.nodes[6] as InternalTreeNodeMutable).leftLineFeedCount += 5;
-    (expectedPage.nodes[5] as InternalTreeNodeMutable).lineFeedCount += 5;
+    (expectedPage.nodes[6] as ContentNodeMutable).leftLineFeedCount += 5;
+    (expectedPage.nodes[5] as ContentNodeMutable).lineFeedCount += 5;
 
     recomputeTreeMetadata(page, 4);
     expect(page).toStrictEqual(expectedPage);

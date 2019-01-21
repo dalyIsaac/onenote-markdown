@@ -1,11 +1,11 @@
 import { Color, PageContentMutable } from "../pageModel";
-import { InternalTreeNode, NEWLINE } from "./contentModel";
+import { ContentNode, NEWLINE } from "./contentModel";
 import { leftRotate, rightRotate } from "./rotate";
 import { SENTINEL, SENTINEL_INDEX } from "./tree";
 
 describe("Functions for performing rotations on the piece table/red-black tree.", () => {
   const constructSimplePieceTableBeforeLeftRotate = (): PageContentMutable => {
-    const nodes: InternalTreeNode[] = [
+    const nodes: ContentNode[] = [
       SENTINEL,
       {
         bufferIndex: 0,
@@ -86,7 +86,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
   const constructSimplePieceTableAfterRightRotate = constructSimplePieceTableBeforeLeftRotate;
 
   const constructSimplePieceTableAfterLeftRotate = (): PageContentMutable => {
-    const nodes: InternalTreeNode[] = [
+    const nodes: ContentNode[] = [
       SENTINEL,
       {
         bufferIndex: 0,
@@ -167,7 +167,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
   const constructSimplePieceTableBeforeRightRotate = constructSimplePieceTableAfterLeftRotate;
 
   const constructComplexPieceTableBeforeLeftRotate = (): PageContentMutable => {
-    const nodes: InternalTreeNode[] = [
+    const nodes: ContentNode[] = [
       SENTINEL,
       {
         bufferIndex: 0,
@@ -365,7 +365,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
   const constructComplexPieceTableAfterRightRotate = constructComplexPieceTableBeforeLeftRotate;
 
   const constructComplexPieceTableAfterLeftRotate = (): PageContentMutable => {
-    const nodes: InternalTreeNode[] = [
+    const nodes: ContentNode[] = [
       SENTINEL,
       {
         bufferIndex: 0,

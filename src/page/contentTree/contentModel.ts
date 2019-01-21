@@ -86,11 +86,11 @@ export interface BufferCursorMutable {
 
 //#endregion
 
-//#region InternalTreeNode
+//#region ContentNode
 /**
  * Represents a "piece" inside the piece table.
  */
-export interface InternalTreeNode extends Node {
+export interface ContentNode extends Node {
   /**
    * The index of the buffer which this node refers to.
    */
@@ -127,7 +127,7 @@ export interface InternalTreeNode extends Node {
   readonly lineFeedCount: number;
 }
 
-export interface InternalTreeNodeMutable extends NodeMutable {
+export interface ContentNodeMutable extends NodeMutable {
   /**
    * The index of the buffer which this node refers to.
    */

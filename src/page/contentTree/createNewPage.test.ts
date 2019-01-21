@@ -2,7 +2,7 @@ import { OnenotePage } from "@microsoft/microsoft-graph-types";
 import { STORE_RECEIVED_PAGE, StoreReceivedPageAction } from "../actions";
 import { Color, PageContent, StatePages } from "../pageModel";
 import pageReducer from "../reducer";
-import { Buffer, BufferCursor, InternalTreeNode } from "./contentModel";
+import { Buffer, BufferCursor, ContentNode } from "./contentModel";
 import { createNewPage } from "./createNewPage";
 import { SENTINEL, SENTINEL_INDEX } from "./tree";
 
@@ -120,7 +120,7 @@ const getExpectedLineStarts = (content: string, newline: string): number[] => {
 const constructExpectedNewPageNode = (
   content: string,
   newline: string,
-): InternalTreeNode => {
+): ContentNode => {
   const start: BufferCursor = { column: 0, line: 0 };
   const lines = content.split(newline);
   const rowIndex = lines.length - 1;
