@@ -18,6 +18,23 @@ import {
 export const MAX_BUFFER_LENGTH = 65535;
 
 /**
+ * The sentinel node of red-black trees.
+ */
+export const SENTINEL_CONTENT: ContentNode = {
+  bufferIndex: 0,
+  color: Color.Black,
+  end: { column: 0, line: 0 },
+  left: SENTINEL_INDEX,
+  leftCharCount: 0,
+  leftLineFeedCount: 0,
+  length: 0,
+  lineFeedCount: 0,
+  parent: SENTINEL_INDEX,
+  right: SENTINEL_INDEX,
+  start: { column: 0, line: 0 },
+};
+
+/**
  * The returned object from `findNodeAtOffset`.
  */
 export interface NodePositionOffset {
@@ -65,8 +82,8 @@ export function findNodeAtOffset(
         return {
           node: nodes[x],
           nodeIndex: oldXIndex,
-          remainder: 0,
           nodeStartOffset,
+          remainder: 0,
         };
       }
     } else if (nodes[x].leftCharCount + nodes[x].length > offset) {
@@ -75,8 +92,8 @@ export function findNodeAtOffset(
       return {
         node: nodes[x],
         nodeIndex: x,
-        remainder: offset - nodes[x].leftCharCount,
         nodeStartOffset,
+        remainder: offset - nodes[x].leftCharCount,
       };
     } else {
       offset -= nodes[x].leftCharCount + nodes[x].length;
@@ -90,8 +107,8 @@ export function findNodeAtOffset(
         return {
           node: nodes[oldXIndex],
           nodeIndex: oldXIndex,
-          remainder: nodes[oldXIndex].length,
           nodeStartOffset: oldNodeStartOffset,
+          remainder: nodes[oldXIndex].length,
         };
       }
     }
@@ -104,8 +121,8 @@ export function findNodeAtOffset(
   return {
     node: SENTINEL_CONTENT,
     nodeIndex: SENTINEL_INDEX,
-    remainder: 0,
     nodeStartOffset: 0,
+    remainder: 0,
   };
 }
 
@@ -154,6 +171,21 @@ export function getLineStarts(
 }
 
 /**
+ * Gets the offset of a cursor inside a buffer.
+ * @param bufferIndex The buffer for which the cursor is located in.
+ * @param cursor The cursor for which the offset is desired.
+ * @param page The page/piece table.
+ */
+export function getOffsetInBuffer(
+  bufferIndex: number,
+  cursor: BufferCursor,
+  page: PageContent,
+): number {
+  const lineStarts = page.buffers[bufferIndex].lineStarts;
+  return lineStarts[cursor.line] + cursor.column;
+}
+
+/**
  * Gets the contents of a node.
  * @param nodeIndex The index of the node in `page.nodes`.
  * @param page The page/piece table.
@@ -171,18 +203,38 @@ export function getNodeContent(nodeIndex: number, page: PageContent): string {
 }
 
 /**
- * Gets the offset of a cursor inside a buffer.
- * @param bufferIndex The buffer for which the cursor is located in.
- * @param cursor The cursor for which the offset is desired.
- * @param page The page/piece table.
+ * Calculates the character count for the node and its subtrees.
+ * @param page The page/piece table
+ * @param index The index of the node in the `node` array of the page/piece table to find the character count for.
  */
-export function getOffsetInBuffer(
-  bufferIndex: number,
-  cursor: BufferCursor,
+export function calculateCharCount(page: PageContent, index: number): number {
+  if (index === SENTINEL_INDEX) {
+    return 0;
+  }
+  const node = page.contentNodes[index];
+  return (
+    node.leftCharCount + node.length + calculateCharCount(page, node.right)
+  );
+}
+
+/**
+ * Calculates the line feed count for the node and subtrees.
+ * @param page The page/piece table
+ * @param index The index of the node in the `node` array of the page/piece table to find the line feed count for.
+ */
+export function calculateLineFeedCount(
   page: PageContent,
+  index: number,
 ): number {
-  const lineStarts = page.buffers[bufferIndex].lineStarts;
-  return lineStarts[cursor.line] + cursor.column;
+  if (index === SENTINEL_INDEX) {
+    return 0;
+  }
+  const node = page.contentNodes[index];
+  return (
+    node.leftLineFeedCount +
+    node.lineFeedCount +
+    calculateLineFeedCount(page, node.right)
+  );
 }
 
 /**
@@ -249,58 +301,6 @@ export function recomputeTreeMetadata(
 
   return;
 }
-
-/**
- * Calculates the character count for the node and its subtrees.
- * @param page The page/piece table
- * @param index The index of the node in the `node` array of the page/piece table to find the character count for.
- */
-export function calculateCharCount(page: PageContent, index: number): number {
-  if (index === SENTINEL_INDEX) {
-    return 0;
-  }
-  const node = page.contentNodes[index];
-  return (
-    node.leftCharCount + node.length + calculateCharCount(page, node.right)
-  );
-}
-
-/**
- * Calculates the line feed count for the node and subtrees.
- * @param page The page/piece table
- * @param index The index of the node in the `node` array of the page/piece table to find the line feed count for.
- */
-export function calculateLineFeedCount(
-  page: PageContent,
-  index: number,
-): number {
-  if (index === SENTINEL_INDEX) {
-    return 0;
-  }
-  const node = page.contentNodes[index];
-  return (
-    node.leftLineFeedCount +
-    node.lineFeedCount +
-    calculateLineFeedCount(page, node.right)
-  );
-}
-
-/**
- * The sentinel node of red-black trees.
- */
-export const SENTINEL_CONTENT: ContentNode = {
-  bufferIndex: 0,
-  start: { column: 0, line: 0 },
-  end: { column: 0, line: 0 },
-  leftCharCount: 0,
-  leftLineFeedCount: 0,
-  length: 0,
-  lineFeedCount: 0,
-  color: Color.Black,
-  parent: SENTINEL_INDEX,
-  left: SENTINEL_INDEX,
-  right: SENTINEL_INDEX,
-};
 
 /**
  * Ensures that the `SENTINEL` node in the piece table is true to the values of the `SENTINEL` node.

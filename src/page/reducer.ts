@@ -76,8 +76,8 @@ export default function pageReducer(
         contentNodes: [...state[deleteAction.pageId].contentNodes],
       };
       deleteContent(extractedPage as PageContentMutable, {
-        startOffset: deleteAction.startOffset,
         endOffset: deleteAction.endOffset,
+        startOffset: deleteAction.startOffset,
       });
       newState = {
         ...state,
@@ -92,8 +92,8 @@ export default function pageReducer(
         contentNodes: [...state[replaceAction.pageId].contentNodes],
       };
       deleteContent(extractedPage as PageContentMutable, {
-        startOffset: replaceAction.startOffset,
         endOffset: replaceAction.endOffset,
+        startOffset: replaceAction.startOffset,
       });
       insertContent(
         extractedPage as PageContentMutable,

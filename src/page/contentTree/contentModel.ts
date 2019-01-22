@@ -72,16 +72,16 @@ export interface BufferMutable {
  * Represents a location inside a buffer.
  */
 export interface BufferCursor {
-  readonly column: number;
   readonly line: number;
+  readonly column: number;
 }
 
 /**
  * Used for constructing a location inside a buffer.
  */
 export interface BufferCursorMutable {
-  column: number;
   line: number;
+  column: number;
 }
 
 //#endregion

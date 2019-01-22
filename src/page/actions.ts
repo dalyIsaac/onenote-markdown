@@ -21,9 +21,9 @@ export const storeReceivedPage = (
   pageId: string,
   receivedPage: OnenotePage,
 ): StoreReceivedPageAction => ({
-  type: STORE_RECEIVED_PAGE,
   pageId,
   receivedPage,
+  type: STORE_RECEIVED_PAGE,
 });
 //#endregion
 
@@ -37,10 +37,10 @@ export const insertContent = (
   content: string,
   offset: number,
 ): InsertContentAction => ({
-  type: INSERT_CONTENT,
-  pageId,
   content,
   offset,
+  pageId,
+  type: INSERT_CONTENT,
 });
 //#endregion
 
@@ -54,10 +54,10 @@ export const deleteContent = (
   startOffset: number,
   endOffset: number,
 ): DeleteContentAction => ({
-  type: DELETE_CONTENT,
+  endOffset,
   pageId,
   startOffset,
-  endOffset,
+  type: DELETE_CONTENT,
 });
 //#endregion
 
@@ -74,10 +74,10 @@ export const replaceContent = (
   endOffset: number,
   content: string,
 ): ReplaceContentAction => ({
-  type: REPLACE_CONTENT,
+  content,
+  endOffset,
   pageId,
   startOffset,
-  endOffset,
-  content,
+  type: REPLACE_CONTENT,
 });
 //#endregion

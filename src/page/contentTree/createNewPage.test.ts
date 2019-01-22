@@ -54,50 +54,6 @@ export const variables = (
 };
 
 /**
- * Fully constructs the expected page's piece table after receiving a new page.
- * @param id The id of the page to store.
- * @param content OnenotePage HTML content.
- * @param newline The newline (EOF) format.
- */
-export const constructExpectedNewPageState = (
-  id: string,
-  content: string,
-  newline: string,
-): StatePages => {
-  const expectedState: StatePages = {
-    [id]: {
-      structureNodes: [SENTINEL_STRUCTURE],
-      structureRoot: SENTINEL_INDEX,
-      buffers: [constructExpectedNewPageBuffer(content, newline)],
-      newlineFormat: constructExpectedNewPageNewlineFormat(content, newline),
-      contentNodes: [
-        SENTINEL_CONTENT,
-        constructExpectedNewPageNode(content, newline),
-      ],
-      contentRoot: constructExpectedNewPageRoot(),
-
-      previouslyInsertedContentNodeIndex: null,
-      previouslyInsertedContentNodeOffset: null,
-    },
-  };
-  return expectedState;
-};
-
-/**
- * Constructs the expected buffer for the piece table after receiving a new page.
- * @param content OnenotePage HTML content.
- * @param newline The newline (EOF) format.
- */
-const constructExpectedNewPageBuffer = (
-  content: string,
-  newline: string,
-): Buffer => ({
-  isReadOnly: true,
-  lineStarts: getExpectedLineStarts(content, newline),
-  content,
-});
-
-/**
  * Gets the expected locations of the line starts.
  * @param content OnenotePage HTML content.
  * @param newline The newline (EOF) format.
@@ -121,6 +77,20 @@ const getExpectedLineStarts = (content: string, newline: string): number[] => {
 };
 
 /**
+ * Constructs the expected buffer for the piece table after receiving a new page.
+ * @param content OnenotePage HTML content.
+ * @param newline The newline (EOF) format.
+ */
+const constructExpectedNewPageBuffer = (
+  content: string,
+  newline: string,
+): Buffer => ({
+  content,
+  isReadOnly: true,
+  lineStarts: getExpectedLineStarts(content, newline),
+});
+
+/**
  * Constructs the expected new node for the piece table after receiving a new page.
  * @param content OnenotePage HTML content.
  * @param newline The newline (EOF) format.
@@ -140,16 +110,16 @@ const constructExpectedNewPageNode = (
 
   return {
     bufferIndex: 0,
-    start,
+    color: Color.Black,
     end,
+    left: SENTINEL_INDEX,
     leftCharCount: 0,
     leftLineFeedCount: 0,
     length: content.length,
     lineFeedCount: lines.length,
-    color: Color.Black,
     parent: SENTINEL_INDEX,
-    left: SENTINEL_INDEX,
     right: SENTINEL_INDEX,
+    start,
   };
 };
 
@@ -174,7 +144,37 @@ const constructExpectedNewPageNewlineFormat = (
  */
 const constructExpectedNewPageRoot = (): number => 0;
 
-export const pageReducerTest = (content: string, newline: string) => {
+/**
+ * Fully constructs the expected page's piece table after receiving a new page.
+ * @param id The id of the page to store.
+ * @param content OnenotePage HTML content.
+ * @param newline The newline (EOF) format.
+ */
+export const constructExpectedNewPageState = (
+  id: string,
+  content: string,
+  newline: string,
+): StatePages => {
+  const expectedState: StatePages = {
+    [id]: {
+      buffers: [constructExpectedNewPageBuffer(content, newline)],
+      contentNodes: [
+        SENTINEL_CONTENT,
+        constructExpectedNewPageNode(content, newline),
+      ],
+      contentRoot: constructExpectedNewPageRoot(),
+      newlineFormat: constructExpectedNewPageNewlineFormat(content, newline),
+      previouslyInsertedContentNodeIndex: null,
+      previouslyInsertedContentNodeOffset: null,
+
+      structureNodes: [SENTINEL_STRUCTURE],
+      structureRoot: SENTINEL_INDEX,
+    },
+  };
+  return expectedState;
+};
+
+export const pageReducerTest = (content: string, newline: string): void => {
   const { page } = variables(content);
   const action: StoreReceivedPageAction = {
     pageId: "id",
@@ -199,7 +199,7 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
    * @param content OnenotePage HTML content.
    * @param newline The newline (EOF) format.
    */
-  const buffersTest = (content: string, newline: string) => {
+  const buffersTest = (content: string, newline: string): void => {
     const { storedPage } = variables(content);
     const expectedBuffer = constructExpectedNewPageBuffer(content, newline);
     expect(storedPage.buffers.length).toBe(1);
@@ -211,7 +211,7 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
    * @param content OnenotePage HTML content.
    * @param newline The newline (EOF) format.
    */
-  const nodesTest = (content: string, newline: string) => {
+  const nodesTest = (content: string, newline: string): void => {
     const { storedPage } = variables(content);
     const expectedNode = constructExpectedNewPageNode(content, newline);
     const node = storedPage.contentNodes[1];
@@ -222,7 +222,7 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
    * Common test for the root of the piece table.
    * @param root The index of the stored page's root.
    */
-  const rootTest = (content: string) => {
+  const rootTest = (content: string): void => {
     const { storedPage } = variables(content);
     const expectedRoot = constructExpectedNewPageRoot();
     expect(storedPage.contentRoot).toBe(expectedRoot);
@@ -233,7 +233,7 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
    * @param content OnenotePage HTML content.
    * @param newline The newline (EOF) format.
    */
-  const newlineTest = (content: string, newline: string) => {
+  const newlineTest = (content: string, newline: string): void => {
     const { storedPage } = variables(content);
     const expectedFormatCharValues = constructExpectedNewPageNewlineFormat(
       content,

@@ -26,7 +26,7 @@ export function treeMinimum(
   while (nodes[x].left !== SENTINEL_INDEX) {
     x = nodes[x].left;
   }
-  return { node: nodes[x], index: x };
+  return { index: x, node: nodes[x] };
 }
 
 /**
@@ -41,7 +41,7 @@ export function treeMaximum(
   while (nodes[x].right !== SENTINEL_INDEX) {
     x = nodes[x].right;
   }
-  return { node: nodes[x], index: x };
+  return { index: x, node: nodes[x] };
 }
 
 /**
@@ -66,7 +66,7 @@ export function nextNode(
   }
 
   if (nodes[currentNode].parent === SENTINEL_INDEX) {
-    return { node: SENTINEL_CONTENT, index: SENTINEL_INDEX };
+    return { index: SENTINEL_INDEX, node: SENTINEL_CONTENT };
   } else {
     return {
       index: nodes[currentNode].parent,
@@ -97,7 +97,7 @@ export function prevNode(
   }
 
   if (nodes[currentNode].parent === SENTINEL_INDEX) {
-    return { node: SENTINEL_CONTENT, index: SENTINEL_INDEX };
+    return { index: SENTINEL_INDEX, node: SENTINEL_CONTENT };
   } else {
     return {
       index: nodes[currentNode].parent,

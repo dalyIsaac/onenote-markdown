@@ -12,9 +12,9 @@ import { getLineStarts, getNewlineFormat, SENTINEL_CONTENT } from "./tree";
 export function createNewPage(receivedPage: OnenotePage): PageContent {
   const newlineFormat = getNewlineFormat(receivedPage.content);
   const buffer: Buffer = {
+    content: receivedPage.content,
     isReadOnly: true,
     lineStarts: getLineStarts(receivedPage.content, newlineFormat),
-    content: receivedPage.content,
   };
   const finalLine = buffer.lineStarts.length - 1;
   const finalLineInitialCharIndex = buffer.lineStarts[finalLine];
@@ -22,25 +22,25 @@ export function createNewPage(receivedPage: OnenotePage): PageContent {
     receivedPage.content.length - finalLineInitialCharIndex;
   const node: ContentNode = {
     bufferIndex: 0,
-    start: { line: 0, column: 0 },
-    end: { line: finalLine, column: finalCharColumn },
+    color: Color.Black,
+    end: { column: finalCharColumn, line: finalLine },
+    left: SENTINEL_INDEX,
     leftCharCount: 0,
     leftLineFeedCount: 0,
     length: receivedPage.content.length,
     lineFeedCount: buffer.lineStarts.length,
-    color: Color.Black,
     parent: SENTINEL_INDEX,
-    left: SENTINEL_INDEX,
     right: SENTINEL_INDEX,
+    start: { column: 0, line: 0 },
   };
   return {
-    structureNodes: [SENTINEL_STRUCTURE],
-    structureRoot: SENTINEL_INDEX,
     buffers: [buffer],
-    newlineFormat,
     contentNodes: [SENTINEL_CONTENT, node],
     contentRoot: 0,
+    newlineFormat,
     previouslyInsertedContentNodeIndex: null,
     previouslyInsertedContentNodeOffset: null,
+    structureNodes: [SENTINEL_STRUCTURE],
+    structureRoot: SENTINEL_INDEX,
   };
 }
