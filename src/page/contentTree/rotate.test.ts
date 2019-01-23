@@ -76,12 +76,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
       },
     ];
     const pieceTable: PageContentMutable = {
-      buffers: [], contentNodes: nodes, contentRoot: 2,
-      newlineFormat: NEWLINE.LF,
+      buffers: [],
+      content: { nodes, root: 2 },newlineFormat: NEWLINE.LF,
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
-      structureNodes: [SENTINEL_STRUCTURE],
-      structureRoot: SENTINEL_INDEX,
+      structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
     };
     return pieceTable;
   };
@@ -157,12 +156,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
       },
     ];
     const pieceTable: PageContentMutable = {
-      buffers: [], contentNodes: nodes, contentRoot: 4,
-      newlineFormat: NEWLINE.LF,
+      buffers: [],
+      content: { nodes, root: 4 },newlineFormat: NEWLINE.LF,
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
-      structureNodes: [SENTINEL_STRUCTURE],
-      structureRoot: SENTINEL_INDEX,
+      structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
     };
     return pieceTable;
   };
@@ -355,12 +353,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
       },
     ];
     const pieceTable: PageContentMutable = {
-      buffers: [], contentNodes: nodes, contentRoot: 5,
-      newlineFormat: NEWLINE.LF,
+      buffers: [],
+      content: { nodes, root: 5 },newlineFormat: NEWLINE.LF,
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
-      structureNodes: [SENTINEL_STRUCTURE],
-      structureRoot: SENTINEL_INDEX,
+      structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
     };
     return pieceTable;
   };
@@ -553,39 +550,40 @@ describe("Functions for performing rotations on the piece table/red-black tree."
       },
     ];
     const pieceTable: PageContentMutable = {
-      buffers: [], contentNodes: nodes, contentRoot: 5,
-      newlineFormat: NEWLINE.LF,
+      buffers: [],
+      content: { nodes, root: 5 },newlineFormat: NEWLINE.LF,
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
-      structureNodes: [SENTINEL_STRUCTURE],
-      structureRoot: SENTINEL_INDEX,
+      structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
     };
     return pieceTable;
   };
   const constructComplexPieceTableBeforeRightRotate = constructComplexPieceTableAfterLeftRotate;
 
   const constructOneNodePieceTable = (): PageContentMutable => ({
-    buffers: [], contentNodes: [
-      SENTINEL_CONTENT,
-      {
-        bufferIndex: 0,
-        color: Color.Black,
-        end: { column: 0, line: 0 },
-        left: SENTINEL_INDEX,
-        leftCharCount: 0,
-        leftLineFeedCount: 0,
-        length: 0,
-        lineFeedCount: 0,
-        parent: SENTINEL_INDEX,
-        right: SENTINEL_INDEX,
-        start: { column: 0, line: 0 },
-      },
-    ], contentRoot: 1,
-    newlineFormat: NEWLINE.LF,
+    buffers: [],
+    content: {
+      nodes: [
+        SENTINEL_CONTENT,
+        {
+          bufferIndex: 0,
+          color: Color.Black,
+          end: { column: 0, line: 0 },
+          left: SENTINEL_INDEX,
+          leftCharCount: 0,
+          leftLineFeedCount: 0,
+          length: 0,
+          lineFeedCount: 0,
+          parent: SENTINEL_INDEX,
+          right: SENTINEL_INDEX,
+          start: { column: 0, line: 0 },
+        },
+      ],
+      root: 1,
+    },newlineFormat: NEWLINE.LF,
     previouslyInsertedContentNodeIndex: 1,
     previouslyInsertedContentNodeOffset: 0,
-    structureNodes: [SENTINEL_STRUCTURE],
-    structureRoot: SENTINEL_INDEX,
+    structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
   });
 
   describe("left rotate", () => {

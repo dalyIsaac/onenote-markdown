@@ -1,12 +1,12 @@
-import { OnenotePage } from "@microsoft/microsoft-graph-types";
-import { STORE_RECEIVED_PAGE, StoreReceivedPageAction } from "../actions";
-import { Color, PageContent, StatePages } from "../pageModel";
-import pageReducer from "../reducer";
-import { SENTINEL_STRUCTURE } from "../structureTree/tree";
-import { SENTINEL_INDEX } from "../tree";
 import { Buffer, BufferCursor, ContentNode } from "./contentModel";
-import { createNewPage } from "./createNewPage";
+import { Color, PageContent, StatePages } from "../pageModel";
+import { STORE_RECEIVED_PAGE, StoreReceivedPageAction } from "../actions";
+import { OnenotePage } from "@microsoft/microsoft-graph-types";
 import { SENTINEL_CONTENT } from "./tree";
+import { SENTINEL_INDEX } from "../tree";
+import { SENTINEL_STRUCTURE } from "../structureTree/tree";
+import { createNewPage } from "./createNewPage";
+import pageReducer from "../reducer";
 
 export const LF_CONTENT = `<html lang="en-NZ">
     <head>
@@ -158,17 +158,18 @@ export const constructExpectedNewPageState = (
   const expectedState: StatePages = {
     [id]: {
       buffers: [constructExpectedNewPageBuffer(content, newline)],
-      contentNodes: [
-        SENTINEL_CONTENT,
-        constructExpectedNewPageNode(content, newline),
-      ],
-      contentRoot: constructExpectedNewPageRoot(),
+      content: {
+        nodes: [
+          SENTINEL_CONTENT,
+          constructExpectedNewPageNode(content, newline),
+        ],
+        root: constructExpectedNewPageRoot(),
+      },
       newlineFormat: constructExpectedNewPageNewlineFormat(content, newline),
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
 
-      structureNodes: [SENTINEL_STRUCTURE],
-      structureRoot: SENTINEL_INDEX,
+      structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
     },
   };
   return expectedState;
@@ -214,7 +215,7 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
   const nodesTest = (content: string, newline: string): void => {
     const { storedPage } = variables(content);
     const expectedNode = constructExpectedNewPageNode(content, newline);
-    const node = storedPage.contentNodes[1];
+    const node = storedPage.content.nodes[1];
     expect(node).toStrictEqual(expectedNode);
   };
 
@@ -225,7 +226,7 @@ describe("createNewPage function/STORE_RECEIVED_PAGE action", () => {
   const rootTest = (content: string): void => {
     const { storedPage } = variables(content);
     const expectedRoot = constructExpectedNewPageRoot();
-    expect(storedPage.contentRoot).toBe(expectedRoot);
+    expect(storedPage.content.root).toBe(expectedRoot);
   };
 
   /**

@@ -10,53 +10,53 @@ import { ContentNodeMutable } from "./contentModel";
 export function leftRotate(page: PageContentMutable, nodeIndex: number): void {
   const x = nodeIndex;
 
-  if (page.contentNodes[x].right === SENTINEL_INDEX) {
+  if (page.content.nodes[x].right === SENTINEL_INDEX) {
     //  you can't left rotate
     return;
   }
 
-  page.contentNodes[x] = { ...page.contentNodes[x] };
+  page.content.nodes[x] = { ...page.content.nodes[x] };
 
-  const y = page.contentNodes[x].right;
-  page.contentNodes[y] = {
-    ...page.contentNodes[y],
+  const y = page.content.nodes[x].right;
+  page.content.nodes[y] = {
+    ...page.content.nodes[y],
     leftCharCount:
-      page.contentNodes[y].leftCharCount +
-      page.contentNodes[x].leftCharCount +
-      page.contentNodes[x].length,
+      page.content.nodes[y].leftCharCount +
+      page.content.nodes[x].leftCharCount +
+      page.content.nodes[x].length,
     leftLineFeedCount:
-      page.contentNodes[y].leftLineFeedCount +
-      page.contentNodes[x].leftLineFeedCount +
-      page.contentNodes[x].lineFeedCount,
+      page.content.nodes[y].leftLineFeedCount +
+      page.content.nodes[x].leftLineFeedCount +
+      page.content.nodes[x].lineFeedCount,
   };
 
-  (page.contentNodes[x] as ContentNodeMutable).right =
-    page.contentNodes[y].left;
-  if (page.contentNodes[y].left !== SENTINEL_INDEX) {
-    page.contentNodes[page.contentNodes[y].left] = {
-      ...page.contentNodes[page.contentNodes[y].left],
+  (page.content.nodes[x] as ContentNodeMutable).right =
+    page.content.nodes[y].left;
+  if (page.content.nodes[y].left !== SENTINEL_INDEX) {
+    page.content.nodes[page.content.nodes[y].left] = {
+      ...page.content.nodes[page.content.nodes[y].left],
       parent: x,
     };
   }
 
-  (page.contentNodes[y] as ContentNodeMutable).parent =
-    page.contentNodes[x].parent;
-  if (page.contentNodes[x].parent === SENTINEL_INDEX) {
-    page.contentRoot = y;
-  } else if (x === page.contentNodes[page.contentNodes[x].parent].left) {
-    page.contentNodes[page.contentNodes[x].parent] = {
-      ...page.contentNodes[page.contentNodes[x].parent],
+  (page.content.nodes[y] as ContentNodeMutable).parent =
+    page.content.nodes[x].parent;
+  if (page.content.nodes[x].parent === SENTINEL_INDEX) {
+    page.content.root = y;
+  } else if (x === page.content.nodes[page.content.nodes[x].parent].left) {
+    page.content.nodes[page.content.nodes[x].parent] = {
+      ...page.content.nodes[page.content.nodes[x].parent],
       left: y,
     };
   } else {
-    page.contentNodes[page.contentNodes[x].parent] = {
-      ...page.contentNodes[page.contentNodes[x].parent],
+    page.content.nodes[page.content.nodes[x].parent] = {
+      ...page.content.nodes[page.content.nodes[x].parent],
       right: y,
     };
   }
 
-  (page.contentNodes[y] as ContentNodeMutable).left = x;
-  (page.contentNodes[x] as ContentNodeMutable).parent = y;
+  (page.content.nodes[y] as ContentNodeMutable).left = x;
+  (page.content.nodes[x] as ContentNodeMutable).parent = y;
 }
 
 /**
@@ -67,48 +67,49 @@ export function leftRotate(page: PageContentMutable, nodeIndex: number): void {
 export function rightRotate(page: PageContentMutable, nodeIndex: number): void {
   const y = nodeIndex;
 
-  if (page.contentNodes[y].left === SENTINEL_INDEX) {
+  if (page.content.nodes[y].left === SENTINEL_INDEX) {
     // you can't right rotate
     return;
   }
 
-  page.contentNodes[y] = { ...page.contentNodes[y] };
+  page.content.nodes[y] = { ...page.content.nodes[y] };
 
-  const x = page.contentNodes[y].left;
-  page.contentNodes[x] = { ...page.contentNodes[x] };
+  const x = page.content.nodes[y].left;
+  page.content.nodes[x] = { ...page.content.nodes[x] };
 
-  (page.contentNodes[y] as ContentNodeMutable).left =
-    page.contentNodes[x].right;
-  if (page.contentNodes[x].right !== SENTINEL_INDEX) {
-    page.contentNodes[page.contentNodes[x].right] = {
-      ...page.contentNodes[page.contentNodes[x].right],
+  (page.content.nodes[y] as ContentNodeMutable).left =
+    page.content.nodes[x].right;
+  if (page.content.nodes[x].right !== SENTINEL_INDEX) {
+    page.content.nodes[page.content.nodes[x].right] = {
+      ...page.content.nodes[page.content.nodes[x].right],
       parent: y,
     };
   }
-  (page.contentNodes[x] as ContentNodeMutable).parent =
-    page.contentNodes[y].parent;
+  (page.content.nodes[x] as ContentNodeMutable).parent =
+    page.content.nodes[y].parent;
 
-  (page.contentNodes[y] as ContentNodeMutable).leftCharCount -=
-    page.contentNodes[x].leftCharCount + page.contentNodes[x].length;
-  (page.contentNodes[y] as ContentNodeMutable).leftLineFeedCount -=
-    page.contentNodes[x].leftLineFeedCount + page.contentNodes[x].lineFeedCount;
+  (page.content.nodes[y] as ContentNodeMutable).leftCharCount -=
+    page.content.nodes[x].leftCharCount + page.content.nodes[x].length;
+  (page.content.nodes[y] as ContentNodeMutable).leftLineFeedCount -=
+    page.content.nodes[x].leftLineFeedCount +
+    page.content.nodes[x].lineFeedCount;
 
-  if (page.contentNodes[y].parent === SENTINEL_INDEX) {
-    page.contentRoot = x;
-  } else if (y === page.contentNodes[page.contentNodes[y].parent].right) {
-    page.contentNodes[page.contentNodes[y].parent] = {
-      ...page.contentNodes[page.contentNodes[y].parent],
+  if (page.content.nodes[y].parent === SENTINEL_INDEX) {
+    page.content.root = x;
+  } else if (y === page.content.nodes[page.content.nodes[y].parent].right) {
+    page.content.nodes[page.content.nodes[y].parent] = {
+      ...page.content.nodes[page.content.nodes[y].parent],
       right: x,
     };
   } else {
-    page.contentNodes[page.contentNodes[y].parent] = {
-      ...page.contentNodes[page.contentNodes[y].parent],
+    page.content.nodes[page.content.nodes[y].parent] = {
+      ...page.content.nodes[page.content.nodes[y].parent],
       left: x,
     };
   }
-  (page.contentNodes[x] as ContentNodeMutable).right = y;
-  (page.contentNodes[y] as ContentNodeMutable).parent = x;
+  (page.content.nodes[x] as ContentNodeMutable).right = y;
+  (page.content.nodes[y] as ContentNodeMutable).parent = x;
 
-  page.contentNodes[y] = page.contentNodes[y];
-  page.contentNodes[x] = page.contentNodes[x];
+  page.content.nodes[y] = page.content.nodes[y];
+  page.content.nodes[x] = page.content.nodes[x];
 }

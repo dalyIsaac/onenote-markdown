@@ -35,12 +35,10 @@ export function createNewPage(receivedPage: OnenotePage): PageContent {
   };
   return {
     buffers: [buffer],
-    contentNodes: [SENTINEL_CONTENT, node],
-    contentRoot: 0,
+    content: { nodes: [SENTINEL_CONTENT, node], root: 0 },
     newlineFormat,
     previouslyInsertedContentNodeIndex: null,
     previouslyInsertedContentNodeOffset: null,
-    structureNodes: [SENTINEL_STRUCTURE],
-    structureRoot: SENTINEL_INDEX,
+    structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
   };
 }

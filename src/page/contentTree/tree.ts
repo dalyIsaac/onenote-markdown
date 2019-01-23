@@ -194,7 +194,7 @@ export function getNodeContent(nodeIndex: number, page: PageContent): string {
   if (nodeIndex === SENTINEL_INDEX) {
     return "";
   }
-  const node = page.contentNodes[nodeIndex];
+  const node = page.content.nodes[nodeIndex];
   const buffer = page.buffers[node.bufferIndex];
   const startOffset = getOffsetInBuffer(node.bufferIndex, node.start, page);
   const endOffset = getOffsetInBuffer(node.bufferIndex, node.end, page);
@@ -211,7 +211,7 @@ export function calculateCharCount(page: PageContent, index: number): number {
   if (index === SENTINEL_INDEX) {
     return 0;
   }
-  const node = page.contentNodes[index];
+  const node = page.content.nodes[index];
   return (
     node.leftCharCount + node.length + calculateCharCount(page, node.right)
   );
@@ -229,7 +229,7 @@ export function calculateLineFeedCount(
   if (index === SENTINEL_INDEX) {
     return 0;
   }
-  const node = page.contentNodes[index];
+  const node = page.content.nodes[index];
   return (
     node.leftLineFeedCount +
     node.lineFeedCount +
@@ -248,55 +248,55 @@ export function recomputeTreeMetadata(
 ): void {
   let lengthDelta = 0;
   let lineFeedDelta = 0;
-  if (x === page.contentRoot) {
+  if (x === page.content.root) {
     return;
   }
-  page.contentNodes[x] = { ...page.contentNodes[x] };
+  page.content.nodes[x] = { ...page.content.nodes[x] };
 
   // go upwards till the node whose left subtree is changed.
   while (
-    x !== page.contentRoot &&
-    x === page.contentNodes[page.contentNodes[x].parent].right
+    x !== page.content.root &&
+    x === page.content.nodes[page.content.nodes[x].parent].right
   ) {
-    x = page.contentNodes[x].parent;
+    x = page.content.nodes[x].parent;
   }
 
-  if (x === page.contentRoot) {
+  if (x === page.content.root) {
     // well, it means we add a node to the end (inorder)
     return;
   }
 
   // page.nodes[x] is the node whose right subtree is changed.
-  x = page.contentNodes[x].parent;
-  page.contentNodes[x] = { ...page.contentNodes[x] };
+  x = page.content.nodes[x].parent;
+  page.content.nodes[x] = { ...page.content.nodes[x] };
 
   lengthDelta =
-    calculateCharCount(page, page.contentNodes[x].left) -
-    page.contentNodes[x].leftCharCount;
+    calculateCharCount(page, page.content.nodes[x].left) -
+    page.content.nodes[x].leftCharCount;
   lineFeedDelta =
-    calculateLineFeedCount(page, page.contentNodes[x].left) -
-    page.contentNodes[x].leftLineFeedCount;
-  (page.contentNodes[x] as ContentNodeMutable).leftCharCount += lengthDelta;
-  (page.contentNodes[
+    calculateLineFeedCount(page, page.content.nodes[x].left) -
+    page.content.nodes[x].leftLineFeedCount;
+  (page.content.nodes[x] as ContentNodeMutable).leftCharCount += lengthDelta;
+  (page.content.nodes[
     x
   ] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta;
 
   // go upwards till root. O(logN)
-  while (x !== page.contentRoot && (lengthDelta !== 0 || lineFeedDelta !== 0)) {
-    if (page.contentNodes[page.contentNodes[x].parent].left === x) {
-      page.contentNodes[page.contentNodes[x].parent] = {
-        ...page.contentNodes[page.contentNodes[x].parent],
+  while (x !== page.content.root && (lengthDelta !== 0 || lineFeedDelta !== 0)) {
+    if (page.content.nodes[page.content.nodes[x].parent].left === x) {
+      page.content.nodes[page.content.nodes[x].parent] = {
+        ...page.content.nodes[page.content.nodes[x].parent],
       };
-      (page.contentNodes[
-        page.contentNodes[x].parent
+      (page.content.nodes[
+        page.content.nodes[x].parent
       ] as ContentNodeMutable).leftCharCount += lengthDelta;
-      (page.contentNodes[
-        page.contentNodes[x].parent
+      (page.content.nodes[
+        page.content.nodes[x].parent
       ] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta;
     }
 
-    x = page.contentNodes[x].parent;
-    page.contentNodes[x] = { ...page.contentNodes[x] };
+    x = page.content.nodes[x].parent;
+    page.content.nodes[x] = { ...page.content.nodes[x] };
   }
 
   return;
@@ -319,7 +319,7 @@ export function resetSentinel(page: PageContentMutable): void {
   (SENTINEL_CONTENT as ContentNodeMutable).parent = SENTINEL_INDEX;
   (SENTINEL_CONTENT as ContentNodeMutable).left = SENTINEL_INDEX;
   (SENTINEL_CONTENT as ContentNodeMutable).right = SENTINEL_INDEX;
-  page.contentNodes[0] = SENTINEL_CONTENT;
+  page.content.nodes[0] = SENTINEL_CONTENT;
 }
 
 /**
@@ -336,19 +336,19 @@ export function updateTreeMetadata(
   lineFeedCountDelta: number,
 ): void {
   // node length change or line feed count change
-  while (x !== page.contentRoot && x !== SENTINEL_INDEX) {
-    if (page.contentNodes[page.contentNodes[x].parent].left === x) {
-      page.contentNodes[page.contentNodes[x].parent] = {
-        ...page.contentNodes[page.contentNodes[x].parent],
+  while (x !== page.content.root && x !== SENTINEL_INDEX) {
+    if (page.content.nodes[page.content.nodes[x].parent].left === x) {
+      page.content.nodes[page.content.nodes[x].parent] = {
+        ...page.content.nodes[page.content.nodes[x].parent],
         leftCharCount:
-          page.contentNodes[page.contentNodes[x].parent].leftCharCount +
+          page.content.nodes[page.content.nodes[x].parent].leftCharCount +
           charCountDelta,
         leftLineFeedCount:
-          page.contentNodes[page.contentNodes[x].parent].leftLineFeedCount +
+          page.content.nodes[page.content.nodes[x].parent].leftLineFeedCount +
           lineFeedCountDelta,
       };
     }
 
-    x = page.contentNodes[x].parent;
+    x = page.content.nodes[x].parent;
   }
 }

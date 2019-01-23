@@ -56,7 +56,10 @@ export default function pageReducer(
       extractedPage = {
         ...state[insertAction.pageId],
         buffers: [...state[insertAction.pageId].buffers],
-        contentNodes: [...state[insertAction.pageId].contentNodes],
+        content: {
+          nodes: [...state[insertAction.pageId].content.nodes],
+          root: state[insertAction.pageId].content.root,
+        },
       };
       insertContent(
         extractedPage as PageContentMutable,
@@ -73,7 +76,10 @@ export default function pageReducer(
       extractedPage = {
         ...state[deleteAction.pageId],
         buffers: [...state[deleteAction.pageId].buffers],
-        contentNodes: [...state[deleteAction.pageId].contentNodes],
+        content: {
+          nodes: [...state[deleteAction.pageId].content.nodes],
+          root: state[deleteAction.pageId].content.root,
+        },
       };
       deleteContent(extractedPage as PageContentMutable, {
         endOffset: deleteAction.endOffset,
@@ -89,7 +95,10 @@ export default function pageReducer(
       extractedPage = {
         ...state[replaceAction.pageId],
         buffers: [...state[replaceAction.pageId].buffers],
-        contentNodes: [...state[replaceAction.pageId].contentNodes],
+        content: {
+          nodes: [...state[replaceAction.pageId].content.nodes],
+          root: state[replaceAction.pageId].content.root,
+        },
       };
       deleteContent(extractedPage as PageContentMutable, {
         endOffset: replaceAction.endOffset,
