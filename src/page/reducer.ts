@@ -43,7 +43,7 @@ export default function pageReducer(
   }
 
   switch (action.type) {
-    case STORE_RECEIVED_PAGE:
+    case STORE_RECEIVED_PAGE: {
       const receivedPage = (action as StoreReceivedPageAction).receivedPage;
       newPage = createNewPage(receivedPage);
       newState = {
@@ -51,7 +51,8 @@ export default function pageReducer(
         [receivedPage.id as string]: newPage,
       };
       return newState;
-    case INSERT_CONTENT:
+    }
+    case INSERT_CONTENT: {
       const insertAction = action as InsertContentAction;
       extractedPage = {
         ...state[insertAction.pageId],
@@ -71,7 +72,8 @@ export default function pageReducer(
         [insertAction.pageId]: extractedPage,
       };
       return newState;
-    case DELETE_CONTENT:
+    }
+    case DELETE_CONTENT: {
       const deleteAction = action as DeleteContentAction;
       extractedPage = {
         ...state[deleteAction.pageId],
@@ -90,7 +92,8 @@ export default function pageReducer(
         [deleteAction.pageId]: extractedPage,
       };
       return newState;
-    case REPLACE_CONTENT:
+    }
+    case REPLACE_CONTENT: {
       const replaceAction = action as ReplaceContentAction;
       extractedPage = {
         ...state[replaceAction.pageId],
@@ -117,7 +120,9 @@ export default function pageReducer(
         [replaceAction.pageId]: extractedPage,
       };
       return newState;
-    default:
+    }
+    default: {
       return state;
+    }
   }
 }
