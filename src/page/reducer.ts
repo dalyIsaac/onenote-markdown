@@ -1,14 +1,16 @@
 import {
+  PageActionPartial,
+  STORE_RECEIVED_PAGE,
+  StoreReceivedPageAction,
+} from "./actions";
+import {
   DELETE_CONTENT,
   DeleteContentAction,
   INSERT_CONTENT,
   InsertContentAction,
-  PageActionPartial,
   REPLACE_CONTENT,
   ReplaceContentAction,
-  STORE_RECEIVED_PAGE,
-  StoreReceivedPageAction,
-} from "./actions";
+} from "./contentTree/actions";
 import { createNewPage } from "./contentTree/createNewPage";
 import { deleteContent } from "./contentTree/delete";
 import { insertContent } from "./contentTree/insert";

@@ -1,12 +1,12 @@
+import { PageActionPartial } from "./actions";
 import {
   DELETE_CONTENT,
   DeleteContentAction,
   INSERT_CONTENT,
   InsertContentAction,
-  PageActionPartial,
   REPLACE_CONTENT,
   ReplaceContentAction,
-} from "./actions";
+} from "./contentTree/actions";
 import { NEWLINE } from "./contentTree/contentModel";
 import {
   LF,
