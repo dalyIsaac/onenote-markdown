@@ -1,4 +1,4 @@
-import { getPage } from "./contentTree/tree.test";
+import { getPage } from "../contentTree/tree.test";
 import { nextNode, prevNode } from "./tree";
 
 describe("Common tree operations", () => {

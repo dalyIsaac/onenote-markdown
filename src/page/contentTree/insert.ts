@@ -1,7 +1,7 @@
 import { Color, PageContentMutable } from "../pageModel";
-import { SENTINEL_INDEX } from "../tree";
+import { SENTINEL_INDEX } from "../tree/tree";
 import { Buffer, ContentNode, ContentNodeMutable } from "./contentModel";
-import { leftRotate, rightRotate } from "./rotate";
+import { leftRotate, rightRotate } from "../tree/rotate";
 import {
   findNodeAtOffset,
   getLineStarts,
@@ -214,18 +214,21 @@ export function fixInsert(page: PageContentMutable, x: number): void {
 
   while (
     page.content.nodes[x].parent !== SENTINEL_INDEX &&
-    page.content.nodes[page.content.nodes[x].parent].parent !== SENTINEL_INDEX &&
+    page.content.nodes[page.content.nodes[x].parent].parent !==
+      SENTINEL_INDEX &&
     x !== page.content.root &&
     page.content.nodes[page.content.nodes[x].parent].color === Color.Red
   ) {
     if (
       page.content.nodes[x].parent ===
-      page.content.nodes[page.content.nodes[page.content.nodes[x].parent].parent]
-        .left
+      page.content.nodes[
+        page.content.nodes[page.content.nodes[x].parent].parent
+      ].left
     ) {
       const y =
-        page.content.nodes[page.content.nodes[page.content.nodes[x].parent].parent]
-          .right;
+        page.content.nodes[
+          page.content.nodes[page.content.nodes[x].parent].parent
+        ].right;
       page.content.nodes[y] = { ...page.content.nodes[y] };
 
       if (page.content.nodes[y].color === Color.Red) {
@@ -248,7 +251,7 @@ export function fixInsert(page: PageContentMutable, x: number): void {
         if (x === page.content.nodes[page.content.nodes[x].parent].right) {
           x = page.content.nodes[x].parent;
           page.content.nodes[x] = { ...page.content.nodes[x] };
-          leftRotate(page, x);
+          leftRotate(page.content, x);
         }
         page.content.nodes[page.content.nodes[x].parent] = {
           ...page.content.nodes[page.content.nodes[x].parent],
@@ -263,14 +266,15 @@ export function fixInsert(page: PageContentMutable, x: number): void {
           color: Color.Red,
         };
         rightRotate(
-          page,
+          page.content,
           page.content.nodes[page.content.nodes[x].parent].parent,
         );
       }
     } else {
       const y =
-        page.content.nodes[page.content.nodes[page.content.nodes[x].parent].parent]
-          .left;
+        page.content.nodes[
+          page.content.nodes[page.content.nodes[x].parent].parent
+        ].left;
       page.content.nodes[y] = {
         ...page.content.nodes[y],
       };
@@ -293,11 +297,13 @@ export function fixInsert(page: PageContentMutable, x: number): void {
       } else {
         if (
           page.content.nodes[x] ===
-          page.content.nodes[page.content.nodes[page.content.nodes[x].parent].left]
+          page.content.nodes[
+            page.content.nodes[page.content.nodes[x].parent].left
+          ]
         ) {
           x = page.content.nodes[x].parent;
           page.content.nodes[x] = { ...page.content.nodes[x] };
-          rightRotate(page, x);
+          rightRotate(page.content, x);
         }
         page.content.nodes[page.content.nodes[x].parent] = {
           ...page.content.nodes[page.content.nodes[x].parent],
@@ -311,7 +317,10 @@ export function fixInsert(page: PageContentMutable, x: number): void {
           ],
           color: Color.Red,
         };
-        leftRotate(page, page.content.nodes[page.content.nodes[x].parent].parent);
+        leftRotate(
+          page.content,
+          page.content.nodes[page.content.nodes[x].parent].parent,
+        );
       }
     }
   }

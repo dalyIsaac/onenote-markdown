@@ -3,7 +3,7 @@ import { Color, PageContent, StatePages } from "../pageModel";
 import { STORE_RECEIVED_PAGE, StoreReceivedPageAction } from "../actions";
 import { OnenotePage } from "@microsoft/microsoft-graph-types";
 import { SENTINEL_CONTENT } from "./tree";
-import { SENTINEL_INDEX } from "../tree";
+import { SENTINEL_INDEX } from "../tree/tree";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { createNewPage } from "./createNewPage";
 import pageReducer from "../reducer";

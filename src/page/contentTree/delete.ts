@@ -1,8 +1,8 @@
 import { Color, PageContent, PageContentMutable } from "../pageModel";
-import { nextNode, SENTINEL_INDEX, treeMinimum } from "../tree";
+import { nextNode, SENTINEL_INDEX, treeMinimum } from "../tree/tree";
 import { ContentNode, ContentNodeMutable } from "./contentModel";
 import { fixInsert, insertNode } from "./insert";
-import { leftRotate, rightRotate } from "./rotate";
+import { leftRotate, rightRotate } from "../tree/rotate";
 import {
   calculateCharCount,
   calculateLineFeedCount,
@@ -78,7 +78,10 @@ function getLineFeedCountsForOffsets(
 function fixDelete(page: PageContentMutable, x: number): void {
   let w: number;
 
-  while (x !== page.content.root && page.content.nodes[x].color === Color.Black) {
+  while (
+    x !== page.content.root &&
+    page.content.nodes[x].color === Color.Black
+  ) {
     if (x === page.content.nodes[page.content.nodes[x].parent].left) {
       w = page.content.nodes[page.content.nodes[x].parent].right;
       (page.content.nodes[w] as ContentNodeMutable) = {
@@ -93,7 +96,7 @@ function fixDelete(page: PageContentMutable, x: number): void {
           ...page.content.nodes[page.content.nodes[x].parent],
           color: Color.Red,
         };
-        leftRotate(page, page.content.nodes[x].parent);
+        leftRotate(page.content, page.content.nodes[x].parent);
         w = page.content.nodes[page.content.nodes[x].parent].right;
         (page.content.nodes[w] as ContentNodeMutable) = {
           ...page.content.nodes[w],
@@ -120,7 +123,7 @@ function fixDelete(page: PageContentMutable, x: number): void {
             color: Color.Black,
           };
           (page.content.nodes[w] as ContentNodeMutable).color = Color.Red;
-          rightRotate(page, w);
+          rightRotate(page.content, w);
           w = page.content.nodes[page.content.nodes[x].parent].right;
           (page.content.nodes[w] as ContentNodeMutable) = {
             ...page.content.nodes[w],
@@ -141,7 +144,7 @@ function fixDelete(page: PageContentMutable, x: number): void {
           ...page.content.nodes[page.content.nodes[w].right],
           color: Color.Black,
         };
-        leftRotate(page, page.content.nodes[x].parent);
+        leftRotate(page.content, page.content.nodes[x].parent);
         x = page.content.root;
         (page.content.nodes[x] as ContentNodeMutable) = {
           ...page.content.nodes[x],
@@ -161,7 +164,7 @@ function fixDelete(page: PageContentMutable, x: number): void {
           ...page.content.nodes[page.content.nodes[x].parent],
           color: Color.Red,
         };
-        rightRotate(page, page.content.nodes[x].parent);
+        rightRotate(page.content, page.content.nodes[x].parent);
         w = page.content.nodes[page.content.nodes[x].parent].left;
         (page.content.nodes[w] as ContentNodeMutable) = {
           ...page.content.nodes[w],
@@ -188,7 +191,7 @@ function fixDelete(page: PageContentMutable, x: number): void {
             color: Color.Black,
           };
           (page.content.nodes[w] as ContentNodeMutable).color = Color.Red;
-          leftRotate(page, w);
+          leftRotate(page.content, w);
           w = page.content.nodes[page.content.nodes[x].parent].left;
         }
 
@@ -200,11 +203,13 @@ function fixDelete(page: PageContentMutable, x: number): void {
           ...page.content.nodes[page.content.nodes[x].parent],
           color: Color.Black,
         };
-        (page.content.nodes[page.content.nodes[w].left] as ContentNodeMutable) = {
+        (page.content.nodes[
+          page.content.nodes[w].left
+        ] as ContentNodeMutable) = {
           ...page.content.nodes[page.content.nodes[w].left],
           color: Color.Black,
         };
-        rightRotate(page, page.content.nodes[x].parent);
+        rightRotate(page.content, page.content.nodes[x].parent);
         x = page.content.root;
         (page.content.nodes[x] as ContentNodeMutable) = {
           ...page.content.nodes[x],

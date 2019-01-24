@@ -1,7 +1,7 @@
 import { Color, PageContentMutable } from "../pageModel";
 import { getStartPage } from "../reducer.test";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
-import { SENTINEL_INDEX } from "../tree";
+import { SENTINEL_INDEX } from "../tree/tree";
 import { NEWLINE } from "./contentModel";
 import { deleteContent, deleteNode } from "./delete";
 import { SENTINEL_CONTENT } from "./tree";

@@ -90,6 +90,10 @@ export interface BufferCursorMutable {
 /**
  * Represents a "piece" inside the piece table.
  */
+export function isContentNode(node: Node): node is ContentNode {
+  return (node as ContentNode).leftCharCount !== undefined;
+}
+
 export interface ContentNode extends Node {
   /**
    * The index of the buffer which this node refers to.

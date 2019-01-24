@@ -1,6 +1,6 @@
 import { Color, PageContent, PageContentMutable } from "../pageModel";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
-import { SENTINEL_INDEX } from "../tree";
+import { SENTINEL_INDEX } from "../tree/tree";
 import { BufferMutable, ContentNodeMutable, NEWLINE } from "./contentModel";
 import { ContentInsert, fixInsert, insertContent } from "./insert";
 import { MAX_BUFFER_LENGTH, SENTINEL_CONTENT } from "./tree";

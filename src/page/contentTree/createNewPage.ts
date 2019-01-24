@@ -1,7 +1,7 @@
 import { OnenotePage } from "@microsoft/microsoft-graph-types";
 import { Color, PageContent } from "../pageModel";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
-import { SENTINEL_INDEX } from "../tree";
+import { SENTINEL_INDEX } from "../tree/tree";
 import { Buffer, ContentNode } from "./contentModel";
 import { getLineStarts, getNewlineFormat, SENTINEL_CONTENT } from "./tree";
 

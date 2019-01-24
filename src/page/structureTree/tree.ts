@@ -1,5 +1,5 @@
 import { Color } from "../pageModel";
-import { SENTINEL_INDEX } from "../tree";
+import { SENTINEL_INDEX } from "../tree/tree";
 import { StructureNode } from "./structureModel";
 
 export const SENTINEL_STRUCTURE: StructureNode = {

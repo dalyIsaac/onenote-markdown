@@ -3,7 +3,7 @@
  */
 
 import { Color, PageContent, PageContentMutable } from "../pageModel";
-import { SENTINEL_INDEX } from "../tree";
+import { SENTINEL_INDEX } from "../tree/tree";
 import {
   BufferCursor,
   CharValues,
@@ -282,7 +282,10 @@ export function recomputeTreeMetadata(
   ] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta;
 
   // go upwards till root. O(logN)
-  while (x !== page.content.root && (lengthDelta !== 0 || lineFeedDelta !== 0)) {
+  while (
+    x !== page.content.root &&
+    (lengthDelta !== 0 || lineFeedDelta !== 0)
+  ) {
     if (page.content.nodes[page.content.nodes[x].parent].left === x) {
       page.content.nodes[page.content.nodes[x].parent] = {
         ...page.content.nodes[page.content.nodes[x].parent],

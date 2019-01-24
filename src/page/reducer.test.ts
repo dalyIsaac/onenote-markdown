@@ -22,7 +22,7 @@ import {
 } from "./pageModel";
 import pageReducer from "./reducer";
 import { SENTINEL_STRUCTURE } from "./structureTree/tree";
-import { SENTINEL_INDEX } from "./tree";
+import { SENTINEL_INDEX } from "./tree/tree";
 
 export const getStartPage = (): PageContentMutable => ({
   buffers: [

@@ -4,6 +4,9 @@ export interface KeyValueStr {
   [key: string]: string;
 }
 
+export function isStructureNode(node: Node): node is StructureNode {
+  return (node as StructureNode).leftSubTreeLength !== undefined;
+}
 export interface StructureNode extends Node {
   readonly tag: string;
   readonly id: string;
