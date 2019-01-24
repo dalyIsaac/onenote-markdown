@@ -2,7 +2,7 @@ import { OnenotePage } from "@microsoft/microsoft-graph-types";
 import { Action } from "../common";
 
 /**
- * Partial action which should be used to extend any action whihch interacts with a page.
+ * Partial action which should be used to extend any action which interacts with a page.
  */
 export interface PageActionPartial extends Action {
   readonly pageId: string;
