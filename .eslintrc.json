@@ -2,11 +2,23 @@
   "parser": "@typescript-eslint/parser",
   "rules": {
     "sort-keys-fix/sort-keys-fix": 2,
-    "@typescript-eslint/indent": ["error", 2]
+    "@typescript-eslint/indent": ["error", 2],
+    "no-console": "warn"
   },
   "plugins": ["sort-keys-fix", "@typescript-eslint"],
   "parserOptions": {
     "sourceType": "module"
   },
-  "extends": ["plugin:@typescript-eslint/recommended"]
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier/react",
+    "prettier/typescript",
+    "prettier"
+  ],
+  "env": {
+    "jest": true,
+    "browser": true
+  }
 }
