@@ -1,14 +1,15 @@
 import { Color, PageContent, PageContentMutable } from "../pageModel";
 import { nextNode, SENTINEL_INDEX, treeMinimum } from "../tree/tree";
 import { ContentNode, ContentNodeMutable } from "./contentModel";
-import { fixInsert, insertNode } from "./insert";
+import { insertNode } from "./insert";
+import { fixInsert } from "../tree/insert";
 import { leftRotate, rightRotate } from "../tree/rotate";
 import {
   calculateCharCount,
   calculateLineFeedCount,
   findNodeAtOffset,
   NodePositionOffset,
-  recomputeTreeMetadata,
+  recomputeContentTreeMetadata,
   resetSentinel,
   updateTreeMetadata,
 } from "./tree";
@@ -313,7 +314,7 @@ export function deleteNode(page: PageContentMutable, z: number): void {
   if (y === z) {
     (page.content.nodes[x] as ContentNodeMutable).parent =
       page.content.nodes[y].parent;
-    recomputeTreeMetadata(page, x);
+    recomputeContentTreeMetadata(page.content, x);
   } else {
     if (page.content.nodes[y].parent === z) {
       (page.content.nodes[x] as ContentNodeMutable).parent = y;
@@ -323,7 +324,7 @@ export function deleteNode(page: PageContentMutable, z: number): void {
     }
 
     // as we make changes to page.nodes[x]'s hierarchy, update leftCharCount of subtree first
-    recomputeTreeMetadata(page, x);
+    recomputeContentTreeMetadata(page.content, x);
 
     (page.content.nodes[y] as ContentNodeMutable).left =
       page.content.nodes[z].left;
@@ -368,14 +369,14 @@ export function deleteNode(page: PageContentMutable, z: number): void {
       page.content.nodes[z].leftCharCount;
     (page.content.nodes[y] as ContentNodeMutable).leftLineFeedCount =
       page.content.nodes[z].leftLineFeedCount;
-    recomputeTreeMetadata(page, y);
+    recomputeContentTreeMetadata(page.content, y);
   }
 
   detach(page, z);
 
   if (page.content.nodes[page.content.nodes[x].parent].left === x) {
-    const newSizeLeft = calculateCharCount(page, x);
-    const newLFLeft = calculateLineFeedCount(page, x);
+    const newSizeLeft = calculateCharCount(page.content, x);
+    const newLFLeft = calculateLineFeedCount(page.content, x);
     if (
       newSizeLeft !==
         page.content.nodes[page.content.nodes[x].parent].leftCharCount ||
@@ -402,7 +403,7 @@ export function deleteNode(page: PageContentMutable, z: number): void {
     }
   }
 
-  recomputeTreeMetadata(page, page.content.nodes[x].parent);
+  recomputeContentTreeMetadata(page.content, page.content.nodes[x].parent);
 
   if (yWasRed) {
     resetSentinel(page);
@@ -561,7 +562,7 @@ function updateNode(
   newNode.right = page.content.nodes[index].right;
   newNode.color = page.content.nodes[index].color;
   page.content.nodes[index] = newNode;
-  recomputeTreeMetadata(page, index);
+  recomputeContentTreeMetadata(page.content, index);
 }
 
 /**
@@ -621,7 +622,7 @@ export function deleteContent(
       oldNodeStartPosition.nodeIndex
     ] as ContentNodeMutable) = nodeBeforeContent;
     insertNode(page, nodeAfterContent, deleteRange.startOffset);
-    fixInsert(page, page.content.nodes.length - 1);
+    fixInsert(page.content, page.content.nodes.length - 1);
   } else if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
     // delete from a point in a node to the end of another node
     updateNode(page, oldNodeStartPosition.nodeIndex, nodeBeforeContent);

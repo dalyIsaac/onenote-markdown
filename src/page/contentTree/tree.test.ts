@@ -6,7 +6,7 @@ import {
   calculateCharCount,
   calculateLineFeedCount,
   findNodeAtOffset,
-  recomputeTreeMetadata,
+  recomputeContentTreeMetadata,
   SENTINEL_CONTENT,
 } from "./tree";
 
@@ -254,17 +254,17 @@ describe("Functions for common tree operations on the piece table/red-black tree
 
   test("Calculate line feed count", () => {
     const page = getPage();
-    expect(calculateLineFeedCount(page, page.content.root)).toBe(2);
+    expect(calculateLineFeedCount(page.content, page.content.root)).toBe(2);
   });
 
   test("Calculate character count", () => {
     const page = getPage();
-    expect(calculateCharCount(page, page.content.root)).toBe(121);
+    expect(calculateCharCount(page.content, page.content.root)).toBe(121);
   });
 
   test("Recompute tree metadata: add a node to the end", () => {
     const page = getPage(); // hypothetically added the last node
-    recomputeTreeMetadata(page, 7);
+    recomputeContentTreeMetadata(page.content, 7);
     expect(page).toStrictEqual(getPage());
   });
 
@@ -277,7 +277,7 @@ describe("Functions for common tree operations on the piece table/red-black tree
       .nodes[6] as ContentNodeMutable).leftLineFeedCount += 5;
     (expectedPage.content.nodes[5] as ContentNodeMutable).lineFeedCount += 5;
 
-    recomputeTreeMetadata(page, 4);
+    recomputeContentTreeMetadata(page.content, 4);
     expect(page).toStrictEqual(expectedPage);
   });
 });

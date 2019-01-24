@@ -204,102 +204,96 @@ export function getNodeContent(nodeIndex: number, page: PageContent): string {
 
 /**
  * Calculates the character count for the node and its subtrees.
- * @param page The page/piece table
+ * @param tree The red-black tree for the content.
  * @param index The index of the node in the `node` array of the page/piece table to find the character count for.
  */
-export function calculateCharCount(page: PageContent, index: number): number {
-  if (index === SENTINEL_INDEX) {
-    return 0;
-  }
-  const node = page.content.nodes[index];
-  return (
-    node.leftCharCount + node.length + calculateCharCount(page, node.right)
-  );
-}
-
-/**
- * Calculates the line feed count for the node and subtrees.
- * @param page The page/piece table
- * @param index The index of the node in the `node` array of the page/piece table to find the line feed count for.
- */
-export function calculateLineFeedCount(
-  page: PageContent,
+export function calculateCharCount(
+  tree: { nodes: ContentNodeMutable[]; root: number },
   index: number,
 ): number {
   if (index === SENTINEL_INDEX) {
     return 0;
   }
-  const node = page.content.nodes[index];
+  const node = tree.nodes[index];
+  return (
+    node.leftCharCount + node.length + calculateCharCount(tree, node.right)
+  );
+}
+
+/**
+ * Calculates the line feed count for the node and subtrees.
+ * @param tree The red-black tree for the content.
+ * @param index The index of the node in the `node` array of the page/piece table to find the line feed count for.
+ */
+export function calculateLineFeedCount(
+  tree: { nodes: ContentNodeMutable[]; root: number },
+  index: number,
+): number {
+  if (index === SENTINEL_INDEX) {
+    return 0;
+  }
+  const node = tree.nodes[index];
   return (
     node.leftLineFeedCount +
     node.lineFeedCount +
-    calculateLineFeedCount(page, node.right)
+    calculateLineFeedCount(tree, node.right)
   );
 }
 
 /**
  * Recomputes the metadata for the tree based on the newly inserted/updated node.
- * @param page The page/piece table.
+ * @param tree The red-black tree for the content.
  * @param index The index of the node in the `node` array, which is the basis for updating the tree.
  */
-export function recomputeTreeMetadata(
-  page: PageContentMutable,
+export function recomputeContentTreeMetadata(
+  tree: { nodes: ContentNodeMutable[]; root: number },
   x: number,
 ): void {
   let lengthDelta = 0;
   let lineFeedDelta = 0;
-  if (x === page.content.root) {
+  if (x === tree.root) {
     return;
   }
-  page.content.nodes[x] = { ...page.content.nodes[x] };
+  tree.nodes[x] = { ...tree.nodes[x] };
 
   // go upwards till the node whose left subtree is changed.
-  while (
-    x !== page.content.root &&
-    x === page.content.nodes[page.content.nodes[x].parent].right
-  ) {
-    x = page.content.nodes[x].parent;
+  while (x !== tree.root && x === tree.nodes[tree.nodes[x].parent].right) {
+    x = tree.nodes[x].parent;
   }
 
-  if (x === page.content.root) {
+  if (x === tree.root) {
     // well, it means we add a node to the end (inorder)
     return;
   }
 
-  // page.nodes[x] is the node whose right subtree is changed.
-  x = page.content.nodes[x].parent;
-  page.content.nodes[x] = { ...page.content.nodes[x] };
+  // tree.nodes[x] is the node whose right subtree is changed.
+  x = tree.nodes[x].parent;
+  tree.nodes[x] = { ...tree.nodes[x] };
 
   lengthDelta =
-    calculateCharCount(page, page.content.nodes[x].left) -
-    page.content.nodes[x].leftCharCount;
+    calculateCharCount(tree, tree.nodes[x].left) - tree.nodes[x].leftCharCount;
   lineFeedDelta =
-    calculateLineFeedCount(page, page.content.nodes[x].left) -
-    page.content.nodes[x].leftLineFeedCount;
-  (page.content.nodes[x] as ContentNodeMutable).leftCharCount += lengthDelta;
-  (page.content.nodes[
-    x
-  ] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta;
+    calculateLineFeedCount(tree, tree.nodes[x].left) -
+    tree.nodes[x].leftLineFeedCount;
+  (tree.nodes[x] as ContentNodeMutable).leftCharCount += lengthDelta;
+  (tree.nodes[x] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta;
 
   // go upwards till root. O(logN)
-  while (
-    x !== page.content.root &&
-    (lengthDelta !== 0 || lineFeedDelta !== 0)
-  ) {
-    if (page.content.nodes[page.content.nodes[x].parent].left === x) {
-      page.content.nodes[page.content.nodes[x].parent] = {
-        ...page.content.nodes[page.content.nodes[x].parent],
+  while (x !== tree.root && (lengthDelta !== 0 || lineFeedDelta !== 0)) {
+    if (tree.nodes[tree.nodes[x].parent].left === x) {
+      tree.nodes[tree.nodes[x].parent] = {
+        ...tree.nodes[tree.nodes[x].parent],
       };
-      (page.content.nodes[
-        page.content.nodes[x].parent
+      (tree.nodes[
+        tree.nodes[x].parent
       ] as ContentNodeMutable).leftCharCount += lengthDelta;
-      (page.content.nodes[
-        page.content.nodes[x].parent
+      (tree.nodes[
+        tree.nodes[x].parent
       ] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta;
     }
 
-    x = page.content.nodes[x].parent;
-    page.content.nodes[x] = { ...page.content.nodes[x] };
+    x = tree.nodes[x].parent;
+    tree.nodes[x] = { ...tree.nodes[x] };
   }
 
   return;

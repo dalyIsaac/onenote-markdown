@@ -1,14 +1,13 @@
 import { Color, PageContentMutable } from "../pageModel";
 import { SENTINEL_INDEX } from "../tree/tree";
 import { Buffer, ContentNode, ContentNodeMutable } from "./contentModel";
-import { leftRotate, rightRotate } from "../tree/rotate";
 import {
   findNodeAtOffset,
   getLineStarts,
   getNodeContent,
   NodePositionOffset,
-  recomputeTreeMetadata,
 } from "./tree";
+import { fixInsert} from "../tree/insert";
 
 /**
  * The desired content and offset for an insertion operation.
@@ -199,138 +198,6 @@ function insertAtNodeExtremity(
 }
 
 /**
- * Restores the properties of a red-black tree after the insertion of a node.
- * @param page The page/piece table.
- * @param x The index of the node in the `node` array, which is the basis for fixing the tree.
- */
-export function fixInsert(page: PageContentMutable, x: number): void {
-  recomputeTreeMetadata(page, x);
-  page.content.nodes[x] = { ...page.content.nodes[x] };
-
-  if (x === page.content.root) {
-    (page.content.nodes[x] as ContentNodeMutable).color = Color.Black;
-    return;
-  }
-
-  while (
-    page.content.nodes[x].parent !== SENTINEL_INDEX &&
-    page.content.nodes[page.content.nodes[x].parent].parent !==
-      SENTINEL_INDEX &&
-    x !== page.content.root &&
-    page.content.nodes[page.content.nodes[x].parent].color === Color.Red
-  ) {
-    if (
-      page.content.nodes[x].parent ===
-      page.content.nodes[
-        page.content.nodes[page.content.nodes[x].parent].parent
-      ].left
-    ) {
-      const y =
-        page.content.nodes[
-          page.content.nodes[page.content.nodes[x].parent].parent
-        ].right;
-      page.content.nodes[y] = { ...page.content.nodes[y] };
-
-      if (page.content.nodes[y].color === Color.Red) {
-        page.content.nodes[page.content.nodes[x].parent] = {
-          ...page.content.nodes[page.content.nodes[x].parent],
-          color: Color.Black,
-        };
-        (page.content.nodes[y] as ContentNodeMutable).color = Color.Black;
-        page.content.nodes[
-          page.content.nodes[page.content.nodes[x].parent].parent
-        ] = {
-          ...page.content.nodes[
-            page.content.nodes[page.content.nodes[x].parent].parent
-          ],
-          color: Color.Red,
-        };
-        x = page.content.nodes[page.content.nodes[x].parent].parent;
-        page.content.nodes[x] = { ...page.content.nodes[x] };
-      } else {
-        if (x === page.content.nodes[page.content.nodes[x].parent].right) {
-          x = page.content.nodes[x].parent;
-          page.content.nodes[x] = { ...page.content.nodes[x] };
-          leftRotate(page.content, x);
-        }
-        page.content.nodes[page.content.nodes[x].parent] = {
-          ...page.content.nodes[page.content.nodes[x].parent],
-          color: Color.Black,
-        };
-        page.content.nodes[
-          page.content.nodes[page.content.nodes[x].parent].parent
-        ] = {
-          ...page.content.nodes[
-            page.content.nodes[page.content.nodes[x].parent].parent
-          ],
-          color: Color.Red,
-        };
-        rightRotate(
-          page.content,
-          page.content.nodes[page.content.nodes[x].parent].parent,
-        );
-      }
-    } else {
-      const y =
-        page.content.nodes[
-          page.content.nodes[page.content.nodes[x].parent].parent
-        ].left;
-      page.content.nodes[y] = {
-        ...page.content.nodes[y],
-      };
-      if (page.content.nodes[y].color === Color.Red) {
-        page.content.nodes[page.content.nodes[x].parent] = {
-          ...page.content.nodes[page.content.nodes[x].parent],
-          color: Color.Black,
-        };
-        (page.content.nodes[y] as ContentNodeMutable).color = Color.Black;
-        page.content.nodes[
-          page.content.nodes[page.content.nodes[x].parent].parent
-        ] = {
-          ...page.content.nodes[
-            page.content.nodes[page.content.nodes[x].parent].parent
-          ],
-          color: Color.Red,
-        };
-        x = page.content.nodes[page.content.nodes[x].parent].parent;
-        page.content.nodes[x] = { ...page.content.nodes[x] };
-      } else {
-        if (
-          page.content.nodes[x] ===
-          page.content.nodes[
-            page.content.nodes[page.content.nodes[x].parent].left
-          ]
-        ) {
-          x = page.content.nodes[x].parent;
-          page.content.nodes[x] = { ...page.content.nodes[x] };
-          rightRotate(page.content, x);
-        }
-        page.content.nodes[page.content.nodes[x].parent] = {
-          ...page.content.nodes[page.content.nodes[x].parent],
-          color: Color.Black,
-        };
-        page.content.nodes[
-          page.content.nodes[page.content.nodes[x].parent].parent
-        ] = {
-          ...page.content.nodes[
-            page.content.nodes[page.content.nodes[x].parent].parent
-          ],
-          color: Color.Red,
-        };
-        leftRotate(
-          page.content,
-          page.content.nodes[page.content.nodes[x].parent].parent,
-        );
-      }
-    }
-  }
-  page.content.nodes[page.content.root] = {
-    ...page.content.nodes[page.content.root],
-    color: Color.Black,
-  };
-}
-
-/**
  * Inserts the given content into a page, inside a range which is currently encapsulated by an existing node.
  * @param content The content to insert into the page.
  * @param page The page to insert the content into.
@@ -381,7 +248,7 @@ function insertInsideNode(
   };
 
   insertNode(page, secondPartNode, content.offset);
-  fixInsert(page, page.content.nodes.length - 1);
+  fixInsert(page.content, page.content.nodes.length - 1);
   insertAtNodeExtremity(content, page, maxBufferLength);
   page.previouslyInsertedContentNodeIndex = page.content.nodes.length - 1;
   page.previouslyInsertedContentNodeOffset = content.offset;
@@ -482,6 +349,6 @@ export function insertContent(
   }
 
   if (page) {
-    fixInsert(page, page.content.nodes.length - 1);
+    fixInsert(page.content, page.content.nodes.length - 1);
   }
 }
