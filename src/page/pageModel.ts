@@ -51,6 +51,11 @@ export interface NodeMutable {
 
 //#region PageContent
 
+export interface RedBlackTree {
+  nodes: Node[];
+  root: number;
+}
+
 /**
  * Represents the piece table for a single Onenote page.
  */

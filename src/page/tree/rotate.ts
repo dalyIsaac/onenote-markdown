@@ -4,18 +4,18 @@ import {
   ContentNode,
   isContentNode,
 } from "../contentTree/contentModel";
-import { NodeMutable } from "../pageModel";
-import { isStructureNode, StructureNodeMutable } from "../structureTree/structureModel";
+import { RedBlackTree } from "../pageModel";
+import {
+  isStructureNode,
+  StructureNodeMutable,
+} from "../structureTree/structureModel";
 
 /**
  * Performs a left rotation on the red-black tree, on the given node.
  * @param page The page/piece table.
  * @param nodeIndex The index of the node in the array for which the left rotation is performed on.
  */
-export function leftRotate(
-  tree: { nodes: NodeMutable[]; root: number },
-  nodeIndex: number,
-): void {
+export function leftRotate(tree: RedBlackTree, nodeIndex: number): void {
   const x = nodeIndex;
 
   if (tree.nodes[x].right === SENTINEL_INDEX) {
@@ -73,10 +73,7 @@ export function leftRotate(
  * @param page The page/piece table.
  * @param nodeIndex The index of the node in the array for which the right rotation is performed on.
  */
-export function rightRotate(
-  tree: { nodes: NodeMutable[]; root: number },
-  nodeIndex: number,
-): void {
+export function rightRotate(tree: RedBlackTree, nodeIndex: number): void {
   const y = nodeIndex;
 
   if (tree.nodes[y].left === SENTINEL_INDEX) {
