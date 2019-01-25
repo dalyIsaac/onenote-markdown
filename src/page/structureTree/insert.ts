@@ -3,6 +3,14 @@ import { KeyValueStr, StructureNode } from "./structureModel";
 import { SENTINEL_INDEX } from "../tree/tree";
 import { insertNode, fixInsert } from "../tree/insert";
 
+/**
+ * Inserts a new `StructureNode` into `.structure.nodes`.
+ * @param page The page in which the structure node is going to be inserted.
+ * @param offset The insertion position of the node.
+ * @param tag The tag of the new node.
+ * @param id The id of the new node.
+ * @param styles The inline CSS of the new node.
+ */
 export function insertStructureNode(
   page: PageContentMutable,
   offset: number,

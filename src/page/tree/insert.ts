@@ -98,6 +98,9 @@ export function fixInsert(tree: RedBlackTree, x: number): void {
   };
 }
 
+/**
+ * Returns the value for the LHS check for binary search for the red-black tree, for different types.
+ */
 function getLHSValue(currentNode: NodeMutable): number {
   if (isContentNode(currentNode)) {
     return currentNode.leftCharCount;
@@ -108,6 +111,9 @@ function getLHSValue(currentNode: NodeMutable): number {
   }
 }
 
+/**
+ * Returns the value for the RHS check for binary search for the red-black tree, for different types.
+ */
 function getRHSValue(currentNode: NodeMutable): number {
   if (isContentNode(currentNode)) {
     return currentNode.leftCharCount + currentNode.length;

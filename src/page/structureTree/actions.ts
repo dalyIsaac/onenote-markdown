@@ -11,6 +11,9 @@ export interface InsertStructureAction extends PageActionPartial {
   readonly offset: number;
 }
 
+/**
+ * Action creator for `InsertStructureAction`.
+ */
 export const insertStructure = (
   pageId: string,
   offset: number,
