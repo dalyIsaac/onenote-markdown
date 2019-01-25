@@ -4,7 +4,7 @@ import {
   ContentNode,
   isContentNode,
 } from "../contentTree/contentModel";
-import { RedBlackTree } from "../pageModel";
+import { RedBlackTree, NodeMutable } from "../pageModel";
 import {
   isStructureNode,
   StructureNodeMutable,
@@ -36,12 +36,11 @@ export function leftRotate(tree: RedBlackTree, nodeIndex: number): void {
       (tree.nodes[x] as ContentNode).leftLineFeedCount +
       (tree.nodes[x] as ContentNode).lineFeedCount;
   } else if (isStructureNode(tree.nodes[y])) {
-    (tree.nodes[y] as StructureNodeMutable).leftSubTreeLength += (tree.nodes[
-      x
-    ] as StructureNodeMutable).leftSubTreeLength;
+    (tree.nodes[y] as StructureNodeMutable).leftSubTreeLength +=
+      (tree.nodes[x] as StructureNodeMutable).leftSubTreeLength + 1;
   }
 
-  tree.nodes[x].right = tree.nodes[y].left;
+  (tree.nodes[x] as NodeMutable).right = tree.nodes[y].left;
   if (tree.nodes[y].left !== SENTINEL_INDEX) {
     tree.nodes[tree.nodes[y].left] = {
       ...tree.nodes[tree.nodes[y].left],
@@ -49,7 +48,7 @@ export function leftRotate(tree: RedBlackTree, nodeIndex: number): void {
     };
   }
 
-  tree.nodes[y].parent = tree.nodes[x].parent;
+  (tree.nodes[y] as NodeMutable).parent = tree.nodes[x].parent;
   if (tree.nodes[x].parent === SENTINEL_INDEX) {
     tree.root = y;
   } else if (x === tree.nodes[tree.nodes[x].parent].left) {
@@ -64,8 +63,8 @@ export function leftRotate(tree: RedBlackTree, nodeIndex: number): void {
     };
   }
 
-  tree.nodes[y].left = x;
-  tree.nodes[x].parent = y;
+  (tree.nodes[y] as NodeMutable).left = x;
+  (tree.nodes[x] as NodeMutable).parent = y;
 }
 
 /**
@@ -94,12 +93,11 @@ export function rightRotate(tree: RedBlackTree, nodeIndex: number): void {
       (tree.nodes[x] as ContentNodeMutable).leftLineFeedCount +
       (tree.nodes[x] as ContentNodeMutable).lineFeedCount;
   } else if (isStructureNode(tree.nodes[y])) {
-    (tree.nodes[y] as StructureNodeMutable).leftSubTreeLength -= (tree.nodes[
-      x
-    ] as StructureNodeMutable).leftSubTreeLength;
+    (tree.nodes[y] as StructureNodeMutable).leftSubTreeLength -=
+      (tree.nodes[x] as StructureNodeMutable).leftSubTreeLength + 1;
   }
 
-  tree.nodes[y].left = tree.nodes[x].right;
+  (tree.nodes[y] as NodeMutable).left = tree.nodes[x].right;
 
   if (tree.nodes[x].right !== SENTINEL_INDEX) {
     tree.nodes[tree.nodes[x].right] = {
@@ -108,7 +106,7 @@ export function rightRotate(tree: RedBlackTree, nodeIndex: number): void {
     };
   }
 
-  tree.nodes[x].parent = tree.nodes[y].parent;
+  (tree.nodes[x] as NodeMutable).parent = tree.nodes[y].parent;
 
   if (tree.nodes[y].parent === SENTINEL_INDEX) {
     tree.root = x;
@@ -123,9 +121,6 @@ export function rightRotate(tree: RedBlackTree, nodeIndex: number): void {
       left: x,
     };
   }
-  tree.nodes[x].right = y;
-  tree.nodes[y].parent = x;
-
-  tree.nodes[y] = tree.nodes[y];
-  tree.nodes[x] = tree.nodes[x];
+  (tree.nodes[x] as NodeMutable).right = y;
+  (tree.nodes[y] as NodeMutable).parent = x;
 }

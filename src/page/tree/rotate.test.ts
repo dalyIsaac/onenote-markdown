@@ -906,7 +906,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           color: Color.Black,
           id: "",
           left: 7,
-          leftSubTreeLength: 4,
+          leftSubTreeLength: 5,
           parent: 5,
           right: 12,
           tag: "span",
