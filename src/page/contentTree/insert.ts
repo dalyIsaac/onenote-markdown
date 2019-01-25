@@ -1,3 +1,4 @@
+import { insertNode, fixInsert } from "../tree/insert";
 import { Color, PageContentMutable } from "../pageModel";
 import { SENTINEL_INDEX } from "../tree/tree";
 import { Buffer, ContentNode, ContentNodeMutable } from "./contentModel";
@@ -7,7 +8,6 @@ import {
   getNodeContent,
   NodePositionOffset,
 } from "./tree";
-import { fixInsert} from "../tree/insert";
 
 /**
  * The desired content and offset for an insertion operation.
@@ -15,70 +15,6 @@ import { fixInsert} from "../tree/insert";
 export interface ContentInsert {
   readonly content: string;
   readonly offset: number;
-}
-
-/**
- * Modifies the metadata of nodes to "insert" a node. **The node should already exist inside `page.nodes`.**
- * @param page The page/piece table.
- * @param newNode Reference to the newly created node. The node already exists inside `page.nodes`.
- * @param offset The offset of the new node.
- */
-export function insertNode(
-  page: PageContentMutable,
-  newNode: ContentNodeMutable,
-  offset: number,
-): void {
-  page.content.nodes.push(newNode);
-  let prevIndex = SENTINEL_INDEX;
-
-  let currentIndex = page.content.root;
-  let currentNode = page.content.nodes[currentIndex];
-
-  let nodeStartOffset = 0;
-  const nodeIndex = page.content.nodes.length - 1; // the index of the new node
-
-  while (currentIndex !== SENTINEL_INDEX) {
-    prevIndex = currentIndex;
-    if (offset <= nodeStartOffset + currentNode.leftCharCount) {
-      // left
-      prevIndex = currentIndex;
-      currentIndex = currentNode.left;
-      if (currentIndex === SENTINEL_INDEX) {
-        page.content.nodes[prevIndex] = {
-          ...page.content.nodes[prevIndex],
-          left: nodeIndex,
-        };
-        newNode.parent = prevIndex; // can mutate the node since it's new
-        return;
-      }
-      currentNode = page.content.nodes[currentIndex];
-    } else if (
-      offset >=
-      nodeStartOffset + currentNode.leftCharCount + currentNode.length
-    ) {
-      // right
-      nodeStartOffset += currentNode.leftCharCount + currentNode.length;
-      prevIndex = currentIndex;
-      currentIndex = currentNode.right;
-      if (currentIndex === SENTINEL_INDEX) {
-        page.content.nodes[prevIndex] = {
-          ...page.content.nodes[prevIndex],
-          right: nodeIndex,
-        };
-        newNode.parent = prevIndex; // can mutate the node since it's new
-        return;
-      }
-      currentNode = page.content.nodes[currentIndex];
-    } else {
-      // middle
-      throw RangeError(
-        "Looking for the place to insert a node should never result in looking in the middle of another node.",
-      );
-    }
-  }
-  throw RangeError(
-    "The currentIndex has reached a SENTINEL node before locating a suitable insertion location.",
-  );
 }
 
 /**
@@ -116,7 +52,7 @@ function createNodeCreateBuffer(
   page.previouslyInsertedContentNodeIndex = page.content.nodes.length;
   page.previouslyInsertedContentNodeOffset = content.offset;
   page.buffers.push(newBuffer);
-  insertNode(page, newNode, content.offset);
+  insertNode(page.content, newNode, content.offset);
 }
 
 /**
@@ -163,7 +99,7 @@ function createNodeAppendToBuffer(
   page.buffers[page.buffers.length - 1] = updatedBuffer;
   page.previouslyInsertedContentNodeIndex = page.content.nodes.length;
   page.previouslyInsertedContentNodeOffset = content.offset;
-  insertNode(page, newNode, content.offset);
+  insertNode(page.content, newNode, content.offset);
 }
 
 /**
@@ -247,7 +183,7 @@ function insertInsideNode(
     start: firstPartNode.end,
   };
 
-  insertNode(page, secondPartNode, content.offset);
+  insertNode(page.content, secondPartNode, content.offset);
   fixInsert(page.content, page.content.nodes.length - 1);
   insertAtNodeExtremity(content, page, maxBufferLength);
   page.previouslyInsertedContentNodeIndex = page.content.nodes.length - 1;

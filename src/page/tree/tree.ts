@@ -1,5 +1,15 @@
-import { SENTINEL_CONTENT } from "../contentTree/tree";
-import { Node } from "../pageModel";
+import {
+  SENTINEL_CONTENT,
+  calculateCharCount,
+  calculateLineFeedCount,
+} from "../contentTree/tree";
+import { Node, NodeMutable } from "../pageModel";
+import { ContentNodeMutable, isContentNode } from "../contentTree/contentModel";
+import {
+  isStructureNode,
+  StructureNodeMutable,
+} from "../structureTree/structureModel";
+import { calculateLengthDelta } from "../structureTree/tree";
 
 /**
  * The index of the sentinel node in the `nodes` array of a page/piece table.
@@ -103,5 +113,93 @@ export function prevNode(
       index: nodes[currentNode].parent,
       node: nodes[nodes[currentNode].parent],
     };
+  }
+}
+
+/**
+ * Recomputes the metadata for the tree based on the newly inserted/updated node.
+ * @param tree The red-black tree for the content.
+ * @param index The index of the node in the `node` array, which is the basis for updating the tree.
+ */
+export function recomputeContentTreeMetadata(
+  tree: {
+    nodes: NodeMutable[];
+    root: number;
+  },
+  x: number,
+): void {
+  // content node
+  let lengthDelta: number | undefined;
+  let lineFeedDelta: number | undefined;
+
+  if (x === tree.root) {
+    return;
+  }
+
+  tree.nodes[x] = { ...tree.nodes[x] }; // go upwards till the node whose left subtree is changed.
+
+  while (x !== tree.root && x === tree.nodes[tree.nodes[x].parent].right) {
+    x = tree.nodes[x].parent;
+  }
+
+  if (x === tree.root) {
+    // well, it means we add a node to the end (inorder)
+    return;
+  } // tree.nodes[x] is the node whose right subtree is changed.
+
+  x = tree.nodes[x].parent;
+  tree.nodes[x] = { ...tree.nodes[x] };
+
+  if (isContentNode(tree.nodes[x])) {
+    lengthDelta =
+      calculateCharCount(
+        tree as { nodes: ContentNodeMutable[]; root: number },
+        tree.nodes[x].left,
+      ) - (tree.nodes[x] as ContentNodeMutable).leftCharCount;
+    lineFeedDelta =
+      calculateLineFeedCount(
+        tree as { nodes: ContentNodeMutable[]; root: number },
+        tree.nodes[x].left,
+      ) - (tree.nodes[x] as ContentNodeMutable).leftLineFeedCount;
+    (tree.nodes[x] as ContentNodeMutable).leftCharCount += lengthDelta;
+    (tree.nodes[x] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta; // go upwards till root. O(logN)
+  } else if (isStructureNode(tree.nodes[x])) {
+    lengthDelta =
+      calculateLengthDelta(
+        tree as { nodes: StructureNodeMutable[]; root: number },
+        tree.nodes[x].left,
+      ) - (tree.nodes[x] as StructureNodeMutable).leftSubTreeLength;
+    (tree.nodes[x] as StructureNodeMutable).leftSubTreeLength += lengthDelta;
+  }
+
+  if (length !== undefined && !(lengthDelta !== 0 || lineFeedDelta !== 0)) {
+    return;
+  }
+
+  while (x !== tree.root) {
+    if (tree.nodes[tree.nodes[x].parent].left === x) {
+      tree.nodes[tree.nodes[x].parent] = {
+        ...tree.nodes[tree.nodes[x].parent],
+      };
+
+      if (isContentNode(tree.nodes[x])) {
+        (tree.nodes[
+          tree.nodes[x].parent
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        ] as ContentNodeMutable).leftCharCount += lengthDelta!;
+        (tree.nodes[
+          tree.nodes[x].parent
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        ] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta!;
+      } else if (isStructureNode(tree.nodes[x])) {
+        (tree.nodes[
+          tree.nodes[x].parent
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        ] as StructureNodeMutable).leftSubTreeLength += lengthDelta!;
+      }
+    }
+
+    x = tree.nodes[x].parent;
+    tree.nodes[x] = { ...tree.nodes[x] };
   }
 }

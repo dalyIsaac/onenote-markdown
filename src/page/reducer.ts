@@ -16,6 +16,11 @@ import { deleteContent } from "./contentTree/delete";
 import { insertContent } from "./contentTree/insert";
 import { MAX_BUFFER_LENGTH } from "./contentTree/tree";
 import { PageContent, PageContentMutable, StatePages } from "./pageModel";
+import {
+  INSERT_STRUCTURE_NODE,
+  InsertStructureAction,
+} from "./structureTree/actions";
+import { insertStructureNode } from "./structureTree/insert";
 
 /**
  * Reducer for the slice of the state referring to the storage of a page.
@@ -120,6 +125,28 @@ export default function pageReducer(
       newState = {
         ...state,
         [replaceAction.pageId]: extractedPage,
+      };
+      return newState;
+    }
+    case INSERT_STRUCTURE_NODE: {
+      const insertStructureAction = action as InsertStructureAction;
+      extractedPage = {
+        ...state[insertStructureAction.pageId],
+        structure: {
+          nodes: [...state[insertStructureAction.pageId].structure.nodes],
+          root: state[insertStructureAction.pageId].structure.root,
+        },
+      };
+      insertStructureNode(
+        extractedPage as PageContentMutable,
+        insertStructureAction.offset,
+        insertStructureAction.tag,
+        insertStructureAction.id,
+        insertStructureAction.styles,
+      );
+      newState = {
+        ...state,
+        [insertStructureAction.pageId]: extractedPage,
       };
       return newState;
     }

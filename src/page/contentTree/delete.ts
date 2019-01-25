@@ -1,14 +1,17 @@
 import { Color, PageContent, PageContentMutable } from "../pageModel";
-import { nextNode, SENTINEL_INDEX, treeMinimum } from "../tree/tree";
+import {
+  nextNode,
+  SENTINEL_INDEX,
+  treeMinimum,
+  recomputeContentTreeMetadata,
+} from "../tree/tree";
 import { ContentNode, ContentNodeMutable } from "./contentModel";
-import { insertNode } from "./insert";
-import { fixInsert } from "../tree/insert";
+import { insertNode, fixInsert } from "../tree/insert";
 import {
   calculateCharCount,
   calculateLineFeedCount,
   findNodeAtOffset,
   NodePositionOffset,
-  recomputeContentTreeMetadata,
   resetSentinel,
   updateTreeMetadata,
 } from "./tree";
@@ -441,7 +444,7 @@ export function deleteContent(
     (page.content.nodes[
       oldNodeStartPosition.nodeIndex
     ] as ContentNodeMutable) = nodeBeforeContent;
-    insertNode(page, nodeAfterContent, deleteRange.startOffset);
+    insertNode(page.content, nodeAfterContent, deleteRange.startOffset);
     fixInsert(page.content, page.content.nodes.length - 1);
   } else if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
     // delete from a point in a node to the end of another node

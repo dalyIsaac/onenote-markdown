@@ -241,65 +241,6 @@ export function calculateLineFeedCount(
 }
 
 /**
- * Recomputes the metadata for the tree based on the newly inserted/updated node.
- * @param tree The red-black tree for the content.
- * @param index The index of the node in the `node` array, which is the basis for updating the tree.
- */
-export function recomputeContentTreeMetadata(
-  tree: { nodes: ContentNodeMutable[]; root: number },
-  x: number,
-): void {
-  let lengthDelta = 0;
-  let lineFeedDelta = 0;
-  if (x === tree.root) {
-    return;
-  }
-  tree.nodes[x] = { ...tree.nodes[x] };
-
-  // go upwards till the node whose left subtree is changed.
-  while (x !== tree.root && x === tree.nodes[tree.nodes[x].parent].right) {
-    x = tree.nodes[x].parent;
-  }
-
-  if (x === tree.root) {
-    // well, it means we add a node to the end (inorder)
-    return;
-  }
-
-  // tree.nodes[x] is the node whose right subtree is changed.
-  x = tree.nodes[x].parent;
-  tree.nodes[x] = { ...tree.nodes[x] };
-
-  lengthDelta =
-    calculateCharCount(tree, tree.nodes[x].left) - tree.nodes[x].leftCharCount;
-  lineFeedDelta =
-    calculateLineFeedCount(tree, tree.nodes[x].left) -
-    tree.nodes[x].leftLineFeedCount;
-  (tree.nodes[x] as ContentNodeMutable).leftCharCount += lengthDelta;
-  (tree.nodes[x] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta;
-
-  // go upwards till root. O(logN)
-  while (x !== tree.root && (lengthDelta !== 0 || lineFeedDelta !== 0)) {
-    if (tree.nodes[tree.nodes[x].parent].left === x) {
-      tree.nodes[tree.nodes[x].parent] = {
-        ...tree.nodes[tree.nodes[x].parent],
-      };
-      (tree.nodes[
-        tree.nodes[x].parent
-      ] as ContentNodeMutable).leftCharCount += lengthDelta;
-      (tree.nodes[
-        tree.nodes[x].parent
-      ] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta;
-    }
-
-    x = tree.nodes[x].parent;
-    tree.nodes[x] = { ...tree.nodes[x] };
-  }
-
-  return;
-}
-
-/**
  * Ensures that the `SENTINEL` node in the piece table is true to the values of the `SENTINEL` node.
  * This function does mutate the `SENTINEL` node, to ensure that `SENTINEL` is a singleton.
  * @param page The page/piece table which contains the `SENTINEL` node.

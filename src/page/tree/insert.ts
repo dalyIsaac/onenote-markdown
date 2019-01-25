@@ -1,20 +1,16 @@
-import { Color, RedBlackTree } from "../pageModel";
-import { SENTINEL_INDEX } from "./tree";
+import { Color, RedBlackTree, NodeMutable } from "../pageModel";
+import { SENTINEL_INDEX, recomputeContentTreeMetadata } from "./tree";
 import { ContentNodeMutable, isContentNode } from "../contentTree/contentModel";
 import { leftRotate, rightRotate } from "./rotate";
-import { recomputeContentTreeMetadata } from "../contentTree/tree";
+import { isStructureNode } from "../structureTree/structureModel";
+
 /**
  * Restores the properties of a red-black tree after the insertion of a node.
  * @param page The page/piece table.
  * @param x The index of the node in the `node` array, which is the basis for fixing the tree.
  */
 export function fixInsert(tree: RedBlackTree, x: number): void {
-  if (isContentNode(tree.nodes[x])) {
-    recomputeContentTreeMetadata(
-      tree as { nodes: ContentNodeMutable[]; root: number },
-      x,
-    );
-  }
+  recomputeContentTreeMetadata(tree, x);
 
   tree.nodes[x] = { ...tree.nodes[x] };
   if (x === tree.root) {
@@ -100,4 +96,83 @@ export function fixInsert(tree: RedBlackTree, x: number): void {
     ...tree.nodes[tree.root],
     color: Color.Black,
   };
+}
+
+function getLHSValue(currentNode: NodeMutable): number {
+  if (isContentNode(currentNode)) {
+    return currentNode.leftCharCount;
+  } else if (isStructureNode(currentNode)) {
+    return currentNode.leftSubTreeLength + 1;
+  } else {
+    throw new TypeError("Passed an unknown node type for the red-black tree.");
+  }
+}
+
+function getRHSValue(currentNode: NodeMutable): number {
+  if (isContentNode(currentNode)) {
+    return currentNode.leftCharCount + currentNode.length;
+  } else if (isStructureNode(currentNode)) {
+    return currentNode.leftSubTreeLength + 1;
+  } else {
+    throw new TypeError("Passed an unknown node type for the red-black tree.");
+  }
+}
+
+/**
+ * Modifies the metadata of nodes to "insert" a node. **The node should already exist inside `page.nodes`.**
+ * @param tree The red-black tree.
+ * @param newNode Reference to the newly created node. The node already exists inside `page.nodes`.
+ * @param offset The offset of the new node.
+ */
+export function insertNode(
+  tree: RedBlackTree,
+  newNode: NodeMutable,
+  offset: number,
+): void {
+  tree.nodes.push(newNode);
+  let prevIndex = SENTINEL_INDEX;
+
+  let currentIndex = tree.root;
+  let currentNode = tree.nodes[currentIndex];
+
+  let nodeStartOffset = 0;
+  const nodeIndex = tree.nodes.length - 1; // the index of the new node
+
+  while (currentIndex !== SENTINEL_INDEX) {
+    prevIndex = currentIndex;
+    if (offset <= nodeStartOffset + getLHSValue(currentNode)) {
+      // left
+      currentIndex = currentNode.left;
+      if (currentIndex === SENTINEL_INDEX) {
+        tree.nodes[prevIndex] = {
+          ...tree.nodes[prevIndex],
+          left: nodeIndex,
+        };
+        newNode.parent = prevIndex; // can mutate the node since it's new
+        return;
+      }
+      currentNode = tree.nodes[currentIndex];
+    } else if (offset >= nodeStartOffset + getRHSValue(currentNode)) {
+      // right
+      nodeStartOffset += getRHSValue(currentNode);
+      currentIndex = currentNode.right;
+      if (currentIndex === SENTINEL_INDEX) {
+        tree.nodes[prevIndex] = {
+          ...tree.nodes[prevIndex],
+          right: nodeIndex,
+        };
+        newNode.parent = prevIndex; // can mutate the node since it's new
+        return;
+      }
+      currentNode = tree.nodes[currentIndex];
+    } else {
+      // middle
+      throw RangeError(
+        "Looking for the place to insert a node should never result in looking in the middle of another node.",
+      );
+    }
+  }
+  throw RangeError(
+    "The currentIndex has reached a SENTINEL node before locating a suitable insertion location.",
+  );
 }
