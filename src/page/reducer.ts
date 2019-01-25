@@ -139,10 +139,7 @@ export default function pageReducer(
       };
       insertStructureNode(
         extractedPage as PageContentMutable,
-        insertStructureAction.offset,
-        insertStructureAction.tag,
-        insertStructureAction.id,
-        insertStructureAction.styles,
+        insertStructureAction,
       );
       newState = {
         ...state,

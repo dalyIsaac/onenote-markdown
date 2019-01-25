@@ -5,6 +5,7 @@ import { SENTINEL_STRUCTURE } from "./tree";
 import { SENTINEL_CONTENT } from "../contentTree/tree";
 import pageReducer from "../reducer";
 import { insertStructure } from "./actions";
+import { TagType } from "./structureModel";
 
 describe("structureTree insert tests", () => {
   test("Less than insertion - left side", () => {
@@ -19,6 +20,7 @@ describe("structureTree insert tests", () => {
           SENTINEL_STRUCTURE,
           {
             // 1
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -26,9 +28,11 @@ describe("structureTree insert tests", () => {
             parent: 2,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 2
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 1,
@@ -36,9 +40,11 @@ describe("structureTree insert tests", () => {
             parent: 3,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 3
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 2,
@@ -46,9 +52,11 @@ describe("structureTree insert tests", () => {
             parent: 5,
             right: 4,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 4
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -56,9 +64,11 @@ describe("structureTree insert tests", () => {
             parent: 3,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 5
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 3,
@@ -66,9 +76,11 @@ describe("structureTree insert tests", () => {
             parent: SENTINEL_INDEX,
             right: 7,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 6
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -76,9 +88,11 @@ describe("structureTree insert tests", () => {
             parent: 7,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 7
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 6,
@@ -86,9 +100,11 @@ describe("structureTree insert tests", () => {
             parent: 5,
             right: 10,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 8
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -96,9 +112,11 @@ describe("structureTree insert tests", () => {
             parent: 10,
             right: 9,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 9
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -106,9 +124,11 @@ describe("structureTree insert tests", () => {
             parent: 8,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 10
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: 8,
@@ -116,9 +136,11 @@ describe("structureTree insert tests", () => {
             parent: 7,
             right: 12,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 11
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -126,9 +148,11 @@ describe("structureTree insert tests", () => {
             parent: 12,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 12
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 11,
@@ -136,9 +160,11 @@ describe("structureTree insert tests", () => {
             parent: 10,
             right: 13,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 13
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -146,6 +172,7 @@ describe("structureTree insert tests", () => {
             parent: 12,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
         ],
         root: 5,
@@ -166,6 +193,7 @@ describe("structureTree insert tests", () => {
           SENTINEL_STRUCTURE,
           {
             // 1
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -173,9 +201,11 @@ describe("structureTree insert tests", () => {
             parent: 2,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 2
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 1,
@@ -183,9 +213,11 @@ describe("structureTree insert tests", () => {
             parent: 3,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 3
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 2,
@@ -193,9 +225,11 @@ describe("structureTree insert tests", () => {
             parent: 5,
             right: 4,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 4
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -203,9 +237,11 @@ describe("structureTree insert tests", () => {
             parent: 3,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 5
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 3,
@@ -213,9 +249,11 @@ describe("structureTree insert tests", () => {
             parent: SENTINEL_INDEX,
             right: 7,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 6
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -223,9 +261,11 @@ describe("structureTree insert tests", () => {
             parent: 7,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 7
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 6,
@@ -233,9 +273,11 @@ describe("structureTree insert tests", () => {
             parent: 5,
             right: 10,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 8
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 14,
@@ -243,9 +285,11 @@ describe("structureTree insert tests", () => {
             parent: 10,
             right: 9,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 9
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -253,9 +297,11 @@ describe("structureTree insert tests", () => {
             parent: 8,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 10
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: 8,
@@ -263,9 +309,11 @@ describe("structureTree insert tests", () => {
             parent: 7,
             right: 12,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 11
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -273,9 +321,11 @@ describe("structureTree insert tests", () => {
             parent: 12,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 12
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 11,
@@ -283,9 +333,11 @@ describe("structureTree insert tests", () => {
             parent: 10,
             right: 13,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 13
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -293,9 +345,11 @@ describe("structureTree insert tests", () => {
             parent: 12,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 14
+            attributes: undefined,
             color: Color.Red,
             id: "newNode",
             left: SENTINEL_INDEX,
@@ -304,6 +358,7 @@ describe("structureTree insert tests", () => {
             right: SENTINEL_INDEX,
             styles: undefined,
             tag: "img",
+            tagType: TagType.StartEndTag,
           },
         ],
         root: 5,
@@ -315,7 +370,7 @@ describe("structureTree insert tests", () => {
 
     const resultState = pageReducer(
       state,
-      insertStructure("pageId", 8, "img", "newNode"),
+      insertStructure("pageId", 8, "img", TagType.StartEndTag, "newNode"),
     );
     expect(resultState).toStrictEqual(expectedState);
   });
@@ -332,6 +387,7 @@ describe("structureTree insert tests", () => {
           SENTINEL_STRUCTURE,
           {
             // 1
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -339,9 +395,11 @@ describe("structureTree insert tests", () => {
             parent: 2,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 2
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 1,
@@ -349,9 +407,11 @@ describe("structureTree insert tests", () => {
             parent: 3,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 3
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 2,
@@ -359,9 +419,11 @@ describe("structureTree insert tests", () => {
             parent: 5,
             right: 4,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 4
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -369,9 +431,11 @@ describe("structureTree insert tests", () => {
             parent: 3,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 5
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 3,
@@ -379,9 +443,11 @@ describe("structureTree insert tests", () => {
             parent: SENTINEL_INDEX,
             right: 7,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 6
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -389,9 +455,11 @@ describe("structureTree insert tests", () => {
             parent: 7,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 7
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 6,
@@ -399,9 +467,11 @@ describe("structureTree insert tests", () => {
             parent: 5,
             right: 10,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 8
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -409,9 +479,11 @@ describe("structureTree insert tests", () => {
             parent: 9,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 9
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 8,
@@ -419,9 +491,11 @@ describe("structureTree insert tests", () => {
             parent: 10,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 10
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: 9,
@@ -429,9 +503,11 @@ describe("structureTree insert tests", () => {
             parent: 7,
             right: 12,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 11
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -439,9 +515,11 @@ describe("structureTree insert tests", () => {
             parent: 12,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 12
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 11,
@@ -449,9 +527,11 @@ describe("structureTree insert tests", () => {
             parent: 10,
             right: 13,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 13
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -459,6 +539,7 @@ describe("structureTree insert tests", () => {
             parent: 12,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
         ],
         root: 5,
@@ -479,6 +560,7 @@ describe("structureTree insert tests", () => {
           SENTINEL_STRUCTURE,
           {
             // 1
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -486,9 +568,11 @@ describe("structureTree insert tests", () => {
             parent: 2,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 2
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 1,
@@ -496,9 +580,11 @@ describe("structureTree insert tests", () => {
             parent: 3,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 3
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 2,
@@ -506,9 +592,11 @@ describe("structureTree insert tests", () => {
             parent: 5,
             right: 4,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 4
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -516,9 +604,11 @@ describe("structureTree insert tests", () => {
             parent: 3,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 5
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 3,
@@ -526,9 +616,11 @@ describe("structureTree insert tests", () => {
             parent: SENTINEL_INDEX,
             right: 7,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 6
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -536,9 +628,11 @@ describe("structureTree insert tests", () => {
             parent: 7,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 7
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 6,
@@ -546,9 +640,11 @@ describe("structureTree insert tests", () => {
             parent: 5,
             right: 10,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 8
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -556,9 +652,11 @@ describe("structureTree insert tests", () => {
             parent: 9,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 9
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 8,
@@ -566,9 +664,11 @@ describe("structureTree insert tests", () => {
             parent: 10,
             right: 14,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 10
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: 9,
@@ -576,9 +676,11 @@ describe("structureTree insert tests", () => {
             parent: 7,
             right: 12,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 11
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -586,9 +688,11 @@ describe("structureTree insert tests", () => {
             parent: 12,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 12
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 11,
@@ -596,9 +700,11 @@ describe("structureTree insert tests", () => {
             parent: 10,
             right: 13,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 13
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -606,9 +712,11 @@ describe("structureTree insert tests", () => {
             parent: 12,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 14
+            attributes: undefined,
             color: Color.Red,
             id: "newNode",
             left: SENTINEL_INDEX,
@@ -617,6 +725,7 @@ describe("structureTree insert tests", () => {
             right: SENTINEL_INDEX,
             styles: undefined,
             tag: "img",
+            tagType: TagType.StartEndTag,
           },
         ],
         root: 5,
@@ -628,7 +737,15 @@ describe("structureTree insert tests", () => {
 
     const resultState = pageReducer(
       state,
-      insertStructure("pageId", 10, "img", "newNode"),
+      insertStructure(
+        "pageId",
+        10,
+        "img",
+        TagType.StartEndTag,
+        "newNode",
+        undefined,
+        undefined,
+      ),
     );
     expect(resultState).toStrictEqual(expectedState);
   });
@@ -645,6 +762,7 @@ describe("structureTree insert tests", () => {
           SENTINEL_STRUCTURE,
           {
             // 1
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -652,9 +770,11 @@ describe("structureTree insert tests", () => {
             parent: 2,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 2
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 1,
@@ -662,9 +782,11 @@ describe("structureTree insert tests", () => {
             parent: 3,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 3
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 2,
@@ -672,9 +794,11 @@ describe("structureTree insert tests", () => {
             parent: 5,
             right: 4,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 4
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -682,9 +806,11 @@ describe("structureTree insert tests", () => {
             parent: 3,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 5
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 3,
@@ -692,9 +818,11 @@ describe("structureTree insert tests", () => {
             parent: SENTINEL_INDEX,
             right: 7,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 6
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -702,9 +830,11 @@ describe("structureTree insert tests", () => {
             parent: 7,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 7
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 6,
@@ -712,9 +842,11 @@ describe("structureTree insert tests", () => {
             parent: 5,
             right: 10,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 8
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -722,9 +854,11 @@ describe("structureTree insert tests", () => {
             parent: 9,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 9
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 8,
@@ -732,9 +866,11 @@ describe("structureTree insert tests", () => {
             parent: 10,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 10
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: 9,
@@ -742,9 +878,11 @@ describe("structureTree insert tests", () => {
             parent: 7,
             right: 12,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 11
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -752,9 +890,11 @@ describe("structureTree insert tests", () => {
             parent: 12,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 12
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 11,
@@ -762,9 +902,11 @@ describe("structureTree insert tests", () => {
             parent: 10,
             right: 13,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 13
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -772,6 +914,7 @@ describe("structureTree insert tests", () => {
             parent: 12,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
         ],
         root: 5,
@@ -792,6 +935,7 @@ describe("structureTree insert tests", () => {
           SENTINEL_STRUCTURE,
           {
             // 1
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -799,9 +943,11 @@ describe("structureTree insert tests", () => {
             parent: 2,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 2
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 1,
@@ -809,9 +955,11 @@ describe("structureTree insert tests", () => {
             parent: 3,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 3
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 2,
@@ -819,9 +967,11 @@ describe("structureTree insert tests", () => {
             parent: 5,
             right: 4,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 4
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -829,9 +979,11 @@ describe("structureTree insert tests", () => {
             parent: 3,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 5
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 3,
@@ -839,9 +991,11 @@ describe("structureTree insert tests", () => {
             parent: SENTINEL_INDEX,
             right: 10,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 6
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -849,9 +1003,11 @@ describe("structureTree insert tests", () => {
             parent: 7,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 7
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: 6,
@@ -859,9 +1015,11 @@ describe("structureTree insert tests", () => {
             parent: 10,
             right: 9,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 8
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -869,9 +1027,11 @@ describe("structureTree insert tests", () => {
             parent: 9,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 9
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 8,
@@ -879,9 +1039,11 @@ describe("structureTree insert tests", () => {
             parent: 7,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 10
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 7,
@@ -889,9 +1051,11 @@ describe("structureTree insert tests", () => {
             parent: 5,
             right: 12,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 11
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -899,9 +1063,11 @@ describe("structureTree insert tests", () => {
             parent: 12,
             right: SENTINEL_INDEX,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 12
+            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: 11,
@@ -909,9 +1075,11 @@ describe("structureTree insert tests", () => {
             parent: 10,
             right: 13,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 13
+            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -919,9 +1087,11 @@ describe("structureTree insert tests", () => {
             parent: 12,
             right: 14,
             tag: "span",
+            tagType: TagType.StartEndTag,
           },
           {
             // 14
+            attributes: undefined,
             color: Color.Red,
             id: "newNode",
             left: SENTINEL_INDEX,
@@ -930,6 +1100,7 @@ describe("structureTree insert tests", () => {
             right: SENTINEL_INDEX,
             styles: undefined,
             tag: "img",
+            tagType: TagType.StartEndTag,
           },
         ],
         root: 5,
@@ -941,7 +1112,7 @@ describe("structureTree insert tests", () => {
 
     const resultState = pageReducer(
       state,
-      insertStructure("pageId", 14, "img", "newNode"),
+      insertStructure("pageId", 14, "img", TagType.StartEndTag, "newNode"),
     );
     expect(resultState).toStrictEqual(expectedState);
   });

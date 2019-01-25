@@ -1,24 +1,28 @@
 import { PageContentMutable, Color } from "../pageModel";
-import { KeyValueStr, StructureNode } from "./structureModel";
+import { StructureNode } from "./structureModel";
 import { SENTINEL_INDEX } from "../tree/tree";
 import { insertNode, fixInsert } from "../tree/insert";
+import { InsertStructureAction } from "./actions";
 
 /**
  * Inserts a new `StructureNode` into `.structure.nodes`.
  * @param page The page in which the structure node is going to be inserted.
- * @param offset The insertion position of the node.
- * @param tag The tag of the new node.
- * @param id The id of the new node.
- * @param styles The inline CSS of the new node.
+ * @param insertStructureAction The insertion action.
  */
 export function insertStructureNode(
   page: PageContentMutable,
-  offset: number,
-  tag: string,
-  id: string,
-  styles?: KeyValueStr,
+  insertStructureAction: InsertStructureAction,
 ): void {
+  const {
+    attributes,
+    id,
+    styles,
+    tag,
+    tagType,
+    offset,
+  } = insertStructureAction;
   const newNode: StructureNode = {
+    attributes,
     color: Color.Red,
     id,
     left: SENTINEL_INDEX,
@@ -27,6 +31,7 @@ export function insertStructureNode(
     right: SENTINEL_INDEX,
     styles,
     tag,
+    tagType,
   };
   insertNode(page.structure, newNode, offset);
   fixInsert(page.structure, page.structure.nodes.length - 1);
