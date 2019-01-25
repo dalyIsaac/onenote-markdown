@@ -4,10 +4,15 @@ import {
   calculateLineFeedCount,
 } from "../contentTree/tree";
 import { Node, NodeMutable } from "../pageModel";
-import { ContentNodeMutable, isContentNode } from "../contentTree/contentModel";
+import {
+  ContentNodeMutable,
+  isContentNode,
+  ContentRedBlackTree,
+} from "../contentTree/contentModel";
 import {
   isStructureNode,
   StructureNodeMutable,
+  StructureRedBlackTree,
 } from "../structureTree/structureModel";
 import { calculateLengthDelta } from "../structureTree/tree";
 
@@ -152,23 +157,17 @@ export function recomputeContentTreeMetadata(
 
   if (isContentNode(tree.nodes[x])) {
     lengthDelta =
-      calculateCharCount(
-        tree as { nodes: ContentNodeMutable[]; root: number },
-        tree.nodes[x].left,
-      ) - (tree.nodes[x] as ContentNodeMutable).leftCharCount;
+      calculateCharCount(tree as ContentRedBlackTree, tree.nodes[x].left) -
+      (tree.nodes[x] as ContentNodeMutable).leftCharCount;
     lineFeedDelta =
-      calculateLineFeedCount(
-        tree as { nodes: ContentNodeMutable[]; root: number },
-        tree.nodes[x].left,
-      ) - (tree.nodes[x] as ContentNodeMutable).leftLineFeedCount;
+      calculateLineFeedCount(tree as ContentRedBlackTree, tree.nodes[x].left) -
+      (tree.nodes[x] as ContentNodeMutable).leftLineFeedCount;
     (tree.nodes[x] as ContentNodeMutable).leftCharCount += lengthDelta;
     (tree.nodes[x] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta; // go upwards till root. O(logN)
   } else if (isStructureNode(tree.nodes[x])) {
     lengthDelta =
-      calculateLengthDelta(
-        tree as { nodes: StructureNodeMutable[]; root: number },
-        tree.nodes[x].left,
-      ) - (tree.nodes[x] as StructureNodeMutable).leftSubTreeLength;
+      calculateLengthDelta(tree as StructureRedBlackTree, tree.nodes[x].left) -
+      (tree.nodes[x] as StructureNodeMutable).leftSubTreeLength;
     (tree.nodes[x] as StructureNodeMutable).leftSubTreeLength += lengthDelta;
   }
 

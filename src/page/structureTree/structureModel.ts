@@ -31,3 +31,8 @@ export interface StructureNodeMutable extends NodeMutable {
   styles?: KeyValueStr;
   attributes?: KeyValueStr;
 }
+
+export interface StructureRedBlackTree {
+  nodes: StructureNode[];
+  root: number;
+}

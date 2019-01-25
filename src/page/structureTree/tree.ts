@@ -1,6 +1,10 @@
 import { Color } from "../pageModel";
 import { SENTINEL_INDEX } from "../tree/tree";
-import { StructureNode, StructureNodeMutable } from "./structureModel";
+import {
+  StructureNode,
+  StructureRedBlackTree,
+  TagType,
+} from "./structureModel";
 
 export const SENTINEL_STRUCTURE: StructureNode = {
   color: Color.Black,
@@ -10,6 +14,7 @@ export const SENTINEL_STRUCTURE: StructureNode = {
   parent: SENTINEL_INDEX,
   right: SENTINEL_INDEX,
   tag: "",
+  tagType: TagType.StartEndTag,
 };
 
 /**
@@ -18,10 +23,7 @@ export const SENTINEL_STRUCTURE: StructureNode = {
  * @param index The index of the node in the `nodes` array of the red-black tree.
  */
 export function calculateLengthDelta(
-  tree: {
-    nodes: StructureNodeMutable[];
-    root: number;
-  },
+  tree: StructureRedBlackTree,
   index: number,
 ): number {
   if (index === SENTINEL_INDEX) {

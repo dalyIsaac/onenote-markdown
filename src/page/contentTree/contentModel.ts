@@ -169,3 +169,8 @@ export interface ContentNodeMutable extends NodeMutable {
 }
 
 //#endregion
+
+export interface ContentRedBlackTree {
+  nodes: ContentNode[];
+  root: number;
+}

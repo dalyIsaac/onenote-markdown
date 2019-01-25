@@ -10,6 +10,7 @@ import {
   ContentNode,
   ContentNodeMutable,
   NEWLINE,
+  ContentRedBlackTree,
 } from "./contentModel";
 
 /**
@@ -208,7 +209,7 @@ export function getNodeContent(nodeIndex: number, page: PageContent): string {
  * @param index The index of the node in the `node` array of the page/piece table to find the character count for.
  */
 export function calculateCharCount(
-  tree: { nodes: ContentNodeMutable[]; root: number },
+  tree: ContentRedBlackTree,
   index: number,
 ): number {
   if (index === SENTINEL_INDEX) {
@@ -226,7 +227,7 @@ export function calculateCharCount(
  * @param index The index of the node in the `node` array of the page/piece table to find the line feed count for.
  */
 export function calculateLineFeedCount(
-  tree: { nodes: ContentNodeMutable[]; root: number },
+  tree: ContentRedBlackTree,
   index: number,
 ): number {
   if (index === SENTINEL_INDEX) {
