@@ -1,5 +1,5 @@
 import { Color, RedBlackTree, NodeMutable } from "../pageModel";
-import { SENTINEL_INDEX, recomputeContentTreeMetadata } from "./tree";
+import { SENTINEL_INDEX, recomputeTreeMetadata } from "./tree";
 import { ContentNodeMutable, isContentNode } from "../contentTree/contentModel";
 import { leftRotate, rightRotate } from "./rotate";
 import { isStructureNode } from "../structureTree/structureModel";
@@ -10,7 +10,7 @@ import { isStructureNode } from "../structureTree/structureModel";
  * @param x The index of the node in the `node` array, which is the basis for fixing the tree.
  */
 export function fixInsert(tree: RedBlackTree, x: number): void {
-  recomputeContentTreeMetadata(tree, x);
+  recomputeTreeMetadata(tree, x);
 
   tree.nodes[x] = { ...tree.nodes[x] };
   if (x === tree.root) {

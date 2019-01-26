@@ -19,8 +19,11 @@ import { PageContent, PageContentMutable, StatePages } from "./pageModel";
 import {
   INSERT_STRUCTURE_NODE,
   InsertStructureAction,
+  DELETE_STRUCTURE_NODE,
+  DeleteStructureAction,
 } from "./structureTree/actions";
 import { insertStructureNode } from "./structureTree/insert";
+import { deleteStructureNode } from "./structureTree/delete";
 
 /**
  * Reducer for the slice of the state referring to the storage of a page.
@@ -144,6 +147,25 @@ export default function pageReducer(
       newState = {
         ...state,
         [insertStructureAction.pageId]: extractedPage,
+      };
+      return newState;
+    }
+    case DELETE_STRUCTURE_NODE: {
+      const deleteStructureAction = action as DeleteStructureAction;
+      extractedPage = {
+        ...state[deleteStructureAction.pageId],
+        structure: {
+          nodes: [...state[deleteStructureAction.pageId].structure.nodes],
+          root: state[deleteStructureAction.pageId].structure.root,
+        },
+      };
+      deleteStructureNode(
+        extractedPage as PageContentMutable,
+        deleteStructureAction.nodeIndex,
+      );
+      newState = {
+        ...state,
+        [deleteStructureAction.pageId]: extractedPage,
       };
       return newState;
     }

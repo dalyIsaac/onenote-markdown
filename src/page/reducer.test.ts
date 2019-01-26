@@ -23,6 +23,8 @@ import {
 import pageReducer from "./reducer";
 import { SENTINEL_STRUCTURE } from "./structureTree/tree";
 import { SENTINEL_INDEX } from "./tree/tree";
+import { TagType } from "./structureTree/structureModel";
+import { deleteStructure } from "./structureTree/actions";
 
 export const getStartPage = (): PageContentMutable => ({
   buffers: [
@@ -860,5 +862,65 @@ describe("page/reducer", () => {
 
   test("Create new page", () => {
     pageReducerTest(LF_CONTENT, LF);
+  });
+
+  test("Delete structure node", () => {
+    const page: PageContentMutable = {
+      buffers: [],
+      content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+      newlineFormat: NEWLINE.LF,
+      previouslyInsertedContentNodeIndex: null,
+      previouslyInsertedContentNodeOffset: null,
+      structure: {
+        nodes: [
+          SENTINEL_STRUCTURE,
+          {
+            // 1
+            color: Color.Black,
+            id: "helloWorld",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            tag: "id",
+            tagType: TagType.StartEndTag,
+          },
+        ],
+        root: 1,
+      },
+    };
+    const state: StatePages = {
+      pageId: page,
+    };
+    const expectedPage: PageContentMutable = {
+      buffers: [],
+      content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+      newlineFormat: NEWLINE.LF,
+      previouslyInsertedContentNodeIndex: null,
+      previouslyInsertedContentNodeOffset: null,
+      structure: {
+        nodes: [
+          SENTINEL_STRUCTURE,
+          {
+            // 1
+            color: Color.Black,
+            id: "helloWorld",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            tag: "id",
+            tagType: TagType.StartEndTag,
+          },
+        ],
+        root: SENTINEL_INDEX,
+      },
+    };
+    const expectedState: StatePages = {
+      pageId: expectedPage,
+    };
+    const action = deleteStructure("pageId", 1);
+    const result = pageReducer(state, action);
+    expect(result).toStrictEqual(expectedState);
   });
 });

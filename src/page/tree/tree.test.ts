@@ -1,5 +1,5 @@
 import { getPage } from "../contentTree/tree.test";
-import { nextNode, prevNode, recomputeContentTreeMetadata } from "./tree";
+import { nextNode, prevNode, recomputeTreeMetadata } from "./tree";
 import { ContentNodeMutable } from "../contentTree/contentModel";
 
 describe("Common tree operations", () => {
@@ -71,7 +71,7 @@ describe("Common tree operations", () => {
 
   test("Recompute tree metadata: add a node to the end", () => {
     const page = getPage(); // hypothetically added the last node
-    recomputeContentTreeMetadata(page.content, 7);
+    recomputeTreeMetadata(page.content, 7);
     expect(page).toStrictEqual(getPage());
   });
 
@@ -84,7 +84,7 @@ describe("Common tree operations", () => {
       .nodes[6] as ContentNodeMutable).leftLineFeedCount += 5;
     (expectedPage.content.nodes[5] as ContentNodeMutable).lineFeedCount += 5;
 
-    recomputeContentTreeMetadata(page.content, 4);
+    recomputeTreeMetadata(page.content, 4);
     expect(page).toStrictEqual(expectedPage);
   });
 });

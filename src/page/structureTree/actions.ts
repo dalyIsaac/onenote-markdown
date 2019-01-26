@@ -35,3 +35,20 @@ export const insertStructure = (
   type: INSERT_STRUCTURE_NODE,
 });
 //#endregion
+
+//#region Delete structure node
+export const DELETE_STRUCTURE_NODE = "DELETE_STRUCTURE_NODE";
+
+export interface DeleteStructureAction extends PageActionPartial {
+  readonly nodeIndex: number;
+}
+
+export const deleteStructure = (
+  pageId: string,
+  index: number,
+): DeleteStructureAction => ({
+  nodeIndex: index,
+  pageId,
+  type: DELETE_STRUCTURE_NODE,
+});
+//#endregion

@@ -2,7 +2,7 @@
  * Contains common items.
  */
 
-import { Color, PageContent, PageContentMutable } from "../pageModel";
+import { Color, PageContent } from "../pageModel";
 import { SENTINEL_INDEX } from "../tree/tree";
 import {
   BufferCursor,
@@ -244,9 +244,9 @@ export function calculateLineFeedCount(
 /**
  * Ensures that the `SENTINEL` node in the piece table is true to the values of the `SENTINEL` node.
  * This function does mutate the `SENTINEL` node, to ensure that `SENTINEL` is a singleton.
- * @param page The page/piece table which contains the `SENTINEL` node.
+ * @param tree The red-black tree for the content.
  */
-export function resetSentinel(page: PageContentMutable): void {
+export function resetSentinelContent(tree: ContentRedBlackTree): void {
   (SENTINEL_CONTENT as ContentNodeMutable).bufferIndex = 0;
   (SENTINEL_CONTENT as ContentNodeMutable).start = { column: 0, line: 0 };
   (SENTINEL_CONTENT as ContentNodeMutable).end = { column: 0, line: 0 };
@@ -258,36 +258,36 @@ export function resetSentinel(page: PageContentMutable): void {
   (SENTINEL_CONTENT as ContentNodeMutable).parent = SENTINEL_INDEX;
   (SENTINEL_CONTENT as ContentNodeMutable).left = SENTINEL_INDEX;
   (SENTINEL_CONTENT as ContentNodeMutable).right = SENTINEL_INDEX;
-  page.content.nodes[0] = SENTINEL_CONTENT;
+  tree.nodes[0] = SENTINEL_CONTENT;
 }
 
 /**
  * Goes up the tree, and updates the metadata of each node.
- * @param page The page/piece table.
+ * @param tree The red-black tree for content.
  * @param x The index of the current node.
  * @param charCountDelta The character count delta to be applied.
  * @param lineFeedCountDelta The line feed count delta to be applied.
  */
-export function updateTreeMetadata(
-  page: PageContentMutable,
+export function updateContentTreeMetadata(
+  tree: ContentRedBlackTree,
   x: number,
   charCountDelta: number,
   lineFeedCountDelta: number,
 ): void {
   // node length change or line feed count change
-  while (x !== page.content.root && x !== SENTINEL_INDEX) {
-    if (page.content.nodes[page.content.nodes[x].parent].left === x) {
-      page.content.nodes[page.content.nodes[x].parent] = {
-        ...page.content.nodes[page.content.nodes[x].parent],
+  while (x !== tree.root && x !== SENTINEL_INDEX) {
+    if (tree.nodes[tree.nodes[x].parent].left === x) {
+      tree.nodes[tree.nodes[x].parent] = {
+        ...tree.nodes[tree.nodes[x].parent],
         leftCharCount:
-          page.content.nodes[page.content.nodes[x].parent].leftCharCount +
+          (tree.nodes[tree.nodes[x].parent] as ContentNode).leftCharCount +
           charCountDelta,
         leftLineFeedCount:
-          page.content.nodes[page.content.nodes[x].parent].leftLineFeedCount +
+          (tree.nodes[tree.nodes[x].parent] as ContentNode).leftLineFeedCount +
           lineFeedCountDelta,
       };
     }
 
-    x = page.content.nodes[x].parent;
+    x = tree.nodes[x].parent;
   }
 }

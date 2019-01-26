@@ -1,21 +1,14 @@
+import { deleteNode, deleteBetweenNodes } from "../tree/delete";
 import { Color, PageContent, PageContentMutable } from "../pageModel";
 import {
   nextNode,
   SENTINEL_INDEX,
-  treeMinimum,
-  recomputeContentTreeMetadata,
+  recomputeTreeMetadata,
+  resetSentinel,
 } from "../tree/tree";
 import { ContentNode, ContentNodeMutable } from "./contentModel";
 import { insertNode, fixInsert } from "../tree/insert";
-import {
-  calculateCharCount,
-  calculateLineFeedCount,
-  findNodeAtOffset,
-  NodePositionOffset,
-  resetSentinel,
-  updateTreeMetadata,
-} from "./tree";
-import { detach, fixDelete } from "../tree/delete";
+import { findNodeAtOffset, NodePositionOffset } from "./tree";
 
 /**
  * The logical offset range for the content to be deleted.
@@ -72,191 +65,6 @@ function getLineFeedCountsForOffsets(
     lineFeedCountBeforeNodeStart,
     lineFeedCountBetweenOffset,
   };
-}
-
-/**
- * Deletes a node from the page/piece table. The node itself still resides inside the piece table, however `parent`,
- * `left`, and `right` will point to `SENTINEL_INDEX`, and no other nodes will point to the deleted node.
- * @param page The page/piece table.
- * @param z The index of the node to delete.
- */
-export function deleteNode(page: PageContentMutable, z: number): void {
-  page.content.nodes[z] = { ...page.content.nodes[z] };
-  let xTemp: number;
-  let yTemp: number;
-
-  if (page.content.nodes[z].left === SENTINEL_INDEX) {
-    yTemp = z;
-    page.content.nodes[yTemp] = page.content.nodes[z];
-    xTemp = page.content.nodes[yTemp].right;
-  } else if (page.content.nodes[z].right === SENTINEL_INDEX) {
-    yTemp = z;
-    page.content.nodes[yTemp] = page.content.nodes[z];
-    xTemp = page.content.nodes[yTemp].left;
-  } else {
-    const result = treeMinimum(page.content.nodes, page.content.nodes[z].right);
-    yTemp = result.index;
-    page.content.nodes[yTemp] = { ...(result.node as ContentNode) };
-    xTemp = page.content.nodes[yTemp].right;
-  }
-
-  // This ensures that x and y don't change after this point
-  const x = xTemp;
-  const y = yTemp;
-
-  page.content.nodes[x] = { ...page.content.nodes[x] };
-
-  if (y === page.content.root) {
-    page.content.root = x;
-
-    // if page.nodes[x] is null, we are removing the only node
-    (page.content.nodes[x] as ContentNodeMutable).color = Color.Black;
-    detach(page.content, z);
-    page.content.nodes[page.content.root] = {
-      ...page.content.nodes[page.content.root],
-      parent: SENTINEL_INDEX,
-    };
-    resetSentinel(page);
-    return;
-  }
-
-  const yWasRed = page.content.nodes[y].color === Color.Red;
-
-  if (y === page.content.nodes[page.content.nodes[y].parent].left) {
-    page.content.nodes[page.content.nodes[y].parent] = {
-      ...page.content.nodes[page.content.nodes[y].parent],
-      left: x,
-    };
-  } else {
-    page.content.nodes[page.content.nodes[y].parent] = {
-      ...page.content.nodes[page.content.nodes[y].parent],
-      right: x,
-    };
-  }
-
-  if (y === z) {
-    (page.content.nodes[x] as ContentNodeMutable).parent =
-      page.content.nodes[y].parent;
-    recomputeContentTreeMetadata(page.content, x);
-  } else {
-    if (page.content.nodes[y].parent === z) {
-      (page.content.nodes[x] as ContentNodeMutable).parent = y;
-    } else {
-      (page.content.nodes[x] as ContentNodeMutable).parent =
-        page.content.nodes[y].parent;
-    }
-
-    // as we make changes to page.nodes[x]'s hierarchy, update leftCharCount of subtree first
-    recomputeContentTreeMetadata(page.content, x);
-
-    (page.content.nodes[y] as ContentNodeMutable).left =
-      page.content.nodes[z].left;
-    (page.content.nodes[y] as ContentNodeMutable).right =
-      page.content.nodes[z].right;
-    (page.content.nodes[y] as ContentNodeMutable).parent =
-      page.content.nodes[z].parent;
-    (page.content.nodes[y] as ContentNodeMutable).color =
-      page.content.nodes[z].color;
-
-    if (z === page.content.root) {
-      page.content.root = y;
-    } else {
-      if (z === page.content.nodes[page.content.nodes[z].parent].left) {
-        page.content.nodes[page.content.nodes[z].parent] = {
-          ...page.content.nodes[page.content.nodes[z].parent],
-          left: y,
-        };
-      } else {
-        page.content.nodes[page.content.nodes[z].parent] = {
-          ...page.content.nodes[page.content.nodes[z].parent],
-          right: y,
-        };
-      }
-    }
-
-    if (page.content.nodes[y].left !== SENTINEL_INDEX) {
-      page.content.nodes[page.content.nodes[y].left] = {
-        ...page.content.nodes[page.content.nodes[y].left],
-        parent: y,
-      };
-    }
-    if (page.content.nodes[y].right !== SENTINEL_INDEX) {
-      page.content.nodes[page.content.nodes[y].right] = {
-        ...page.content.nodes[page.content.nodes[y].right],
-        parent: y,
-      };
-    }
-    // update metadata
-    // we replace page.nodes[z] with page.nodes[y], so in this sub tree, the length change is page.nodes[z].item.length
-    (page.content.nodes[y] as ContentNodeMutable).leftCharCount =
-      page.content.nodes[z].leftCharCount;
-    (page.content.nodes[y] as ContentNodeMutable).leftLineFeedCount =
-      page.content.nodes[z].leftLineFeedCount;
-    recomputeContentTreeMetadata(page.content, y);
-  }
-
-  detach(page.content, z);
-
-  if (page.content.nodes[page.content.nodes[x].parent].left === x) {
-    const newSizeLeft = calculateCharCount(page.content, x);
-    const newLFLeft = calculateLineFeedCount(page.content, x);
-    if (
-      newSizeLeft !==
-        page.content.nodes[page.content.nodes[x].parent].leftCharCount ||
-      newLFLeft !==
-        page.content.nodes[page.content.nodes[x].parent].leftLineFeedCount
-    ) {
-      const charDelta =
-        newSizeLeft -
-        page.content.nodes[page.content.nodes[x].parent].leftCharCount;
-      const lineFeedDelta =
-        newLFLeft -
-        page.content.nodes[page.content.nodes[x].parent].leftLineFeedCount;
-      page.content.nodes[page.content.nodes[x].parent] = {
-        ...page.content.nodes[page.content.nodes[x].parent],
-        leftCharCount: newSizeLeft,
-        leftLineFeedCount: newSizeLeft,
-      };
-      updateTreeMetadata(
-        page,
-        page.content.nodes[x].parent,
-        charDelta,
-        lineFeedDelta,
-      );
-    }
-  }
-
-  recomputeContentTreeMetadata(page.content, page.content.nodes[x].parent);
-
-  if (yWasRed) {
-    resetSentinel(page);
-    return;
-  }
-
-  fixDelete(page.content, x);
-  resetSentinel(page);
-  return;
-}
-
-/**
- * Deletes nodes inorder between the start and end index.
- * Format: `startIndex <= in order node to delete < endIndex`
- * @param page The page/piece table.
- * @param startIndex The index of the first node to delete.
- * @param endIndex The index of the node after the last node to delete.
- */
-function deleteBetweenNodes(
-  page: PageContentMutable,
-  startIndex: number,
-  endIndex: number,
-): void {
-  let currentIndex = startIndex;
-  let nextIndex = currentIndex;
-  while (nextIndex !== endIndex) {
-    currentIndex = nextIndex;
-    nextIndex = nextNode(page.content.nodes, currentIndex).index;
-    deleteNode(page, currentIndex);
-  }
 }
 
 /**
@@ -385,7 +193,7 @@ function updateNode(
   newNode.right = page.content.nodes[index].right;
   newNode.color = page.content.nodes[index].color;
   page.content.nodes[index] = newNode;
-  recomputeContentTreeMetadata(page.content, index);
+  recomputeTreeMetadata(page.content, index);
 }
 
 /**
@@ -458,7 +266,7 @@ export function deleteContent(
     ] as ContentNodeMutable) = nodeBeforeContent;
     if (oldNodeStartPosition !== oldNodeEndPosition) {
       // deleting from a point in a node to the end of the content
-      deleteNode(page, oldNodeEndPosition.nodeIndex);
+      deleteNode(page.content, oldNodeEndPosition.nodeIndex);
       nodeAfterLastNodeToDelete = SENTINEL_INDEX;
       firstNodeToDelete = nextNode(page.content.nodes, firstNodeToDelete).index;
     }
@@ -467,7 +275,7 @@ export function deleteContent(
     updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
   } else if (oldNodeStartPosition === oldNodeEndPosition) {
     // delete the entire node
-    deleteNode(page, oldNodeStartPosition.nodeIndex);
+    deleteNode(page.content, oldNodeStartPosition.nodeIndex);
   } else {
     // deleting up to and including the last node
     nodeAfterLastNodeToDelete = nextNode(
@@ -480,7 +288,11 @@ export function deleteContent(
   page.previouslyInsertedContentNodeOffset = null;
 
   if (oldNodeStartPosition.nodeIndex !== oldNodeEndPosition.nodeIndex) {
-    deleteBetweenNodes(page, firstNodeToDelete, nodeAfterLastNodeToDelete);
+    deleteBetweenNodes(
+      page.content,
+      firstNodeToDelete,
+      nodeAfterLastNodeToDelete,
+    );
   }
-  resetSentinel(page);
+  resetSentinel(page.content);
 }
