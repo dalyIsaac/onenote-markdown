@@ -162,8 +162,8 @@ export interface PageContentMutable {
  * Possible node colors, inside the red and black tree.
  */
 export enum Color {
-  Red = 0,
-  Black = 1,
+  Red = "Red",
+  Black = "Black",
 }
 
 //#region StatePages
