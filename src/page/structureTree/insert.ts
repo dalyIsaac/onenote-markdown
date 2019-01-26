@@ -20,6 +20,7 @@ export function insertStructureNode(
     tag,
     tagType,
     offset,
+    length,
   } = insertStructureAction;
   const newNode: StructureNode = {
     attributes,
@@ -27,6 +28,7 @@ export function insertStructureNode(
     id,
     left: SENTINEL_INDEX,
     leftSubTreeLength: 0,
+    length,
     parent: SENTINEL_INDEX,
     right: SENTINEL_INDEX,
     styles,

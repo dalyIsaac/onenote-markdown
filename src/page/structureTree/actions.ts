@@ -11,6 +11,7 @@ export interface InsertStructureAction extends PageActionPartial {
   readonly styles?: KeyValueStr;
   readonly attributes?: KeyValueStr;
   readonly offset: number;
+  readonly length: number;
 }
 
 /**
@@ -19,6 +20,7 @@ export interface InsertStructureAction extends PageActionPartial {
 export const insertStructure = (
   pageId: string,
   offset: number,
+  length: number,
   tag: string,
   tagType: TagType,
   id: string,
@@ -27,6 +29,7 @@ export const insertStructure = (
 ): InsertStructureAction => ({
   attributes,
   id,
+  length,
   offset,
   pageId,
   styles,

@@ -4,7 +4,7 @@ import { SENTINEL_INDEX } from "./tree";
 import { ContentNode, NEWLINE } from "../contentTree/contentModel";
 import { leftRotate, rightRotate } from "./rotate";
 import { SENTINEL_CONTENT } from "../contentTree/tree";
-import { StructureNode } from "../structureTree/structureModel";
+import { StructureNode, TagType } from "../structureTree/structureModel";
 
 describe("Functions for performing rotations on the piece table/red-black tree.", () => {
   describe("Content nodes", () => {
@@ -651,9 +651,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: SENTINEL_INDEX,
           leftSubTreeLength: 0,
+          length: 0,
           parent: 2,
           right: SENTINEL_INDEX,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 2
@@ -661,9 +663,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: 1,
           leftSubTreeLength: 1,
+          length: 0,
           parent: 3,
           right: SENTINEL_INDEX,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 3
@@ -671,9 +675,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: 2,
           leftSubTreeLength: 2,
+          length: 0,
           parent: 5,
           right: 4,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 4
@@ -681,9 +687,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: SENTINEL_INDEX,
           leftSubTreeLength: 0,
+          length: 0,
           parent: 3,
           right: SENTINEL_INDEX,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 5
@@ -691,9 +699,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: 3,
           leftSubTreeLength: 4,
+          length: 0,
           parent: SENTINEL_INDEX,
           right: 7,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 6
@@ -701,9 +711,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: SENTINEL_INDEX,
           leftSubTreeLength: 0,
+          length: 0,
           parent: 7,
           right: SENTINEL_INDEX,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 7
@@ -711,9 +723,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: 6,
           leftSubTreeLength: 1,
+          length: 0,
           parent: 5,
           right: 11,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 8
@@ -721,9 +735,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: SENTINEL_INDEX,
           leftSubTreeLength: 0,
+          length: 0,
           parent: 9,
           right: SENTINEL_INDEX,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 9
@@ -731,9 +747,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: 8,
           leftSubTreeLength: 1,
+          length: 0,
           parent: 11,
           right: 10,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 10
@@ -741,9 +759,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: SENTINEL_INDEX,
           leftSubTreeLength: 0,
+          length: 0,
           parent: 9,
           right: SENTINEL_INDEX,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 11
@@ -751,9 +771,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: 9,
           leftSubTreeLength: 3,
+          length: 0,
           parent: 7,
           right: 12,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 12
@@ -761,9 +783,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: SENTINEL_INDEX,
           leftSubTreeLength: 0,
+          length: 0,
           parent: 11,
           right: 14,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 13
@@ -771,9 +795,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: SENTINEL_INDEX,
           leftSubTreeLength: 0,
+          length: 0,
           parent: 14,
           right: SENTINEL_INDEX,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 14
@@ -781,9 +807,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: 13,
           leftSubTreeLength: 1,
+          length: 0,
           parent: 12,
           right: SENTINEL_INDEX,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
       ];
       const pieceTable: PageContentMutable = {
@@ -807,9 +835,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: SENTINEL_INDEX,
           leftSubTreeLength: 0,
+          length: 0,
           parent: 2,
           right: SENTINEL_INDEX,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 2
@@ -817,9 +847,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: 1,
           leftSubTreeLength: 1,
+          length: 0,
           parent: 3,
           right: SENTINEL_INDEX,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 3
@@ -827,9 +859,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: 2,
           leftSubTreeLength: 2,
+          length: 0,
           parent: 5,
           right: 4,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 4
@@ -837,9 +871,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: SENTINEL_INDEX,
           leftSubTreeLength: 0,
+          length: 0,
           parent: 3,
           right: SENTINEL_INDEX,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 5
@@ -847,9 +883,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: 3,
           leftSubTreeLength: 4,
+          length: 0,
           parent: SENTINEL_INDEX,
           right: 11,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 6
@@ -857,9 +895,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: SENTINEL_INDEX,
           leftSubTreeLength: 0,
+          length: 0,
           parent: 7,
           right: SENTINEL_INDEX,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 7
@@ -867,9 +907,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: 6,
           leftSubTreeLength: 1,
+          length: 0,
           parent: 11,
           right: 9,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 8
@@ -877,9 +919,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: SENTINEL_INDEX,
           leftSubTreeLength: 0,
+          length: 0,
           parent: 9,
           right: SENTINEL_INDEX,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 9
@@ -887,9 +931,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: 8,
           leftSubTreeLength: 1,
+          length: 0,
           parent: 7,
           right: 10,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 10
@@ -897,9 +943,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: SENTINEL_INDEX,
           leftSubTreeLength: 0,
+          length: 0,
           parent: 9,
           right: SENTINEL_INDEX,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 11
@@ -907,9 +955,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: 7,
           leftSubTreeLength: 5,
+          length: 0,
           parent: 5,
           right: 12,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 12
@@ -917,9 +967,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: SENTINEL_INDEX,
           leftSubTreeLength: 0,
+          length: 0,
           parent: 11,
           right: 14,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 13
@@ -927,9 +979,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: SENTINEL_INDEX,
           leftSubTreeLength: 0,
+          length: 0,
           parent: 14,
           right: SENTINEL_INDEX,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
         {
           // 14
@@ -937,9 +991,11 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           id: "",
           left: 13,
           leftSubTreeLength: 1,
+          length: 0,
           parent: 12,
           right: SENTINEL_INDEX,
           tag: "span",
+          tagType: TagType.StartEndTag,
         },
       ];
       const pieceTable: PageContentMutable = {

@@ -12,6 +12,7 @@ export const SENTINEL_STRUCTURE: StructureNode = {
   id: "SENTINEL",
   left: SENTINEL_INDEX,
   leftSubTreeLength: 0,
+  length: 0,
   parent: SENTINEL_INDEX,
   right: SENTINEL_INDEX,
   tag: "",
