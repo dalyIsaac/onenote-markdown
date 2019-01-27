@@ -1,193 +1,211 @@
+import { PageActionPartial } from "./actions";
 import {
   DELETE_CONTENT,
   DeleteContentAction,
   INSERT_CONTENT,
   InsertContentAction,
-  PageActionPartial,
   REPLACE_CONTENT,
   ReplaceContentAction,
-} from "./actions";
-import { Color, NEWLINE, PageContent, PageContentMutable, StatePages } from "./model";
+} from "./contentTree/actions";
+import { NEWLINE } from "./contentTree/contentModel";
+import {
+  LF,
+  LF_CONTENT,
+  pageReducerTest,
+} from "./contentTree/createNewPage.test";
+import { SENTINEL_CONTENT } from "./contentTree/tree";
+import {
+  Color,
+  PageContent,
+  PageContentMutable,
+  StatePages,
+} from "./pageModel";
 import pageReducer from "./reducer";
-import { LF, LF_CONTENT, pageReducerTest } from "./tree/createNewPage.test";
-import { SENTINEL, SENTINEL_INDEX } from "./tree/tree";
+import { SENTINEL_STRUCTURE } from "./structureTree/tree";
+import { SENTINEL_INDEX } from "./tree/tree";
+import { TagType } from "./structureTree/structureModel";
+import { deleteStructure } from "./structureTree/actions";
 
 export const getStartPage = (): PageContentMutable => ({
   buffers: [
     {
-      isReadOnly: true,
-      lineStarts: [0, 39, 86],
       content:
         "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
         "Todo: Add the end of this stanza",
+      isReadOnly: true,
+      lineStarts: [0, 39, 86],
     },
     {
+      content: "vdayRave, rave against the dying of the lightgg.",
       isReadOnly: false,
       lineStarts: [0],
-      content: "vdayRave, rave against the dying of the lightgg.",
     },
   ],
+  content: {
+    nodes: [
+      SENTINEL_CONTENT,
+      {
+        // 1
+        bufferIndex: 0,
+        color: Color.Red,
+        end: { column: 26, line: 1 },
+        left: SENTINEL_INDEX,
+        leftCharCount: 0,
+        leftLineFeedCount: 0,
+        length: 65,
+        lineFeedCount: 1,
+        parent: 2,
+        right: SENTINEL_INDEX,
+        start: { column: 0, line: 0 },
+      },
+      {
+        // 2
+        bufferIndex: 1,
+        color: Color.Black,
+        end: { column: 1, line: 0 },
+        left: 1,
+        leftCharCount: 65,
+        leftLineFeedCount: 1,
+        length: 1,
+        lineFeedCount: 0,
+        parent: 4,
+        right: 3,
+        start: { column: 0, line: 0 },
+      },
+      {
+        // 3
+        bufferIndex: 0,
+        color: Color.Red,
+        end: { column: 42, line: 1 },
+        left: SENTINEL_INDEX,
+        leftCharCount: 0,
+        leftLineFeedCount: 0,
+        length: 14,
+        lineFeedCount: 0,
+        parent: 2,
+        right: SENTINEL_INDEX,
+        start: { column: 28, line: 1 },
+      },
+      {
+        // 4
+        bufferIndex: 1,
+        color: Color.Red,
+        end: { column: 4, line: 0 },
+        left: 2,
+        leftCharCount: 80,
+        leftLineFeedCount: 1,
+        length: 3,
+        lineFeedCount: 0,
+        parent: 6,
+        right: 5,
+        start: { column: 1, line: 0 },
+      },
+      {
+        // 5
+        bufferIndex: 0,
+        color: Color.Black,
+        end: { column: 47, line: 1 },
+        left: SENTINEL_INDEX,
+        leftCharCount: 0,
+        leftLineFeedCount: 0,
+        length: 2,
+        lineFeedCount: 1,
+        parent: 4,
+        right: SENTINEL_INDEX,
+        start: { column: 45, line: 1 },
+      },
+      {
+        // 6
+        bufferIndex: 1,
+        color: Color.Black,
+        end: { column: 6, line: 0 },
+        left: 4,
+        leftCharCount: 85,
+        leftLineFeedCount: 2,
+        length: 2,
+        lineFeedCount: 0,
+        parent: SENTINEL_INDEX,
+        right: 8,
+        start: { column: 4, line: 0 },
+      },
+      {
+        // 7
+        bufferIndex: 1,
+        color: Color.Black,
+        end: { column: 46, line: 0 },
+        left: SENTINEL_INDEX,
+        leftCharCount: 0,
+        leftLineFeedCount: 0,
+        length: 1,
+        lineFeedCount: 0,
+        parent: 8,
+        right: SENTINEL_INDEX,
+        start: { column: 45, line: 0 },
+      },
+      {
+        // 8
+        bufferIndex: 1,
+        color: Color.Red,
+        end: { column: 12, line: 0 },
+        left: 7,
+        leftCharCount: 1,
+        leftLineFeedCount: 0,
+        length: 5,
+        lineFeedCount: 0,
+        parent: 6,
+        right: 10,
+        start: { column: 7, line: 0 },
+      },
+      {
+        // 9
+        bufferIndex: 1,
+        color: Color.Red,
+        end: { column: 47, line: 0 },
+        left: SENTINEL_INDEX,
+        leftCharCount: 0,
+        leftLineFeedCount: 0,
+        length: 1,
+        lineFeedCount: 0,
+        parent: 10,
+        right: SENTINEL_INDEX,
+        start: { column: 46, line: 0 },
+      },
+      {
+        // 10
+        bufferIndex: 1,
+        color: Color.Black,
+        end: { column: 45, line: 0 },
+        left: 9,
+        leftCharCount: 1,
+        leftLineFeedCount: 0,
+        length: 32,
+        lineFeedCount: 0,
+        parent: 8,
+        right: 11,
+        start: { column: 13, line: 0 },
+      },
+      {
+        // 11
+        bufferIndex: 1,
+        color: Color.Red,
+        end: { column: 48, line: 0 },
+        left: SENTINEL_INDEX,
+        leftCharCount: 0,
+        leftLineFeedCount: 0,
+        length: 1,
+        lineFeedCount: 0,
+        parent: 10,
+        right: SENTINEL_INDEX,
+        start: { column: 47, line: 0 },
+      },
+    ],
+    root: 6,
+  },
   newlineFormat: NEWLINE.LF,
-  nodes: [
-    SENTINEL,
-    {
-      // 1
-      bufferIndex: 0,
-      start: { line: 0, column: 0 },
-      end: { line: 1, column: 26 },
-      leftCharCount: 0,
-      leftLineFeedCount: 0,
-      length: 65,
-      lineFeedCount: 1,
-      color: Color.Red,
-      parent: 2,
-      left: SENTINEL_INDEX,
-      right: SENTINEL_INDEX,
-    },
-    {
-      // 2
-      bufferIndex: 1,
-      start: { line: 0, column: 0 },
-      end: { line: 0, column: 1 },
-      leftCharCount: 65,
-      leftLineFeedCount: 1,
-      length: 1,
-      lineFeedCount: 0,
-      color: Color.Black,
-      parent: 4,
-      left: 1,
-      right: 3,
-    },
-    {
-      // 3
-      bufferIndex: 0,
-      start: { line: 1, column: 28 },
-      end: { line: 1, column: 42 },
-      leftCharCount: 0,
-      leftLineFeedCount: 0,
-      length: 14,
-      lineFeedCount: 0,
-      color: Color.Red,
-      parent: 2,
-      left: SENTINEL_INDEX,
-      right: SENTINEL_INDEX,
-    },
-    {
-      // 4
-      bufferIndex: 1,
-      start: { line: 0, column: 1 },
-      end: { line: 0, column: 4 },
-      leftCharCount: 80,
-      leftLineFeedCount: 1,
-      length: 3,
-      lineFeedCount: 0,
-      color: Color.Red,
-      parent: 6,
-      left: 2,
-      right: 5,
-    },
-    {
-      // 5
-      bufferIndex: 0,
-      start: { line: 1, column: 45 },
-      end: { line: 1, column: 47 },
-      leftCharCount: 0,
-      leftLineFeedCount: 0,
-      length: 2,
-      lineFeedCount: 1,
-      color: Color.Black,
-      parent: 4,
-      left: SENTINEL_INDEX,
-      right: SENTINEL_INDEX,
-    },
-    {
-      // 6
-      bufferIndex: 1,
-      start: { line: 0, column: 4 },
-      end: { line: 0, column: 6 },
-      leftCharCount: 85,
-      leftLineFeedCount: 2,
-      length: 2,
-      lineFeedCount: 0,
-      color: Color.Black,
-      parent: SENTINEL_INDEX,
-      left: 4,
-      right: 8,
-    },
-    {
-      // 7
-      bufferIndex: 1,
-      start: { line: 0, column: 45 },
-      end: { line: 0, column: 46 },
-      leftCharCount: 0,
-      leftLineFeedCount: 0,
-      length: 1,
-      lineFeedCount: 0,
-      color: Color.Black,
-      parent: 8,
-      left: SENTINEL_INDEX,
-      right: SENTINEL_INDEX,
-    },
-    {
-      // 8
-      bufferIndex: 1,
-      start: { line: 0, column: 7 },
-      end: { line: 0, column: 12 },
-      leftCharCount: 1,
-      leftLineFeedCount: 0,
-      length: 5,
-      lineFeedCount: 0,
-      color: Color.Red,
-      parent: 6,
-      left: 7,
-      right: 10,
-    },
-    {
-      // 9
-      bufferIndex: 1,
-      start: { line: 0, column: 46 },
-      end: { line: 0, column: 47 },
-      leftCharCount: 0,
-      leftLineFeedCount: 0,
-      length: 1,
-      lineFeedCount: 0,
-      color: Color.Red,
-      parent: 10,
-      left: SENTINEL_INDEX,
-      right: SENTINEL_INDEX,
-    },
-    {
-      // 10
-      bufferIndex: 1,
-      start: { line: 0, column: 13 },
-      end: { line: 0, column: 45 },
-      leftCharCount: 1,
-      leftLineFeedCount: 0,
-      length: 32,
-      lineFeedCount: 0,
-      color: Color.Black,
-      left: 9,
-      parent: 8,
-      right: 11,
-    },
-    {
-      // 11
-      bufferIndex: 1,
-      start: { line: 0, column: 47 },
-      end: { line: 0, column: 48 },
-      leftCharCount: 0,
-      leftLineFeedCount: 0,
-      length: 1,
-      lineFeedCount: 0,
-      color: Color.Red,
-      parent: 10,
-      left: SENTINEL_INDEX,
-      right: SENTINEL_INDEX,
-    },
-  ],
-  root: 6,
-  previouslyInsertedNodeIndex: null,
-  previouslyInsertedNodeOffset: null,
+  previouslyInsertedContentNodeIndex: null,
+  previouslyInsertedContentNodeOffset: null,
+
+  structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
 });
 
 const PAGE_ID = "pageId";
@@ -201,14 +219,14 @@ describe("page/reducer", () => {
   };
 
   test("Invalid action types returns the state with no changes", () => {
-    const action: PageActionPartial = { type: "HELLO_WORLD", pageId: "" };
+    const action: PageActionPartial = { pageId: "", type: "HELLO_WORLD" };
     const state = getState();
     expect(pageReducer(state, action)).toBe(state);
     expect(pageReducer(state, action)).toStrictEqual(state);
   });
 
   test("Invalid page id", () => {
-    const action: PageActionPartial = { type: INSERT_CONTENT, pageId: "" };
+    const action: PageActionPartial = { pageId: "", type: INSERT_CONTENT };
     const state = getState();
     expect(pageReducer(state, action)).toBe(state);
     expect(pageReducer(state, action)).toStrictEqual(state);
@@ -216,203 +234,206 @@ describe("page/reducer", () => {
 
   test("Insertion", () => {
     const action: InsertContentAction = {
-      type: INSERT_CONTENT,
-      pageId: PAGE_ID,
       content: "Hello world",
       offset: 127,
+      pageId: PAGE_ID,
+      type: INSERT_CONTENT,
     };
 
     const expectedPage: PageContent = {
-      root: 6,
-      previouslyInsertedNodeIndex: 12,
-      previouslyInsertedNodeOffset: 127,
-      newlineFormat: NEWLINE.LF,
       buffers: [
         {
-          isReadOnly: true,
-          lineStarts: [0, 39, 86],
           content:
             "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
             "Todo: Add the end of this stanza",
+          isReadOnly: true,
+          lineStarts: [0, 39, 86],
         },
         {
-          isReadOnly: false,
-          lineStarts: [0],
           content:
             "vdayRave, rave against the dying of the lightgg.Hello world",
+          isReadOnly: false,
+          lineStarts: [0],
         },
       ],
-      nodes: [
-        SENTINEL,
-        {
-          // 1
-          bufferIndex: 0,
-          start: { line: 0, column: 0 },
-          end: { line: 1, column: 26 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 65,
-          lineFeedCount: 1,
-          color: Color.Red,
-          parent: 2,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          // 2
-          bufferIndex: 1,
-          start: { line: 0, column: 0 },
-          end: { line: 0, column: 1 },
-          leftCharCount: 65,
-          leftLineFeedCount: 1,
-          length: 1,
-          lineFeedCount: 0,
-          color: Color.Black,
-          parent: 4,
-          left: 1,
-          right: 3,
-        },
-        {
-          // 3
-          bufferIndex: 0,
-          start: { line: 1, column: 28 },
-          end: { line: 1, column: 42 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 14,
-          lineFeedCount: 0,
-          color: Color.Red,
-          parent: 2,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          // 4
-          bufferIndex: 1,
-          start: { line: 0, column: 1 },
-          end: { line: 0, column: 4 },
-          leftCharCount: 80,
-          leftLineFeedCount: 1,
-          length: 3,
-          lineFeedCount: 0,
-          color: Color.Black,
-          parent: 6,
-          left: 2,
-          right: 5,
-        },
-        {
-          // 5
-          bufferIndex: 0,
-          start: { line: 1, column: 45 },
-          end: { line: 1, column: 47 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 2,
-          lineFeedCount: 1,
-          color: Color.Black,
-          parent: 4,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          // 6
-          bufferIndex: 1,
-          start: { line: 0, column: 4 },
-          end: { line: 0, column: 6 },
-          leftCharCount: 85,
-          leftLineFeedCount: 2,
-          length: 2,
-          lineFeedCount: 0,
-          color: Color.Black,
-          parent: SENTINEL_INDEX,
-          left: 4,
-          right: 8,
-        },
-        {
-          // 7
-          bufferIndex: 1,
-          start: { line: 0, column: 45 },
-          end: { line: 0, column: 46 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 1,
-          lineFeedCount: 0,
-          color: Color.Black,
-          parent: 8,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          // 8
-          bufferIndex: 1,
-          start: { line: 0, column: 7 },
-          end: { line: 0, column: 12 },
-          leftCharCount: 1,
-          leftLineFeedCount: 0,
-          length: 5,
-          lineFeedCount: 0,
-          color: Color.Black,
-          parent: 6,
-          left: 7,
-          right: 10,
-        },
-        {
-          // 9
-          bufferIndex: 1,
-          start: { line: 0, column: 46 },
-          end: { line: 0, column: 47 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 1,
-          lineFeedCount: 0,
-          color: Color.Black,
-          parent: 10,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          // 10
-          bufferIndex: 1,
-          start: { line: 0, column: 13 },
-          end: { line: 0, column: 45 },
-          leftCharCount: 1,
-          leftLineFeedCount: 0,
-          length: 32,
-          lineFeedCount: 0,
-          color: Color.Red,
-          left: 9,
-          parent: 8,
-          right: 11,
-        },
-        {
-          // 11
-          bufferIndex: 1,
-          start: { line: 0, column: 47 },
-          end: { line: 0, column: 48 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 1,
-          lineFeedCount: 0,
-          color: Color.Black,
-          parent: 10,
-          left: SENTINEL_INDEX,
-          right: 12,
-        },
-        {
-          // 12
-          bufferIndex: 1,
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 11,
-          lineFeedCount: 0,
-          color: Color.Red,
-          start: { line: 0, column: 48 },
-          end: { line: 0, column: 59 },
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-          parent: 11,
-        },
-      ],
+      content: {
+        nodes: [
+          SENTINEL_CONTENT,
+          {
+            // 1
+            bufferIndex: 0,
+            color: Color.Red,
+            end: { column: 26, line: 1 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 65,
+            lineFeedCount: 1,
+            parent: 2,
+            right: SENTINEL_INDEX,
+            start: { column: 0, line: 0 },
+          },
+          {
+            // 2
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 1, line: 0 },
+            left: 1,
+            leftCharCount: 65,
+            leftLineFeedCount: 1,
+            length: 1,
+            lineFeedCount: 0,
+            parent: 4,
+            right: 3,
+            start: { column: 0, line: 0 },
+          },
+          {
+            // 3
+            bufferIndex: 0,
+            color: Color.Red,
+            end: { column: 42, line: 1 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 14,
+            lineFeedCount: 0,
+            parent: 2,
+            right: SENTINEL_INDEX,
+            start: { column: 28, line: 1 },
+          },
+          {
+            // 4
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 4, line: 0 },
+            left: 2,
+            leftCharCount: 80,
+            leftLineFeedCount: 1,
+            length: 3,
+            lineFeedCount: 0,
+            parent: 6,
+            right: 5,
+            start: { column: 1, line: 0 },
+          },
+          {
+            // 5
+            bufferIndex: 0,
+            color: Color.Black,
+            end: { column: 47, line: 1 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 1,
+            parent: 4,
+            right: SENTINEL_INDEX,
+            start: { column: 45, line: 1 },
+          },
+          {
+            // 6
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 6, line: 0 },
+            left: 4,
+            leftCharCount: 85,
+            leftLineFeedCount: 2,
+            length: 2,
+            lineFeedCount: 0,
+            parent: SENTINEL_INDEX,
+            right: 8,
+            start: { column: 4, line: 0 },
+          },
+          {
+            // 7
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 46, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 1,
+            lineFeedCount: 0,
+            parent: 8,
+            right: SENTINEL_INDEX,
+            start: { column: 45, line: 0 },
+          },
+          {
+            // 8
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 12, line: 0 },
+            left: 7,
+            leftCharCount: 1,
+            leftLineFeedCount: 0,
+            length: 5,
+            lineFeedCount: 0,
+            parent: 6,
+            right: 10,
+            start: { column: 7, line: 0 },
+          },
+          {
+            // 9
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 47, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 1,
+            lineFeedCount: 0,
+            parent: 10,
+            right: SENTINEL_INDEX,
+            start: { column: 46, line: 0 },
+          },
+          {
+            // 10
+            bufferIndex: 1,
+            color: Color.Red,
+            end: { column: 45, line: 0 },
+            left: 9,
+            leftCharCount: 1,
+            leftLineFeedCount: 0,
+            length: 32,
+            lineFeedCount: 0,
+            parent: 8,
+            right: 11,
+            start: { column: 13, line: 0 },
+          },
+          {
+            // 11
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 48, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 1,
+            lineFeedCount: 0,
+            parent: 10,
+            right: 12,
+            start: { column: 47, line: 0 },
+          },
+          {
+            // 12
+            bufferIndex: 1,
+            color: Color.Red,
+            end: { column: 59, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 11,
+            lineFeedCount: 0,
+            parent: 11,
+            right: SENTINEL_INDEX,
+            start: { column: 48, line: 0 },
+          },
+        ],
+        root: 6,
+      },
+      newlineFormat: NEWLINE.LF,
+      previouslyInsertedContentNodeIndex: 12,
+      previouslyInsertedContentNodeOffset: 127,
+      structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
     };
 
     const state = getState();
@@ -428,10 +449,10 @@ describe("page/reducer", () => {
 
   test("Deletion", () => {
     const action: DeleteContentAction = {
-      type: DELETE_CONTENT,
+      endOffset: 127,
       pageId: PAGE_ID,
       startOffset: 126,
-      endOffset: 127,
+      type: DELETE_CONTENT,
     };
     const state = getState();
     const result = pageReducer(state, action);
@@ -439,179 +460,183 @@ describe("page/reducer", () => {
     const expectedPage: PageContent = {
       buffers: [
         {
-          isReadOnly: true,
-          lineStarts: [0, 39, 86],
           content:
             "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
             "Todo: Add the end of this stanza",
+          isReadOnly: true,
+          lineStarts: [0, 39, 86],
         },
         {
+          content: "vdayRave, rave against the dying of the lightgg.",
           isReadOnly: false,
           lineStarts: [0],
-          content: "vdayRave, rave against the dying of the lightgg.",
         },
       ],
+      content: {
+        nodes: [
+          SENTINEL_CONTENT,
+          {
+            // 1
+            bufferIndex: 0,
+            color: Color.Red,
+            end: { column: 26, line: 1 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 65,
+            lineFeedCount: 1,
+            parent: 2,
+            right: SENTINEL_INDEX,
+            start: { column: 0, line: 0 },
+          },
+          {
+            // 2
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 1, line: 0 },
+            left: 1,
+            leftCharCount: 65,
+            leftLineFeedCount: 1,
+            length: 1,
+            lineFeedCount: 0,
+            parent: 4,
+            right: 3,
+            start: { column: 0, line: 0 },
+          },
+          {
+            // 3
+            bufferIndex: 0,
+            color: Color.Red,
+            end: { column: 42, line: 1 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 14,
+            lineFeedCount: 0,
+            parent: 2,
+            right: SENTINEL_INDEX,
+            start: { column: 28, line: 1 },
+          },
+          {
+            // 4
+            bufferIndex: 1,
+            color: Color.Red,
+            end: { column: 4, line: 0 },
+            left: 2,
+            leftCharCount: 80,
+            leftLineFeedCount: 1,
+            length: 3,
+            lineFeedCount: 0,
+            parent: 6,
+            right: 5,
+            start: { column: 1, line: 0 },
+          },
+          {
+            // 5
+            bufferIndex: 0,
+            color: Color.Black,
+            end: { column: 47, line: 1 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 1,
+            parent: 4,
+            right: SENTINEL_INDEX,
+            start: { column: 45, line: 1 },
+          },
+          {
+            // 6
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 6, line: 0 },
+            left: 4,
+            leftCharCount: 85,
+            leftLineFeedCount: 2,
+            length: 2,
+            lineFeedCount: 0,
+            parent: SENTINEL_INDEX,
+            right: 8,
+            start: { column: 4, line: 0 },
+          },
+          {
+            // 7
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 46, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 1,
+            lineFeedCount: 0,
+            parent: 8,
+            right: SENTINEL_INDEX,
+            start: { column: 45, line: 0 },
+          },
+          {
+            // 8
+            bufferIndex: 1,
+            color: Color.Red,
+            end: { column: 12, line: 0 },
+            left: 7,
+            leftCharCount: 1,
+            leftLineFeedCount: 0,
+            length: 5,
+            lineFeedCount: 0,
+            parent: 6,
+            right: 10,
+            start: { column: 7, line: 0 },
+          },
+          {
+            // 9
+            bufferIndex: 1,
+            color: Color.Red,
+            end: { column: 47, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 1,
+            lineFeedCount: 0,
+            parent: 10,
+            right: SENTINEL_INDEX,
+            start: { column: 46, line: 0 },
+          },
+          {
+            // 10
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 45, line: 0 },
+            left: 9,
+            leftCharCount: 1,
+            leftLineFeedCount: 0,
+            length: 32,
+            lineFeedCount: 0,
+            parent: 8,
+            right: SENTINEL_INDEX,
+            start: { column: 13, line: 0 },
+          },
+          {
+            // 11
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 48, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 1,
+            lineFeedCount: 0,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            start: { column: 47, line: 0 },
+          },
+        ],
+        root: 6,
+      },
       newlineFormat: NEWLINE.LF,
-      nodes: [
-        SENTINEL,
-        {
-          // 1
-          bufferIndex: 0,
-          start: { line: 0, column: 0 },
-          end: { line: 1, column: 26 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 65,
-          lineFeedCount: 1,
-          color: Color.Red,
-          parent: 2,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          // 2
-          bufferIndex: 1,
-          start: { line: 0, column: 0 },
-          end: { line: 0, column: 1 },
-          leftCharCount: 65,
-          leftLineFeedCount: 1,
-          length: 1,
-          lineFeedCount: 0,
-          color: Color.Black,
-          parent: 4,
-          left: 1,
-          right: 3,
-        },
-        {
-          // 3
-          bufferIndex: 0,
-          start: { line: 1, column: 28 },
-          end: { line: 1, column: 42 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 14,
-          lineFeedCount: 0,
-          color: Color.Red,
-          parent: 2,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          // 4
-          bufferIndex: 1,
-          start: { line: 0, column: 1 },
-          end: { line: 0, column: 4 },
-          leftCharCount: 80,
-          leftLineFeedCount: 1,
-          length: 3,
-          lineFeedCount: 0,
-          color: Color.Red,
-          parent: 6,
-          left: 2,
-          right: 5,
-        },
-        {
-          // 5
-          bufferIndex: 0,
-          start: { line: 1, column: 45 },
-          end: { line: 1, column: 47 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 2,
-          lineFeedCount: 1,
-          color: Color.Black,
-          parent: 4,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          // 6
-          bufferIndex: 1,
-          start: { line: 0, column: 4 },
-          end: { line: 0, column: 6 },
-          leftCharCount: 85,
-          leftLineFeedCount: 2,
-          length: 2,
-          lineFeedCount: 0,
-          color: Color.Black,
-          parent: SENTINEL_INDEX,
-          left: 4,
-          right: 8,
-        },
-        {
-          // 7
-          bufferIndex: 1,
-          start: { line: 0, column: 45 },
-          end: { line: 0, column: 46 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 1,
-          lineFeedCount: 0,
-          color: Color.Black,
-          parent: 8,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          // 8
-          bufferIndex: 1,
-          start: { line: 0, column: 7 },
-          end: { line: 0, column: 12 },
-          leftCharCount: 1,
-          leftLineFeedCount: 0,
-          length: 5,
-          lineFeedCount: 0,
-          color: Color.Red,
-          parent: 6,
-          left: 7,
-          right: 10,
-        },
-        {
-          // 9
-          bufferIndex: 1,
-          start: { line: 0, column: 46 },
-          end: { line: 0, column: 47 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 1,
-          lineFeedCount: 0,
-          color: Color.Red,
-          parent: 10,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          // 10
-          bufferIndex: 1,
-          start: { line: 0, column: 13 },
-          end: { line: 0, column: 45 },
-          leftCharCount: 1,
-          leftLineFeedCount: 0,
-          length: 32,
-          lineFeedCount: 0,
-          color: Color.Black,
-          left: 9,
-          parent: 8,
-          right: SENTINEL_INDEX,
-        },
-        {
-          // 11
-          bufferIndex: 1,
-          start: { line: 0, column: 47 },
-          end: { line: 0, column: 48 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 1,
-          lineFeedCount: 0,
-          color: Color.Black,
-          parent: SENTINEL_INDEX,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-      ],
-      root: 6,
-      previouslyInsertedNodeIndex: null,
-      previouslyInsertedNodeOffset: null,
+      previouslyInsertedContentNodeIndex: null,
+      previouslyInsertedContentNodeOffset: null,
+
+      structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
     };
     const expectedState: StatePages = {
       ...state,
@@ -623,11 +648,11 @@ describe("page/reducer", () => {
 
   test("Replacement", () => {
     const action: ReplaceContentAction = {
-      type: REPLACE_CONTENT,
+      content: "Hello world",
+      endOffset: 127,
       pageId: PAGE_ID,
       startOffset: 126,
-      endOffset: 127,
-      content: "Hello world",
+      type: REPLACE_CONTENT,
     };
     const state = getState();
     const result = pageReducer(state, action);
@@ -635,194 +660,197 @@ describe("page/reducer", () => {
     const expectedPage: PageContent = {
       buffers: [
         {
-          isReadOnly: true,
-          lineStarts: [0, 39, 86],
           content:
             "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
             "Todo: Add the end of this stanza",
+          isReadOnly: true,
+          lineStarts: [0, 39, 86],
         },
         {
-          isReadOnly: false,
-          lineStarts: [0],
           content:
             "vdayRave, rave against the dying of the lightgg.Hello world",
+          isReadOnly: false,
+          lineStarts: [0],
         },
       ],
+      content: {
+        nodes: [
+          SENTINEL_CONTENT,
+          {
+            // 1
+            bufferIndex: 0,
+            color: Color.Red,
+            end: { column: 26, line: 1 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 65,
+            lineFeedCount: 1,
+            parent: 2,
+            right: SENTINEL_INDEX,
+            start: { column: 0, line: 0 },
+          },
+          {
+            // 2
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 1, line: 0 },
+            left: 1,
+            leftCharCount: 65,
+            leftLineFeedCount: 1,
+            length: 1,
+            lineFeedCount: 0,
+            parent: 4,
+            right: 3,
+            start: { column: 0, line: 0 },
+          },
+          {
+            // 3
+            bufferIndex: 0,
+            color: Color.Red,
+            end: { column: 42, line: 1 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 14,
+            lineFeedCount: 0,
+            parent: 2,
+            right: SENTINEL_INDEX,
+            start: { column: 28, line: 1 },
+          },
+          {
+            // 4
+            bufferIndex: 1,
+            color: Color.Red,
+            end: { column: 4, line: 0 },
+            left: 2,
+            leftCharCount: 80,
+            leftLineFeedCount: 1,
+            length: 3,
+            lineFeedCount: 0,
+            parent: 6,
+            right: 5,
+            start: { column: 1, line: 0 },
+          },
+          {
+            // 5
+            bufferIndex: 0,
+            color: Color.Black,
+            end: { column: 47, line: 1 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 1,
+            parent: 4,
+            right: SENTINEL_INDEX,
+            start: { column: 45, line: 1 },
+          },
+          {
+            // 6
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 6, line: 0 },
+            left: 4,
+            leftCharCount: 85,
+            leftLineFeedCount: 2,
+            length: 2,
+            lineFeedCount: 0,
+            parent: SENTINEL_INDEX,
+            right: 8,
+            start: { column: 4, line: 0 },
+          },
+          {
+            // 7
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 46, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 1,
+            lineFeedCount: 0,
+            parent: 8,
+            right: SENTINEL_INDEX,
+            start: { column: 45, line: 0 },
+          },
+          {
+            // 8
+            bufferIndex: 1,
+            color: Color.Red,
+            end: { column: 12, line: 0 },
+            left: 7,
+            leftCharCount: 1,
+            leftLineFeedCount: 0,
+            length: 5,
+            lineFeedCount: 0,
+            parent: 6,
+            right: 10,
+            start: { column: 7, line: 0 },
+          },
+          {
+            // 9
+            bufferIndex: 1,
+            color: Color.Red,
+            end: { column: 47, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 1,
+            lineFeedCount: 0,
+            parent: 10,
+            right: SENTINEL_INDEX,
+            start: { column: 46, line: 0 },
+          },
+          {
+            // 10
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 45, line: 0 },
+            left: 9,
+            leftCharCount: 1,
+            leftLineFeedCount: 0,
+            length: 32,
+            lineFeedCount: 0,
+            parent: 8,
+            right: 12,
+            start: { column: 13, line: 0 },
+          },
+          {
+            // 11
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 48, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 1,
+            lineFeedCount: 0,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            start: { column: 47, line: 0 },
+          },
+          {
+            // 12
+            bufferIndex: 1,
+            color: Color.Red,
+            end: { column: 59, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 11,
+            lineFeedCount: 0,
+            parent: 10,
+            right: SENTINEL_INDEX,
+            start: { column: 48, line: 0 },
+          },
+        ],
+        root: 6,
+      },
       newlineFormat: NEWLINE.LF,
-      nodes: [
-        SENTINEL,
-        {
-          // 1
-          bufferIndex: 0,
-          start: { line: 0, column: 0 },
-          end: { line: 1, column: 26 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 65,
-          lineFeedCount: 1,
-          color: Color.Red,
-          parent: 2,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          // 2
-          bufferIndex: 1,
-          start: { line: 0, column: 0 },
-          end: { line: 0, column: 1 },
-          leftCharCount: 65,
-          leftLineFeedCount: 1,
-          length: 1,
-          lineFeedCount: 0,
-          color: Color.Black,
-          parent: 4,
-          left: 1,
-          right: 3,
-        },
-        {
-          // 3
-          bufferIndex: 0,
-          start: { line: 1, column: 28 },
-          end: { line: 1, column: 42 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 14,
-          lineFeedCount: 0,
-          color: Color.Red,
-          parent: 2,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          // 4
-          bufferIndex: 1,
-          start: { line: 0, column: 1 },
-          end: { line: 0, column: 4 },
-          leftCharCount: 80,
-          leftLineFeedCount: 1,
-          length: 3,
-          lineFeedCount: 0,
-          color: Color.Red,
-          parent: 6,
-          left: 2,
-          right: 5,
-        },
-        {
-          // 5
-          bufferIndex: 0,
-          start: { line: 1, column: 45 },
-          end: { line: 1, column: 47 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 2,
-          lineFeedCount: 1,
-          color: Color.Black,
-          parent: 4,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          // 6
-          bufferIndex: 1,
-          start: { line: 0, column: 4 },
-          end: { line: 0, column: 6 },
-          leftCharCount: 85,
-          leftLineFeedCount: 2,
-          length: 2,
-          lineFeedCount: 0,
-          color: Color.Black,
-          parent: SENTINEL_INDEX,
-          left: 4,
-          right: 8,
-        },
-        {
-          // 7
-          bufferIndex: 1,
-          start: { line: 0, column: 45 },
-          end: { line: 0, column: 46 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 1,
-          lineFeedCount: 0,
-          color: Color.Black,
-          parent: 8,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          // 8
-          bufferIndex: 1,
-          start: { line: 0, column: 7 },
-          end: { line: 0, column: 12 },
-          leftCharCount: 1,
-          leftLineFeedCount: 0,
-          length: 5,
-          lineFeedCount: 0,
-          color: Color.Red,
-          parent: 6,
-          left: 7,
-          right: 10,
-        },
-        {
-          // 9
-          bufferIndex: 1,
-          start: { line: 0, column: 46 },
-          end: { line: 0, column: 47 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 1,
-          lineFeedCount: 0,
-          color: Color.Red,
-          parent: 10,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          // 10
-          bufferIndex: 1,
-          start: { line: 0, column: 13 },
-          end: { line: 0, column: 45 },
-          leftCharCount: 1,
-          leftLineFeedCount: 0,
-          length: 32,
-          lineFeedCount: 0,
-          color: Color.Black,
-          left: 9,
-          parent: 8,
-          right: 12,
-        },
-        {
-          // 11
-          bufferIndex: 1,
-          start: { line: 0, column: 47 },
-          end: { line: 0, column: 48 },
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 1,
-          lineFeedCount: 0,
-          color: Color.Black,
-          parent: SENTINEL_INDEX,
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-        },
-        {
-          // 12
-          bufferIndex: 1,
-          leftCharCount: 0,
-          leftLineFeedCount: 0,
-          length: 11,
-          lineFeedCount: 0,
-          color: Color.Red,
-          start: { line: 0, column: 48 },
-          end: { line: 0, column: 59 },
-          left: SENTINEL_INDEX,
-          right: SENTINEL_INDEX,
-          parent: 10,
-        },
-      ],
-      root: 6,
-      previouslyInsertedNodeIndex: 12,
-      previouslyInsertedNodeOffset: 126,
+      previouslyInsertedContentNodeIndex: 12,
+      previouslyInsertedContentNodeOffset: 126,
+      structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
     };
     const expectedState: StatePages = {
       ...state,
@@ -834,5 +862,67 @@ describe("page/reducer", () => {
 
   test("Create new page", () => {
     pageReducerTest(LF_CONTENT, LF);
+  });
+
+  test("Delete structure node", () => {
+    const page: PageContentMutable = {
+      buffers: [],
+      content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+      newlineFormat: NEWLINE.LF,
+      previouslyInsertedContentNodeIndex: null,
+      previouslyInsertedContentNodeOffset: null,
+      structure: {
+        nodes: [
+          SENTINEL_STRUCTURE,
+          {
+            // 1
+            color: Color.Black,
+            id: "helloWorld",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 0,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            tag: "id",
+            tagType: TagType.StartEndTag,
+          },
+        ],
+        root: 1,
+      },
+    };
+    const state: StatePages = {
+      pageId: page,
+    };
+    const expectedPage: PageContentMutable = {
+      buffers: [],
+      content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+      newlineFormat: NEWLINE.LF,
+      previouslyInsertedContentNodeIndex: null,
+      previouslyInsertedContentNodeOffset: null,
+      structure: {
+        nodes: [
+          SENTINEL_STRUCTURE,
+          {
+            // 1
+            color: Color.Black,
+            id: "helloWorld",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 0,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            tag: "id",
+            tagType: TagType.StartEndTag,
+          },
+        ],
+        root: SENTINEL_INDEX,
+      },
+    };
+    const expectedState: StatePages = {
+      pageId: expectedPage,
+    };
+    const action = deleteStructure("pageId", 1);
+    const result = pageReducer(state, action);
+    expect(result).toStrictEqual(expectedState);
   });
 });

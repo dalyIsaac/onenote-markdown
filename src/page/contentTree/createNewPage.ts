@@ -1,11 +1,9 @@
 import { OnenotePage } from "@microsoft/microsoft-graph-types";
-import { Buffer, Color, Node, PageContent } from "../model";
-import {
-  getLineStarts,
-  getNewlineFormat,
-  SENTINEL,
-  SENTINEL_INDEX,
-} from "./tree";
+import { Color, PageContent } from "../pageModel";
+import { SENTINEL_STRUCTURE } from "../structureTree/tree";
+import { SENTINEL_INDEX } from "../tree/tree";
+import { Buffer, ContentNode } from "./contentModel";
+import { getLineStarts, getNewlineFormat, SENTINEL_CONTENT } from "./tree";
 
 /**
  * Creates a new page, and its associated piece table.
@@ -14,33 +12,33 @@ import {
 export function createNewPage(receivedPage: OnenotePage): PageContent {
   const newlineFormat = getNewlineFormat(receivedPage.content);
   const buffer: Buffer = {
+    content: receivedPage.content,
     isReadOnly: true,
     lineStarts: getLineStarts(receivedPage.content, newlineFormat),
-    content: receivedPage.content,
   };
   const finalLine = buffer.lineStarts.length - 1;
   const finalLineInitialCharIndex = buffer.lineStarts[finalLine];
   const finalCharColumn =
     receivedPage.content.length - finalLineInitialCharIndex;
-  const node: Node = {
+  const node: ContentNode = {
     bufferIndex: 0,
-    start: { line: 0, column: 0 },
-    end: { line: finalLine, column: finalCharColumn },
+    color: Color.Black,
+    end: { column: finalCharColumn, line: finalLine },
+    left: SENTINEL_INDEX,
     leftCharCount: 0,
     leftLineFeedCount: 0,
     length: receivedPage.content.length,
     lineFeedCount: buffer.lineStarts.length,
-    color: Color.Black,
     parent: SENTINEL_INDEX,
-    left: SENTINEL_INDEX,
     right: SENTINEL_INDEX,
+    start: { column: 0, line: 0 },
   };
   return {
     buffers: [buffer],
+    content: { nodes: [SENTINEL_CONTENT, node], root: 0 },
     newlineFormat,
-    nodes: [SENTINEL, node],
-    root: 0,
-    previouslyInsertedNodeIndex: null,
-    previouslyInsertedNodeOffset: null,
+    previouslyInsertedContentNodeIndex: null,
+    previouslyInsertedContentNodeOffset: null,
+    structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
   };
 }

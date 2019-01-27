@@ -1,8206 +1,2823 @@
-import { Color, NEWLINE, PageContentMutable } from "../model";
-import { getStartPage } from "../reducer.test";
-import { deleteContent, deleteNode } from "./delete";
-import { SENTINEL, SENTINEL_INDEX } from "./tree";
+import { PageContentMutable, Color } from "../pageModel";
+import { TagType } from "../structureTree/structureModel";
+import { SENTINEL_CONTENT } from "../contentTree/tree";
+import { SENTINEL_INDEX } from "./tree";
+import { NEWLINE } from "../contentTree/contentModel";
+import { SENTINEL_STRUCTURE } from "../structureTree/tree";
+import { deleteNode } from "../tree/delete";
 
-describe("page/tree/delete", () => {
-  describe("delete node", () => {
-    test("Scenario 1: Simple case", () => {
+describe("delete node", () => {
+  describe("Content nodes", () => {
+    test("Content: Scenario 1: Simple case", () => {
       const page: PageContentMutable = {
         buffers: [],
-        previouslyInsertedNodeIndex: null,
-        previouslyInsertedNodeOffset: null,
+        content: {
+          nodes: [
+            SENTINEL_CONTENT,
+            {
+              // u
+              bufferIndex: 1,
+              color: Color.Red,
+              end: {
+                column: 0,
+                line: 0,
+              },
+              left: SENTINEL_INDEX,
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              parent: 2,
+              right: SENTINEL_INDEX,
+              start: {
+                column: 0,
+                line: 0,
+              },
+            },
+            {
+              // v
+              bufferIndex: 2,
+              color: Color.Black,
+              end: {
+                column: 0,
+                line: 0,
+              },
+              left: 1,
+              leftCharCount: 10,
+              leftLineFeedCount: 2,
+              length: 10,
+              lineFeedCount: 2,
+              parent: 3,
+              right: SENTINEL_INDEX,
+              start: {
+                column: 0,
+                line: 0,
+              },
+            },
+            {
+              bufferIndex: 3,
+              color: Color.Black,
+              end: {
+                column: 0,
+                line: 0,
+              },
+              left: 2,
+              leftCharCount: 20,
+              leftLineFeedCount: 4,
+              length: 10,
+              lineFeedCount: 2,
+              parent: SENTINEL_INDEX,
+              right: 4,
+              start: {
+                column: 0,
+                line: 0,
+              },
+            },
+            {
+              bufferIndex: 4,
+              color: Color.Black,
+              end: {
+                column: 0,
+                line: 0,
+              },
+              left: SENTINEL_INDEX,
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              parent: 3,
+              right: SENTINEL_INDEX,
+              start: {
+                column: 0,
+                line: 0,
+              },
+            },
+          ],
+          root: 3,
+        },
         newlineFormat: NEWLINE.LF,
-        root: 3,
-        nodes: [
-          SENTINEL,
-          {
-            // u
-            bufferIndex: 1,
-            start: {
-              line: 0,
-              column: 0,
-            },
-            end: {
-              line: 0,
-              column: 0,
-            },
-            leftCharCount: 0,
-            leftLineFeedCount: 0,
-            length: 10,
-            lineFeedCount: 2,
-            color: Color.Red,
-            parent: 2,
-            left: SENTINEL_INDEX,
-            right: SENTINEL_INDEX,
-          },
-          {
-            // v
-            bufferIndex: 2,
-            start: {
-              line: 0,
-              column: 0,
-            },
-            end: {
-              line: 0,
-              column: 0,
-            },
-            leftCharCount: 10,
-            leftLineFeedCount: 2,
-            length: 10,
-            lineFeedCount: 2,
-            color: Color.Black,
-            parent: 3,
-            left: 1,
-            right: SENTINEL_INDEX,
-          },
-          {
-            bufferIndex: 3,
-            start: {
-              line: 0,
-              column: 0,
-            },
-            end: {
-              line: 0,
-              column: 0,
-            },
-            leftCharCount: 20,
-            leftLineFeedCount: 4,
-            length: 10,
-            lineFeedCount: 2,
-            color: Color.Black,
-            parent: SENTINEL_INDEX,
-            left: 2,
-            right: 4,
-          },
-          {
-            bufferIndex: 4,
-            start: {
-              line: 0,
-              column: 0,
-            },
-            end: {
-              line: 0,
-              column: 0,
-            },
-            leftCharCount: 0,
-            leftLineFeedCount: 0,
-            length: 10,
-            lineFeedCount: 2,
-            color: Color.Black,
-            parent: 3,
-            left: SENTINEL_INDEX,
-            right: SENTINEL_INDEX,
-          },
-        ],
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
+        structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
       };
       const expectedPage: PageContentMutable = {
         buffers: [],
-        previouslyInsertedNodeIndex: null,
-        previouslyInsertedNodeOffset: null,
+        content: {
+          nodes: [
+            SENTINEL_CONTENT,
+            {
+              // u
+              bufferIndex: 1,
+              color: Color.Black,
+              end: {
+                column: 0,
+                line: 0,
+              },
+              left: SENTINEL_INDEX,
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              parent: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+              start: {
+                column: 0,
+                line: 0,
+              },
+            },
+            {
+              // v
+              bufferIndex: 2,
+              color: Color.Black,
+              end: {
+                column: 0,
+                line: 0,
+              },
+              left: SENTINEL_INDEX,
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              parent: 3,
+              right: SENTINEL_INDEX,
+              start: {
+                column: 0,
+                line: 0,
+              },
+            },
+            {
+              bufferIndex: 3,
+              color: Color.Black,
+              end: {
+                column: 0,
+                line: 0,
+              },
+              left: 2,
+              leftCharCount: 10,
+              leftLineFeedCount: 2,
+              length: 10,
+              lineFeedCount: 2,
+              parent: SENTINEL_INDEX,
+              right: 4,
+              start: {
+                column: 0,
+                line: 0,
+              },
+            },
+            {
+              bufferIndex: 4,
+              color: Color.Black,
+              end: {
+                column: 0,
+                line: 0,
+              },
+              left: SENTINEL_INDEX,
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              parent: 3,
+              right: SENTINEL_INDEX,
+              start: {
+                column: 0,
+                line: 0,
+              },
+            },
+          ],
+          root: 3,
+        },
         newlineFormat: NEWLINE.LF,
-        root: 3,
-        nodes: [
-          SENTINEL,
-          {
-            // u
-            bufferIndex: 1,
-            start: {
-              line: 0,
-              column: 0,
-            },
-            end: {
-              line: 0,
-              column: 0,
-            },
-            leftCharCount: 0,
-            leftLineFeedCount: 0,
-            length: 10,
-            lineFeedCount: 2,
-            color: Color.Black,
-            parent: SENTINEL_INDEX,
-            left: SENTINEL_INDEX,
-            right: SENTINEL_INDEX,
-          },
-          {
-            // v
-            bufferIndex: 2,
-            start: {
-              line: 0,
-              column: 0,
-            },
-            end: {
-              line: 0,
-              column: 0,
-            },
-            leftCharCount: 0,
-            leftLineFeedCount: 0,
-            length: 10,
-            lineFeedCount: 2,
-            color: Color.Black,
-            parent: 3,
-            left: SENTINEL_INDEX,
-            right: SENTINEL_INDEX,
-          },
-          {
-            bufferIndex: 3,
-            start: {
-              line: 0,
-              column: 0,
-            },
-            end: {
-              line: 0,
-              column: 0,
-            },
-            leftCharCount: 10,
-            leftLineFeedCount: 2,
-            length: 10,
-            lineFeedCount: 2,
-            color: Color.Black,
-            parent: SENTINEL_INDEX,
-            left: 2,
-            right: 4,
-          },
-          {
-            bufferIndex: 4,
-            start: {
-              line: 0,
-              column: 0,
-            },
-            end: {
-              line: 0,
-              column: 0,
-            },
-            leftCharCount: 0,
-            leftLineFeedCount: 0,
-            length: 10,
-            lineFeedCount: 2,
-            color: Color.Black,
-            parent: 3,
-            left: SENTINEL_INDEX,
-            right: SENTINEL_INDEX,
-          },
-        ],
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
+        structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
       };
-      deleteNode(page, 1);
+      deleteNode(page.content, 1);
       expect(page).toStrictEqual(expectedPage);
     });
 
     describe("Sibling s is black and at least one of s's children is red", () => {
-      test("Scenario 2: Right right case", () => {
+      test("Content: Scenario 2: Right right case", () => {
         const page: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          content: {
+            nodes: [
+              SENTINEL_CONTENT,
+              {
+                bufferIndex: 1,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 2,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 1,
+                leftCharCount: 10,
+                leftLineFeedCount: 2,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: 4,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 3,
+                color: Color.Red,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 4,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 4,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 3,
+                leftCharCount: 10,
+                leftLineFeedCount: 2,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: 5,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 5,
+                color: Color.Red,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 4,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+            ],
+            root: 2,
+          },
           newlineFormat: NEWLINE.LF,
-          root: 2,
-          nodes: [
-            SENTINEL,
-            {
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 1,
-              right: 4,
-            },
-            {
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 4,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 2,
-              left: 3,
-              right: 5,
-            },
-            {
-              bufferIndex: 5,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 4,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-          ],
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         const expectedPage: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          content: {
+            nodes: [
+              SENTINEL_CONTENT,
+              {
+                bufferIndex: 1,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 2,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 4,
+                right: 3,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 3,
+                color: Color.Red,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 4,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 2,
+                leftCharCount: 20,
+                leftLineFeedCount: 4,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: 5,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 5,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 4,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+            ],
+            root: 4,
+          },
           newlineFormat: NEWLINE.LF,
-          root: 4,
-          nodes: [
-            SENTINEL,
-            {
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 4,
-              left: SENTINEL_INDEX,
-              right: 3,
-            },
-            {
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 20,
-              leftLineFeedCount: 4,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 2,
-              right: 5,
-            },
-            {
-              bufferIndex: 5,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 4,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-          ],
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        deleteNode(page, 1);
+        deleteNode(page.content, 1);
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 3: Right left case", () => {
+      test("Content: Scenario 3: Right left case", () => {
         const page: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          content: {
+            nodes: [
+              SENTINEL_CONTENT,
+              {
+                bufferIndex: 1,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+
+              {
+                bufferIndex: 2,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 1,
+                leftCharCount: 10,
+                leftLineFeedCount: 2,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: 4,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+
+              {
+                bufferIndex: 3,
+                color: Color.Red,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 4,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 3,
+                leftCharCount: 10,
+                leftLineFeedCount: 2,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+            ],
+            root: 2,
+          },
           newlineFormat: NEWLINE.LF,
-          root: 2,
-          nodes: [
-            SENTINEL,
-            {
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-
-            {
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 1,
-              right: 4,
-            },
-
-            {
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 2,
-              left: 3,
-              right: SENTINEL_INDEX,
-            },
-          ],
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         const expectedPage: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          content: {
+            nodes: [
+              SENTINEL_CONTENT,
+              {
+                bufferIndex: 1,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 2,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 3,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 3,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 2,
+                leftCharCount: 10,
+                leftLineFeedCount: 2,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: 4,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 4,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 3,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+            ],
+            root: 3,
+          },
           newlineFormat: NEWLINE.LF,
-          root: 3,
-          nodes: [
-            SENTINEL,
-            {
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 3,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 2,
-              right: 4,
-            },
-            {
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 3,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-          ],
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        deleteNode(page, 1);
+        deleteNode(page.content, 1);
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 4: Left left case", () => {
+      test("Content: Scenario 4: Left left case", () => {
         const page: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          content: {
+            nodes: [
+              SENTINEL_CONTENT,
+              {
+                bufferIndex: 1,
+                color: Color.Red,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 2,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 1,
+                leftCharCount: 10,
+                leftLineFeedCount: 2,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 4,
+                right: 3,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 3,
+                color: Color.Red,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 4,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 2,
+                leftCharCount: 30,
+                leftLineFeedCount: 6,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: 5,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 5,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 4,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+            ],
+            root: 4,
+          },
           newlineFormat: NEWLINE.LF,
-          root: 4,
-          nodes: [
-            SENTINEL,
-            {
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 4,
-              left: 1,
-              right: 3,
-            },
-            {
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 30,
-              leftLineFeedCount: 6,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 2,
-              right: 5,
-            },
-            {
-              bufferIndex: 5,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 4,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-          ],
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         const expectedPage: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          content: {
+            nodes: [
+              SENTINEL_CONTENT,
+              {
+                bufferIndex: 1,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 2,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 1,
+                leftCharCount: 10,
+                leftLineFeedCount: 2,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: 4,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 3,
+                color: Color.Red,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 4,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 4,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 3,
+                leftCharCount: 10,
+                leftLineFeedCount: 2,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 5,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+            ],
+            root: 2,
+          },
           newlineFormat: NEWLINE.LF,
-          root: 2,
-          nodes: [
-            SENTINEL,
-            {
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 1,
-              right: 4,
-            },
-            {
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 4,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 2,
-              left: 3,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 5,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-          ],
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        deleteNode(page, 5);
+        deleteNode(page.content, 5);
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 5: Left right case", () => {
+      test("Content: Scenario 5: Left right case", () => {
         const page: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          content: {
+            nodes: [
+              SENTINEL_CONTENT,
+              {
+                bufferIndex: 1,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 3,
+                right: 2,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 2,
+                color: Color.Red,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 1,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 3,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 1,
+                leftCharCount: 20,
+                leftLineFeedCount: 4,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: 4,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 4,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 3,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+            ],
+            root: 3,
+          },
           newlineFormat: NEWLINE.LF,
-          root: 3,
-          nodes: [
-            SENTINEL,
-            {
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 3,
-              left: SENTINEL_INDEX,
-              right: 2,
-            },
-            {
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 1,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 20,
-              leftLineFeedCount: 4,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 1,
-              right: 4,
-            },
-            {
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 3,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-          ],
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         const expectedPage: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          content: {
+            nodes: [
+              SENTINEL_CONTENT,
+              {
+                bufferIndex: 1,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 2,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 1,
+                leftCharCount: 10,
+                leftLineFeedCount: 2,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: 3,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 3,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 4,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+            ],
+            root: 2,
+          },
           newlineFormat: NEWLINE.LF,
-          root: 2,
-          nodes: [
-            SENTINEL,
-            {
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 1,
-              right: 3,
-            },
-            {
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-          ],
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        deleteNode(page, 4);
+        deleteNode(page.content, 4);
         expect(page).toStrictEqual(expectedPage);
       });
     });
 
-    test("Scenario 6: Sibling s is black, and both its children are black", () => {
+    test("Content: Scenario 6: Sibling s is black, and both its children are black", () => {
       const page: PageContentMutable = {
         buffers: [],
-        previouslyInsertedNodeIndex: null,
-        previouslyInsertedNodeOffset: null,
+        content: {
+          nodes: [
+            SENTINEL_CONTENT,
+            {
+              bufferIndex: 1,
+              color: Color.Black,
+              end: {
+                column: 0,
+                line: 0,
+              },
+              left: SENTINEL_INDEX,
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              parent: 2,
+              right: SENTINEL_INDEX,
+              start: {
+                column: 0,
+                line: 0,
+              },
+            },
+            {
+              bufferIndex: 2,
+              color: Color.Black,
+              end: {
+                column: 0,
+                line: 0,
+              },
+              left: 1,
+              leftCharCount: 10,
+              leftLineFeedCount: 2,
+              length: 10,
+              lineFeedCount: 2,
+              parent: SENTINEL_INDEX,
+              right: 3,
+              start: {
+                column: 0,
+                line: 0,
+              },
+            },
+            {
+              bufferIndex: 3,
+              color: Color.Black,
+              end: {
+                column: 0,
+                line: 0,
+              },
+              left: SENTINEL_INDEX,
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              parent: 2,
+              right: SENTINEL_INDEX,
+              start: {
+                column: 0,
+                line: 0,
+              },
+            },
+          ],
+          root: 2,
+        },
         newlineFormat: NEWLINE.LF,
-        root: 2,
-        nodes: [
-          SENTINEL,
-          {
-            bufferIndex: 1,
-            start: {
-              line: 0,
-              column: 0,
-            },
-            end: {
-              line: 0,
-              column: 0,
-            },
-            leftCharCount: 0,
-            leftLineFeedCount: 0,
-            length: 10,
-            lineFeedCount: 2,
-            color: Color.Black,
-            parent: 2,
-            left: SENTINEL_INDEX,
-            right: SENTINEL_INDEX,
-          },
-          {
-            bufferIndex: 2,
-            start: {
-              line: 0,
-              column: 0,
-            },
-            end: {
-              line: 0,
-              column: 0,
-            },
-            leftCharCount: 10,
-            leftLineFeedCount: 2,
-            length: 10,
-            lineFeedCount: 2,
-            color: Color.Black,
-            parent: SENTINEL_INDEX,
-            left: 1,
-            right: 3,
-          },
-          {
-            bufferIndex: 3,
-            start: {
-              line: 0,
-              column: 0,
-            },
-            end: {
-              line: 0,
-              column: 0,
-            },
-            leftCharCount: 0,
-            leftLineFeedCount: 0,
-            length: 10,
-            lineFeedCount: 2,
-            color: Color.Black,
-            parent: 2,
-            left: SENTINEL_INDEX,
-            right: SENTINEL_INDEX,
-          },
-        ],
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
+        structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
       };
       const expectedPage: PageContentMutable = {
         buffers: [],
-        previouslyInsertedNodeIndex: null,
-        previouslyInsertedNodeOffset: null,
+        content: {
+          nodes: [
+            SENTINEL_CONTENT,
+            {
+              bufferIndex: 1,
+              color: Color.Black,
+              end: {
+                column: 0,
+                line: 0,
+              },
+              left: SENTINEL_INDEX,
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              parent: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+              start: {
+                column: 0,
+                line: 0,
+              },
+            },
+            {
+              bufferIndex: 2,
+              color: Color.Black,
+              end: {
+                column: 0,
+                line: 0,
+              },
+              left: SENTINEL_INDEX,
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              parent: SENTINEL_INDEX,
+              right: 3,
+              start: {
+                column: 0,
+                line: 0,
+              },
+            },
+            {
+              bufferIndex: 3,
+              color: Color.Red,
+              end: {
+                column: 0,
+                line: 0,
+              },
+              left: SENTINEL_INDEX,
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 10,
+              lineFeedCount: 2,
+              parent: 2,
+              right: SENTINEL_INDEX,
+              start: {
+                column: 0,
+                line: 0,
+              },
+            },
+          ],
+          root: 2,
+        },
         newlineFormat: NEWLINE.LF,
-        root: 2,
-        nodes: [
-          SENTINEL,
-          {
-            bufferIndex: 1,
-            start: {
-              line: 0,
-              column: 0,
-            },
-            end: {
-              line: 0,
-              column: 0,
-            },
-            leftCharCount: 0,
-            leftLineFeedCount: 0,
-            length: 10,
-            lineFeedCount: 2,
-            color: Color.Black,
-            parent: SENTINEL_INDEX,
-            left: SENTINEL_INDEX,
-            right: SENTINEL_INDEX,
-          },
-          {
-            bufferIndex: 2,
-            start: {
-              line: 0,
-              column: 0,
-            },
-            end: {
-              line: 0,
-              column: 0,
-            },
-            leftCharCount: 0,
-            leftLineFeedCount: 0,
-            length: 10,
-            lineFeedCount: 2,
-            color: Color.Black,
-            parent: SENTINEL_INDEX,
-            left: SENTINEL_INDEX,
-            right: 3,
-          },
-          {
-            bufferIndex: 3,
-            start: {
-              line: 0,
-              column: 0,
-            },
-            end: {
-              line: 0,
-              column: 0,
-            },
-            leftCharCount: 0,
-            leftLineFeedCount: 0,
-            length: 10,
-            lineFeedCount: 2,
-            color: Color.Red,
-            parent: 2,
-            left: SENTINEL_INDEX,
-            right: SENTINEL_INDEX,
-          },
-        ],
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
+        structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
       };
-      deleteNode(page, 1);
+      deleteNode(page.content, 1);
       expect(page).toStrictEqual(expectedPage);
     });
 
     describe("Sibling s is red", () => {
-      test("Scenario 7: sibling s is right child of its parent", () => {
+      test("Content: Scenario 7: sibling s is right child of its parent", () => {
         const page: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          content: {
+            nodes: [
+              SENTINEL_CONTENT,
+              {
+                bufferIndex: 1,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 2,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 1,
+                leftCharCount: 10,
+                leftLineFeedCount: 2,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: 4,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 3,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 4,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 4,
+                color: Color.Red,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 3,
+                leftCharCount: 10,
+                leftLineFeedCount: 2,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: 5,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 5,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 4,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+            ],
+            root: 2,
+          },
           newlineFormat: NEWLINE.LF,
-          root: 2,
-          nodes: [
-            SENTINEL,
-            {
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 1,
-              right: 4,
-            },
-            {
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 4,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 2,
-              left: 3,
-              right: 5,
-            },
-            {
-              bufferIndex: 5,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 4,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-          ],
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         const expectedPage: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          content: {
+            nodes: [
+              SENTINEL_CONTENT,
+              {
+                bufferIndex: 1,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 2,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 4,
+                right: 3,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 3,
+                color: Color.Red,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 4,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 2,
+                leftCharCount: 20,
+                leftLineFeedCount: 4,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: 5,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 5,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 4,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+            ],
+            root: 4,
+          },
           newlineFormat: NEWLINE.LF,
-          root: 4,
-          nodes: [
-            SENTINEL,
-            {
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 4,
-              left: SENTINEL_INDEX,
-              right: 3,
-            },
-            {
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 20,
-              leftLineFeedCount: 4,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 2,
-              right: 5,
-            },
-            {
-              bufferIndex: 5,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 4,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-          ],
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        deleteNode(page, 1);
+        deleteNode(page.content, 1);
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 8: sibling s is left child of its parent", () => {
+      test("Content: Scenario 8: sibling s is left child of its parent", () => {
         const page: PageContentMutable = {
           buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
+          content: {
+            nodes: [
+              SENTINEL_CONTENT,
+              {
+                bufferIndex: 1,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 2,
+                color: Color.Red,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 1,
+                leftCharCount: 10,
+                leftLineFeedCount: 2,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 4,
+                right: 3,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 3,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 4,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 2,
+                leftCharCount: 30,
+                leftLineFeedCount: 6,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: 5,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 5,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 4,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+            ],
+            root: 4,
+          },
           newlineFormat: NEWLINE.LF,
-          root: 4,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
+        };
+        const expectedPage: PageContentMutable = {
+          buffers: [],
+          content: {
+            nodes: [
+              SENTINEL_CONTENT,
+              {
+                bufferIndex: 1,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 2,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 1,
+                leftCharCount: 10,
+                leftLineFeedCount: 2,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: 4,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 3,
+                color: Color.Red,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 4,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 4,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: 3,
+                leftCharCount: 10,
+                leftLineFeedCount: 2,
+                length: 10,
+                lineFeedCount: 2,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+              {
+                bufferIndex: 5,
+                color: Color.Black,
+                end: {
+                  column: 0,
+                  line: 0,
+                },
+                left: SENTINEL_INDEX,
+                leftCharCount: 0,
+                leftLineFeedCount: 0,
+                length: 10,
+                lineFeedCount: 2,
+                parent: SENTINEL_INDEX,
+                right: SENTINEL_INDEX,
+                start: {
+                  column: 0,
+                  line: 0,
+                },
+              },
+            ],
+            root: 2,
+          },
+          newlineFormat: NEWLINE.LF,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
+        };
+        deleteNode(page.content, 5);
+        expect(page).toStrictEqual(expectedPage);
+      });
+    });
+
+    test("Content: Scenario 9: delete root", () => {
+      const page: PageContentMutable = {
+        buffers: [],
+        content: {
           nodes: [
-            SENTINEL,
+            SENTINEL_CONTENT,
             {
               bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
               color: Color.Black,
-              parent: 2,
+              end: {
+                column: 0,
+                line: 0,
+              },
               left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 4,
-              left: 1,
-              right: 3,
-            },
-            {
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
               leftCharCount: 30,
               leftLineFeedCount: 6,
               length: 10,
               lineFeedCount: 2,
-              color: Color.Black,
               parent: SENTINEL_INDEX,
-              left: 2,
-              right: 5,
-            },
-            {
-              bufferIndex: 5,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 4,
-              left: SENTINEL_INDEX,
               right: SENTINEL_INDEX,
+              start: {
+                column: 0,
+                line: 0,
+              },
             },
           ],
-        };
-        const expectedPage: PageContentMutable = {
-          buffers: [],
-          previouslyInsertedNodeIndex: null,
-          previouslyInsertedNodeOffset: null,
-          newlineFormat: NEWLINE.LF,
-          root: 2,
-          nodes: [
-            SENTINEL,
-            {
-              bufferIndex: 1,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 2,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 2,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: 1,
-              right: 4,
-            },
-            {
-              bufferIndex: 3,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Red,
-              parent: 4,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 4,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 10,
-              leftLineFeedCount: 2,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: 2,
-              left: 3,
-              right: SENTINEL_INDEX,
-            },
-            {
-              bufferIndex: 5,
-              start: {
-                line: 0,
-                column: 0,
-              },
-              end: {
-                line: 0,
-                column: 0,
-              },
-              leftCharCount: 0,
-              leftLineFeedCount: 0,
-              length: 10,
-              lineFeedCount: 2,
-              color: Color.Black,
-              parent: SENTINEL_INDEX,
-              left: SENTINEL_INDEX,
-              right: SENTINEL_INDEX,
-            },
-          ],
-        };
-        deleteNode(page, 5);
-        expect(page).toStrictEqual(expectedPage);
-      });
-    });
-
-    test("Scenario 9: delete root", () => {
-      const page: PageContentMutable = {
-        buffers: [],
-        previouslyInsertedNodeIndex: null,
-        previouslyInsertedNodeOffset: null,
+          root: 1,
+        },
         newlineFormat: NEWLINE.LF,
-        root: 1,
-        nodes: [
-          SENTINEL,
-          {
-            bufferIndex: 1,
-            start: {
-              line: 0,
-              column: 0,
-            },
-            end: {
-              line: 0,
-              column: 0,
-            },
-            leftCharCount: 30,
-            leftLineFeedCount: 6,
-            length: 10,
-            lineFeedCount: 2,
-            color: Color.Black,
-            parent: SENTINEL_INDEX,
-            left: SENTINEL_INDEX,
-            right: SENTINEL_INDEX,
-          },
-        ],
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
+        structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
       };
       const expectedPage: PageContentMutable = {
         buffers: [],
-        previouslyInsertedNodeIndex: null,
-        previouslyInsertedNodeOffset: null,
+        content: {
+          nodes: [
+            SENTINEL_CONTENT,
+            {
+              bufferIndex: 1,
+              color: Color.Black,
+              end: {
+                column: 0,
+                line: 0,
+              },
+              left: SENTINEL_INDEX,
+              leftCharCount: 30,
+              leftLineFeedCount: 6,
+              length: 10,
+              lineFeedCount: 2,
+              parent: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+              start: {
+                column: 0,
+                line: 0,
+              },
+            },
+          ],
+          root: SENTINEL_INDEX,
+        },
         newlineFormat: NEWLINE.LF,
-        root: SENTINEL_INDEX,
-        nodes: [
-          SENTINEL,
-          {
-            bufferIndex: 1,
-            start: {
-              line: 0,
-              column: 0,
-            },
-            end: {
-              line: 0,
-              column: 0,
-            },
-            leftCharCount: 30,
-            leftLineFeedCount: 6,
-            length: 10,
-            lineFeedCount: 2,
-            color: Color.Black,
-            parent: SENTINEL_INDEX,
-            left: SENTINEL_INDEX,
-            right: SENTINEL_INDEX,
-          },
-        ],
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
+        structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
       };
-      deleteNode(page, 1);
+      deleteNode(page.content, 1);
       expect(page).toStrictEqual(expectedPage);
     });
   });
 
-  describe("delete content", () => {
-    describe("Scenario 1", () => {
-      describe("Scenario 1a: delete the content from an entire node", () => {
-        test("Scenario 1a: Test 1", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 5,
-            endOffset: 7,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
+  describe("Structure nodes", () => {
+    test("Structure: Scenario 1: Simple case", () => {
+      const page: PageContentMutable = {
+        buffers: [],
+        content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+        newlineFormat: NEWLINE.LF,
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
+        structure: {
+          nodes: [
+            SENTINEL_STRUCTURE,
+            {
+              // u
+              // 1
+              color: Color.Red,
+              id: "helloWorld",
+              left: SENTINEL_INDEX,
+              leftSubTreeLength: 0,
+              length: 0,
+              parent: 2,
+              right: SENTINEL_INDEX,
+              tag: "id",
+              tagType: TagType.StartEndTag,
+            },
+            {
+              // v
+              // 2
+              color: Color.Black,
+              id: "helloWorld",
+              left: 1,
+              leftSubTreeLength: 1,
+              length: 0,
+              parent: 3,
+              right: SENTINEL_INDEX,
+              tag: "id",
+              tagType: TagType.StartEndTag,
+            },
+            {
+              // 3
+              color: Color.Black,
+              id: "helloWorld",
+              left: 2,
+              leftSubTreeLength: 2,
+              length: 0,
+              parent: SENTINEL_INDEX,
+              right: 4,
+              tag: "id",
+              tagType: TagType.StartEndTag,
+            },
+            {
+              // 4
+              color: Color.Black,
+              id: "helloWorld",
+              left: SENTINEL_INDEX,
+              leftSubTreeLength: 0,
+              length: 0,
+              parent: 3,
+              right: SENTINEL_INDEX,
+              tag: "id",
+              tagType: TagType.StartEndTag,
+            },
+          ],
+          root: 3,
+        },
+      };
+      const expectedPage: PageContentMutable = {
+        buffers: [],
+        content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+        newlineFormat: NEWLINE.LF,
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
+        structure: {
+          nodes: [
+            SENTINEL_STRUCTURE,
+            {
+              // u
+              // 1
+              color: Color.Black,
+              id: "helloWorld",
+              left: SENTINEL_INDEX,
+              leftSubTreeLength: 0,
+              length: 0,
+              parent: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+              tag: "id",
+              tagType: TagType.StartEndTag,
+            },
+            {
+              // v
+              // 2
+              color: Color.Black,
+              id: "helloWorld",
+              left: SENTINEL_INDEX,
+              leftSubTreeLength: 0,
+              length: 0,
+              parent: 3,
+              right: SENTINEL_INDEX,
+              tag: "id",
+              tagType: TagType.StartEndTag,
+            },
+            {
+              // 3
+              color: Color.Black,
+              id: "helloWorld",
+              left: 2,
+              leftSubTreeLength: 1,
+              length: 0,
+              parent: SENTINEL_INDEX,
+              right: 4,
+              tag: "id",
+              tagType: TagType.StartEndTag,
+            },
+            {
+              // 4
+              color: Color.Black,
+              id: "helloWorld",
+              left: SENTINEL_INDEX,
+              leftSubTreeLength: 0,
+              length: 0,
+              parent: 3,
+              right: SENTINEL_INDEX,
+              tag: "id",
+              tagType: TagType.StartEndTag,
+            },
+          ],
+          root: 3,
+        },
+      };
+      deleteNode(page.structure, 1);
+      expect(page).toStrictEqual(expectedPage);
+    });
 
-        test("Scenario 1a: Test 2", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
+    describe("Sibling s is black and at least one of s's children is red", () => {
+      test("Structure: Scenario 2: Right right case", () => {
+        const page: PageContentMutable = {
+          buffers: [],
+          content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+          newlineFormat: NEWLINE.LF,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: {
             nodes: [
-              SENTINEL,
+              SENTINEL_STRUCTURE,
               {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
+                // 1
                 color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
+                id: "helloWorld",
                 left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 0,
-            endOffset: 2,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1a: Test 3", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 2,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 0,
-            endOffset: 5,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1a: Test 4", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 2,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 2,
-            endOffset: 7,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-      });
-
-      describe("Scenario 1b: delete from the start of a node to a point in the node", () => {
-        test("Scenario 1b: Test 1", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 0,
-            endOffset: 4,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1b: Test 2", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 2,
-            endOffset: 6,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1b: Test 3", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 3 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 2,
-            endOffset: 5,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1b: Test 4", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 2 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 3,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 2,
-            endOffset: 4,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1b: Test 5", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 2 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 5,
-            endOffset: 6,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1b: Test 6", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 2 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 0,
-            endOffset: 1,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-      });
-
-      describe("Scenario 1c: delete from a point in a node to the end of the node", () => {
-        test("Scenario 1c: Test 1", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 2 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 2,
-            endOffset: 5,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1c: Test 2", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 3,
-            endOffset: 5,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1c: Test 3", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 4,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 4,
-            endOffset: 5,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1c: Test 4", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndzef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 2 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 6,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 2 },
-                end: { line: 1, column: 4 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndzef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 2 },
-                end: { line: 1, column: 4 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 5,
-            endOffset: 6,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1c: Test 5", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 2 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 4,
-            endOffset: 7,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1c: Test 6", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 2 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 6,
-            endOffset: 7,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1c: Test 7", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 0,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 2 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 1,
-            endOffset: 2,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-      });
-
-      describe("Scenario 1d: delete from a point in a node to another point in the node", () => {
-        test("Scenario 1d: Test 1", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 2 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 3,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 3,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 1,
-                right: 2,
-              },
-            ],
-            root: 3,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 2,
-            endOffset: 4,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1d: Test 2", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 3,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 3,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 3,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 1,
-                right: 2,
-              },
-            ],
-            root: 3,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 3,
-            endOffset: 4,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1d: Test 3", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: 1,
-            previouslyInsertedNodeOffset: 5,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 2 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 3,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 3,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 3 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 1,
-                right: 2,
-              },
-            ],
-            root: 3,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 2,
-            endOffset: 3,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1d: Test 4", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 2 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: 3,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 4,
-            endOffset: 6,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1d: Test 5", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndef",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 2 },
-                leftCharCount: 2,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: 3,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 3 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 3 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 4,
-            endOffset: 5,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 1d: Test 6", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndefgh",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 2,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 5 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 4,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndefgh",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Red,
+                leftSubTreeLength: 0,
+                length: 0,
                 parent: 2,
-                left: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 2 },
-                leftCharCount: 5,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
+                // 2
                 color: Color.Black,
-                parent: SENTINEL_INDEX,
+                id: "helloWorld",
                 left: 1,
-                right: 3,
+                leftSubTreeLength: 1,
+                length: 0,
+                parent: SENTINEL_INDEX,
+                right: 4,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
-                bufferIndex: 0,
-                start: { line: 1, column: 4 },
-                end: { line: 1, column: 5 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
+                // 3
                 color: Color.Red,
-                parent: 2,
+                id: "helloWorld",
                 left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 4,
                 right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 4
+                color: Color.Black,
+                id: "helloWorld",
+                left: 3,
+                leftSubTreeLength: 1,
+                length: 0,
+                parent: 2,
+                right: 5,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 5
+                color: Color.Red,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 4,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
             ],
             root: 2,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 6,
-            endOffset: 8,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
+          },
+        };
+        const expectedPage: PageContentMutable = {
+          buffers: [],
+          content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+          newlineFormat: NEWLINE.LF,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: {
+            nodes: [
+              SENTINEL_STRUCTURE,
+              {
+                // 1
+                color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: SENTINEL_INDEX,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 2
+                color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 4,
+                right: 3,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 3
+                color: Color.Red,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 4
+                color: Color.Black,
+                id: "helloWorld",
+                left: 2,
+                leftSubTreeLength: 2,
+                length: 0,
+                parent: SENTINEL_INDEX,
+                right: 5,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 5
+                color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 4,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+            ],
+            root: 4,
+          },
+        };
+        deleteNode(page.structure, 1);
+        expect(page).toStrictEqual(expectedPage);
+      });
 
-        test("Scenario 1d: Test 7", () => {
-          const page: PageContentMutable = {
-            buffers: [
-              {
-                content: "abc\ndefgh",
-                lineStarts: [0, 4],
-                isReadOnly: false,
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
+      test("Structure: Scenario 3: Right left case", () => {
+        const page: PageContentMutable = {
+          buffers: [],
+          content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+          newlineFormat: NEWLINE.LF,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: {
             nodes: [
-              SENTINEL,
+              SENTINEL_STRUCTURE,
               {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 4,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
+                // 1
                 color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 5 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 4,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 1,
+                id: "helloWorld",
                 left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 2,
                 right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          const expectedPage: PageContentMutable = {
-            buffers: [
+
               {
-                content: "abc\ndefgh",
-                lineStarts: [0, 4],
-                isReadOnly: false,
+                // 2
+                color: Color.Black,
+                id: "helloWorld",
+                left: 1,
+                leftSubTreeLength: 1,
+                length: 0,
+                parent: SENTINEL_INDEX,
+                right: 4,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+
+              {
+                // 3
+                color: Color.Red,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 4
+                color: Color.Black,
+                id: "helloWorld",
+                left: 3,
+                leftSubTreeLength: 1,
+                length: 0,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
             ],
-            newlineFormat: NEWLINE.LF,
+            root: 2,
+          },
+        };
+        const expectedPage: PageContentMutable = {
+          buffers: [],
+          content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+          newlineFormat: NEWLINE.LF,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: {
             nodes: [
-              SENTINEL,
+              SENTINEL_STRUCTURE,
               {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 1,
-                color: Color.Red,
-                parent: 3,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 1 },
-                end: { line: 1, column: 2 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 3,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 4 },
-                end: { line: 1, column: 5 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
+                // 1
                 color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
                 parent: SENTINEL_INDEX,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 2
+                color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 3,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 3
+                color: Color.Black,
+                id: "helloWorld",
                 left: 2,
-                right: 1,
+                leftSubTreeLength: 1,
+                length: 0,
+                parent: SENTINEL_INDEX,
+                right: 4,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 4
+                color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 3,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
             ],
             root: 3,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 1,
-            endOffset: 3,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
+          },
+        };
+        deleteNode(page.structure, 1);
+        expect(page).toStrictEqual(expectedPage);
+      });
+
+      test("Structure: Scenario 4: Left left case", () => {
+        const page: PageContentMutable = {
+          buffers: [],
+          content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+          newlineFormat: NEWLINE.LF,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: {
+            nodes: [
+              SENTINEL_STRUCTURE,
+              {
+                // 1
+                color: Color.Red,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 2
+                color: Color.Black,
+                id: "helloWorld",
+                left: 1,
+                leftSubTreeLength: 1,
+                length: 0,
+                parent: 4,
+                right: 3,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 3
+                color: Color.Red,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 4
+                color: Color.Black,
+                id: "helloWorld",
+                left: 2,
+                leftSubTreeLength: 3,
+                length: 0,
+                parent: SENTINEL_INDEX,
+                right: 5,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 5
+                color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 4,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+            ],
+            root: 4,
+          },
+        };
+        const expectedPage: PageContentMutable = {
+          buffers: [],
+          content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+          newlineFormat: NEWLINE.LF,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: {
+            nodes: [
+              SENTINEL_STRUCTURE,
+              {
+                // 1
+                color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 2
+                color: Color.Black,
+                id: "helloWorld",
+                left: 1,
+                leftSubTreeLength: 1,
+                length: 0,
+                parent: SENTINEL_INDEX,
+                right: 4,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 3
+                color: Color.Red,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 4,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 4
+                color: Color.Black,
+                id: "helloWorld",
+                left: 3,
+                leftSubTreeLength: 1,
+                length: 0,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 5
+                color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: SENTINEL_INDEX,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+            ],
+            root: 2,
+          },
+        };
+        deleteNode(page.structure, 5);
+        expect(page).toStrictEqual(expectedPage);
+      });
+
+      test("Structure: Scenario 5: Left right case", () => {
+        const page: PageContentMutable = {
+          buffers: [],
+          content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+          newlineFormat: NEWLINE.LF,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: {
+            nodes: [
+              SENTINEL_STRUCTURE,
+              {
+                // 1
+                color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 3,
+                right: 2,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 2
+                color: Color.Red,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 1,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 3
+                color: Color.Black,
+                id: "helloWorld",
+                left: 1,
+                leftSubTreeLength: 2,
+                length: 0,
+                parent: SENTINEL_INDEX,
+                right: 4,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 4
+                color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 3,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+            ],
+            root: 3,
+          },
+        };
+        const expectedPage: PageContentMutable = {
+          buffers: [],
+          content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+          newlineFormat: NEWLINE.LF,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: {
+            nodes: [
+              SENTINEL_STRUCTURE,
+              {
+                // 1
+                color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 2
+                color: Color.Black,
+                id: "helloWorld",
+                left: 1,
+                leftSubTreeLength: 1,
+                length: 0,
+                parent: SENTINEL_INDEX,
+                right: 3,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 3
+                color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 2,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+              {
+                // 4
+                color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: SENTINEL_INDEX,
+                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
+              },
+            ],
+            root: 2,
+          },
+        };
+        deleteNode(page.structure, 4);
+        expect(page).toStrictEqual(expectedPage);
       });
     });
 
-    describe("Scenario 2", () => {
-      describe("Scenario 2a: delete from the start of a node to the end of another node", () => {
-        test("Scenario 2a: Test 1", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
+    test("Structure: Scenario 6: Sibling s is black, and both its children are black", () => {
+      const page: PageContentMutable = {
+        buffers: [],
+        content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+        newlineFormat: NEWLINE.LF,
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
+        structure: {
+          nodes: [
+            SENTINEL_STRUCTURE,
+            {
+              // 1
+              color: Color.Black,
+              id: "helloWorld",
+              left: SENTINEL_INDEX,
+              leftSubTreeLength: 0,
+              length: 0,
+              parent: 2,
+              right: SENTINEL_INDEX,
+              tag: "id",
+              tagType: TagType.StartEndTag,
+            },
+            {
+              // 2
+              color: Color.Black,
+              id: "helloWorld",
+              left: 1,
+              leftSubTreeLength: 1,
+              length: 0,
+              parent: SENTINEL_INDEX,
+              right: 3,
+              tag: "id",
+              tagType: TagType.StartEndTag,
+            },
+            {
+              // 3
+              color: Color.Black,
+              id: "helloWorld",
+              left: SENTINEL_INDEX,
+              leftSubTreeLength: 0,
+              length: 0,
+              parent: 2,
+              right: SENTINEL_INDEX,
+              tag: "id",
+              tagType: TagType.StartEndTag,
+            },
+          ],
+          root: 2,
+        },
+      };
+      const expectedPage: PageContentMutable = {
+        buffers: [],
+        content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+        newlineFormat: NEWLINE.LF,
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
+        structure: {
+          nodes: [
+            SENTINEL_STRUCTURE,
+            {
+              // 1
+              color: Color.Black,
+              id: "helloWorld",
+              left: SENTINEL_INDEX,
+              leftSubTreeLength: 0,
+              length: 0,
+              parent: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+              tag: "id",
+              tagType: TagType.StartEndTag,
+            },
+            {
+              // 2
+              color: Color.Black,
+              id: "helloWorld",
+              left: SENTINEL_INDEX,
+              leftSubTreeLength: 0,
+              length: 0,
+              parent: SENTINEL_INDEX,
+              right: 3,
+              tag: "id",
+              tagType: TagType.StartEndTag,
+            },
+            {
+              // 3
+              color: Color.Red,
+              id: "helloWorld",
+              left: SENTINEL_INDEX,
+              leftSubTreeLength: 0,
+              length: 0,
+              parent: 2,
+              right: SENTINEL_INDEX,
+              tag: "id",
+              tagType: TagType.StartEndTag,
+            },
+          ],
+          root: 2,
+        },
+      };
+      deleteNode(page.structure, 1);
+      expect(page).toStrictEqual(expectedPage);
+    });
+
+    describe("Sibling s is red", () => {
+      test("Structure: Scenario 7: sibling s is right child of its parent", () => {
+        const page: PageContentMutable = {
+          buffers: [],
+          content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+          newlineFormat: NEWLINE.LF,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: {
             nodes: [
-              SENTINEL,
+              SENTINEL_STRUCTURE,
               {
                 // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Red,
+                color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
                 parent: 2,
-                left: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
                 // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
                 color: Color.Black,
-                parent: 10,
+                id: "helloWorld",
                 left: 1,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Black,
+                leftSubTreeLength: 1,
+                length: 0,
                 parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 66,
-                leftLineFeedCount: 1,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 66,
-                leftLineFeedCount: 1,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 66,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 66,
-                leftLineFeedCount: 1,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 66,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 66,
-                leftLineFeedCount: 1,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 10,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 66,
-            endOffset: 94,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2a: Test 2", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 1,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 10,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 65,
-            endOffset: 94,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2a: Test 3", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 10,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 0,
-            endOffset: 94,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2a: Test 4", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: 2,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 8,
-                left: 1,
                 right: 4,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
                 // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 4,
+                color: Color.Black,
+                id: "helloWorld",
                 left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 4,
                 right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
                 // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 14,
-                leftLineFeedCount: 0,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 2,
+                color: Color.Red,
+                id: "helloWorld",
                 left: 3,
-                right: SENTINEL_INDEX,
+                leftSubTreeLength: 1,
+                length: 0,
+                parent: 2,
+                right: 5,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
                 // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
                 color: Color.Black,
-                parent: SENTINEL_INDEX,
+                id: "helloWorld",
                 left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 83,
-                leftLineFeedCount: 1,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 83,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 83,
-                leftLineFeedCount: 1,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: 10,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 8,
-                left: 9,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 8,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 83,
-            endOffset: 88,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2a: Test 5", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: 2,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 1,
-                right: 4,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Red,
+                leftSubTreeLength: 0,
+                length: 0,
                 parent: 4,
-                left: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 14,
-                leftLineFeedCount: 0,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 2,
-                left: 3,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 83,
-                leftLineFeedCount: 1,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 83,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 83,
-                leftLineFeedCount: 1,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 83,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 83,
-                leftLineFeedCount: 1,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
             ],
             root: 2,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 83,
-            endOffset: 127,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2a: Test 6", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
+          },
+        };
+        const expectedPage: PageContentMutable = {
+          buffers: [],
+          content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+          newlineFormat: NEWLINE.LF,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: {
             nodes: [
-              SENTINEL,
+              SENTINEL_STRUCTURE,
               {
                 // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Red,
-                parent: 2,
+                color: Color.Black,
+                id: "helloWorld",
                 left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
                 // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
                 color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
                 parent: 4,
-                left: 1,
                 right: 3,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
                 // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
                 color: Color.Red,
-                parent: 2,
+                id: "helloWorld",
                 left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 2,
                 right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
                 // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 80,
-                leftLineFeedCount: 1,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
+                color: Color.Black,
+                id: "helloWorld",
                 left: 2,
+                leftSubTreeLength: 2,
+                length: 0,
+                parent: SENTINEL_INDEX,
                 right: 5,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
                 // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
                 color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
                 parent: 4,
-                left: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 85,
-                leftLineFeedCount: 2,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 4,
-                right: 8,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 8,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 6,
-                left: 7,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Black,
-                left: SENTINEL_INDEX,
-                parent: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
             ],
-            root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 93,
-            endOffset: 127,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2a: Test 7", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 6,
-                left: SENTINEL_INDEX,
-                right: 5,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Red,
-                parent: 4,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 5,
-                leftLineFeedCount: 1,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 4,
-                right: 8,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 8,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 7,
-                right: 10,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Black,
-                left: 9,
-                parent: 8,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 0,
-            endOffset: 80,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2a: Test 8", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: 2,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 1,
-                right: 3,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 2,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 80,
-                leftLineFeedCount: 1,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 14,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 80,
-                leftLineFeedCount: 1,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: 8,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 8,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 7,
-                right: 10,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Black,
-                left: 9,
-                parent: 8,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 80,
-            endOffset: 85,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
+            root: 4,
+          },
+        };
+        deleteNode(page.structure, 1);
+        expect(page).toStrictEqual(expectedPage);
       });
 
-      describe("Scenario 2b: delete from the start of a node to a point in another node", () => {
-        test("Scenario 2b: Test 1", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
+      test("Structure: Scenario 8: sibling s is left child of its parent", () => {
+        const page: PageContentMutable = {
+          buffers: [],
+          content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+          newlineFormat: NEWLINE.LF,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: {
             nodes: [
-              SENTINEL,
+              SENTINEL_STRUCTURE,
               {
                 // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Red,
+                color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
                 parent: 2,
-                left: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
                 // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 8,
+                color: Color.Red,
+                id: "helloWorld",
                 left: 1,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 66,
-                leftLineFeedCount: 1,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 66,
-                leftLineFeedCount: 1,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 66,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 9 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 66,
-                leftLineFeedCount: 1,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: 10,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 8,
-                left: 9,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 8,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 66,
-            endOffset: 90,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2b: Test 2", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 46 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: 6,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 1,
-                leftLineFeedCount: 1,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 5,
-                right: 8,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 8,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 7,
-                right: 10,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 8,
-                left: 9,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 0,
-            endOffset: 84,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2b: Test 3", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Red,
-                parent: 3,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 32 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 10,
-                lineFeedCount: 0,
-                color: Color.Black,
+                leftSubTreeLength: 1,
+                length: 0,
                 parent: 4,
-                left: 1,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 75,
-                leftLineFeedCount: 1,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 3,
-                right: 5,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: 4,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 80,
-                leftLineFeedCount: 2,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 4,
-                right: 8,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 8,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 7,
-                right: 10,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Black,
-                left: 9,
-                parent: 8,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 65,
-            endOffset: 70,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2b: Test 4", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Red,
-                parent: 2,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 4,
-                left: 1,
                 right: 3,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
                 // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 2,
+                color: Color.Black,
+                id: "helloWorld",
                 left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 2,
                 right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
                 // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 80,
-                leftLineFeedCount: 1,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
+                color: Color.Black,
+                id: "helloWorld",
                 left: 2,
+                leftSubTreeLength: 3,
+                length: 0,
+                parent: SENTINEL_INDEX,
                 right: 5,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
                 // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
                 color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
                 parent: 4,
-                left: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 85,
-                leftLineFeedCount: 2,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 4,
-                right: 10,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 9 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: 9,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 8,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 4,
-                leftLineFeedCount: 0,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Red,
-                left: 8,
-                parent: 6,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
             ],
-            root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 87,
-            endOffset: 90,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-      });
-
-      describe("Scenario 2c: delete from a point in a node to the end of another node", () => {
-        test("Scenario 2c: Test 1", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
+            root: 4,
+          },
+        };
+        const expectedPage: PageContentMutable = {
+          buffers: [],
+          content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+          newlineFormat: NEWLINE.LF,
+          previouslyInsertedContentNodeIndex: null,
+          previouslyInsertedContentNodeOffset: null,
+          structure: {
             nodes: [
-              SENTINEL,
+              SENTINEL_STRUCTURE,
               {
                 // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 31 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 31,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 3,
+                color: Color.Black,
+                id: "helloWorld",
                 left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 31,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 31,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 4,
-                left: 1,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 45,
-                leftLineFeedCount: 0,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 3,
-                right: 5,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: 4,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 50,
-                leftLineFeedCount: 1,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 4,
-                right: 8,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 8,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 7,
-                right: 10,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Black,
-                left: 9,
-                parent: 8,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 31,
-            endOffset: 66,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2c: Test 2", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Black,
+                leftSubTreeLength: 0,
+                length: 0,
                 parent: 2,
-                left: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
                 // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
+                color: Color.Black,
+                id: "helloWorld",
                 left: 1,
+                leftSubTreeLength: 1,
+                length: 0,
+                parent: SENTINEL_INDEX,
                 right: 4,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
                 // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
                 color: Color.Red,
-                parent: 4,
+                id: "helloWorld",
                 left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
+                parent: 4,
                 right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
                 // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 2 },
-                leftCharCount: 14,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
                 color: Color.Black,
-                parent: 2,
+                id: "helloWorld",
                 left: 3,
+                leftSubTreeLength: 1,
+                length: 0,
+                parent: 2,
                 right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
               {
                 // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
                 color: Color.Black,
+                id: "helloWorld",
+                left: SENTINEL_INDEX,
+                leftSubTreeLength: 0,
+                length: 0,
                 parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 81,
-                leftLineFeedCount: 1,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: 8,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 8,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 7,
-                right: 10,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Black,
-                left: 9,
-                parent: 8,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
+                tag: "id",
+                tagType: TagType.StartEndTag,
               },
             ],
-            root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 81,
-            endOffset: 85,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2c: Test 3", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Red,
-                parent: 2,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 4,
-                left: 1,
-                right: 3,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 2,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 80,
-                leftLineFeedCount: 1,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 7,
-                left: 2,
-                right: 5,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 46 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 4,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 84,
-                leftLineFeedCount: 1,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 84,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 4,
-                right: 10,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: 9,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 8,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 6,
-                leftLineFeedCount: 0,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Red,
-                left: 8,
-                parent: 7,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 7,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 84,
-            endOffset: 87,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2c: Test 4", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Red,
-                parent: 2,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 4,
-                left: 1,
-                right: 3,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 2,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 80,
-                leftLineFeedCount: 1,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 2,
-                right: 5,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: 4,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 85,
-                leftLineFeedCount: 2,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 4,
-                right: 8,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 8,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 7,
-                right: 10,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 39 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 26,
-                lineFeedCount: 0,
-                color: Color.Black,
-                left: 9,
-                parent: 8,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 120,
-            endOffset: 127,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2c: Test 5", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Red,
-                parent: 2,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 4,
-                left: 1,
-                right: 3,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 2,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 80,
-                leftLineFeedCount: 1,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 2,
-                right: 5,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: 4,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 85,
-                leftLineFeedCount: 2,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 4,
-                right: 8,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 8,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 9 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 6,
-                left: 7,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Black,
-                left: SENTINEL_INDEX,
-                parent: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 90,
-            endOffset: 127,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2c: Test 6", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 21 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 60,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 60,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 60,
-                leftLineFeedCount: 1,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 60,
-                leftLineFeedCount: 1,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 60,
-                leftLineFeedCount: 1,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 60,
-                leftLineFeedCount: 1,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 60,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 60,
-                leftLineFeedCount: 1,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 60,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 60,
-                leftLineFeedCount: 1,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 1,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 60,
-            endOffset: 127,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
+            root: 2,
+          },
+        };
+        deleteNode(page.structure, 5);
+        expect(page).toStrictEqual(expectedPage);
       });
+    });
 
-      describe("Scenario 2d: delete from a point in a node to a point in another node", () => {
-        test("Scenario 2d: Test 1", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 21 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 60,
-                lineFeedCount: 1,
-                color: Color.Red,
-                parent: 3,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 60,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 32 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 60,
-                leftLineFeedCount: 1,
-                length: 10,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 4,
-                left: 1,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 70,
-                leftLineFeedCount: 1,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 3,
-                right: 5,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: 4,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 75,
-                leftLineFeedCount: 2,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 4,
-                right: 8,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 8,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 7,
-                right: 10,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Black,
-                left: 9,
-                parent: 8,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 60,
-            endOffset: 70,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2d: Test 2", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 30 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 30,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 3,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 30,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 32 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 30,
-                leftLineFeedCount: 0,
-                length: 10,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 4,
-                left: 1,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 40,
-                leftLineFeedCount: 0,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 3,
-                right: 5,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: 4,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 45,
-                leftLineFeedCount: 1,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 4,
-                right: 8,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 8,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 7,
-                right: 10,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Black,
-                left: 9,
-                parent: 8,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 30,
-            endOffset: 70,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2d: Test 3", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Red,
-                parent: 2,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 4,
-                left: 1,
-                right: 3,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 2,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 80,
-                leftLineFeedCount: 1,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 8,
-                left: 2,
-                right: 5,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 46 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 4,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 84,
-                leftLineFeedCount: 1,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 84,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 8 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 84,
-                leftLineFeedCount: 1,
-                length: 4,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 4,
-                right: 10,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Red,
-                left: 9,
-                parent: 8,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 8,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 84,
-            endOffset: 89,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2d: Test 4", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: 2,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 1,
-                right: 4,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 4,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 2 },
-                leftCharCount: 14,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 2,
-                left: 3,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 5 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 81,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 2,
-                right: 8,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 8,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 12 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 5,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 7,
-                right: 10,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 13 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 32,
-                lineFeedCount: 0,
-                color: Color.Black,
-                left: 9,
-                parent: 8,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 81,
-            endOffset: 86,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-
-        test("Scenario 2d: Test 5", () => {
-          const page = getStartPage();
-          const expectedPage: PageContentMutable = {
-            buffers: [
-              {
-                isReadOnly: true,
-                lineStarts: [0, 39, 86],
-                content:
-                  "Do not go gentle into that good night,\nOld age should burn and rave at close of shop;\n" +
-                  "Todo: Add the end of this stanza",
-              },
-              {
-                isReadOnly: false,
-                lineStarts: [0],
-                content: "vdayRave, rave against the dying of the lightgg.",
-              },
-            ],
-            newlineFormat: NEWLINE.LF,
-            nodes: [
-              SENTINEL,
-              {
-                // 1
-                bufferIndex: 0,
-                start: { line: 0, column: 0 },
-                end: { line: 1, column: 26 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 65,
-                lineFeedCount: 1,
-                color: Color.Red,
-                parent: 2,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 2
-                bufferIndex: 1,
-                start: { line: 0, column: 0 },
-                end: { line: 0, column: 1 },
-                leftCharCount: 65,
-                leftLineFeedCount: 1,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 4,
-                left: 1,
-                right: 3,
-              },
-              {
-                // 3
-                bufferIndex: 0,
-                start: { line: 1, column: 28 },
-                end: { line: 1, column: 42 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 14,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 2,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 4
-                bufferIndex: 1,
-                start: { line: 0, column: 1 },
-                end: { line: 0, column: 4 },
-                leftCharCount: 80,
-                leftLineFeedCount: 1,
-                length: 3,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 2,
-                right: 5,
-              },
-              {
-                // 5
-                bufferIndex: 0,
-                start: { line: 1, column: 45 },
-                end: { line: 1, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 2,
-                lineFeedCount: 1,
-                color: Color.Black,
-                parent: 4,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 6
-                bufferIndex: 1,
-                start: { line: 0, column: 4 },
-                end: { line: 0, column: 6 },
-                leftCharCount: 85,
-                leftLineFeedCount: 2,
-                length: 2,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: 4,
-                right: 8,
-              },
-              {
-                // 7
-                bufferIndex: 1,
-                start: { line: 0, column: 45 },
-                end: { line: 0, column: 46 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: 8,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 8
-                bufferIndex: 1,
-                start: { line: 0, column: 7 },
-                end: { line: 0, column: 8 },
-                leftCharCount: 1,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 6,
-                left: 7,
-                right: 10,
-              },
-              {
-                // 9
-                bufferIndex: 1,
-                start: { line: 0, column: 46 },
-                end: { line: 0, column: 47 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Black,
-                parent: SENTINEL_INDEX,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-              {
-                // 10
-                bufferIndex: 1,
-                start: { line: 0, column: 19 },
-                end: { line: 0, column: 45 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 26,
-                lineFeedCount: 0,
-                color: Color.Black,
-                left: SENTINEL_INDEX,
-                parent: 8,
-                right: 11,
-              },
-              {
-                // 11
-                bufferIndex: 1,
-                start: { line: 0, column: 47 },
-                end: { line: 0, column: 48 },
-                leftCharCount: 0,
-                leftLineFeedCount: 0,
-                length: 1,
-                lineFeedCount: 0,
-                color: Color.Red,
-                parent: 10,
-                left: SENTINEL_INDEX,
-                right: SENTINEL_INDEX,
-              },
-            ],
-            root: 6,
-            previouslyInsertedNodeIndex: null,
-            previouslyInsertedNodeOffset: null,
-          };
-          deleteContent(page, {
-            startOffset: 89,
-            endOffset: 100,
-          });
-          expect(page).toStrictEqual(expectedPage);
-        });
-      });
+    test("Structure: Scenario 9: delete root", () => {
+      const page: PageContentMutable = {
+        buffers: [],
+        content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+        newlineFormat: NEWLINE.LF,
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
+        structure: {
+          nodes: [
+            SENTINEL_STRUCTURE,
+            {
+              // 1
+              color: Color.Black,
+              id: "helloWorld",
+              left: SENTINEL_INDEX,
+              leftSubTreeLength: 0,
+              length: 0,
+              parent: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+              tag: "id",
+              tagType: TagType.StartEndTag,
+            },
+          ],
+          root: 1,
+        },
+      };
+      const expectedPage: PageContentMutable = {
+        buffers: [],
+        content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
+        newlineFormat: NEWLINE.LF,
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
+        structure: {
+          nodes: [
+            SENTINEL_STRUCTURE,
+            {
+              // 1
+              color: Color.Black,
+              id: "helloWorld",
+              left: SENTINEL_INDEX,
+              leftSubTreeLength: 0,
+              length: 0,
+              parent: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+              tag: "id",
+              tagType: TagType.StartEndTag,
+            },
+          ],
+          root: SENTINEL_INDEX,
+        },
+      };
+      deleteNode(page.structure, 1);
+      expect(page).toStrictEqual(expectedPage);
     });
   });
 });

@@ -1,59 +1,70 @@
-import { NodeMutable, PageContentMutable } from "../model";
-import { SENTINEL_INDEX } from "./tree";
+import { SENTINEL_INDEX } from "../tree/tree";
+import {
+  ContentNodeMutable,
+  ContentNode,
+  isContentNode,
+} from "../contentTree/contentModel";
+import { RedBlackTree, NodeMutable } from "../pageModel";
+import {
+  isStructureNode,
+  StructureNodeMutable,
+} from "../structureTree/structureModel";
 
 /**
  * Performs a left rotation on the red-black tree, on the given node.
  * @param page The page/piece table.
  * @param nodeIndex The index of the node in the array for which the left rotation is performed on.
  */
-export function leftRotate(page: PageContentMutable, nodeIndex: number): void {
+export function leftRotate(tree: RedBlackTree, nodeIndex: number): void {
   const x = nodeIndex;
 
-  if (page.nodes[x].right === SENTINEL_INDEX) {
+  if (tree.nodes[x].right === SENTINEL_INDEX) {
     //  you can't left rotate
     return;
   }
 
-  page.nodes[x] = { ...page.nodes[x] };
+  tree.nodes[x] = { ...tree.nodes[x] };
 
-  const y = page.nodes[x].right;
-  page.nodes[y] = {
-    ...page.nodes[y],
-    leftCharCount:
-      page.nodes[y].leftCharCount +
-      page.nodes[x].leftCharCount +
-      page.nodes[x].length,
-    leftLineFeedCount:
-      page.nodes[y].leftLineFeedCount +
-      page.nodes[x].leftLineFeedCount +
-      page.nodes[x].lineFeedCount,
-  };
+  const y = tree.nodes[x].right;
+  tree.nodes[y] = { ...tree.nodes[y] };
 
-  (page.nodes[x] as NodeMutable).right = page.nodes[y].left;
-  if (page.nodes[y].left !== SENTINEL_INDEX) {
-    page.nodes[page.nodes[y].left] = {
-      ...page.nodes[page.nodes[y].left],
+  if (isContentNode(tree.nodes[y])) {
+    (tree.nodes[y] as ContentNodeMutable).leftCharCount +=
+      (tree.nodes[x] as ContentNode).leftCharCount +
+      (tree.nodes[x] as ContentNode).length;
+    (tree.nodes[y] as ContentNodeMutable).leftLineFeedCount +=
+      (tree.nodes[x] as ContentNode).leftLineFeedCount +
+      (tree.nodes[x] as ContentNode).lineFeedCount;
+  } else if (isStructureNode(tree.nodes[y])) {
+    (tree.nodes[y] as StructureNodeMutable).leftSubTreeLength +=
+      (tree.nodes[x] as StructureNodeMutable).leftSubTreeLength + 1;
+  }
+
+  (tree.nodes[x] as NodeMutable).right = tree.nodes[y].left;
+  if (tree.nodes[y].left !== SENTINEL_INDEX) {
+    tree.nodes[tree.nodes[y].left] = {
+      ...tree.nodes[tree.nodes[y].left],
       parent: x,
     };
   }
 
-  (page.nodes[y] as NodeMutable).parent = page.nodes[x].parent;
-  if (page.nodes[x].parent === SENTINEL_INDEX) {
-    page.root = y;
-  } else if (x === page.nodes[page.nodes[x].parent].left) {
-    page.nodes[page.nodes[x].parent] = {
-      ...page.nodes[page.nodes[x].parent],
+  (tree.nodes[y] as NodeMutable).parent = tree.nodes[x].parent;
+  if (tree.nodes[x].parent === SENTINEL_INDEX) {
+    tree.root = y;
+  } else if (x === tree.nodes[tree.nodes[x].parent].left) {
+    tree.nodes[tree.nodes[x].parent] = {
+      ...tree.nodes[tree.nodes[x].parent],
       left: y,
     };
   } else {
-    page.nodes[page.nodes[x].parent] = {
-      ...page.nodes[page.nodes[x].parent],
+    tree.nodes[tree.nodes[x].parent] = {
+      ...tree.nodes[tree.nodes[x].parent],
       right: y,
     };
   }
 
-  (page.nodes[y] as NodeMutable).left = x;
-  (page.nodes[x] as NodeMutable).parent = y;
+  (tree.nodes[y] as NodeMutable).left = x;
+  (tree.nodes[x] as NodeMutable).parent = y;
 }
 
 /**
@@ -61,49 +72,55 @@ export function leftRotate(page: PageContentMutable, nodeIndex: number): void {
  * @param page The page/piece table.
  * @param nodeIndex The index of the node in the array for which the right rotation is performed on.
  */
-export function rightRotate(page: PageContentMutable, nodeIndex: number): void {
+export function rightRotate(tree: RedBlackTree, nodeIndex: number): void {
   const y = nodeIndex;
 
-  if (page.nodes[y].left === SENTINEL_INDEX) {
+  if (tree.nodes[y].left === SENTINEL_INDEX) {
     // you can't right rotate
     return;
   }
 
-  page.nodes[y] = { ...page.nodes[y] };
+  const x = tree.nodes[y].left;
+  tree.nodes[x] = { ...tree.nodes[x] };
 
-  const x = page.nodes[y].left;
-  page.nodes[x] = { ...page.nodes[x] };
+  tree.nodes[y] = { ...tree.nodes[y] };
 
-  (page.nodes[y] as NodeMutable).left = page.nodes[x].right;
-  if (page.nodes[x].right !== SENTINEL_INDEX) {
-    page.nodes[page.nodes[x].right] = {
-      ...page.nodes[page.nodes[x].right],
+  if (isContentNode(tree.nodes[y])) {
+    (tree.nodes[y] as ContentNodeMutable).leftCharCount -=
+      (tree.nodes[x] as ContentNodeMutable).leftCharCount +
+      (tree.nodes[x] as ContentNodeMutable).length;
+    (tree.nodes[y] as ContentNodeMutable).leftLineFeedCount -=
+      (tree.nodes[x] as ContentNodeMutable).leftLineFeedCount +
+      (tree.nodes[x] as ContentNodeMutable).lineFeedCount;
+  } else if (isStructureNode(tree.nodes[y])) {
+    (tree.nodes[y] as StructureNodeMutable).leftSubTreeLength -=
+      (tree.nodes[x] as StructureNodeMutable).leftSubTreeLength + 1;
+  }
+
+  (tree.nodes[y] as NodeMutable).left = tree.nodes[x].right;
+
+  if (tree.nodes[x].right !== SENTINEL_INDEX) {
+    tree.nodes[tree.nodes[x].right] = {
+      ...tree.nodes[tree.nodes[x].right],
       parent: y,
     };
   }
-  (page.nodes[x] as NodeMutable).parent = page.nodes[y].parent;
 
-  (page.nodes[y] as NodeMutable).leftCharCount -=
-    page.nodes[x].leftCharCount + page.nodes[x].length;
-  (page.nodes[y] as NodeMutable).leftLineFeedCount -=
-    page.nodes[x].leftLineFeedCount + page.nodes[x].lineFeedCount;
+  (tree.nodes[x] as NodeMutable).parent = tree.nodes[y].parent;
 
-  if (page.nodes[y].parent === SENTINEL_INDEX) {
-    page.root = x;
-  } else if (y === page.nodes[page.nodes[y].parent].right) {
-    page.nodes[page.nodes[y].parent] = {
-      ...page.nodes[page.nodes[y].parent],
+  if (tree.nodes[y].parent === SENTINEL_INDEX) {
+    tree.root = x;
+  } else if (y === tree.nodes[tree.nodes[y].parent].right) {
+    tree.nodes[tree.nodes[y].parent] = {
+      ...tree.nodes[tree.nodes[y].parent],
       right: x,
     };
   } else {
-    page.nodes[page.nodes[y].parent] = {
-      ...page.nodes[page.nodes[y].parent],
+    tree.nodes[tree.nodes[y].parent] = {
+      ...tree.nodes[tree.nodes[y].parent],
       left: x,
     };
   }
-  (page.nodes[x] as NodeMutable).right = y;
-  (page.nodes[y] as NodeMutable).parent = x;
-
-  page.nodes[y] = page.nodes[y];
-  page.nodes[x] = page.nodes[x];
+  (tree.nodes[x] as NodeMutable).right = y;
+  (tree.nodes[y] as NodeMutable).parent = x;
 }
