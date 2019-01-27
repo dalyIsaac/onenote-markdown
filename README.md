@@ -1,6 +1,6 @@
 # onenote-markdown
 
-[![Build Status](https://dev.azure.com/isaacdaly/onenote-markdown/_apis/build/status/onenote-markdown-CI?branchName=master)](https://dev.azure.com/isaacdaly/onenote-markdown/_build/latest?definitionId=3?branchName=master) [![Code coverage](https://img.shields.io/azure-devops/coverage/isaacdaly/onenote-markdown/3.svg)](https://dev.azure.com/isaacdaly/onenote-markdown/_build/latest?definitionId=3?branchName=master) [![Dependencies status](https://img.shields.io/david/dalyIsaac/onenote-markdown.svg)](https://github.com/dalyIsaac/onenote-markdown)
+[![Build Status](https://dev.azure.com/isaacdaly/onenote-markdown/_apis/build/status/onenote-markdown-CI?branchName=master)](https://dev.azure.com/isaacdaly/onenote-markdown/_build/latest?definitionId=3?branchName=master) [![Code coverage](https://img.shields.io/azure-devops/coverage/isaacdaly/onenote-markdown/3.svg)](https://dev.azure.com/isaacdaly/onenote-markdown/_build/latest?definitionId=3?branchName=master) [![Dependencies status](https://img.shields.io/david/dalyIsaac/onenote-markdown.svg)](https://david-dm.org/dalyIsaac/onenote-markdown)
 
 This is a new prototype for building a markdown editor for OneNote, starting with the editor.
 
