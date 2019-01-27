@@ -101,6 +101,26 @@ export interface PageContent {
    * `null` if another operation which wasn't an insert was performed.
    */
   readonly previouslyInsertedContentNodeOffset: number | null;
+
+  /**
+   * The language of the OneNote page.
+   */
+  readonly language?: string;
+
+  /**
+   * The title of the OneNote page.
+   */
+  readonly title?: string;
+
+  /**
+   * UTF charset.
+   */
+  readonly charset?: string;
+
+  /**
+   * The datetime at which this page was created at.
+   */
+  readonly created?: string;
 }
 
 export interface PageContentMutable {
@@ -145,6 +165,26 @@ export interface PageContentMutable {
    * `null` if another operation which wasn't an insert was performed.
    */
   previouslyInsertedContentNodeOffset: number | null;
+
+  /**
+   * The language of the OneNote page.
+   */
+  language?: string;
+
+  /**
+   * The title of the OneNote page.
+   */
+  title?: string;
+
+  /**
+   * UTF charset.
+   */
+  charset?: string;
+
+  /**
+   * The datetime at which this page was created at.
+   */
+  created?: string;
 }
 //#endregion
 
