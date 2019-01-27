@@ -1,9 +1,10 @@
 import { PageContentMutable, Color, PageContent } from "../pageModel";
 import { SENTINEL_CONTENT } from "../contentTree/tree";
-import { SENTINEL_INDEX } from "./tree";
+import { SENTINEL_INDEX, EMPTY_TREE_ROOT } from "./tree";
 import { ContentNodeMutable } from "../contentTree/contentModel";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
-import { fixInsert } from "./insert";
+import { fixInsert, insertNode } from "./insert";
+import { StructureNode, TagType } from "../structureTree/structureModel";
 
 describe("fix insert function", () => {
   describe("black uncle cases", () => {
@@ -1356,7 +1357,6 @@ describe("fix insert function", () => {
         ],
         root: 1,
       },
-
       previouslyInsertedContentNodeIndex: 1,
       previouslyInsertedContentNodeOffset: 0,
       structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1365,6 +1365,38 @@ describe("fix insert function", () => {
     (expectedPage.content.nodes[1] as ContentNodeMutable).color = Color.Black;
     const page = getPage();
     fixInsert(page.content, 1);
+    expect(page).toStrictEqual(expectedPage);
+  });
+});
+
+describe("insertNode", () => {
+  test("Insert the root of the tree", () => {
+    const page: PageContentMutable = {
+      buffers: [],
+      content: { nodes: [SENTINEL_CONTENT], root: EMPTY_TREE_ROOT },
+      previouslyInsertedContentNodeIndex: null,
+      previouslyInsertedContentNodeOffset: null,
+      structure: { nodes: [SENTINEL_STRUCTURE], root: EMPTY_TREE_ROOT },
+    };
+    const newNode: StructureNode = {
+      color: Color.Red,
+      id: "id",
+      left: SENTINEL_INDEX,
+      leftSubTreeLength: 0,
+      length: 0,
+      parent: SENTINEL_INDEX,
+      right: SENTINEL_INDEX,
+      tag: "tag",
+      tagType: TagType.StartEndTag,
+    };
+    const expectedPage: PageContentMutable = {
+      buffers: [],
+      content: { nodes: [SENTINEL_CONTENT], root: EMPTY_TREE_ROOT },
+      previouslyInsertedContentNodeIndex: null,
+      previouslyInsertedContentNodeOffset: null,
+      structure: { nodes: [SENTINEL_STRUCTURE, newNode], root: 1 },
+    };
+    insertNode(page.structure, newNode, 1);
     expect(page).toStrictEqual(expectedPage);
   });
 });

@@ -26,6 +26,11 @@ import {
 export const SENTINEL_INDEX = 0;
 
 /**
+ * The root of the tree when there are no nodes in the tree.
+ */
+export const EMPTY_TREE_ROOT = -1;
+
+/**
  * Contains a node and its index in a page/piece table.
  */
 export interface NodePosition {
