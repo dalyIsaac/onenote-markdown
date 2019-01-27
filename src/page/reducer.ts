@@ -47,129 +47,128 @@ export default function pageReducer(
 
   switch (action.type) {
     case INSERT_CONTENT: {
-      const insertAction = action as InsertContentAction;
+      const { pageId, content, offset } = action as InsertContentAction;
       extractedPage = {
-        ...state[insertAction.pageId],
-        buffers: [...state[insertAction.pageId].buffers],
+        ...state[pageId],
+        buffers: [...state[pageId].buffers],
         content: {
-          nodes: [...state[insertAction.pageId].content.nodes],
-          root: state[insertAction.pageId].content.root,
+          nodes: [...state[pageId].content.nodes],
+          root: state[pageId].content.root,
         },
       };
       insertContent(
         extractedPage as PageContentMutable,
-        { content: insertAction.content, offset: insertAction.offset },
+        { content: content, offset: offset },
         MAX_BUFFER_LENGTH,
       );
       newState = {
         ...state,
-        [insertAction.pageId]: extractedPage,
+        [pageId]: extractedPage,
       };
       return newState;
     }
     case DELETE_CONTENT: {
-      const deleteAction = action as DeleteContentAction;
+      const { pageId, endOffset, startOffset } = action as DeleteContentAction;
       extractedPage = {
-        ...state[deleteAction.pageId],
-        buffers: [...state[deleteAction.pageId].buffers],
+        ...state[pageId],
+        buffers: [...state[pageId].buffers],
         content: {
-          nodes: [...state[deleteAction.pageId].content.nodes],
-          root: state[deleteAction.pageId].content.root,
+          nodes: [...state[pageId].content.nodes],
+          root: state[pageId].content.root,
         },
       };
       deleteContent(extractedPage as PageContentMutable, {
-        endOffset: deleteAction.endOffset,
-        startOffset: deleteAction.startOffset,
+        endOffset: endOffset,
+        startOffset: startOffset,
       });
       newState = {
         ...state,
-        [deleteAction.pageId]: extractedPage,
+        [pageId]: extractedPage,
       };
       return newState;
     }
     case REPLACE_CONTENT: {
-      const replaceAction = action as ReplaceContentAction;
+      const {
+        pageId,
+        content,
+        endOffset,
+        startOffset,
+      } = action as ReplaceContentAction;
       extractedPage = {
-        ...state[replaceAction.pageId],
-        buffers: [...state[replaceAction.pageId].buffers],
+        ...state[pageId],
+        buffers: [...state[pageId].buffers],
         content: {
-          nodes: [...state[replaceAction.pageId].content.nodes],
-          root: state[replaceAction.pageId].content.root,
+          nodes: [...state[pageId].content.nodes],
+          root: state[pageId].content.root,
         },
       };
       deleteContent(extractedPage as PageContentMutable, {
-        endOffset: replaceAction.endOffset,
-        startOffset: replaceAction.startOffset,
+        endOffset: endOffset,
+        startOffset: startOffset,
       });
       insertContent(
         extractedPage as PageContentMutable,
         {
-          content: replaceAction.content,
-          offset: replaceAction.startOffset,
+          content: content,
+          offset: startOffset,
         },
         MAX_BUFFER_LENGTH,
       );
       newState = {
         ...state,
-        [replaceAction.pageId]: extractedPage,
+        [pageId]: extractedPage,
       };
       return newState;
     }
     case INSERT_STRUCTURE_NODE: {
-      const insertStructureAction = action as InsertStructureAction;
+      const { pageId, ...props } = action as InsertStructureAction;
       extractedPage = {
-        ...state[insertStructureAction.pageId],
+        ...state[pageId],
         structure: {
-          nodes: [...state[insertStructureAction.pageId].structure.nodes],
-          root: state[insertStructureAction.pageId].structure.root,
+          nodes: [...state[pageId].structure.nodes],
+          root: state[pageId].structure.root,
         },
       };
-      insertStructureNode(
-        extractedPage as PageContentMutable,
-        insertStructureAction,
-      );
+      insertStructureNode(extractedPage as PageContentMutable, props);
       newState = {
         ...state,
-        [insertStructureAction.pageId]: extractedPage,
+        [pageId]: extractedPage,
       };
       return newState;
     }
     case DELETE_STRUCTURE_NODE: {
-      const deleteStructureAction = action as DeleteStructureAction;
+      const { pageId, nodeIndex } = action as DeleteStructureAction;
       extractedPage = {
-        ...state[deleteStructureAction.pageId],
+        ...state[pageId],
         structure: {
-          nodes: [...state[deleteStructureAction.pageId].structure.nodes],
-          root: state[deleteStructureAction.pageId].structure.root,
+          nodes: [...state[pageId].structure.nodes],
+          root: state[pageId].structure.root,
         },
       };
-      deleteStructureNode(
-        extractedPage as PageContentMutable,
-        deleteStructureAction.nodeIndex,
-      );
+      deleteStructureNode(extractedPage as PageContentMutable, nodeIndex);
       newState = {
         ...state,
-        [deleteStructureAction.pageId]: extractedPage,
+        [pageId]: extractedPage,
       };
       return newState;
     }
     case UPDATE_STRUCTURE_NODE: {
-      const updateStructureAction = action as UpdateStructureAction;
+      const { pageId, nodeIndex, values } = action as UpdateStructureAction;
       extractedPage = {
-        ...state[updateStructureAction.pageId],
+        ...state[pageId],
         structure: {
-          nodes: [...state[updateStructureAction.pageId].structure.nodes],
-          root: state[updateStructureAction.pageId].structure.root,
+          nodes: [...state[pageId].structure.nodes],
+          root: state[pageId].structure.root,
         },
       };
       updateStructureNode(
         extractedPage as PageContentMutable,
-        updateStructureAction.nodeIndex,
-        updateStructureAction.values,
+        nodeIndex,
+        values,
       );
       newState = {
         ...state,
-        [updateStructureAction.pageId]: extractedPage,
+        [pageId]: extractedPage,
       };
       return newState;
     }
