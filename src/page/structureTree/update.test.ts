@@ -1,19 +1,16 @@
 import { PageContentMutable, Color, StatePages } from "../pageModel";
 import { SENTINEL_CONTENT } from "../contentTree/tree";
 import { SENTINEL_INDEX } from "../tree/tree";
-import { NEWLINE } from "../contentTree/contentModel";
 import { SENTINEL_STRUCTURE } from "./tree";
 import { TagType } from "./structureModel";
 import pageReducer from "../reducer";
-import { UpdateStructureValues } from "./update";
-import { PageActionPartial } from "../actions";
 import { updateStructure } from "./actions";
 
 describe("Update a structure node", () => {
   const getPage = (): PageContentMutable => ({
     buffers: [],
     content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-    newlineFormat: NEWLINE.LF,
+
     previouslyInsertedContentNodeIndex: null,
     previouslyInsertedContentNodeOffset: null,
     structure: {
@@ -77,7 +74,7 @@ describe("Update a structure node", () => {
   const getExpectedPage = (): PageContentMutable => ({
     buffers: [],
     content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-    newlineFormat: NEWLINE.LF,
+
     previouslyInsertedContentNodeIndex: null,
     previouslyInsertedContentNodeOffset: null,
     structure: {

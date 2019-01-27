@@ -6,10 +6,8 @@ import { Color, PageContent } from "../pageModel";
 import { SENTINEL_INDEX } from "../tree/tree";
 import {
   BufferCursor,
-  CharValues,
   ContentNode,
   ContentNodeMutable,
-  NEWLINE,
   ContentRedBlackTree,
 } from "./contentModel";
 
@@ -128,44 +126,15 @@ export function findNodeAtOffset(
 }
 
 /**
- * Checks the first 100 characters of a OneNote page to find what newline format is used. If it can't determine what
- * format is used within the first 100 lines, it assumes that LF is used.
- * @param content The HTML content of a OneNote page.
- */
-export function getNewlineFormat(content: string): ReadonlyArray<CharValues> {
-  for (let i = 0; i < 100; i++) {
-    if (content.charCodeAt(i) === CharValues.LF) {
-      return NEWLINE.LF;
-    } else if (content.charCodeAt(i) === CharValues.CR) {
-      if (
-        i + 1 < content.length &&
-        content.charCodeAt(i + 1) === CharValues.LF
-      ) {
-        return NEWLINE.CRLF;
-      }
-    }
-  }
-  return NEWLINE.LF;
-}
-
-/**
  * Gets an array of the indices of the line starts.
  * @param content The HTML content of a OneNote page.
- * @param newline The newline format for the OneNote page, as determined by the getNewline function.
  */
-export function getLineStarts(
-  content: string,
-  newline: ReadonlyArray<CharValues>,
-): number[] {
+export function getLineStarts(content: string): number[] {
   const lineStarts: number[] = [0];
-  for (let i = 0; i + newline.length - 1 <= content.length; i++) {
-    let match = true;
-    for (let j = 0; j < newline.length && match; j++) {
-      if (content.charCodeAt(i + j) !== newline[j]) {
-        match = false;
-      } else if (j === newline.length - 1) {
-        lineStarts.push(i + newline.length);
-      }
+  for (let i = 1; i < content.length; i++) {
+    const char = content[i];
+    if (char === "\n") {
+      lineStarts.push(i + 1);
     }
   }
   return lineStarts;

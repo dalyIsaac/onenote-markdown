@@ -2,7 +2,6 @@ import { PageContentMutable, Color } from "../pageModel";
 import { TagType } from "../structureTree/structureModel";
 import { SENTINEL_CONTENT } from "../contentTree/tree";
 import { SENTINEL_INDEX } from "./tree";
-import { NEWLINE } from "../contentTree/contentModel";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { deleteNode } from "../tree/delete";
 
@@ -95,7 +94,7 @@ describe("delete node", () => {
           ],
           root: 3,
         },
-        newlineFormat: NEWLINE.LF,
+        
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -186,7 +185,7 @@ describe("delete node", () => {
           ],
           root: 3,
         },
-        newlineFormat: NEWLINE.LF,
+        
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -300,7 +299,7 @@ describe("delete node", () => {
             ],
             root: 2,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -408,7 +407,7 @@ describe("delete node", () => {
             ],
             root: 4,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -504,7 +503,7 @@ describe("delete node", () => {
             ],
             root: 2,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -593,7 +592,7 @@ describe("delete node", () => {
             ],
             root: 3,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -706,7 +705,7 @@ describe("delete node", () => {
             ],
             root: 4,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -814,7 +813,7 @@ describe("delete node", () => {
             ],
             root: 2,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -908,7 +907,7 @@ describe("delete node", () => {
             ],
             root: 3,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -997,7 +996,7 @@ describe("delete node", () => {
             ],
             root: 2,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1073,7 +1072,7 @@ describe("delete node", () => {
           ],
           root: 2,
         },
-        newlineFormat: NEWLINE.LF,
+        
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1143,7 +1142,7 @@ describe("delete node", () => {
           ],
           root: 2,
         },
-        newlineFormat: NEWLINE.LF,
+        
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1257,7 +1256,7 @@ describe("delete node", () => {
             ],
             root: 2,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1365,7 +1364,7 @@ describe("delete node", () => {
             ],
             root: 4,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1478,7 +1477,7 @@ describe("delete node", () => {
             ],
             root: 4,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1586,7 +1585,7 @@ describe("delete node", () => {
             ],
             root: 2,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1624,7 +1623,7 @@ describe("delete node", () => {
           ],
           root: 1,
         },
-        newlineFormat: NEWLINE.LF,
+        
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1656,7 +1655,7 @@ describe("delete node", () => {
           ],
           root: SENTINEL_INDEX,
         },
-        newlineFormat: NEWLINE.LF,
+        
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1671,7 +1670,7 @@ describe("delete node", () => {
       const page: PageContentMutable = {
         buffers: [],
         content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-        newlineFormat: NEWLINE.LF,
+        
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: {
@@ -1734,7 +1733,7 @@ describe("delete node", () => {
       const expectedPage: PageContentMutable = {
         buffers: [],
         content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-        newlineFormat: NEWLINE.LF,
+        
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: {
@@ -1803,7 +1802,7 @@ describe("delete node", () => {
         const page: PageContentMutable = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: {
@@ -1876,7 +1875,7 @@ describe("delete node", () => {
         const expectedPage: PageContentMutable = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: {
@@ -1954,7 +1953,7 @@ describe("delete node", () => {
         const page: PageContentMutable = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: {
@@ -2017,7 +2016,7 @@ describe("delete node", () => {
         const expectedPage: PageContentMutable = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: {
@@ -2083,7 +2082,7 @@ describe("delete node", () => {
         const page: PageContentMutable = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: {
@@ -2156,7 +2155,7 @@ describe("delete node", () => {
         const expectedPage: PageContentMutable = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: {
@@ -2234,7 +2233,7 @@ describe("delete node", () => {
         const page: PageContentMutable = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: {
@@ -2295,7 +2294,7 @@ describe("delete node", () => {
         const expectedPage: PageContentMutable = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: {
@@ -2362,7 +2361,7 @@ describe("delete node", () => {
       const page: PageContentMutable = {
         buffers: [],
         content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-        newlineFormat: NEWLINE.LF,
+        
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: {
@@ -2411,7 +2410,7 @@ describe("delete node", () => {
       const expectedPage: PageContentMutable = {
         buffers: [],
         content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-        newlineFormat: NEWLINE.LF,
+        
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: {
@@ -2466,7 +2465,7 @@ describe("delete node", () => {
         const page: PageContentMutable = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: {
@@ -2539,7 +2538,7 @@ describe("delete node", () => {
         const expectedPage: PageContentMutable = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: {
@@ -2617,7 +2616,7 @@ describe("delete node", () => {
         const page: PageContentMutable = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: {
@@ -2690,7 +2689,7 @@ describe("delete node", () => {
         const expectedPage: PageContentMutable = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
           structure: {
@@ -2769,7 +2768,7 @@ describe("delete node", () => {
       const page: PageContentMutable = {
         buffers: [],
         content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-        newlineFormat: NEWLINE.LF,
+        
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: {
@@ -2794,7 +2793,7 @@ describe("delete node", () => {
       const expectedPage: PageContentMutable = {
         buffers: [],
         content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-        newlineFormat: NEWLINE.LF,
+        
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: {

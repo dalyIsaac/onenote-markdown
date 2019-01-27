@@ -2,7 +2,6 @@ import { Color, PageContentMutable } from "../pageModel";
 import { getStartPage } from "../reducer.test";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { SENTINEL_INDEX } from "../tree/tree";
-import { NEWLINE } from "./contentModel";
 import { deleteContent } from "./delete";
 import { SENTINEL_CONTENT } from "./tree";
 
@@ -50,7 +49,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -95,7 +94,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -149,7 +148,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -194,7 +193,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -248,7 +247,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -293,7 +292,7 @@ describe("delete content", () => {
             ],
             root: 2,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -347,7 +346,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -392,7 +391,7 @@ describe("delete content", () => {
             ],
             root: 2,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -448,7 +447,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -493,7 +492,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -547,7 +546,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -592,7 +591,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -646,7 +645,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -691,7 +690,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -745,7 +744,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -790,7 +789,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -844,7 +843,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -889,7 +888,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -943,7 +942,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -988,7 +987,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -1044,7 +1043,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1089,7 +1088,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -1143,7 +1142,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1188,7 +1187,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -1242,7 +1241,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1287,7 +1286,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -1341,7 +1340,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1386,7 +1385,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -1440,7 +1439,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1485,7 +1484,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -1539,7 +1538,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1584,7 +1583,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -1638,7 +1637,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1683,7 +1682,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -1739,7 +1738,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1797,7 +1796,7 @@ describe("delete content", () => {
             ],
             root: 3,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -1851,7 +1850,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1909,7 +1908,7 @@ describe("delete content", () => {
             ],
             root: 3,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -1963,7 +1962,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -2021,7 +2020,7 @@ describe("delete content", () => {
             ],
             root: 3,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -2075,7 +2074,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -2134,7 +2133,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -2188,7 +2187,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -2247,7 +2246,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -2301,7 +2300,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -2360,7 +2359,7 @@ describe("delete content", () => {
             ],
             root: 2,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -2414,7 +2413,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -2473,7 +2472,7 @@ describe("delete content", () => {
             ],
             root: 3,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -2667,7 +2666,7 @@ describe("delete content", () => {
             ],
             root: 10,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -2857,7 +2856,7 @@ describe("delete content", () => {
             ],
             root: 10,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -3047,7 +3046,7 @@ describe("delete content", () => {
             ],
             root: 10,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -3237,7 +3236,7 @@ describe("delete content", () => {
             ],
             root: 8,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -3427,7 +3426,7 @@ describe("delete content", () => {
             ],
             root: 2,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -3617,7 +3616,7 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -3807,7 +3806,7 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -3997,7 +3996,7 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -4189,7 +4188,7 @@ describe("delete content", () => {
             ],
             root: 8,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -4375,7 +4374,7 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -4565,7 +4564,7 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -4755,7 +4754,7 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -4947,7 +4946,7 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -5137,7 +5136,7 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -5327,7 +5326,7 @@ describe("delete content", () => {
             ],
             root: 7,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -5517,7 +5516,7 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -5707,7 +5706,7 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -5897,7 +5896,7 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -6089,7 +6088,7 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -6279,7 +6278,7 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -6469,7 +6468,7 @@ describe("delete content", () => {
             ],
             root: 8,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -6659,7 +6658,7 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 
@@ -6849,7 +6848,7 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          newlineFormat: NEWLINE.LF,
+          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
 

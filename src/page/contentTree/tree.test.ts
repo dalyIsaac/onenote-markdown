@@ -1,7 +1,7 @@
 import { Color, PageContentMutable } from "../pageModel";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { SENTINEL_INDEX } from "../tree/tree";
-import { ContentNode, NEWLINE } from "./contentModel";
+import { ContentNode } from "./contentModel";
 import {
   calculateCharCount,
   calculateLineFeedCount,
@@ -120,7 +120,7 @@ export const getFinalTree = (): {
 export const getPage = (): PageContentMutable => ({
   buffers: [],
   content: { ...getFinalTree() },
-  newlineFormat: NEWLINE.LF,
+  
   previouslyInsertedContentNodeIndex: null,
   previouslyInsertedContentNodeOffset: null,
   structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },

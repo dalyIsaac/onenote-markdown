@@ -1,4 +1,4 @@
-import { Buffer, CharValues, ContentNode } from "./contentTree/contentModel";
+import { Buffer, ContentNode } from "./contentTree/contentModel";
 import { StructureNode } from "./structureTree/structureModel";
 
 //#region Node
@@ -65,11 +65,6 @@ export interface PageContent {
    */
   readonly buffers: ReadonlyArray<Buffer>;
 
-  /**
-   * The newline format, which is determined by the received content from the Microsoft Graph.
-   */
-  readonly newlineFormat: ReadonlyArray<CharValues>;
-
   readonly content: {
     /**
      * The nodes of the piece table. The first node is always the `SENTINEL` node.
@@ -113,11 +108,6 @@ export interface PageContentMutable {
    * Array of the buffers for the piece table.
    */
   buffers: Buffer[];
-
-  /**
-   * The newline format, which is determined by the received content from the Microsoft Graph.
-   */
-  readonly newlineFormat: ReadonlyArray<CharValues>;
 
   content: {
     /**

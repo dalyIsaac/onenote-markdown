@@ -3,10 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/he": "^1.1.0",
     "@types/node": "^10.12.5",
     "@types/react": "^16.7.21",
     "@types/react-dom": "^16.0.9",
     "@types/react-redux": "^6.0.9",
+    "he": "^1.2.0",
     "react": "^16.6.1",
     "react-dom": "^16.6.1",
     "react-redux": "^5.1.1",

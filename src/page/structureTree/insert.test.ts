@@ -1,4 +1,3 @@
-import { NEWLINE } from "../contentTree/contentModel";
 import { Color, PageContentMutable, StatePages } from "../pageModel";
 import { SENTINEL_INDEX } from "../tree/tree";
 import { SENTINEL_STRUCTURE } from "./tree";
@@ -12,7 +11,7 @@ describe("structureTree insert tests", () => {
     const page: PageContentMutable = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-      newlineFormat: NEWLINE.LF,
+      
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
       structure: {
@@ -198,7 +197,7 @@ describe("structureTree insert tests", () => {
     const expectedPage: PageContentMutable = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-      newlineFormat: NEWLINE.LF,
+      
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
       structure: {
@@ -406,7 +405,7 @@ describe("structureTree insert tests", () => {
     const page: PageContentMutable = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-      newlineFormat: NEWLINE.LF,
+      
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
       structure: {
@@ -592,7 +591,7 @@ describe("structureTree insert tests", () => {
     const expectedPage: PageContentMutable = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-      newlineFormat: NEWLINE.LF,
+      
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
       structure: {
@@ -809,7 +808,7 @@ describe("structureTree insert tests", () => {
     const page: PageContentMutable = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-      newlineFormat: NEWLINE.LF,
+      
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
       structure: {
@@ -995,7 +994,7 @@ describe("structureTree insert tests", () => {
     const expectedPage: PageContentMutable = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-      newlineFormat: NEWLINE.LF,
+      
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
       structure: {

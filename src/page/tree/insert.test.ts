@@ -1,7 +1,7 @@
 import { PageContentMutable, Color, PageContent } from "../pageModel";
 import { SENTINEL_CONTENT } from "../contentTree/tree";
 import { SENTINEL_INDEX } from "./tree";
-import { NEWLINE, ContentNodeMutable } from "../contentTree/contentModel";
+import { ContentNodeMutable } from "../contentTree/contentModel";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { fixInsert } from "./insert";
 
@@ -116,7 +116,7 @@ describe("fix insert function", () => {
           ],
           root: 1,
         },
-        newlineFormat: NEWLINE.LF,
+
         previouslyInsertedContentNodeIndex: null,
 
         previouslyInsertedContentNodeOffset: null,
@@ -230,7 +230,7 @@ describe("fix insert function", () => {
           ],
           root: 2,
         },
-        newlineFormat: NEWLINE.LF,
+
         previouslyInsertedContentNodeIndex: null,
 
         previouslyInsertedContentNodeOffset: null,
@@ -349,7 +349,7 @@ describe("fix insert function", () => {
           ],
           root: 1,
         },
-        newlineFormat: NEWLINE.LF,
+
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -462,7 +462,7 @@ describe("fix insert function", () => {
           ],
           root: 5,
         },
-        newlineFormat: NEWLINE.LF,
+
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -580,7 +580,7 @@ describe("fix insert function", () => {
           ],
           root: 1,
         },
-        newlineFormat: NEWLINE.LF,
+
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -693,7 +693,7 @@ describe("fix insert function", () => {
           ],
           root: 3,
         },
-        newlineFormat: NEWLINE.LF,
+
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -811,7 +811,7 @@ describe("fix insert function", () => {
           ],
           root: 1,
         },
-        newlineFormat: NEWLINE.LF,
+
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -924,7 +924,7 @@ describe("fix insert function", () => {
           ],
           root: 4,
         },
-        newlineFormat: NEWLINE.LF,
+
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1024,7 +1024,7 @@ describe("fix insert function", () => {
           ],
           root: 1,
         },
-        newlineFormat: NEWLINE.LF,
+
         previouslyInsertedContentNodeIndex: null,
 
         previouslyInsertedContentNodeOffset: null,
@@ -1118,7 +1118,7 @@ describe("fix insert function", () => {
           ],
           root: 1,
         },
-        newlineFormat: NEWLINE.LF,
+
         previouslyInsertedContentNodeIndex: null,
 
         previouslyInsertedContentNodeOffset: null,
@@ -1217,7 +1217,7 @@ describe("fix insert function", () => {
           ],
           root: 1,
         },
-        newlineFormat: NEWLINE.LF,
+
         previouslyInsertedContentNodeIndex: null,
 
         previouslyInsertedContentNodeOffset: null,
@@ -1311,7 +1311,7 @@ describe("fix insert function", () => {
           ],
           root: 1,
         },
-        newlineFormat: NEWLINE.LF,
+
         previouslyInsertedContentNodeIndex: null,
 
         previouslyInsertedContentNodeOffset: null,
@@ -1356,7 +1356,7 @@ describe("fix insert function", () => {
         ],
         root: 1,
       },
-      newlineFormat: NEWLINE.LF,
+
       previouslyInsertedContentNodeIndex: 1,
       previouslyInsertedContentNodeOffset: 0,
       structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
