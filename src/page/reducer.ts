@@ -1,8 +1,4 @@
-import {
-  PageActionPartial,
-  STORE_RECEIVED_PAGE,
-  StoreReceivedPageAction,
-} from "./actions";
+import { PageActionPartial } from "./actions";
 import {
   DELETE_CONTENT,
   DeleteContentAction,
@@ -11,7 +7,6 @@ import {
   REPLACE_CONTENT,
   ReplaceContentAction,
 } from "./contentTree/actions";
-import { createNewPage } from "./contentTree/createNewPage";
 import { deleteContent } from "./contentTree/delete";
 import { insertContent } from "./contentTree/insert";
 import { MAX_BUFFER_LENGTH } from "./contentTree/tree";
@@ -38,33 +33,19 @@ export default function pageReducer(
   action: PageActionPartial,
 ): StatePages {
   let extractedPage: PageContent;
-  let newPage: PageContent;
   let newState: StatePages;
 
   if (!action.hasOwnProperty("pageId")) {
     console.error("The action does not contain the property pageId");
     console.error(action);
     return state;
-  } else if (
-    !(
-      state.hasOwnProperty(action.pageId) || action.type === STORE_RECEIVED_PAGE
-    )
-  ) {
+  } else if (!state.hasOwnProperty(action.pageId)) {
     console.error(`The state does not contain the key ${action.pageId}`);
     console.error(action);
     return state;
   }
 
   switch (action.type) {
-    case STORE_RECEIVED_PAGE: {
-      const receivedPage = (action as StoreReceivedPageAction).receivedPage;
-      newPage = createNewPage(receivedPage);
-      newState = {
-        ...state,
-        [receivedPage.id as string]: newPage,
-      };
-      return newState;
-    }
     case INSERT_CONTENT: {
       const insertAction = action as InsertContentAction;
       extractedPage = {

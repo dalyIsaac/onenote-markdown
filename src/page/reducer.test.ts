@@ -8,11 +8,6 @@ import {
   ReplaceContentAction,
 } from "./contentTree/actions";
 import { NEWLINE } from "./contentTree/contentModel";
-import {
-  LF,
-  LF_CONTENT,
-  pageReducerTest,
-} from "./contentTree/createNewPage.test";
 import { SENTINEL_CONTENT } from "./contentTree/tree";
 import {
   Color,
@@ -858,10 +853,6 @@ describe("page/reducer", () => {
     };
     expect(result).toStrictEqual(expectedState);
     expect(result).not.toBe(state);
-  });
-
-  test("Create new page", () => {
-    pageReducerTest(LF_CONTENT, LF);
   });
 
   test("Delete structure node", () => {
