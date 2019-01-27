@@ -3,7 +3,9 @@
   "rules": {
     "sort-keys-fix/sort-keys-fix": 2,
     "@typescript-eslint/indent": ["error", 2],
-    "no-console": "warn"
+    "no-console": "warn",
+    "@typescript-eslint/member-ordering": "error",
+    "@typescript-eslint/array-type": ["error", "array-simple"]
   },
   "plugins": ["sort-keys-fix", "@typescript-eslint"],
   "parserOptions": {
