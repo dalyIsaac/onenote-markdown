@@ -1,5 +1,6 @@
 import { PageActionPartial } from "../actions";
 import { KeyValueStr, TagType } from "./structureModel";
+import { UpdateStructureValues } from "./update";
 
 //#region Insert new structure node
 export const INSERT_STRUCTURE_NODE = "INSERT_STRUCTURE_NODE";
@@ -53,5 +54,25 @@ export const deleteStructure = (
   nodeIndex: index,
   pageId,
   type: DELETE_STRUCTURE_NODE,
+});
+//#endregion
+
+//#region Update structure node
+export const UPDATE_STRUCTURE_NODE = "UPDATE_STRUCTURE_NODE";
+
+export interface UpdateStructureAction extends PageActionPartial {
+  readonly nodeIndex: number;
+  readonly values: UpdateStructureValues;
+}
+
+export const updateStructure = (
+  pageId: string,
+  nodeIndex: number,
+  values: UpdateStructureValues,
+): UpdateStructureAction => ({
+  nodeIndex,
+  pageId,
+  type: UPDATE_STRUCTURE_NODE,
+  values,
 });
 //#endregion
