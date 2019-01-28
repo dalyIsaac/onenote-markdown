@@ -128,7 +128,7 @@ describe("Update a structure node", () => {
           length: 1,
           parent: 3,
           right: SENTINEL_INDEX,
-          styles: { camelLength: "2" },
+          style: { camelLength: "2" },
           tag: "id",
           tagType: TagType.StartEndTag,
         },
@@ -145,7 +145,7 @@ describe("Update a structure node", () => {
     const action = updateStructure("pageId", 4, {
       attributes: { smelliness: "excessive" },
       length: 1,
-      styles: { camelLength: "2" },
+      style: { camelLength: "2" },
     });
 
     const result = pageReducer(state, action);
@@ -166,7 +166,7 @@ describe("Update a structure node", () => {
     const action = updateStructure("pageId", 4, {
       attributes: { smelliness: "excessive" },
       length: 1,
-      styles: { camelLength: "2" },
+      style: { camelLength: "2" },
     });
     const result = pageReducer(state, action);
     expect(result).toStrictEqual(expectedState);

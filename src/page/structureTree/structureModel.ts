@@ -20,7 +20,7 @@ export interface StructureNode extends Node {
   readonly id: string;
   readonly leftSubTreeLength: number;
   readonly length: number;
-  readonly styles?: KeyValueStr;
+  readonly style?: KeyValueStr;
   readonly attributes?: KeyValueStr;
 }
 
@@ -30,7 +30,7 @@ export interface StructureNodeMutable extends NodeMutable {
   id: string;
   leftSubTreeLength: number;
   length: number;
-  styles?: KeyValueStr;
+  style?: KeyValueStr;
   attributes?: KeyValueStr;
 }
 

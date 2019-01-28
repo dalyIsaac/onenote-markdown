@@ -3,6 +3,9 @@ import { StructureNode } from "./structureModel";
 import { SENTINEL_INDEX } from "../tree/tree";
 import { insertNode, fixInsert } from "../tree/insert";
 import { InsertStructureAction } from "./actions";
+import { Omit } from "react-redux";
+
+type InsertStructureProps = Omit<Omit<InsertStructureAction, "pageId">, "type">;
 
 /**
  * Inserts a new `StructureNode` into `.structure.nodes`.
@@ -11,12 +14,12 @@ import { InsertStructureAction } from "./actions";
  */
 export function insertStructureNode(
   page: PageContentMutable,
-  insertStructureAction: InsertStructureAction,
+  insertStructureAction: InsertStructureProps,
 ): void {
   const {
     attributes,
     id,
-    styles,
+    style,
     tag,
     tagType,
     offset,
@@ -31,7 +34,7 @@ export function insertStructureNode(
     length,
     parent: SENTINEL_INDEX,
     right: SENTINEL_INDEX,
-    styles,
+    style,
     tag,
     tagType,
   };
