@@ -1,55 +1,19 @@
 import { PageContent, PageContentMutable } from "./pageModel";
 import { SENTINEL_CONTENT } from "./contentTree/tree";
 import { SENTINEL_STRUCTURE } from "./structureTree/tree";
-import { chunks } from "tiny-html-lexer";
-import { KeyValuePair } from "@microsoft/microsoft-graph-types";
+import { chunks, TokenStream, TokenType } from "tiny-html-lexer";
+import { EMPTY_TREE_ROOT } from "./tree/tree";
 
 export default class Parser {
   private static page: PageContentMutable;
-  private static tags: Array<{ tag: string; id?: string }> = [];
-  private static attributes: KeyValuePair[] = [];
+  private static stream: TokenStream;
 
   public static parse(content: string): PageContent {
     Parser.resetPage();
 
-    const stream = chunks(content);
-    for (const [type, chunk] of stream) {
-      switch (type) {
-        case "startTag-start": {
-          Parser.startTagStart(chunk);
-          break;
-        }
-        case "endTag-start": {
-          Parser.endTagStart(chunk);
-          break;
-        }
-        case "tag-end-autoclose": {
-          Parser.autoCloseTag();
-          break;
-        }
-        case "attribute-name": {
-          Parser.attributeName(chunk);
-          break;
-        }
-        case "attribute-value-data": {
-          Parser.attributeData(chunk);
-          break;
-        }
-        case "rcdata": {
-          Parser.rcData(chunk);
-          break;
-        }
-        case "attribute-assign":
-        case "attribute-value-start":
-        case "attribute-value-end":
-        case "tag-end":
-        case "space":
-          break;
-        default: {
-          console.log({ chunk, type });
-          break;
-        }
-      }
+    Parser.stream = chunks(content);
+    while (!Parser.stream.done) {
+      Parser.start();
     }
     return Parser.page as PageContent;
   }
@@ -59,78 +23,120 @@ export default class Parser {
       buffers: [],
       content: {
         nodes: [SENTINEL_CONTENT],
-        root: -1,
+        root: EMPTY_TREE_ROOT,
       },
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
       structure: {
         nodes: [SENTINEL_STRUCTURE],
-        root: -1,
+        root: EMPTY_TREE_ROOT,
       },
     };
   }
 
-  private static startTagStart(chunk: string): void {
-    Parser.tags.push({ tag: chunk.slice(1) });
-  }
+  private static start(): void {
+    let [, chunk] = Parser.stream.next().value;
 
-  private static endTagStart(chunk: string): void {
-    const tag = chunk.slice(2);
-    if (Parser.tags[Parser.tags.length - 1].tag === tag) {
-      Parser.tags.pop();
-    } else {
-      throw new Error("Unexpected tag");
+    const tag = chunk.slice(1);
+    switch (tag) {
+      case "html": {
+        Parser.html();
+        break;
+      }
+      case "/html":
+      case "head":
+      case "/head": {
+        Parser.consumeUpToType("tag-end");
+        break;
+      }
+      case "title": {
+        Parser.title();
+        break;
+      }
+      case "meta": {
+        Parser.meta();
+        break;
+      }
+      default: {
+        console.log(Parser.page);
+        if (Parser.stream.next().done) {
+          return;
+        }
+        throw new TypeError("Unexpected type");
+      }
     }
   }
 
-  private static autoCloseTag(): void {
-    Parser.tags.pop();
-  }
-
-  private static attributeName(chunk: string): void {
-    Parser.attributes.push({ name: chunk });
-  }
-
-  private static attributeData(chunk: string): void {
-    if (
-      Parser.attributes[Parser.attributes.length - 1].name === "lang" &&
-      Parser.tags[Parser.tags.length - 1].tag === "html"
-    ) {
-      Parser.page.language = chunk;
-    } else if (Parser.metaAttributes(chunk)) {
-      return;
-    } else {
-      Parser.attributes[Parser.attributes.length - 1].value = chunk;
+  private static consumeUpToType(targetType: TokenType): void {
+    let [type] = Parser.stream.next().value;
+    while (type !== targetType) {
+      [type] = Parser.stream.next().value;
     }
   }
 
-  private static metaAttributes(chunk: string): boolean {
-    if (
-      Parser.attributes.length < 2 ||
-      Parser.tags[Parser.tags.length - 1].tag !== "meta"
-    ) {
-      return false;
+  private static html(): void {
+    let [type, chunk] = Parser.stream.next().value;
+    while (type !== "attribute-name") {
+      [type, chunk] = Parser.stream.next().value;
     }
 
-    const prevAttr = Parser.attributes[Parser.attributes.length - 2];
-    if (prevAttr.name === "http-equiv" && prevAttr.value === "Content-Type") {
-      // charset
-      Parser.page.charset = chunk.split(";")[1].trim();
-      Parser.attributes.pop();
-      Parser.attributes.pop();
-      return true;
-    } else if (prevAttr.name === "name" && prevAttr.value === "created") {
-      Parser.page.created = chunk;
-      return true;
+    if (chunk !== "lang") {
+      throw new TypeError(
+        "Unexpected attribute name. Expected `lang` attribute name.",
+      );
     }
-    return false;
+
+    while (type !== "attribute-value-data") {
+      [type, chunk] = Parser.stream.next().value;
+    }
+    Parser.page.language = chunk;
+    Parser.consumeUpToType("tag-end");
   }
 
-  private static rcData(chunk: string): void {
-    if (Parser.tags[Parser.tags.length - 1].tag === "title") {
-      Parser.page.title = chunk;
-    } else {
-      throw new Error("Unknown tag");
+  private static title(): void {
+    Parser.consumeUpToType("tag-end");
+    let [type, chunk] = Parser.stream.next().value;
+
+    if (type !== "rcdata") {
+      throw new TypeError("Expected `rcdata` type.");
     }
+
+    Parser.page.title = chunk;
+    Parser.consumeUpToType("tag-end");
+  }
+
+  private static meta(): void {
+    Parser.consumeUpToType("space");
+    let [type, chunk] = Parser.stream.next().value;
+    if (type !== "attribute-name") {
+      Parser.expectedAttributeNameError();
+    }
+
+    if (chunk === "http-equiv") {
+      Parser.page.charset = Parser.getMetaInfo().split("=")[1];
+    } else if (chunk === "name") {
+      Parser.page.created = Parser.getMetaInfo();
+    }
+    Parser.consumeUpToType("tag-end-autoclose");
+  }
+
+  private static getMetaInfo(): string {
+    Parser.consumeUpToType("space");
+
+    let [type, chunk] = Parser.stream.next().value;
+    if (type !== "attribute-name") {
+      Parser.expectedAttributeNameError();
+    } else if (chunk !== "content") {
+      throw new Error(`Unexpected chunk. Expected \`content\`, got ${chunk}`);
+    }
+
+    Parser.consumeUpToType("attribute-value-start");
+
+    [type, chunk] = Parser.stream.next().value;
+    return chunk;
+  }
+
+  private static expectedAttributeNameError(): void {
+    throw new Error("Unexpected type. Expected `attribute-name`");
   }
 }

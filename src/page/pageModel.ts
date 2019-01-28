@@ -1,5 +1,5 @@
 import { Buffer, ContentNode } from "./contentTree/contentModel";
-import { StructureNode } from "./structureTree/structureModel";
+import { StructureNode, KeyValueStr } from "./structureTree/structureModel";
 
 //#region Node
 
@@ -121,6 +121,16 @@ export interface PageContent {
    * The datetime at which this page was created at.
    */
   readonly created?: string;
+
+  /**
+   * Indicates whether the body of the page has absolute positioning enabled.
+   */
+  readonly dataAbsoluteEnabled?: boolean;
+
+  /**
+   * The default style for the paragraph text for this page.
+   */
+  readonly defaultStyle?: KeyValueStr;
 }
 
 export interface PageContentMutable {
@@ -185,6 +195,16 @@ export interface PageContentMutable {
    * The datetime at which this page was created at.
    */
   created?: string;
+
+  /**
+   * Indicates whether the body of the page has absolute positioning enabled.
+   */
+  dataAbsoluteEnabled?: boolean;
+
+  /**
+   * The default style for the paragraph text for this page.
+   */
+  defaultStyle?: KeyValueStr;
 }
 //#endregion
 
