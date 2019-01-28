@@ -261,7 +261,6 @@ export function insertContent(
   if (
     previouslyInsertedNode !== undefined &&
     content.offset ===
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       page.previouslyInsertedContentNodeOffset! + previouslyInsertedNode.length
   ) {
     insertAtEndPreviouslyInsertedNode(content, page, maxBufferLength);

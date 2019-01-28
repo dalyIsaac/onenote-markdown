@@ -198,16 +198,13 @@ export function recomputeTreeMetadata(
       if (isContentNode(tree.nodes[x])) {
         (tree.nodes[
           tree.nodes[x].parent
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         ] as ContentNodeMutable).leftCharCount += lengthDelta!;
         (tree.nodes[
           tree.nodes[x].parent
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         ] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta!;
       } else if (isStructureNode(tree.nodes[x])) {
         (tree.nodes[
           tree.nodes[x].parent
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         ] as StructureNodeMutable).leftSubTreeLength += lengthDelta!;
       }
     }
