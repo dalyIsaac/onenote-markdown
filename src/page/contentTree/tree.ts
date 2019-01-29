@@ -112,7 +112,6 @@ export function findNodeAtOffset(
       }
     }
   }
-  // tslint:disable-next-line:no-console
   console.error(
     `Reaching here means that \`nodes[x]\` is a SENTINEL node, and stored inside the piece table's \`nodes\` array.`,
   );

@@ -20,7 +20,6 @@
     "@microsoft/microsoft-graph-types": "^1.5.0",
     "@types/jest": "^23.3.9",
     "@typescript-eslint/eslint-plugin": "^1.1.0",
-    "@typescript-eslint/eslint-plugin-tslint": "^1.1.0",
     "@typescript-eslint/parser": "^1.1.0",
     "eslint-config-prettier": "^3.6.0",
     "eslint-plugin-react": "^7.12.4",
@@ -29,9 +28,6 @@
     "jest-junit": "^5.2.0",
     "pretty-quick": "^1.10.0",
     "redux-devtools-extension": "^2.13.5",
-    "tslint": "^5.11.0",
-    "tslint-config-prettier": "^1.15.0",
-    "tslint-react": "^3.6.0",
     "typescript": "^3.2.2",
     "vsts-coverage-styles": "^1.0.7"
   },
