@@ -1,6 +1,6 @@
 import { insertNode, fixInsert } from "../tree/insert";
 import { Color, PageContentMutable } from "../pageModel";
-import { SENTINEL_INDEX } from "../tree/tree";
+import { SENTINEL_INDEX, EMPTY_TREE_ROOT } from "../tree/tree";
 import { Buffer, ContentNode, ContentNodeMutable } from "./contentModel";
 import {
   findNodeAtOffset,
@@ -248,6 +248,10 @@ export function insertContent(
   content: ContentInsert,
   maxBufferLength: number,
 ): void {
+  if (page.content.root === EMPTY_TREE_ROOT) {
+    createNodeCreateBuffer(content, page);
+    return;
+  }
   let previouslyInsertedNode: ContentNode | undefined;
 
   if (

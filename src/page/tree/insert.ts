@@ -141,6 +141,7 @@ export function insertNode(
   let currentIndex = tree.root;
   if (currentIndex === EMPTY_TREE_ROOT) {
     tree.root = 1;
+    newNode.color = Color.Black;
     return;
   }
 

@@ -1,11 +1,8 @@
 import { PageContentMutable, Color } from "../pageModel";
-import { StructureNode } from "./structureModel";
+import { StructureNode, StructureNodeMutable } from "./structureModel";
 import { SENTINEL_INDEX } from "../tree/tree";
 import { insertNode, fixInsert } from "../tree/insert";
-import { InsertStructureAction } from "./actions";
-import { Omit } from "react-redux";
-
-type InsertStructureProps = Omit<Omit<InsertStructureAction, "pageId">, "type">;
+import { InsertStructureProps } from "./actions";
 
 /**
  * Inserts a new `StructureNode` into `.structure.nodes`.
@@ -26,7 +23,6 @@ export function insertStructureNode(
     length,
   } = insertStructureAction;
   const newNode: StructureNode = {
-    attributes,
     color: Color.Red,
     id,
     left: SENTINEL_INDEX,
@@ -34,10 +30,15 @@ export function insertStructureNode(
     length,
     parent: SENTINEL_INDEX,
     right: SENTINEL_INDEX,
-    style,
     tag,
     tagType,
   };
+  if (style) {
+    (newNode as StructureNodeMutable).style = style;
+  }
+  if (attributes) {
+    (newNode as StructureNodeMutable).attributes = attributes;
+  }
   insertNode(page.structure, newNode, offset);
   fixInsert(page.structure, page.structure.nodes.length - 1);
 }
