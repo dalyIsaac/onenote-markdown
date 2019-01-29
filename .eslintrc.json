@@ -22,6 +22,7 @@
   ],
   "env": {
     "jest": true,
-    "browser": true
+    "browser": true,
+    "es6": true
   }
 }

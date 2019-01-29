@@ -5,6 +5,16 @@ import { UpdateStructureValues } from "./update";
 //#region Insert new structure node
 export const INSERT_STRUCTURE_NODE = "INSERT_STRUCTURE_NODE";
 
+export interface InsertStructureProps {
+  tag: string;
+  tagType: TagType;
+  id: string;
+  style?: KeyValueStr;
+  attributes?: KeyValueStr;
+  offset: number;
+  length: number;
+}
+
 export interface InsertStructureAction extends PageActionPartial {
   readonly tag: string;
   readonly tagType: TagType;
