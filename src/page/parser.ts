@@ -1,7 +1,7 @@
 import { PageContent, PageContentMutable } from "./pageModel";
 import { SENTINEL_CONTENT, MAX_BUFFER_LENGTH } from "./contentTree/tree";
 import { SENTINEL_STRUCTURE } from "./structureTree/tree";
-import { chunks, TokenStream, TokenType } from "tiny-html-lexer";
+import { chunks, TokenType } from "tiny-html-lexer";
 import { EMPTY_TREE_ROOT } from "./tree/tree";
 import { KeyValueStr, TagType } from "./structureTree/structureModel";
 import { InsertStructureProps } from "./structureTree/actions";
@@ -14,109 +14,48 @@ interface Attributes {
   [key: string]: string;
 }
 
-export default class Parser {
-  private static page: PageContentMutable;
-  private static stream: TokenStream;
-  private static lastTextNode: InsertStructureProps;
-  private static structureNodeOffset = 1;
-  private static contentOffset = 0;
-  private static markdownStack: string[][] = [];
-  private static readonly charRef: Set<TokenType> = new Set([
+export default function parse(content: string): PageContent {
+  const page: PageContentMutable = {
+    buffers: [],
+    content: {
+      nodes: [SENTINEL_CONTENT],
+      root: EMPTY_TREE_ROOT,
+    },
+    previouslyInsertedContentNodeIndex: null,
+    previouslyInsertedContentNodeOffset: null,
+    structure: {
+      nodes: [SENTINEL_STRUCTURE],
+      root: EMPTY_TREE_ROOT,
+    },
+  };
+  const stream = chunks(content);
+  let lastTextNode: InsertStructureProps;
+  let structureNodeOffset = 1;
+  let contentOffset = 0;
+  let markdownStack: string[][] = [];
+  const charRef: Set<TokenType> = new Set([
     "charRef-decimal",
     "charRef-hex",
     "charRef-named",
   ] as TokenType[]);
 
-  public static parse(content: string): PageContent {
-    Parser.resetPage();
-
-    Parser.stream = chunks(content);
-    while (!Parser.stream.done) {
-      Parser.start();
-    }
-    Parser.page.buffers.forEach((x) => {
-      (x as BufferMutable).isReadOnly = true;
-    });
-    return Parser.page as PageContent;
-  }
-
-  private static resetPage(): void {
-    Parser.page = {
-      buffers: [],
-      content: {
-        nodes: [SENTINEL_CONTENT],
-        root: EMPTY_TREE_ROOT,
-      },
-      previouslyInsertedContentNodeIndex: null,
-      previouslyInsertedContentNodeOffset: null,
-      structure: {
-        nodes: [SENTINEL_STRUCTURE],
-        root: EMPTY_TREE_ROOT,
-      },
-    };
-  }
-
-  private static start(): void {
-    let [, chunk] = Parser.stream.next().value;
-
-    const tag = chunk.slice(1);
-    switch (tag) {
-      case "html": {
-        Parser.html();
-        break;
-      }
-      case "/html":
-      case "head":
-      case "/head":
-      case "/body": {
-        Parser.consumeUpToType("tag-end");
-        break;
-      }
-      case "title": {
-        Parser.title();
-        break;
-      }
-      case "meta": {
-        Parser.meta();
-        break;
-      }
-      case "body": {
-        Parser.body();
-        break;
-      }
-      case "p": {
-        Parser.text("p");
-        break;
-      }
-      default: {
-        if (Parser.stream.next().done) {
-          return;
-        }
-        throw new TypeError("Unexpected type");
-      }
-    }
-  }
-
-  private static consumeUpToType(...targetTypes: TokenType[]): TokenType {
-    let [type] = Parser.stream.next().value;
+  function consumeUpToType(...targetTypes: TokenType[]): TokenType {
+    let [type] = stream.next().value;
     const target = new Set(targetTypes);
     while (!target.has(type)) {
-      [type] = Parser.stream.next().value;
+      [type] = stream.next().value;
     }
     return type;
   }
 
-  private static getNextAttribute(key: string): { key: string; value: string } {
-    Parser.consumeUpToType("attribute-value-start");
-    const [, value] = Parser.stream.next().value;
-    Parser.consumeUpToType("attribute-value-end");
+  function getNextAttribute(key: string): { key: string; value: string } {
+    consumeUpToType("attribute-value-start");
+    const [, value] = stream.next().value;
+    consumeUpToType("attribute-value-end");
     return { key, value };
   }
 
-  private static getAttributeName(
-    name: string,
-    isStyleProperty = false,
-  ): string {
+  function getAttributeName(name: string, isStyleProperty = false): string {
     const newName = name.split("-").reduce((acc: string, curr: string) => {
       if (isStyleProperty) {
         if (acc) {
@@ -132,159 +71,201 @@ export default class Parser {
     return newName;
   }
 
-  private static getStyle(text: string): KeyValueStr {
+  function getStyle(text: string): KeyValueStr {
     return text
       .split(";")
       .reduce((acc: KeyValueStr, curr: string): KeyValueStr => {
         const [key, value] = curr.split(":");
-        acc[Parser.getAttributeName(key, true)] = value;
+        acc[getAttributeName(key, true)] = value;
         return acc;
       }, {});
   }
 
-  private static getAttributes(): Attributes {
+  function getAttributes(): Attributes {
     const attributes: Attributes = {};
     // eslint-disable-next-line no-constant-condition
     while (true) {
-      const terminatingType = Parser.consumeUpToType(
+      const terminatingType = consumeUpToType(
         "space",
         "tag-end",
         "tag-end-autoclose",
       );
       if (terminatingType === "space") {
-        const [type, chunk] = Parser.stream.next().value;
+        const [type, chunk] = stream.next().value;
         if (type === "tag-end" || type === "tag-end-autoclose") {
           return attributes;
         }
-        attributes[chunk] = Parser.getNextAttribute(chunk).value;
+        attributes[chunk] = getNextAttribute(chunk).value;
       } else {
         return attributes;
       }
     }
   }
 
-  private static html(): void {
-    const attributes = this.getAttributes();
+  function html(): void {
+    const attributes = getAttributes();
     if (attributes.lang) {
-      Parser.page.language = attributes.lang as string;
+      page.language = attributes.lang as string;
     }
   }
 
-  private static title(): void {
-    Parser.consumeUpToType("tag-end");
-    let [type, chunk] = Parser.stream.next().value;
+  function title(): void {
+    consumeUpToType("tag-end");
+    let [type, chunk] = stream.next().value;
 
     if (type !== "rcdata") {
       throw new TypeError("Expected `rcdata` type.");
     }
 
-    Parser.page.title = chunk;
-    Parser.consumeUpToType("tag-end");
+    page.title = chunk;
+    consumeUpToType("tag-end");
   }
 
-  private static meta(): void {
-    const attributes = Parser.getAttributes();
+  function meta(): void {
+    const attributes = getAttributes();
     if (attributes["http-equiv"] === "Content-Type" && attributes["content"]) {
-      Parser.page.charset = (attributes["content"] as string).split("=")[1];
+      page.charset = (attributes["content"] as string).split("=")[1];
     } else if (attributes["name"] === "created" && attributes["content"]) {
-      Parser.page.created = attributes["content"] as string;
+      page.created = attributes["content"] as string;
     }
   }
 
-  private static body(): void {
-    const attributes = Parser.getAttributes();
+  function body(): void {
+    const attributes = getAttributes();
     if (attributes["data-absolute-enabled"]) {
-      Parser.page.dataAbsoluteEnabled = Boolean(
-        attributes["data-absolute-enabled"],
-      );
+      page.dataAbsoluteEnabled = Boolean(attributes["data-absolute-enabled"]);
     }
     if (attributes["style"]) {
-      Parser.page.defaultStyle = Parser.getStyle(attributes["style"]);
+      page.defaultStyle = getStyle(attributes["style"]);
     }
   }
 
-  private static text(tag: string): void {
-    const { id, style: styleStr, ...attributes } = Parser.getAttributes();
-    Parser.lastTextNode = {
+  function span(): string {
+    const style = getStyle(getAttributes().style);
+    const markdown: string[] = [];
+    if (style.fontWeight === "bold") {
+      markdown.push("**");
+    }
+    if (style.fontStyle === "italic") {
+      markdown.push("_");
+    }
+    if (style.textDecoration === "underline") {
+      markdown.push("{text-decoration:underline}");
+    }
+    markdownStack.push(markdown);
+    return markdown.join("");
+  }
+
+  function spanEnd(): string {
+    consumeUpToType("tag-end");
+    const forwardsContent = markdownStack.pop()!;
+    return forwardsContent.reduce((acc, curr) => {
+      return curr + acc;
+    }, "");
+  }
+
+  function textBody(tag: string): void {
+    let [type, chunk] = stream.next().value;
+    let content = "";
+    while (!(type === "endTag-start" && chunk.slice(2) === tag)) {
+      if (type === "data") {
+        content += chunk;
+      } else if (charRef.has(type)) {
+        const charRefContent = he.decode(chunk);
+        content += charRefContent;
+      } else if (type === "startTag-start" && chunk === "<span") {
+        content += span();
+      } else if (type === "endTag-start" && chunk === "</span") {
+        content += spanEnd();
+      }
+      [type, chunk] = stream.next().value;
+    }
+
+    lastTextNode.length = content.length;
+    insertStructureNode(page, lastTextNode);
+    structureNodeOffset += 1;
+    insertStructureNode(page, {
+      id: lastTextNode.id,
+      length: 0,
+      offset: structureNodeOffset,
+      tag: lastTextNode.tag,
+      tagType: TagType.EndTag,
+    });
+    structureNodeOffset += 1;
+
+    insertContent(page, { content, offset: contentOffset }, MAX_BUFFER_LENGTH);
+    contentOffset += content.length;
+    consumeUpToType("tag-end");
+  }
+
+  function text(tag: string): void {
+    const { id, style: styleStr, ...attributes } = getAttributes();
+    lastTextNode = {
       id,
       length: 0,
       offset: 0,
       tag,
       tagType: TagType.StartTag,
     };
-
     if (styleStr) {
-      Parser.lastTextNode.style = Parser.getStyle(styleStr);
+      lastTextNode.style = getStyle(styleStr);
     }
     if (Object.keys(attributes).length > 0) {
       const renamedKeyAttributes: KeyValueStr = {};
       for (const key in attributes) {
-        renamedKeyAttributes[Parser.getAttributeName(key)] = attributes[key];
+        renamedKeyAttributes[getAttributeName(key)] = attributes[key];
       }
-      Parser.lastTextNode.attributes = renamedKeyAttributes;
+      lastTextNode.attributes = renamedKeyAttributes;
     }
-    Parser.textBody(tag);
+    textBody(tag);
   }
 
-  private static textBody(tag: string): void {
-    let [type, chunk] = Parser.stream.next().value;
-    let content = "";
-    while (!(type === "endTag-start" && chunk.slice(2) === tag)) {
-      if (type === "data") {
-        content += chunk;
-      } else if (Parser.charRef.has(type)) {
-        const charRefContent = he.decode(chunk);
-        content += charRefContent;
-      } else if (type === "startTag-start" && chunk === "<span") {
-        content += Parser.span();
-      } else if (type === "endTag-start" && chunk === "</span") {
-        content += Parser.spanEnd();
+  function start(): void {
+    let [, chunk] = stream.next().value;
+
+    const tag = chunk.slice(1);
+    switch (tag) {
+      case "html": {
+        html();
+        break;
       }
-      [type, chunk] = Parser.stream.next().value;
+      case "/html":
+      case "head":
+      case "/head":
+      case "/body": {
+        consumeUpToType("tag-end");
+        break;
+      }
+      case "title": {
+        title();
+        break;
+      }
+      case "meta": {
+        meta();
+        break;
+      }
+      case "body": {
+        body();
+        break;
+      }
+      case "p": {
+        text("p");
+        break;
+      }
+      default: {
+        if (stream.next().done) {
+          return;
+        }
+        throw new TypeError("Unexpected type");
+      }
     }
-
-    Parser.lastTextNode.length = content.length;
-    insertStructureNode(Parser.page, Parser.lastTextNode);
-    Parser.structureNodeOffset += 1;
-    insertStructureNode(Parser.page, {
-      id: Parser.lastTextNode.id,
-      length: 0,
-      offset: Parser.structureNodeOffset,
-      tag: Parser.lastTextNode.tag,
-      tagType: TagType.EndTag,
-    });
-    Parser.structureNodeOffset += 1;
-
-    insertContent(
-      Parser.page,
-      { content, offset: Parser.contentOffset },
-      MAX_BUFFER_LENGTH,
-    );
-    Parser.contentOffset += content.length;
-    Parser.consumeUpToType("tag-end");
   }
 
-  private static span(): string {
-    const style = Parser.getStyle(Parser.getAttributes().style);
-    const markdown: string[] = [];
-    if (style.fontStyle === "italic") {
-      markdown.push("_");
-    }
-    if (style.fontWeight === "bold") {
-      markdown.push("**");
-    }
-    if (style.textDecoration === "underline") {
-      markdown.push("{text-decoration:underline}");
-    }
-    Parser.markdownStack.push(markdown);
-    return markdown.join();
+  while (!stream.done) {
+    start();
   }
-
-  private static spanEnd(): string {
-    Parser.consumeUpToType("tag-end");
-    const forwardsContent = Parser.markdownStack.pop()!;
-    return forwardsContent.reduce((acc, curr) => {
-      return curr + acc;
-    }, "");
-  }
+  page.buffers.forEach((x) => {
+    (x as BufferMutable).isReadOnly = true;
+  });
+  return page as PageContent;
 }
