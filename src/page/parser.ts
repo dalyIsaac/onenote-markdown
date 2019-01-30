@@ -166,6 +166,9 @@ export default function parse(content: string): PageContent {
     if (style.backgroundColor) {
       markdown.push(`{background-color:${style.backgroundColor}}`);
     }
+    if (style.color) {
+      markdown.push(`{color:${style.color}}`);
+    }
     markdownStack.push(markdown);
     return markdown.join("");
   }
