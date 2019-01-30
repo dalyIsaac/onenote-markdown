@@ -195,10 +195,30 @@ export default function parse(content: string): PageContent {
       } else if (charRef.has(type)) {
         const charRefContent = he.decode(chunk);
         content += charRefContent;
-      } else if (type === "startTag-start" && chunk === "<span") {
-        content += span();
-      } else if (type === "endTag-start" && chunk === "</span") {
-        content += spanEnd();
+      } else if (type === "startTag-start") {
+        switch (chunk) {
+          case "<span":
+            content += span();
+            break;
+          case "<sub":
+          case "<sup":
+            content += chunk + ">";
+            break;
+          default:
+            break;
+        }
+      } else if (type === "endTag-start") {
+        switch (chunk) {
+          case "</span":
+            content += spanEnd();
+            break;
+          case "</sub":
+          case "</sup":
+            content += chunk + ">";
+            break;
+          default:
+            break;
+        }
       }
       [type, chunk] = stream.next().value;
     }
