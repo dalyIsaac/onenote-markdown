@@ -160,8 +160,8 @@ export default function parse(content: string): PageContent {
     if (style.fontStyle === "italic") {
       markdown.push("_");
     }
-    if (style.textDecoration === "underline") {
-      markdown.push("{text-decoration:underline}");
+    if (style.textDecoration) {
+      markdown.push(`{text-decoration:${style.textDecoration}}`);
     }
     if (style.backgroundColor) {
       markdown.push(`{background-color:${style.backgroundColor}}`);
@@ -270,14 +270,18 @@ export default function parse(content: string): PageContent {
         body();
         break;
       }
-      case "p": {
-        text("p");
+      case "p":
+      case "cite":
+      case "h1":
+      case "h2":
+      case "h3":
+      case "h4":
+      case "h5":
+      case "h6": {
+        text(tag);
         break;
       }
-      case "cite": {
-        text("cite");
-        break;
-      }
+
       default: {
         if (stream.next().done) {
           return;

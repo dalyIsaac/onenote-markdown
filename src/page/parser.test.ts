@@ -593,25 +593,544 @@ describe("Parser tests", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  // TODO: colored text
+  test("h1", () => {
+    const html =
+      `<html lang="en-NZ">` +
+      `<head>` +
+      `<title>This is the title</title>` +
+      `<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />` +
+      `<meta name="created" content="2018-09-03T14:08:00.0000000" />` +
+      `</head>` +
+      `<body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">` +
+      `<h1 id="h1:{6cb59116-8e61-03a9-39ef-edf64004790d}{69}" style="font-size:16pt;color:#1e4e79;margin-top:0pt;margin-bottom:0pt">This is <span style="font-weight:bold">heading</span> 1</h1>` +
+      `</body>` +
+      `</html>`;
+    const page = parse(html);
+    const expectedPage: PageContent = {
+      buffers: [
+        {
+          content: "# This is **heading** 1",
+          isReadOnly: true,
+          lineStarts: [0],
+        },
+      ],
+      charset: "utf-8",
+      content: {
+        nodes: [
+          SENTINEL_CONTENT,
+          {
+            bufferIndex: 0,
+            color: Color.Black,
+            end: { column: 23, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 23,
+            lineFeedCount: 0,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            start: { column: 0, line: 0 },
+          },
+        ],
+        root: 1,
+      },
+      created: "2018-09-03T14:08:00.0000000",
+      dataAbsoluteEnabled: true,
+      defaultStyle: {
+        fontFamily: "Calibri",
+        fontSize: "11pt",
+      },
+      language: "en-NZ",
+      previouslyInsertedContentNodeIndex: 1,
+      previouslyInsertedContentNodeOffset: 0,
+      structure: {
+        nodes: [
+          SENTINEL_STRUCTURE,
+          {
+            color: Color.Black,
+            id: "h1:{6cb59116-8e61-03a9-39ef-edf64004790d}{69}",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 23,
+            parent: SENTINEL_INDEX,
+            right: 2,
+            style: {
+              color: "#1e4e79",
+              fontSize: "16pt",
+              marginBottom: "0pt",
+              marginTop: "0pt",
+            },
+            tag: "h1",
+            tagType: TagType.StartTag,
+          },
+          {
+            color: Color.Red,
+            id: "h1:{6cb59116-8e61-03a9-39ef-edf64004790d}{69}",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 0,
+            parent: 1,
+            right: SENTINEL_INDEX,
+            tag: "h1",
+            tagType: TagType.EndTag,
+          },
+        ],
+        root: 1,
+      },
+      title: "This is the title",
+    };
+    expect(page).toStrictEqual(expectedPage);
+  });
+
+  test("h2", () => {
+    const html =
+      `<html lang="en-NZ">` +
+      `<head>` +
+      `<title>This is the title</title>` +
+      `<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />` +
+      `<meta name="created" content="2018-09-03T14:08:00.0000000" />` +
+      `</head>` +
+      `<body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">` +
+      `<h2 id="h2:{6cb59116-8e61-03a9-39ef-edf64004790d}{74}" style="font-size:14pt;color:#2e75b5;margin-top:0pt;margin-bottom:0pt">This is <span style="text-decoration:underline">heading</span> 2</h2>` +
+      `</body>` +
+      `</html>`;
+    const page = parse(html);
+    const expectedPage: PageContent = {
+      buffers: [
+        {
+          content:
+            "## This is {text-decoration:underline}heading{text-decoration:underline} 2",
+          isReadOnly: true,
+          lineStarts: [0],
+        },
+      ],
+      charset: "utf-8",
+      content: {
+        nodes: [
+          SENTINEL_CONTENT,
+          {
+            bufferIndex: 0,
+            color: Color.Black,
+            end: { column: 74, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 74,
+            lineFeedCount: 0,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            start: { column: 0, line: 0 },
+          },
+        ],
+        root: 1,
+      },
+      created: "2018-09-03T14:08:00.0000000",
+      dataAbsoluteEnabled: true,
+      defaultStyle: {
+        fontFamily: "Calibri",
+        fontSize: "11pt",
+      },
+      language: "en-NZ",
+      previouslyInsertedContentNodeIndex: 1,
+      previouslyInsertedContentNodeOffset: 0,
+      structure: {
+        nodes: [
+          SENTINEL_STRUCTURE,
+          {
+            color: Color.Black,
+            id: "h2:{6cb59116-8e61-03a9-39ef-edf64004790d}{74}",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 74,
+            parent: SENTINEL_INDEX,
+            right: 2,
+            style: {
+              color: "#2e75b5",
+              fontSize: "14pt",
+              marginBottom: "0pt",
+              marginTop: "0pt",
+            },
+            tag: "h2",
+            tagType: TagType.StartTag,
+          },
+          {
+            color: Color.Red,
+            id: "h2:{6cb59116-8e61-03a9-39ef-edf64004790d}{74}",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 0,
+            parent: 1,
+            right: SENTINEL_INDEX,
+            tag: "h2",
+            tagType: TagType.EndTag,
+          },
+        ],
+        root: 1,
+      },
+      title: "This is the title",
+    };
+    expect(page).toStrictEqual(expectedPage);
+  });
+
+  test("h3", () => {
+    const html =
+      `<html lang="en-NZ">` +
+      `<head>` +
+      `<title>This is the title</title>` +
+      `<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />` +
+      `<meta name="created" content="2018-09-03T14:08:00.0000000" />` +
+      `</head>` +
+      `<body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">` +
+      `<h3 id="h3:{6cb59116-8e61-03a9-39ef-edf64004790d}{79}" style="font-size:12pt;color:#377bac;margin-top:0pt;margin-bottom:0pt">This is <span style="text-decoration:line-through">heading</span> 3</h3>` +
+      `</body>` +
+      `</html>`;
+    const page = parse(html);
+    const expectedPage: PageContent = {
+      buffers: [
+        {
+          content:
+            "### This is {text-decoration:line-through}heading{text-decoration:line-through} 3",
+          isReadOnly: true,
+          lineStarts: [0],
+        },
+      ],
+      charset: "utf-8",
+      content: {
+        nodes: [
+          SENTINEL_CONTENT,
+          {
+            bufferIndex: 0,
+            color: Color.Black,
+            end: { column: 81, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 81,
+            lineFeedCount: 0,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            start: { column: 0, line: 0 },
+          },
+        ],
+        root: 1,
+      },
+      created: "2018-09-03T14:08:00.0000000",
+      dataAbsoluteEnabled: true,
+      defaultStyle: {
+        fontFamily: "Calibri",
+        fontSize: "11pt",
+      },
+      language: "en-NZ",
+      previouslyInsertedContentNodeIndex: 1,
+      previouslyInsertedContentNodeOffset: 0,
+      structure: {
+        nodes: [
+          SENTINEL_STRUCTURE,
+          {
+            color: Color.Black,
+            id: "h3:{6cb59116-8e61-03a9-39ef-edf64004790d}{79}",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 81,
+            parent: SENTINEL_INDEX,
+            right: 2,
+            style: {
+              color: "#377bac",
+              fontSize: "12pt",
+              marginBottom: "0pt",
+              marginTop: "0pt",
+            },
+            tag: "h3",
+            tagType: TagType.StartTag,
+          },
+          {
+            color: Color.Red,
+            id: "h3:{6cb59116-8e61-03a9-39ef-edf64004790d}{79}",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 0,
+            parent: 1,
+            right: SENTINEL_INDEX,
+            tag: "h3",
+            tagType: TagType.EndTag,
+          },
+        ],
+        root: 1,
+      },
+      title: "This is the title",
+    };
+    expect(page).toStrictEqual(expectedPage);
+  });
+
+  test("h4", () => {
+    const html =
+      `<html lang="en-NZ">` +
+      `<head>` +
+      `<title>This is the title</title>` +
+      `<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />` +
+      `<meta name="created" content="2018-09-03T14:08:00.0000000" />` +
+      `</head>` +
+      `<body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">` +
+      `<h4 id="h4:{6cb59116-8e61-03a9-39ef-edf64004790d}{84}" style="font-size:12pt;color:#377bac;font-style:italic;margin-top:0pt;margin-bottom:0pt">This is heading 4</h4>` +
+      `</body>` +
+      `</html>`;
+    const page = parse(html);
+    const expectedPage: PageContent = {
+      buffers: [
+        {
+          content: "#### This is heading 4",
+          isReadOnly: true,
+          lineStarts: [0],
+        },
+      ],
+      charset: "utf-8",
+      content: {
+        nodes: [
+          SENTINEL_CONTENT,
+          {
+            bufferIndex: 0,
+            color: Color.Black,
+            end: { column: 22, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 22,
+            lineFeedCount: 0,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            start: { column: 0, line: 0 },
+          },
+        ],
+        root: 1,
+      },
+      created: "2018-09-03T14:08:00.0000000",
+      dataAbsoluteEnabled: true,
+      defaultStyle: {
+        fontFamily: "Calibri",
+        fontSize: "11pt",
+      },
+      language: "en-NZ",
+      previouslyInsertedContentNodeIndex: 1,
+      previouslyInsertedContentNodeOffset: 0,
+      structure: {
+        nodes: [
+          SENTINEL_STRUCTURE,
+          {
+            color: Color.Black,
+            id: "h4:{6cb59116-8e61-03a9-39ef-edf64004790d}{84}",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 22,
+            parent: SENTINEL_INDEX,
+            right: 2,
+            style: {
+              color: "#377bac",
+              fontSize: "12pt",
+              fontStyle: "italic",
+              marginBottom: "0pt",
+              marginTop: "0pt",
+            },
+            tag: "h4",
+            tagType: TagType.StartTag,
+          },
+          {
+            color: Color.Red,
+            id: "h4:{6cb59116-8e61-03a9-39ef-edf64004790d}{84}",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 0,
+            parent: 1,
+            right: SENTINEL_INDEX,
+            tag: "h4",
+            tagType: TagType.EndTag,
+          },
+        ],
+        root: 1,
+      },
+      title: "This is the title",
+    };
+    expect(page).toStrictEqual(expectedPage);
+  });
+
+  test("h5", () => {
+    const html =
+      `<html lang="en-NZ">` +
+      `<head>` +
+      `<title>This is the title</title>` +
+      `<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />` +
+      `<meta name="created" content="2018-09-03T14:08:00.0000000" />` +
+      `</head>` +
+      `<body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">` +
+      `<h5 id="h5:{6cb59116-8e61-03a9-39ef-edf64004790d}{89}" style="color:#2e75b5;margin-top:0pt;margin-bottom:0pt">This is <span style="font-weight:bold;font-style:italic;text-decoration:line-through">heading</span> 5</h5>` +
+      `</body>` +
+      `</html>`;
+    const page = parse(html);
+    const expectedPage: PageContent = {
+      buffers: [
+        {
+          content:
+            "##### This is **_{text-decoration:line-through}heading{text-decoration:line-through}_** 5",
+          isReadOnly: true,
+          lineStarts: [0],
+        },
+      ],
+      charset: "utf-8",
+      content: {
+        nodes: [
+          SENTINEL_CONTENT,
+          {
+            bufferIndex: 0,
+            color: Color.Black,
+            end: { column: 89, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 89,
+            lineFeedCount: 0,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            start: { column: 0, line: 0 },
+          },
+        ],
+        root: 1,
+      },
+      created: "2018-09-03T14:08:00.0000000",
+      dataAbsoluteEnabled: true,
+      defaultStyle: {
+        fontFamily: "Calibri",
+        fontSize: "11pt",
+      },
+      language: "en-NZ",
+      previouslyInsertedContentNodeIndex: 1,
+      previouslyInsertedContentNodeOffset: 0,
+      structure: {
+        nodes: [
+          SENTINEL_STRUCTURE,
+          {
+            color: Color.Black,
+            id: "h5:{6cb59116-8e61-03a9-39ef-edf64004790d}{89}",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 89,
+            parent: SENTINEL_INDEX,
+            right: 2,
+            style: {
+              color: "#2e75b5",
+              marginBottom: "0pt",
+              marginTop: "0pt",
+            },
+            tag: "h5",
+            tagType: TagType.StartTag,
+          },
+          {
+            color: Color.Red,
+            id: "h5:{6cb59116-8e61-03a9-39ef-edf64004790d}{89}",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 0,
+            parent: 1,
+            right: SENTINEL_INDEX,
+            tag: "h5",
+            tagType: TagType.EndTag,
+          },
+        ],
+        root: 1,
+      },
+      title: "This is the title",
+    };
+    expect(page).toStrictEqual(expectedPage);
+  });
+
+  test("h6", () => {
+    const html =
+      `<html lang="en-NZ">` +
+      `<head>` +
+      `<title>This is the title</title>` +
+      `<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />` +
+      `<meta name="created" content="2018-09-03T14:08:00.0000000" />` +
+      `</head>` +
+      `<body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">` +
+      `<h6 id="h6:{6cb59116-8e61-03a9-39ef-edf64004790d}{94}" style="color:#2e75b5;font-style:italic;margin-top:0pt;margin-bottom:0pt">This is heading 6</h6>` +
+      `</body>` +
+      `</html>`;
+    const page = parse(html);
+    const expectedPage: PageContent = {
+      buffers: [
+        {
+          content: "###### This is heading 6",
+          isReadOnly: true,
+          lineStarts: [0],
+        },
+      ],
+      charset: "utf-8",
+      content: {
+        nodes: [
+          SENTINEL_CONTENT,
+          {
+            bufferIndex: 0,
+            color: Color.Black,
+            end: { column: 24, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 24,
+            lineFeedCount: 0,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            start: { column: 0, line: 0 },
+          },
+        ],
+        root: 1,
+      },
+      created: "2018-09-03T14:08:00.0000000",
+      dataAbsoluteEnabled: true,
+      defaultStyle: {
+        fontFamily: "Calibri",
+        fontSize: "11pt",
+      },
+      language: "en-NZ",
+      previouslyInsertedContentNodeIndex: 1,
+      previouslyInsertedContentNodeOffset: 0,
+      structure: {
+        nodes: [
+          SENTINEL_STRUCTURE,
+          {
+            color: Color.Black,
+            id: "h6:{6cb59116-8e61-03a9-39ef-edf64004790d}{94}",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 24,
+            parent: SENTINEL_INDEX,
+            right: 2,
+            style: {
+              color: "#2e75b5",
+              fontStyle: "italic",
+              marginBottom: "0pt",
+              marginTop: "0pt",
+            },
+            tag: "h6",
+            tagType: TagType.StartTag,
+          },
+          {
+            color: Color.Red,
+            id: "h6:{6cb59116-8e61-03a9-39ef-edf64004790d}{94}",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 0,
+            parent: 1,
+            right: SENTINEL_INDEX,
+            tag: "h6",
+            tagType: TagType.EndTag,
+          },
+        ],
+        root: 1,
+      },
+      title: "This is the title",
+    };
+    expect(page).toStrictEqual(expectedPage);
+  });
 
   // TODO: superscript
 
   // TODO: subscript
-
-  // TODO: strike-through
-
-  // TODO: h1
-
-  // TODO: h2
-
-  // TODO: h3
-
-  // TODO: h4
-
-  // TODO: h5
-
-  // TODO: h6
-
-  // TODO: cite
 });
