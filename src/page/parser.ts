@@ -163,6 +163,9 @@ export default function parse(content: string): PageContent {
     if (style.textDecoration === "underline") {
       markdown.push("{text-decoration:underline}");
     }
+    if (style.backgroundColor) {
+      markdown.push(`{background-color:${style.backgroundColor}}`);
+    }
     markdownStack.push(markdown);
     return markdown.join("");
   }
@@ -198,7 +201,7 @@ export default function parse(content: string): PageContent {
     }
 
     lastTextNode.length = content.length;
-    insertStructureNode(page, {...lastTextNode, offset: structureNodeOffset});
+    insertStructureNode(page, { ...lastTextNode, offset: structureNodeOffset });
     structureNodeOffset += 1;
     insertStructureNode(page, {
       id: lastTextNode.id,
