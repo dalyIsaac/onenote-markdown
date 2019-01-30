@@ -1,14 +1,14 @@
-import { PageContent, PageContentMutable } from "./pageModel";
-import { SENTINEL_CONTENT, MAX_BUFFER_LENGTH } from "./contentTree/tree";
-import { SENTINEL_STRUCTURE } from "./structureTree/tree";
+import { PageContent, PageContentMutable } from "../pageModel";
+import { SENTINEL_CONTENT, MAX_BUFFER_LENGTH } from "../contentTree/tree";
+import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { chunks, TokenType } from "tiny-html-lexer";
-import { EMPTY_TREE_ROOT } from "./tree/tree";
-import { KeyValueStr, TagType } from "./structureTree/structureModel";
-import { InsertStructureProps } from "./structureTree/actions";
+import { EMPTY_TREE_ROOT } from "../tree/tree";
+import { KeyValueStr, TagType } from "../structureTree/structureModel";
+import { InsertStructureProps } from "../structureTree/actions";
 import he from "he";
-import { insertContent } from "./contentTree/insert";
-import { insertStructureNode } from "./structureTree/insert";
-import { BufferMutable } from "./contentTree/contentModel";
+import { insertContent } from "../contentTree/insert";
+import { insertStructureNode } from "../structureTree/insert";
+import { BufferMutable } from "../contentTree/contentModel";
 
 interface Attributes {
   [key: string]: string;

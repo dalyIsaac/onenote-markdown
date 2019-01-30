@@ -1,9 +1,9 @@
 import parse from "./parser";
-import { PageContent, Color } from "./pageModel";
-import { SENTINEL_CONTENT } from "./contentTree/tree";
-import { SENTINEL_STRUCTURE } from "./structureTree/tree";
-import { EMPTY_TREE_ROOT, SENTINEL_INDEX } from "./tree/tree";
-import { TagType } from "./structureTree/structureModel";
+import { PageContent, Color } from "../pageModel";
+import { SENTINEL_CONTENT } from "../contentTree/tree";
+import { SENTINEL_STRUCTURE } from "../structureTree/tree";
+import { EMPTY_TREE_ROOT, SENTINEL_INDEX } from "../tree/tree";
+import { TagType } from "../structureTree/structureModel";
 
 describe("Parser tests", () => {
   test("Ensures that the parser can correctly parse the HTML head data.", () => {
