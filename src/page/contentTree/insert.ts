@@ -1,6 +1,6 @@
 import { insertNode, fixInsert } from "../tree/insert";
 import { Color, PageContentMutable } from "../pageModel";
-import { SENTINEL_INDEX } from "../tree/tree";
+import { SENTINEL_INDEX, EMPTY_TREE_ROOT } from "../tree/tree";
 import { Buffer, ContentNode, ContentNodeMutable } from "./contentModel";
 import {
   findNodeAtOffset,
@@ -29,7 +29,7 @@ function createNodeCreateBuffer(
   const newBuffer: Buffer = {
     content: content.content,
     isReadOnly: false,
-    lineStarts: getLineStarts(content.content, page.newlineFormat),
+    lineStarts: getLineStarts(content.content),
   };
   const newNode: ContentNode = {
     bufferIndex: page.buffers.length,
@@ -69,7 +69,7 @@ function createNodeAppendToBuffer(
   const updatedBuffer: Buffer = {
     content: newContent,
     isReadOnly: oldBuffer.isReadOnly,
-    lineStarts: getLineStarts(newContent, page.newlineFormat),
+    lineStarts: getLineStarts(newContent),
   };
   const newNode: ContentNode = {
     bufferIndex: page.buffers.length - 1,
@@ -149,10 +149,7 @@ function insertInsideNode(
   const oldNode = nodePosition.node;
   const nodeContent = getNodeContent(nodePosition.nodeIndex, page);
   const firstPartContent = nodeContent.slice(0, nodePosition.remainder);
-  const firstPartLineStarts = getLineStarts(
-    firstPartContent,
-    page.newlineFormat,
-  );
+  const firstPartLineStarts = getLineStarts(firstPartContent);
 
   const firstPartNode: ContentNode = {
     ...oldNode,
@@ -215,7 +212,7 @@ function insertAtEndPreviouslyInsertedNode(
     const buffer: Buffer = {
       content: newContent,
       isReadOnly: oldBuffer.isReadOnly,
-      lineStarts: getLineStarts(newContent, page.newlineFormat),
+      lineStarts: getLineStarts(newContent),
     };
 
     const node: ContentNodeMutable = {
@@ -251,6 +248,10 @@ export function insertContent(
   content: ContentInsert,
   maxBufferLength: number,
 ): void {
+  if (page.content.root === EMPTY_TREE_ROOT) {
+    createNodeCreateBuffer(content, page);
+    return;
+  }
   let previouslyInsertedNode: ContentNode | undefined;
 
   if (
@@ -264,7 +265,6 @@ export function insertContent(
   if (
     previouslyInsertedNode !== undefined &&
     content.offset ===
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       page.previouslyInsertedContentNodeOffset! + previouslyInsertedNode.length
   ) {
     insertAtEndPreviouslyInsertedNode(content, page, maxBufferLength);

@@ -1,5 +1,5 @@
-import { Buffer, CharValues, ContentNode } from "./contentTree/contentModel";
-import { StructureNode } from "./structureTree/structureModel";
+import { Buffer, ContentNode } from "./contentTree/contentModel";
+import { StructureNode, KeyValueStr } from "./structureTree/structureModel";
 
 //#region Node
 
@@ -65,11 +65,6 @@ export interface PageContent {
    */
   readonly buffers: ReadonlyArray<Buffer>;
 
-  /**
-   * The newline format, which is determined by the received content from the Microsoft Graph.
-   */
-  readonly newlineFormat: ReadonlyArray<CharValues>;
-
   readonly content: {
     /**
      * The nodes of the piece table. The first node is always the `SENTINEL` node.
@@ -106,6 +101,36 @@ export interface PageContent {
    * `null` if another operation which wasn't an insert was performed.
    */
   readonly previouslyInsertedContentNodeOffset: number | null;
+
+  /**
+   * The language of the OneNote page.
+   */
+  readonly language?: string;
+
+  /**
+   * The title of the OneNote page.
+   */
+  readonly title?: string;
+
+  /**
+   * UTF charset.
+   */
+  readonly charset?: string;
+
+  /**
+   * The datetime at which this page was created at.
+   */
+  readonly created?: string;
+
+  /**
+   * Indicates whether the body of the page has absolute positioning enabled.
+   */
+  readonly dataAbsoluteEnabled?: boolean;
+
+  /**
+   * The default style for the paragraph text for this page.
+   */
+  readonly defaultStyle?: KeyValueStr;
 }
 
 export interface PageContentMutable {
@@ -113,11 +138,6 @@ export interface PageContentMutable {
    * Array of the buffers for the piece table.
    */
   buffers: Buffer[];
-
-  /**
-   * The newline format, which is determined by the received content from the Microsoft Graph.
-   */
-  readonly newlineFormat: ReadonlyArray<CharValues>;
 
   content: {
     /**
@@ -155,6 +175,36 @@ export interface PageContentMutable {
    * `null` if another operation which wasn't an insert was performed.
    */
   previouslyInsertedContentNodeOffset: number | null;
+
+  /**
+   * The language of the OneNote page.
+   */
+  language?: string;
+
+  /**
+   * The title of the OneNote page.
+   */
+  title?: string;
+
+  /**
+   * UTF charset.
+   */
+  charset?: string;
+
+  /**
+   * The datetime at which this page was created at.
+   */
+  created?: string;
+
+  /**
+   * Indicates whether the body of the page has absolute positioning enabled.
+   */
+  dataAbsoluteEnabled?: boolean;
+
+  /**
+   * The default style for the paragraph text for this page.
+   */
+  defaultStyle?: KeyValueStr;
 }
 //#endregion
 

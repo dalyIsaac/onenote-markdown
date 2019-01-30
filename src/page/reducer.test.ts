@@ -7,12 +7,6 @@ import {
   REPLACE_CONTENT,
   ReplaceContentAction,
 } from "./contentTree/actions";
-import { NEWLINE } from "./contentTree/contentModel";
-import {
-  LF,
-  LF_CONTENT,
-  pageReducerTest,
-} from "./contentTree/createNewPage.test";
 import { SENTINEL_CONTENT } from "./contentTree/tree";
 import {
   Color,
@@ -201,7 +195,7 @@ export const getStartPage = (): PageContentMutable => ({
     ],
     root: 6,
   },
-  newlineFormat: NEWLINE.LF,
+  
   previouslyInsertedContentNodeIndex: null,
   previouslyInsertedContentNodeOffset: null,
 
@@ -430,7 +424,7 @@ describe("page/reducer", () => {
         ],
         root: 6,
       },
-      newlineFormat: NEWLINE.LF,
+      
       previouslyInsertedContentNodeIndex: 12,
       previouslyInsertedContentNodeOffset: 127,
       structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -632,7 +626,7 @@ describe("page/reducer", () => {
         ],
         root: 6,
       },
-      newlineFormat: NEWLINE.LF,
+      
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
 
@@ -847,7 +841,7 @@ describe("page/reducer", () => {
         ],
         root: 6,
       },
-      newlineFormat: NEWLINE.LF,
+      
       previouslyInsertedContentNodeIndex: 12,
       previouslyInsertedContentNodeOffset: 126,
       structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -860,15 +854,11 @@ describe("page/reducer", () => {
     expect(result).not.toBe(state);
   });
 
-  test("Create new page", () => {
-    pageReducerTest(LF_CONTENT, LF);
-  });
-
   test("Delete structure node", () => {
     const page: PageContentMutable = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-      newlineFormat: NEWLINE.LF,
+      
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
       structure: {
@@ -896,7 +886,7 @@ describe("page/reducer", () => {
     const expectedPage: PageContentMutable = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-      newlineFormat: NEWLINE.LF,
+      
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
       structure: {

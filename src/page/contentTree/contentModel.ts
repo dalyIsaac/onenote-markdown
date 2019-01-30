@@ -4,25 +4,6 @@ import { Node, NodeMutable } from "../pageModel";
  * Mutable objects are only used in constructing the next state.
  * Immutable (interfaces with readonly properties) are used in the state.
  */
-/**
- * Associated Unicode values for various characters.
- */
-export enum CharValues {
-  LF = 0x0a,
-  CR = 0x0d,
-}
-
-interface Newlines {
-  [key: string]: ReadonlyArray<CharValues>;
-}
-
-/**
- * Unicode sequences for various newline (EOL) formats.
- */
-export const NEWLINE: Newlines = {
-  CRLF: [CharValues.CR, CharValues.LF],
-  LF: [CharValues.LF],
-};
 
 //#region Buffer
 /**

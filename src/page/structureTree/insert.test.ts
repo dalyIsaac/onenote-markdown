@@ -1,6 +1,5 @@
-import { NEWLINE } from "../contentTree/contentModel";
 import { Color, PageContentMutable, StatePages } from "../pageModel";
-import { SENTINEL_INDEX } from "../tree/tree";
+import { SENTINEL_INDEX, EMPTY_TREE_ROOT } from "../tree/tree";
 import { SENTINEL_STRUCTURE } from "./tree";
 import { SENTINEL_CONTENT } from "../contentTree/tree";
 import pageReducer from "../reducer";
@@ -12,7 +11,7 @@ describe("structureTree insert tests", () => {
     const page: PageContentMutable = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-      newlineFormat: NEWLINE.LF,
+
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
       structure: {
@@ -20,7 +19,6 @@ describe("structureTree insert tests", () => {
           SENTINEL_STRUCTURE,
           {
             // 1
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -33,7 +31,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 2
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 1,
@@ -46,7 +43,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 3
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 2,
@@ -59,7 +55,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 4
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -72,7 +67,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 5
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 3,
@@ -85,7 +79,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 6
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -98,7 +91,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 7
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 6,
@@ -111,7 +103,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 8
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -124,7 +115,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 9
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -137,7 +127,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 10
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: 8,
@@ -150,7 +139,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 11
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -163,7 +151,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 12
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 11,
@@ -176,7 +163,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 13
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -198,7 +184,7 @@ describe("structureTree insert tests", () => {
     const expectedPage: PageContentMutable = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-      newlineFormat: NEWLINE.LF,
+
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
       structure: {
@@ -206,7 +192,6 @@ describe("structureTree insert tests", () => {
           SENTINEL_STRUCTURE,
           {
             // 1
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -219,7 +204,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 2
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 1,
@@ -232,7 +216,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 3
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 2,
@@ -245,7 +228,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 4
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -258,7 +240,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 5
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 3,
@@ -271,7 +252,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 6
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -284,7 +264,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 7
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 6,
@@ -297,7 +276,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 8
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 14,
@@ -310,7 +288,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 9
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -323,7 +300,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 10
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: 8,
@@ -336,7 +312,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 11
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -349,7 +324,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 12
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 11,
@@ -362,7 +336,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 13
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -375,7 +348,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 14
-            attributes: undefined,
             color: Color.Red,
             id: "newNode",
             left: SENTINEL_INDEX,
@@ -383,7 +355,6 @@ describe("structureTree insert tests", () => {
             length: 0,
             parent: 8,
             right: SENTINEL_INDEX,
-            styles: undefined,
             tag: "img",
             tagType: TagType.StartEndTag,
           },
@@ -406,7 +377,7 @@ describe("structureTree insert tests", () => {
     const page: PageContentMutable = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-      newlineFormat: NEWLINE.LF,
+
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
       structure: {
@@ -414,7 +385,6 @@ describe("structureTree insert tests", () => {
           SENTINEL_STRUCTURE,
           {
             // 1
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -427,7 +397,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 2
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 1,
@@ -440,7 +409,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 3
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 2,
@@ -453,7 +421,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 4
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -466,7 +433,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 5
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 3,
@@ -479,7 +445,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 6
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -492,7 +457,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 7
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 6,
@@ -505,7 +469,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 8
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -518,7 +481,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 9
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 8,
@@ -531,7 +493,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 10
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: 9,
@@ -544,7 +505,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 11
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -557,7 +517,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 12
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 11,
@@ -570,7 +529,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 13
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -592,7 +550,7 @@ describe("structureTree insert tests", () => {
     const expectedPage: PageContentMutable = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-      newlineFormat: NEWLINE.LF,
+
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
       structure: {
@@ -600,7 +558,6 @@ describe("structureTree insert tests", () => {
           SENTINEL_STRUCTURE,
           {
             // 1
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -613,7 +570,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 2
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 1,
@@ -626,7 +582,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 3
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 2,
@@ -639,7 +594,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 4
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -652,7 +606,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 5
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 3,
@@ -665,7 +618,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 6
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -678,7 +630,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 7
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 6,
@@ -691,7 +642,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 8
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -704,7 +654,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 9
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 8,
@@ -717,7 +666,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 10
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: 9,
@@ -730,7 +678,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 11
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -743,7 +690,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 12
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 11,
@@ -756,7 +702,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 13
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -769,7 +714,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 14
-            attributes: undefined,
             color: Color.Red,
             id: "newNode",
             left: SENTINEL_INDEX,
@@ -777,7 +721,6 @@ describe("structureTree insert tests", () => {
             length: 0,
             parent: 9,
             right: SENTINEL_INDEX,
-            styles: undefined,
             tag: "img",
             tagType: TagType.StartEndTag,
           },
@@ -809,7 +752,7 @@ describe("structureTree insert tests", () => {
     const page: PageContentMutable = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-      newlineFormat: NEWLINE.LF,
+
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
       structure: {
@@ -817,7 +760,6 @@ describe("structureTree insert tests", () => {
           SENTINEL_STRUCTURE,
           {
             // 1
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -830,7 +772,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 2
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 1,
@@ -843,7 +784,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 3
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 2,
@@ -856,7 +796,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 4
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -869,7 +808,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 5
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 3,
@@ -882,7 +820,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 6
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -895,7 +832,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 7
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 6,
@@ -908,7 +844,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 8
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -921,7 +856,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 9
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 8,
@@ -934,7 +868,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 10
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: 9,
@@ -947,7 +880,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 11
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -960,7 +892,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 12
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 11,
@@ -973,7 +904,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 13
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -995,7 +925,7 @@ describe("structureTree insert tests", () => {
     const expectedPage: PageContentMutable = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-      newlineFormat: NEWLINE.LF,
+
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
       structure: {
@@ -1003,7 +933,6 @@ describe("structureTree insert tests", () => {
           SENTINEL_STRUCTURE,
           {
             // 1
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -1016,7 +945,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 2
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 1,
@@ -1029,7 +957,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 3
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 2,
@@ -1042,7 +969,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 4
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -1055,7 +981,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 5
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 3,
@@ -1068,7 +993,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 6
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -1081,7 +1005,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 7
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: 6,
@@ -1094,7 +1017,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 8
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -1107,7 +1029,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 9
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 8,
@@ -1120,7 +1041,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 10
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: 7,
@@ -1133,7 +1053,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 11
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -1146,7 +1065,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 12
-            attributes: undefined,
             color: Color.Red,
             id: "helloWorld",
             left: 11,
@@ -1159,7 +1077,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 13
-            attributes: undefined,
             color: Color.Black,
             id: "helloWorld",
             left: SENTINEL_INDEX,
@@ -1172,7 +1089,6 @@ describe("structureTree insert tests", () => {
           },
           {
             // 14
-            attributes: undefined,
             color: Color.Red,
             id: "newNode",
             left: SENTINEL_INDEX,
@@ -1180,7 +1096,6 @@ describe("structureTree insert tests", () => {
             length: 0,
             parent: 13,
             right: SENTINEL_INDEX,
-            styles: undefined,
             tag: "img",
             tagType: TagType.StartEndTag,
           },
@@ -1195,6 +1110,50 @@ describe("structureTree insert tests", () => {
     const resultState = pageReducer(
       state,
       insertStructure("pageId", 14, 0, "img", TagType.StartEndTag, "newNode"),
+    );
+    expect(resultState).toStrictEqual(expectedState);
+  });
+
+  test("Insert the root of the tree", () => {
+    const state: StatePages = {
+      pageId: {
+        buffers: [],
+        content: { nodes: [SENTINEL_CONTENT], root: EMPTY_TREE_ROOT },
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
+        structure: { nodes: [SENTINEL_STRUCTURE], root: EMPTY_TREE_ROOT },
+      },
+    };
+
+    const expectedState: StatePages = {
+      pageId: {
+        buffers: [],
+        content: { nodes: [SENTINEL_CONTENT], root: EMPTY_TREE_ROOT },
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
+        structure: {
+          nodes: [
+            SENTINEL_STRUCTURE,
+            {
+              color: Color.Black,
+              id: "id",
+              left: SENTINEL_INDEX,
+              leftSubTreeLength: 0,
+              length: 0,
+              parent: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+              tag: "tag",
+              tagType: TagType.StartEndTag,
+            },
+          ],
+          root: 1,
+        },
+      },
+    };
+
+    const resultState = pageReducer(
+      state,
+      insertStructure("pageId", 1, 0, "tag", TagType.StartEndTag, "id"),
     );
     expect(resultState).toStrictEqual(expectedState);
   });

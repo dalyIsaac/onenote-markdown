@@ -5,11 +5,21 @@ import { UpdateStructureValues } from "./update";
 //#region Insert new structure node
 export const INSERT_STRUCTURE_NODE = "INSERT_STRUCTURE_NODE";
 
+export interface InsertStructureProps {
+  tag: string;
+  tagType: TagType;
+  id: string;
+  style?: KeyValueStr;
+  attributes?: KeyValueStr;
+  offset: number;
+  length: number;
+}
+
 export interface InsertStructureAction extends PageActionPartial {
   readonly tag: string;
   readonly tagType: TagType;
   readonly id: string;
-  readonly styles?: KeyValueStr;
+  readonly style?: KeyValueStr;
   readonly attributes?: KeyValueStr;
   readonly offset: number;
   readonly length: number;
@@ -25,7 +35,7 @@ export const insertStructure = (
   tag: string,
   tagType: TagType,
   id: string,
-  styles?: KeyValueStr,
+  style?: KeyValueStr,
   attributes?: KeyValueStr,
 ): InsertStructureAction => ({
   attributes,
@@ -33,7 +43,7 @@ export const insertStructure = (
   length,
   offset,
   pageId,
-  styles,
+  style,
   tag,
   tagType,
   type: INSERT_STRUCTURE_NODE,

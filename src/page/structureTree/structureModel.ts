@@ -5,9 +5,9 @@ export interface KeyValueStr {
 }
 
 export enum TagType {
-  StartTag = "StartTag",
   EndTag = "EndTag",
   StartEndTag = "StartEndTag",
+  StartTag = "StartTag",
 }
 
 export function isStructureNode(node: Node): node is StructureNode {
@@ -15,23 +15,23 @@ export function isStructureNode(node: Node): node is StructureNode {
 }
 
 export interface StructureNode extends Node {
-  readonly tag: string;
-  readonly tagType: TagType;
+  readonly attributes?: KeyValueStr;
   readonly id: string;
   readonly leftSubTreeLength: number;
   readonly length: number;
-  readonly styles?: KeyValueStr;
-  readonly attributes?: KeyValueStr;
+  readonly style?: KeyValueStr;
+  readonly tag: string;
+  readonly tagType: TagType;
 }
 
 export interface StructureNodeMutable extends NodeMutable {
-  tag: string;
-  tagType: TagType;
+  attributes?: KeyValueStr;
   id: string;
   leftSubTreeLength: number;
   length: number;
-  styles?: KeyValueStr;
-  attributes?: KeyValueStr;
+  style?: KeyValueStr;
+  tag: string;
+  tagType: TagType;
 }
 
 export interface StructureRedBlackTree {

@@ -1,5 +1,5 @@
 import { Color, RedBlackTree, NodeMutable } from "../pageModel";
-import { SENTINEL_INDEX, recomputeTreeMetadata } from "./tree";
+import { SENTINEL_INDEX, recomputeTreeMetadata, EMPTY_TREE_ROOT } from "./tree";
 import { ContentNodeMutable, isContentNode } from "../contentTree/contentModel";
 import { leftRotate, rightRotate } from "./rotate";
 import { isStructureNode } from "../structureTree/structureModel";
@@ -139,6 +139,12 @@ export function insertNode(
   let prevIndex = SENTINEL_INDEX;
 
   let currentIndex = tree.root;
+  if (currentIndex === EMPTY_TREE_ROOT) {
+    tree.root = 1;
+    newNode.color = Color.Black;
+    return;
+  }
+
   let currentNode = tree.nodes[currentIndex];
 
   let nodeStartOffset = 0;

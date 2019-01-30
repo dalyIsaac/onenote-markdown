@@ -3,7 +3,7 @@ import { KeyValueStr, StructureNodeMutable } from "./structureModel";
 
 export interface UpdateStructureValues {
   length?: number;
-  styles?: KeyValueStr;
+  style?: KeyValueStr;
   attributes?: KeyValueStr;
 }
 
@@ -14,8 +14,8 @@ export function updateStructureNode(
 ): void {
   const node = page.structure.nodes[nodeIndex];
   const newNode: StructureNodeMutable = { ...node };
-  const { length, styles, attributes } = props;
-  newNode.styles = styles || newNode.styles;
+  const { length, style, attributes } = props;
+  newNode.style = style || newNode.style;
   newNode.attributes = attributes || newNode.attributes;
   newNode.length = length || newNode.length;
   page.structure.nodes[nodeIndex] = newNode;
