@@ -38,6 +38,17 @@ export default function parse(content: string): PageContent {
     "charRef-hex",
     "charRef-named",
   ] as TokenType[]);
+  const tags: KeyValueStr = {
+    cite: "{<cite}",
+    h1: "# ",
+    h2: "## ",
+    h3: "### ",
+    h4: "#### ",
+    h5: "##### ",
+    h6: "###### ",
+    sub: "{<sub}",
+    sup: "{<sup}",
+  };
 
   function consumeUpToType(...targetTypes: TokenType[]): TokenType {
     let [type] = stream.next().value;
@@ -167,6 +178,11 @@ export default function parse(content: string): PageContent {
   function textBody(tag: string): void {
     let [type, chunk] = stream.next().value;
     let content = "";
+
+    if (tags[tag]) {
+      content += tags[tag];
+    }
+
     while (!(type === "endTag-start" && chunk.slice(2) === tag)) {
       if (type === "data") {
         content += chunk;
@@ -182,7 +198,7 @@ export default function parse(content: string): PageContent {
     }
 
     lastTextNode.length = content.length;
-    insertStructureNode(page, lastTextNode);
+    insertStructureNode(page, {...lastTextNode, offset: structureNodeOffset});
     structureNodeOffset += 1;
     insertStructureNode(page, {
       id: lastTextNode.id,
@@ -250,6 +266,10 @@ export default function parse(content: string): PageContent {
       }
       case "p": {
         text("p");
+        break;
+      }
+      case "cite": {
+        text("cite");
         break;
       }
       default: {

@@ -30,7 +30,7 @@ describe("Parser tests", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Tests that paragraph tags can be handled.", () => {
+  test("Tests that paragraph tags can be handled, with bold, italics, and underline styling.", () => {
     const html =
       `<html lang="en-NZ">` +
       `<head>` +
@@ -300,4 +300,145 @@ describe("Parser tests", () => {
     };
     expect(page).toStrictEqual(expectedPage);
   });
+
+  test("Multiple text tags.", () => {
+    const html =
+      `<html lang="en-NZ">` +
+      `<head>` +
+      `<title>This is the title</title>` +
+      `<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />` +
+      `<meta name="created" content="2018-09-03T14:08:00.0000000" />` +
+      `</head>` +
+      `<body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">` +
+      `<p id="p:{6cb59116-8e61-03a9-39ef-edf64004790d}{62}" style="margin-top:0pt;margin-bottom:0pt"><span style="font-weight:bold">Bold</span> text which has <span style="font-style:italic">italics</span> and <span style="text-decoration:underline">underlines</span></p>` +
+      `<cite id="cite:{28216e73-1f0a-05fd-25c5-a04844147e70}{16}" style="font-size:9pt;color:#595959;margin-top:0pt;margin-bottom:0pt">Citation</cite>` +
+      `</body>` +
+      `</html>`;
+    const page = parse(html);
+    const expectedPage: PageContent = {
+      buffers: [
+        {
+          content:
+            "**Bold** text which has _italics_ and {text-decoration:underline}underlines{text-decoration:underline}{<cite}Citation",
+          isReadOnly: true,
+          lineStarts: [0],
+        },
+      ],
+      charset: "utf-8",
+      content: {
+        nodes: [
+          SENTINEL_CONTENT,
+          {
+            bufferIndex: 0,
+            color: Color.Black,
+            end: { column: 117, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 117,
+            lineFeedCount: 0,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            start: { column: 0, line: 0 },
+          },
+        ],
+        root: 1,
+      },
+      created: "2018-09-03T14:08:00.0000000",
+      dataAbsoluteEnabled: true,
+      defaultStyle: {
+        fontFamily: "Calibri",
+        fontSize: "11pt",
+      },
+      language: "en-NZ",
+      previouslyInsertedContentNodeIndex: 1,
+      previouslyInsertedContentNodeOffset: 0,
+      structure: {
+        nodes: [
+          SENTINEL_STRUCTURE,
+          {
+            color: Color.Black,
+            id: "p:{6cb59116-8e61-03a9-39ef-edf64004790d}{62}",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 102,
+            parent: 2,
+            right: SENTINEL_INDEX,
+            style: {
+              marginBottom: "0pt",
+              marginTop: "0pt",
+            },
+            tag: "p",
+            tagType: TagType.StartTag,
+          },
+          {
+            color: Color.Black,
+            id: "p:{6cb59116-8e61-03a9-39ef-edf64004790d}{62}",
+            left: 1,
+            leftSubTreeLength: 1,
+            length: 0,
+            parent: SENTINEL_INDEX,
+            right: 3,
+            tag: "p",
+            tagType: TagType.EndTag,
+          },
+          {
+            color: Color.Black,
+            id: "cite:{28216e73-1f0a-05fd-25c5-a04844147e70}{16}",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 15,
+            parent: 2,
+            right: 4,
+            style: {
+              color: "#595959",
+              fontSize: "9pt",
+              marginBottom: "0pt",
+              marginTop: "0pt",
+            },
+            tag: "cite",
+            tagType: TagType.StartTag,
+          },
+          {
+            color: Color.Red,
+            id: "cite:{28216e73-1f0a-05fd-25c5-a04844147e70}{16}",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 0,
+            parent: 3,
+            right: SENTINEL_INDEX,
+            tag: "cite",
+            tagType: TagType.EndTag,
+          },
+        ],
+        root: 2,
+      },
+      title: "This is the title",
+    };
+    expect(page).toStrictEqual(expectedPage);
+  });
+
+  // TODO: highlighted text
+
+  // TODO: colored text
+
+  // TODO: superscript
+
+  // TODO: subscript
+
+  // TODO: strike-through
+
+  // TODO: h1
+
+  // TODO: h2
+
+  // TODO: h3
+
+  // TODO: h4
+
+  // TODO: h5
+
+  // TODO: h6
+
+  // TODO: cite
 });
