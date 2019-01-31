@@ -9,7 +9,6 @@
     "@types/react-dom": "^16.0.9",
     "@types/react-redux": "^6.0.9",
     "he": "^1.2.0",
-    "office-ui-fabric-react": "^6.131.0",
     "react": "^16.6.1",
     "react-dom": "^16.6.1",
     "react-redux": "^5.1.1",
