@@ -120,7 +120,7 @@ export const getFinalTree = (): {
 export const getPage = (): PageContentMutable => ({
   buffers: [],
   content: { ...getFinalTree() },
-  
+
   previouslyInsertedContentNodeIndex: null,
   previouslyInsertedContentNodeOffset: null,
   structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -130,112 +130,112 @@ describe("Functions for common tree operations on the piece table/red-black tree
   test("findNodeAtOffset", () => {
     const { nodes, root } = getFinalTree();
 
-    expect(findNodeAtOffset(-1, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, -1)).toStrictEqual({
       node: SENTINEL_CONTENT,
       nodeIndex: 1,
       nodeStartOffset: 0,
       remainder: 0,
     });
 
-    expect(findNodeAtOffset(0, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 0)).toStrictEqual({
       node: nodes[1],
       nodeIndex: 1,
       nodeStartOffset: 0,
       remainder: 0,
     });
 
-    expect(findNodeAtOffset(30, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 30)).toStrictEqual({
       node: nodes[1],
       nodeIndex: 1,
       nodeStartOffset: 0,
       remainder: 30,
     });
 
-    expect(findNodeAtOffset(31, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 31)).toStrictEqual({
       node: nodes[2],
       nodeIndex: 2,
       nodeStartOffset: 31,
       remainder: 0,
     });
 
-    expect(findNodeAtOffset(32, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 32)).toStrictEqual({
       node: nodes[2],
       nodeIndex: 2,
       nodeStartOffset: 31,
       remainder: 1,
     });
 
-    expect(findNodeAtOffset(41, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 41)).toStrictEqual({
       node: nodes[2],
       nodeIndex: 2,
       nodeStartOffset: 31,
       remainder: 10,
     });
 
-    expect(findNodeAtOffset(42, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 42)).toStrictEqual({
       node: nodes[3],
       nodeIndex: 3,
       nodeStartOffset: 42,
       remainder: 0,
     });
 
-    expect(findNodeAtOffset(51, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 51)).toStrictEqual({
       node: nodes[3],
       nodeIndex: 3,
       nodeStartOffset: 42,
       remainder: 9,
     });
 
-    expect(findNodeAtOffset(52, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 52)).toStrictEqual({
       node: nodes[4],
       nodeIndex: 4,
       nodeStartOffset: 52,
       remainder: 0,
     });
 
-    expect(findNodeAtOffset(53, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 53)).toStrictEqual({
       node: nodes[4],
       nodeIndex: 4,
       nodeStartOffset: 52,
       remainder: 1,
     });
 
-    expect(findNodeAtOffset(54, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 54)).toStrictEqual({
       node: nodes[5],
       nodeIndex: 5,
       nodeStartOffset: 54,
       remainder: 0,
     });
 
-    expect(findNodeAtOffset(63, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 63)).toStrictEqual({
       node: nodes[5],
       nodeIndex: 5,
       nodeStartOffset: 54,
       remainder: 9,
     });
 
-    expect(findNodeAtOffset(64, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 64)).toStrictEqual({
       node: nodes[6],
       nodeIndex: 6,
       nodeStartOffset: 64,
       remainder: 0,
     });
 
-    expect(findNodeAtOffset(79, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 79)).toStrictEqual({
       node: nodes[6],
       nodeIndex: 6,
       nodeStartOffset: 64,
       remainder: 15,
     });
 
-    expect(findNodeAtOffset(80, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 80)).toStrictEqual({
       node: nodes[7],
       nodeIndex: 7,
       nodeStartOffset: 80,
       remainder: 0,
     });
 
-    expect(findNodeAtOffset(120, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 120)).toStrictEqual({
       node: nodes[7],
       nodeIndex: 7,
       nodeStartOffset: 80,
@@ -243,7 +243,7 @@ describe("Functions for common tree operations on the piece table/red-black tree
     });
 
     // out of range
-    expect(findNodeAtOffset(121, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 121)).toStrictEqual({
       node: nodes[7],
       nodeIndex: 7,
       nodeStartOffset: 80,

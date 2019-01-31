@@ -60,54 +60,52 @@ export interface NodePositionOffset {
 
 /**
  * Finds the node which contains the offset.
+ * @param tree The red-black tree of the content.
  * @param offset The offset.
- * @param nodes The nodes.
- * @param root The root of the tree.
  */
 export function findNodeAtOffset(
+  tree: ContentRedBlackTree,
   offset: number,
-  nodes: ReadonlyArray<ContentNode>,
-  root: number,
 ): NodePositionOffset {
-  let x = root;
+  let x = tree.root;
   let nodeStartOffset = 0;
 
   while (x !== SENTINEL_INDEX) {
-    if (nodes[x].leftCharCount > offset) {
+    if (tree.nodes[x].leftCharCount > offset) {
       const oldXIndex = x;
-      x = nodes[x].left;
+      x = tree.nodes[x].left;
       if (x === SENTINEL_INDEX) {
         // to the left of the tree
         return {
-          node: nodes[x],
+          node: tree.nodes[x],
           nodeIndex: oldXIndex,
           nodeStartOffset,
           remainder: 0,
         };
       }
-    } else if (nodes[x].leftCharCount + nodes[x].length > offset) {
+    } else if (tree.nodes[x].leftCharCount + tree.nodes[x].length > offset) {
       // note, the vscode nodeAt function uses >= instead of >
-      nodeStartOffset += nodes[x].leftCharCount;
+      nodeStartOffset += tree.nodes[x].leftCharCount;
       return {
-        node: nodes[x],
+        node: tree.nodes[x],
         nodeIndex: x,
         nodeStartOffset,
-        remainder: offset - nodes[x].leftCharCount,
+        remainder: offset - tree.nodes[x].leftCharCount,
       };
     } else {
-      offset -= nodes[x].leftCharCount + nodes[x].length;
+      offset -= tree.nodes[x].leftCharCount + tree.nodes[x].length;
       const oldNodeStartOffset = nodeStartOffset;
-      nodeStartOffset += nodes[x].leftCharCount + nodes[x].length;
+      nodeStartOffset += tree.nodes[x].leftCharCount + tree.nodes[x].length;
 
       const oldXIndex = x;
-      x = nodes[x].right;
+      x = tree.nodes[x].right;
       if (x === SENTINEL_INDEX) {
         // to the right of the tree
         return {
-          node: nodes[oldXIndex],
+          node: tree.nodes[oldXIndex],
           nodeIndex: oldXIndex,
           nodeStartOffset: oldNodeStartOffset,
-          remainder: nodes[oldXIndex].length,
+          remainder: tree.nodes[oldXIndex].length,
         };
       }
     }
@@ -141,14 +139,14 @@ export function getLineStarts(content: string): number[] {
 
 /**
  * Gets the offset of a cursor inside a buffer.
+ * @param page The page/piece table.
  * @param bufferIndex The buffer for which the cursor is located in.
  * @param cursor The cursor for which the offset is desired.
- * @param page The page/piece table.
  */
 export function getOffsetInBuffer(
+  page: PageContent,
   bufferIndex: number,
   cursor: BufferCursor,
-  page: PageContent,
 ): number {
   const lineStarts = page.buffers[bufferIndex].lineStarts;
   return lineStarts[cursor.line] + cursor.column;
@@ -156,17 +154,17 @@ export function getOffsetInBuffer(
 
 /**
  * Gets the contents of a node.
- * @param nodeIndex The index of the node in `page.nodes`.
  * @param page The page/piece table.
+ * @param nodeIndex The index of the node in `page.nodes`.
  */
-export function getNodeContent(nodeIndex: number, page: PageContent): string {
+export function getNodeContent(page: PageContent, nodeIndex: number): string {
   if (nodeIndex === SENTINEL_INDEX) {
     return "";
   }
   const node = page.content.nodes[nodeIndex];
   const buffer = page.buffers[node.bufferIndex];
-  const startOffset = getOffsetInBuffer(node.bufferIndex, node.start, page);
-  const endOffset = getOffsetInBuffer(node.bufferIndex, node.end, page);
+  const startOffset = getOffsetInBuffer(page, node.bufferIndex, node.start);
+  const endOffset = getOffsetInBuffer(page, node.bufferIndex, node.end);
   const currentContent = buffer.content.slice(startOffset, endOffset);
   return currentContent;
 }
