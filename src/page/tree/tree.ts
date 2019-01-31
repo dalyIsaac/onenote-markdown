@@ -8,7 +8,7 @@ import { Node, NodeMutable, RedBlackTree } from "../pageModel";
 import {
   ContentNodeMutable,
   isContentNode,
-  ContentRedBlackTree,
+  ContentRedBlackTreeMutable,
 } from "../contentTree/contentModel";
 import {
   isStructureNode,
@@ -171,11 +171,15 @@ export function recomputeTreeMetadata(
 
   if (isContentNode(tree.nodes[x])) {
     lengthDelta =
-      calculateCharCount(tree as ContentRedBlackTree, tree.nodes[x].left) -
-      (tree.nodes[x] as ContentNodeMutable).leftCharCount;
+      calculateCharCount(
+        tree as ContentRedBlackTreeMutable,
+        tree.nodes[x].left,
+      ) - (tree.nodes[x] as ContentNodeMutable).leftCharCount;
     lineFeedDelta =
-      calculateLineFeedCount(tree as ContentRedBlackTree, tree.nodes[x].left) -
-      (tree.nodes[x] as ContentNodeMutable).leftLineFeedCount;
+      calculateLineFeedCount(
+        tree as ContentRedBlackTreeMutable,
+        tree.nodes[x].left,
+      ) - (tree.nodes[x] as ContentNodeMutable).leftLineFeedCount;
     (tree.nodes[x] as ContentNodeMutable).leftCharCount += lengthDelta;
     (tree.nodes[x] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta; // go upwards till root. O(logN)
   } else if (isStructureNode(tree.nodes[x])) {
@@ -221,7 +225,7 @@ export function recomputeTreeMetadata(
  */
 export function resetSentinel(tree: RedBlackTree): void {
   if (isContentNode(tree.nodes[0])) {
-    resetSentinelContent(tree as ContentRedBlackTree);
+    resetSentinelContent(tree as ContentRedBlackTreeMutable);
   } else if (isStructureNode(tree.nodes[0])) {
     resetSentinelStructure(tree as StructureRedBlackTree);
   }

@@ -11,7 +11,7 @@ import {
   ContentNode,
   ContentNodeMutable,
   isContentNode,
-  ContentRedBlackTree,
+  ContentRedBlackTreeMutable,
 } from "../contentTree/contentModel";
 import {
   calculateCharCount,
@@ -285,8 +285,8 @@ export function deleteNode(tree: RedBlackTree, z: number): void {
 
   if (tree.nodes[tree.nodes[x].parent].left === x) {
     if (isContentNode(tree.nodes[x])) {
-      const newSizeLeft = calculateCharCount(tree as ContentRedBlackTree, x);
-      const newLFLeft = calculateLineFeedCount(tree as ContentRedBlackTree, x);
+      const newSizeLeft = calculateCharCount(tree as ContentRedBlackTreeMutable, x);
+      const newLFLeft = calculateLineFeedCount(tree as ContentRedBlackTreeMutable, x);
 
       if (
         newSizeLeft !==
@@ -306,7 +306,7 @@ export function deleteNode(tree: RedBlackTree, z: number): void {
           leftLineFeedCount: newSizeLeft,
         };
         updateContentTreeMetadata(
-          tree as ContentRedBlackTree,
+          tree as ContentRedBlackTreeMutable,
           tree.nodes[x].parent,
           charDelta,
           lineFeedDelta,

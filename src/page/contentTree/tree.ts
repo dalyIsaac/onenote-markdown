@@ -8,6 +8,7 @@ import {
   BufferCursor,
   ContentNode,
   ContentNodeMutable,
+  ContentRedBlackTreeMutable,
   ContentRedBlackTree,
 } from "./contentModel";
 
@@ -175,7 +176,7 @@ export function getNodeContent(page: PageContent, nodeIndex: number): string {
  * @param index The index of the node in the `node` array of the page/piece table to find the character count for.
  */
 export function calculateCharCount(
-  tree: ContentRedBlackTree,
+  tree: ContentRedBlackTreeMutable,
   index: number,
 ): number {
   if (index === SENTINEL_INDEX) {
@@ -193,7 +194,7 @@ export function calculateCharCount(
  * @param index The index of the node in the `node` array of the page/piece table to find the line feed count for.
  */
 export function calculateLineFeedCount(
-  tree: ContentRedBlackTree,
+  tree: ContentRedBlackTreeMutable,
   index: number,
 ): number {
   if (index === SENTINEL_INDEX) {
@@ -212,7 +213,7 @@ export function calculateLineFeedCount(
  * This function does mutate the `SENTINEL` node, to ensure that `SENTINEL` is a singleton.
  * @param tree The red-black tree for the content.
  */
-export function resetSentinelContent(tree: ContentRedBlackTree): void {
+export function resetSentinelContent(tree: ContentRedBlackTreeMutable): void {
   (SENTINEL_CONTENT as ContentNodeMutable).bufferIndex = 0;
   (SENTINEL_CONTENT as ContentNodeMutable).start = { column: 0, line: 0 };
   (SENTINEL_CONTENT as ContentNodeMutable).end = { column: 0, line: 0 };
@@ -235,7 +236,7 @@ export function resetSentinelContent(tree: ContentRedBlackTree): void {
  * @param lineFeedCountDelta The line feed count delta to be applied.
  */
 export function updateContentTreeMetadata(
-  tree: ContentRedBlackTree,
+  tree: ContentRedBlackTreeMutable,
   x: number,
   charCountDelta: number,
   lineFeedCountDelta: number,
