@@ -1,0 +1,10 @@
+h1,
+p {
+  margin: 0;
+}
+
+.wrapper {
+  display: grid;
+  grid-template-rows: 40px auto;
+  grid-template-columns: fr fr;
+}

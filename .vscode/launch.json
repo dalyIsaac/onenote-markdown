@@ -4,6 +4,28 @@
     {
       "type": "chrome",
       "request": "launch",
+      "name": "Launch Chrome Dev against localhost",
+      "port": 9222,
+      "url": "localhost:3000",
+      "webRoot": "${workspaceFolder}",
+      "windows": {
+        "program": "C:\\Program Files (x86)\\Google\\Chrome Dev\\Application\\chrome.exe"
+      }
+    },
+    {
+      "type": "chrome",
+      "request": "attach",
+      "name": "Attach to Chrome Dev against localhost",
+      "port": 9222,
+      "url": "localhost:3000",
+      "webRoot": "${workspaceFolder}",
+      "windows": {
+        "program": "C:\\Program Files (x86)\\Google\\Chrome Dev\\Application\\chrome.exe"
+      }
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
       "name": "Launch Chrome against localhost",
       "url": "http://localhost:3000",
       "webRoot": "${workspaceFolder}"

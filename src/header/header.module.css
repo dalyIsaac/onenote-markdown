@@ -1,0 +1,4 @@
+.header {
+  grid-column: 1 / 3;
+  border-bottom: solid rgb(127, 127, 127) 1px;
+}

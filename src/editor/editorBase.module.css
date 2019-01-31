@@ -1,0 +1,4 @@
+.editor {
+  height: calc(100vh - 40px);
+  grid-row: 2;
+}
