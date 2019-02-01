@@ -3,7 +3,7 @@
  */
 
 import { Color, PageContent } from "../pageModel";
-import { SENTINEL_INDEX } from "../tree/tree";
+import { SENTINEL_INDEX, nextNode } from "../tree/tree";
 import {
   BufferCursor,
   ContentNode,
@@ -257,4 +257,36 @@ export function updateContentTreeMetadata(
 
     x = tree.nodes[x].parent;
   }
+}
+
+/**
+ * Gets content between the start and end offset for a page.
+ * @param page The page from which to get the content from.
+ * @param startOffset The start offset.
+ * @param endOffset The end offset.
+ */
+export function getContentBetweenOffsets(
+  page: PageContent,
+  startOffset: number,
+  endOffset: number,
+): string {
+  let position = findNodeAtOffset(page.content, startOffset);
+  const length = endOffset - startOffset;
+  let content = getNodeContent(page, position.nodeIndex).slice(
+    startOffset - position.nodeStartOffset,
+  );
+  if (length <= content.length) {
+    content = content.slice(0, length);
+  } else {
+    let offset = startOffset;
+    let { nodeIndex } = position;
+    let next = nextNode(page.content.nodes, nodeIndex);
+    while (offset + (next.node as ContentNode).length <= endOffset) {
+      content += getNodeContent(page, next.index);
+      offset += (next.node as ContentNode).length;
+      next = nextNode(page.content.nodes, next.index);
+    }
+    content = content.slice(0, length);
+  }
+  return content;
 }

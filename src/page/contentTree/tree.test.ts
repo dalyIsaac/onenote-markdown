@@ -8,6 +8,7 @@ import {
   findNodeAtOffset,
   SENTINEL_CONTENT,
   getNodeContent,
+  getContentBetweenOffsets,
 } from "./tree";
 import { getStartPage } from "../reducer.test";
 
@@ -278,5 +279,36 @@ describe("Functions for common tree operations on the piece table/content red-bl
     expect(getNodeContent(page, 9)).toBe("g");
     expect(getNodeContent(page, 10)).toBe("e against the dying of the light");
     expect(getNodeContent(page, 11)).toBe(".");
+  });
+
+  describe("getContentBetweenOffset", () => {
+    const page = getStartPage();
+
+    test("Inside a single node", () => {
+      expect(getContentBetweenOffsets(page, 3, 50)).toBe(
+        "not go gentle into that good night,\nOld age sho",
+      );
+    });
+
+    test("An entire single node", () => {
+      expect(getContentBetweenOffsets(page, 0, 65)).toBe(
+        "Do not go gentle into that good night,\nOld age should burn and ra",
+      );
+    });
+
+    test("Across two nodes", () => {
+      expect(getContentBetweenOffsets(page, 63, 66)).toBe("rav");
+      expect(getContentBetweenOffsets(page, 70, 82)).toBe(" close of da");
+    });
+
+    test("Across two nodes to the end of the second node", () => {
+      expect(getContentBetweenOffsets(page, 70, 83)).toBe(" close of day");
+    });
+
+    test("Across multiple nodes", () => {
+      expect(getContentBetweenOffsets(page, 60, 83)).toBe(
+        "nd rave at close of day",
+      );
+    });
   });
 });
