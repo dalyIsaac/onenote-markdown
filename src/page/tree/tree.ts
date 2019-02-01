@@ -3,14 +3,21 @@ import {
   calculateLineFeedCount,
   resetSentinelContent,
 } from "../contentTree/tree";
-import { Node, NodeMutable, RedBlackTreeMutable } from "../pageModel";
+import {
+  Node,
+  NodeMutable,
+  RedBlackTreeMutable,
+  RedBlackTree,
+} from "../pageModel";
 import {
   ContentNodeMutable,
   isContentRedBlackTreeMutable,
+  isContentNode,
 } from "../contentTree/contentModel";
 import {
   StructureNodeMutable,
   isStructureRedBlackTreeMutable,
+  isStructureNode,
 } from "../structureTree/structureModel";
 import {
   calculateLengthCount,
@@ -220,5 +227,29 @@ export function resetSentinel<T extends NodeMutable>(
     resetSentinelContent(tree);
   } else if (isStructureRedBlackTreeMutable(tree)) {
     resetSentinelStructure(tree);
+  }
+}
+
+/**
+ * Performs an in-order tree traversal of the given tree.
+ */
+export function* inorderTreeTraversal<T extends Node>(
+  tree: RedBlackTree<T>,
+): IterableIterator<{ readonly offset: number } & NodePosition<T>> {
+  let value = treeMinimum(tree.nodes, tree.root);
+  let offset = 0;
+  if (isContentNode(value.node)) {
+    offset = 0;
+  } else if (isStructureNode(value.node)) {
+    offset = 1;
+  }
+  while (value.index !== SENTINEL_INDEX) {
+    yield { ...value, offset };
+    if (isContentNode(value.node)) {
+      offset += value.node.length;
+    } else if (isStructureNode(value.node)) {
+      offset += 1;
+    }
+    value = nextNode(tree.nodes, value.index);
   }
 }

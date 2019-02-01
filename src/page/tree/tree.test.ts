@@ -1,6 +1,15 @@
 import { getPage } from "../contentTree/tree.test";
-import { nextNode, prevNode, recomputeTreeMetadata } from "./tree";
-import { ContentNodeMutable } from "../contentTree/contentModel";
+import {
+  nextNode,
+  prevNode,
+  recomputeTreeMetadata,
+  inorderTreeTraversal,
+  NodePosition,
+} from "./tree";
+import { ContentNodeMutable, ContentNode } from "../contentTree/contentModel";
+import { getStartPage } from "../reducer.test";
+import { getBigTree } from "../structureTree/insert.test";
+import { StructureNode } from "../structureTree/structureModel";
 
 describe("Common tree operations", () => {
   test("nextNode", () => {
@@ -86,5 +95,97 @@ describe("Common tree operations", () => {
 
     recomputeTreeMetadata(page.content, 4);
     expect(page).toStrictEqual(expectedPage);
+  });
+
+  describe("inOrderTreeTraversal", () => {
+    describe("Content nodes", () => {
+      test("Tree which is already in order", () => {
+        const page = getPage();
+        let i = 1;
+        let offset = 0;
+        for (const result of inorderTreeTraversal(page.content)) {
+          expect(result).toEqual({
+            index: i,
+            node: page.content.nodes[i],
+            offset,
+          });
+          offset += result.node.length;
+          i++;
+        }
+      });
+
+      test("Big tree which is already in order", () => {
+        const page = getStartPage();
+        let i = 1;
+        let offset = 0;
+        for (const result of inorderTreeTraversal(page.content)) {
+          expect(result).toEqual({
+            index: i,
+            node: page.content.nodes[i],
+            offset,
+          });
+          offset += result.node.length;
+          i++;
+        }
+      });
+
+      test("Big tree which has its order adjusted", () => {
+        const page = getStartPage();
+        (page.content.nodes[7] as ContentNodeMutable).parent = 3;
+        (page.content.nodes[8] as ContentNodeMutable).left = 0;
+        (page.content.nodes[3] as ContentNodeMutable).right = 7;
+        const expectedResult: Array<NodePosition<ContentNode>> = [
+          { index: 1, node: page.content.nodes[1] },
+          { index: 2, node: page.content.nodes[2] },
+          { index: 3, node: page.content.nodes[3] },
+          { index: 7, node: page.content.nodes[7] },
+          { index: 4, node: page.content.nodes[4] },
+          { index: 5, node: page.content.nodes[5] },
+          { index: 6, node: page.content.nodes[6] },
+          { index: 8, node: page.content.nodes[8] },
+          { index: 9, node: page.content.nodes[9] },
+          { index: 10, node: page.content.nodes[10] },
+          { index: 11, node: page.content.nodes[11] },
+        ];
+
+        let i = 0;
+        let offset = 0;
+        for (const result of inorderTreeTraversal(page.content)) {
+          expect(result).toEqual({ ...expectedResult[i], offset });
+          offset += result.node.length;
+          i++;
+        }
+      });
+    });
+
+    describe("Structure nodes", () => {
+      test("Big tree", () => {
+        const page = getBigTree();
+        const expectedResult: Array<NodePosition<StructureNode>> = [
+          { index: 1, node: page.structure.nodes[1] },
+          { index: 2, node: page.structure.nodes[2] },
+          { index: 3, node: page.structure.nodes[3] },
+          { index: 4, node: page.structure.nodes[4] },
+          { index: 5, node: page.structure.nodes[5] },
+          { index: 6, node: page.structure.nodes[6] },
+          { index: 7, node: page.structure.nodes[7] },
+          { index: 14, node: page.structure.nodes[14] },
+          { index: 8, node: page.structure.nodes[8] },
+          { index: 9, node: page.structure.nodes[9] },
+          { index: 10, node: page.structure.nodes[10] },
+          { index: 11, node: page.structure.nodes[11] },
+          { index: 12, node: page.structure.nodes[12] },
+          { index: 13, node: page.structure.nodes[13] },
+        ];
+
+        let i = 0;
+        let offset = 0;
+        for (const result of inorderTreeTraversal(page.content)) {
+          expect(result).toEqual({ ...expectedResult[i], offset });
+          offset += result.node.length;
+          i++;
+        }
+      });
+    });
   });
 });
