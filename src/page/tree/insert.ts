@@ -1,6 +1,6 @@
-import { Color, RedBlackTree, NodeMutable } from "../pageModel";
+import { Color, RedBlackTreeMutable, NodeMutable } from "../pageModel";
 import { SENTINEL_INDEX, recomputeTreeMetadata, EMPTY_TREE_ROOT } from "./tree";
-import { ContentNodeMutable, isContentNode } from "../contentTree/contentModel";
+import { isContentNode } from "../contentTree/contentModel";
 import { leftRotate, rightRotate } from "./rotate";
 import { isStructureNode } from "../structureTree/structureModel";
 
@@ -9,12 +9,15 @@ import { isStructureNode } from "../structureTree/structureModel";
  * @param page The page/piece table.
  * @param x The index of the node in the `node` array, which is the basis for fixing the tree.
  */
-export function fixInsert(tree: RedBlackTree, x: number): void {
+export function fixInsert<T extends NodeMutable>(
+  tree: RedBlackTreeMutable<T>,
+  x: number,
+): void {
   recomputeTreeMetadata(tree, x);
 
   tree.nodes[x] = { ...tree.nodes[x] };
   if (x === tree.root) {
-    (tree.nodes[x] as ContentNodeMutable).color = Color.Black;
+    (tree.nodes[x] as T).color = Color.Black;
     return;
   }
   while (
@@ -34,7 +37,7 @@ export function fixInsert(tree: RedBlackTree, x: number): void {
           ...tree.nodes[tree.nodes[x].parent],
           color: Color.Black,
         };
-        (tree.nodes[y] as ContentNodeMutable).color = Color.Black;
+        (tree.nodes[y] as T).color = Color.Black;
         tree.nodes[tree.nodes[tree.nodes[x].parent].parent] = {
           ...tree.nodes[tree.nodes[tree.nodes[x].parent].parent],
           color: Color.Red,
@@ -65,7 +68,7 @@ export function fixInsert(tree: RedBlackTree, x: number): void {
           ...tree.nodes[tree.nodes[x].parent],
           color: Color.Black,
         };
-        (tree.nodes[y] as ContentNodeMutable).color = Color.Black;
+        (tree.nodes[y] as T).color = Color.Black;
         tree.nodes[tree.nodes[tree.nodes[x].parent].parent] = {
           ...tree.nodes[tree.nodes[tree.nodes[x].parent].parent],
           color: Color.Red,
@@ -130,9 +133,9 @@ function getRHSValue(currentNode: NodeMutable): number {
  * @param newNode Reference to the newly created node. The node already exists inside `page.nodes`.
  * @param offset The offset of the new node.
  */
-export function insertNode(
-  tree: RedBlackTree,
-  newNode: NodeMutable,
+export function insertNode<T extends NodeMutable>(
+  tree: RedBlackTreeMutable<T>,
+  newNode: T,
   offset: number,
 ): void {
   tree.nodes.push(newNode);

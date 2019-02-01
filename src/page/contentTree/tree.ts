@@ -2,7 +2,7 @@
  * Contains common items.
  */
 
-import { Color, PageContent } from "../pageModel";
+import { Color, PageContent, RedBlackTreeMutable } from "../pageModel";
 import { SENTINEL_INDEX, nextNode } from "../tree/tree";
 import {
   BufferCursor,
@@ -176,7 +176,7 @@ export function getNodeContent(page: PageContent, nodeIndex: number): string {
  * @param index The index of the node in the `node` array of the page/piece table to find the character count for.
  */
 export function calculateCharCount(
-  tree: ContentRedBlackTreeMutable,
+  tree: RedBlackTreeMutable<ContentNode>,
   index: number,
 ): number {
   if (index === SENTINEL_INDEX) {

@@ -70,8 +70,7 @@ export function updateStructureTreeMetadata(
       tree.nodes[tree.nodes[x].parent] = {
         ...tree.nodes[tree.nodes[x].parent],
         leftSubTreeLength:
-          (tree.nodes[tree.nodes[x].parent] as StructureNode)
-            .leftSubTreeLength + lengthDelta,
+          tree.nodes[tree.nodes[x].parent].leftSubTreeLength + lengthDelta,
       };
     }
 

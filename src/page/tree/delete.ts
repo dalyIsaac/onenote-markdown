@@ -1,4 +1,4 @@
-import { Color, RedBlackTree, NodeMutable } from "../pageModel";
+import { Color, RedBlackTreeMutable, NodeMutable } from "../pageModel";
 import {
   SENTINEL_INDEX,
   nextNode,
@@ -8,10 +8,9 @@ import {
 } from "./tree";
 import { leftRotate, rightRotate } from "./rotate";
 import {
-  ContentNode,
   ContentNodeMutable,
-  isContentNode,
   ContentRedBlackTreeMutable,
+  isContentRedBlackTreeMutable,
 } from "../contentTree/contentModel";
 import {
   calculateCharCount,
@@ -19,10 +18,9 @@ import {
   updateContentTreeMetadata,
 } from "../contentTree/tree";
 import {
-  isStructureNode,
   StructureNodeMutable,
-  StructureNode,
   StructureRedBlackTree,
+  isStructureRedBlackTreeMutable,
 } from "../structureTree/structureModel";
 import {
   calculateLengthCount,
@@ -34,7 +32,10 @@ import {
  * @param tree The red-black tree.
  * @param x The node to start the fixup from.
  */
-export function fixDelete(tree: RedBlackTree, x: number): void {
+export function fixDelete<T extends NodeMutable>(
+  tree: RedBlackTreeMutable<T>,
+  x: number,
+): void {
   let w: number;
   while (x !== tree.root && tree.nodes[x].color === Color.Black) {
     if (x === tree.nodes[tree.nodes[x].parent].left) {
@@ -139,7 +140,10 @@ export function fixDelete(tree: RedBlackTree, x: number): void {
  * @param tree The red-black tree.
  * @param node The index of the node to detach.
  */
-export function detach(tree: RedBlackTree, node: number): void {
+export function detach<T extends NodeMutable>(
+  tree: RedBlackTreeMutable<T>,
+  node: number,
+): void {
   const parent = tree.nodes[tree.nodes[node].parent]; // NEVER ASSIGN TO THIS
   if (parent.left === node) {
     tree.nodes[tree.nodes[node].parent] = {
@@ -167,7 +171,10 @@ export function detach(tree: RedBlackTree, node: number): void {
  * @param tree The red-black tree.
  * @param z The index of the node to delete.
  */
-export function deleteNode(tree: RedBlackTree, z: number): void {
+export function deleteNode<T extends NodeMutable>(
+  tree: RedBlackTreeMutable<T>,
+  z: number,
+): void {
   tree.nodes[z] = { ...tree.nodes[z] };
   let xTemp: number;
   let yTemp: number;
@@ -183,7 +190,7 @@ export function deleteNode(tree: RedBlackTree, z: number): void {
   } else {
     const result = treeMinimum(tree.nodes, tree.nodes[z].right);
     yTemp = result.index;
-    tree.nodes[yTemp] = { ...(result.node as ContentNode) };
+    tree.nodes[yTemp] = { ...result.node };
     xTemp = tree.nodes[yTemp].right;
   }
 
@@ -195,7 +202,7 @@ export function deleteNode(tree: RedBlackTree, z: number): void {
   if (y === tree.root) {
     tree.root = x; // if page.nodes[x] is null, we are removing the only node
 
-    (tree.nodes[x] as ContentNodeMutable).color = Color.Black;
+    (tree.nodes[x] as T).color = Color.Black;
     detach(tree, z);
     tree.nodes[tree.root] = {
       ...tree.nodes[tree.root],
@@ -230,10 +237,10 @@ export function deleteNode(tree: RedBlackTree, z: number): void {
     } // as we make changes to page.nodes[x]'s hierarchy, update leftCharCount of subtree first
 
     recomputeTreeMetadata(tree, x);
-    (tree.nodes[y] as ContentNodeMutable).left = tree.nodes[z].left;
-    (tree.nodes[y] as ContentNodeMutable).right = tree.nodes[z].right;
-    (tree.nodes[y] as NodeMutable).parent = tree.nodes[z].parent;
-    (tree.nodes[y] as ContentNodeMutable).color = tree.nodes[z].color;
+    (tree.nodes[y] as T).left = tree.nodes[z].left;
+    (tree.nodes[y] as T).right = tree.nodes[z].right;
+    (tree.nodes[y] as T).parent = tree.nodes[z].parent;
+    (tree.nodes[y] as T).color = tree.nodes[z].color;
 
     if (z === tree.root) {
       tree.root = y;
@@ -266,17 +273,14 @@ export function deleteNode(tree: RedBlackTree, z: number): void {
     } // update metadata
     // we replace page.nodes[z] with page.nodes[y], so in this sub tree, the length change is page.nodes[z].item.length
 
-    if (isContentNode(tree.nodes[z])) {
-      (tree.nodes[y] as ContentNodeMutable).leftCharCount = (tree.nodes[
-        z
-      ] as ContentNode).leftCharCount;
-      (tree.nodes[y] as ContentNodeMutable).leftLineFeedCount = (tree.nodes[
-        z
-      ] as ContentNode).leftLineFeedCount;
-    } else if (isStructureNode(tree.nodes[z])) {
-      (tree.nodes[y] as StructureNodeMutable).leftSubTreeLength = (tree.nodes[
-        z
-      ] as StructureNode).leftSubTreeLength;
+    if (isContentRedBlackTreeMutable(tree)) {
+      (tree.nodes[y] as ContentNodeMutable).leftCharCount =
+        tree.nodes[z].leftCharCount;
+      (tree.nodes[y] as ContentNodeMutable).leftLineFeedCount =
+        tree.nodes[z].leftLineFeedCount;
+    } else if (isStructureRedBlackTreeMutable(tree)) {
+      (tree.nodes[y] as StructureNodeMutable).leftSubTreeLength =
+        tree.nodes[z].leftSubTreeLength;
     }
     recomputeTreeMetadata(tree, y);
   }
@@ -284,24 +288,26 @@ export function deleteNode(tree: RedBlackTree, z: number): void {
   detach(tree, z);
 
   if (tree.nodes[tree.nodes[x].parent].left === x) {
-    if (isContentNode(tree.nodes[x])) {
-      const newSizeLeft = calculateCharCount(tree as ContentRedBlackTreeMutable, x);
-      const newLFLeft = calculateLineFeedCount(tree as ContentRedBlackTreeMutable, x);
+    if (isContentRedBlackTreeMutable(tree)) {
+      const newSizeLeft = calculateCharCount(
+        tree as ContentRedBlackTreeMutable,
+        x,
+      );
+      const newLFLeft = calculateLineFeedCount(
+        tree as ContentRedBlackTreeMutable,
+        x,
+      );
 
       if (
-        newSizeLeft !==
-          (tree.nodes[tree.nodes[x].parent] as ContentNode).leftCharCount ||
-        newLFLeft !==
-          (tree.nodes[tree.nodes[x].parent] as ContentNode).leftLineFeedCount
+        newSizeLeft !== tree.nodes[tree.nodes[x].parent].leftCharCount ||
+        newLFLeft !== tree.nodes[tree.nodes[x].parent].leftLineFeedCount
       ) {
         const charDelta =
-          newSizeLeft -
-          (tree.nodes[tree.nodes[x].parent] as ContentNode).leftCharCount;
+          newSizeLeft - tree.nodes[tree.nodes[x].parent].leftCharCount;
         const lineFeedDelta =
-          newLFLeft -
-          (tree.nodes[tree.nodes[x].parent] as ContentNode).leftLineFeedCount;
-        (tree.nodes[tree.nodes[x].parent] as ContentNode) = {
-          ...(tree.nodes[tree.nodes[x].parent] as ContentNode),
+          newLFLeft - tree.nodes[tree.nodes[x].parent].leftLineFeedCount;
+        tree.nodes[tree.nodes[x].parent] = {
+          ...tree.nodes[tree.nodes[x].parent],
           leftCharCount: newSizeLeft,
           leftLineFeedCount: newSizeLeft,
         };
@@ -312,7 +318,7 @@ export function deleteNode(tree: RedBlackTree, z: number): void {
           lineFeedDelta,
         );
       }
-    } else if (isStructureNode(tree.nodes[x])) {
+    } else if (isStructureRedBlackTreeMutable(tree)) {
       const newLeftSubTreeLength = calculateLengthCount(
         tree as StructureRedBlackTree,
         x,
@@ -320,11 +326,11 @@ export function deleteNode(tree: RedBlackTree, z: number): void {
 
       if (
         newLeftSubTreeLength !==
-        (tree.nodes[tree.nodes[x].parent] as StructureNode).leftSubTreeLength
+        tree.nodes[tree.nodes[x].parent].leftSubTreeLength
       ) {
         const lengthDelta =
           newLeftSubTreeLength -
-          (tree.nodes[tree.nodes[x].parent] as StructureNode).leftSubTreeLength;
+          tree.nodes[tree.nodes[x].parent].leftSubTreeLength;
         updateStructureTreeMetadata(
           tree as StructureRedBlackTree,
           tree.nodes[x].parent,
@@ -352,8 +358,8 @@ export function deleteNode(tree: RedBlackTree, z: number): void {
  * @param startIndex The index of the first node to delete.
  * @param endIndex The index of the node after the last node to delete.
  */
-export function deleteBetweenNodes(
-  tree: RedBlackTree,
+export function deleteBetweenNodes<T extends NodeMutable>(
+  tree: RedBlackTreeMutable<T>,
   startIndex: number,
   endIndex: number,
 ): void {
