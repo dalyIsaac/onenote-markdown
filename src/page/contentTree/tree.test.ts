@@ -7,7 +7,9 @@ import {
   calculateLineFeedCount,
   findNodeAtOffset,
   SENTINEL_CONTENT,
+  getNodeContent,
 } from "./tree";
+import { getStartPage } from "../reducer.test";
 
 export const getFinalTree = (): {
   nodes: ContentNode[];
@@ -258,5 +260,23 @@ describe("Functions for common tree operations on the piece table/content red-bl
   test("Calculate character count", () => {
     const page = getPage();
     expect(calculateCharCount(page.content, page.content.root)).toBe(121);
+  });
+
+  test("getNodeContent", () => {
+    const page = getStartPage();
+
+    expect(getNodeContent(page, 1)).toBe(
+      "Do not go gentle into that good night,\nOld age should burn and ra",
+    );
+    expect(getNodeContent(page, 2)).toBe("v");
+    expect(getNodeContent(page, 3)).toBe("e at close of ");
+    expect(getNodeContent(page, 4)).toBe("day");
+    expect(getNodeContent(page, 5)).toBe(";\n");
+    expect(getNodeContent(page, 6)).toBe("Ra");
+    expect(getNodeContent(page, 7)).toBe("g");
+    expect(getNodeContent(page, 8)).toBe("e, ra");
+    expect(getNodeContent(page, 9)).toBe("g");
+    expect(getNodeContent(page, 10)).toBe("e against the dying of the light");
+    expect(getNodeContent(page, 11)).toBe(".");
   });
 });
