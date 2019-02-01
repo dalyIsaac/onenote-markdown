@@ -56,6 +56,11 @@ export interface RedBlackTreeMutable<T extends Node> {
   root: number;
 }
 
+export interface RedBlackTree<T extends Node> {
+  readonly nodes: ReadonlyArray<T>;
+  readonly root: number;
+}
+
 /**
  * Represents the piece table for a single Onenote page.
  */

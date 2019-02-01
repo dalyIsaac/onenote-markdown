@@ -156,13 +156,3 @@ export interface ContentNodeMutable extends NodeMutable {
 }
 
 //#endregion
-
-export interface ContentRedBlackTreeMutable {
-  nodes: ContentNode[];
-  root: number;
-}
-
-export interface ContentRedBlackTree {
-  readonly nodes: ReadonlyArray<ContentNode>;
-  readonly root: number;
-}

@@ -9,7 +9,6 @@ import {
 import { leftRotate, rightRotate } from "./rotate";
 import {
   ContentNodeMutable,
-  ContentRedBlackTreeMutable,
   isContentRedBlackTreeMutable,
 } from "../contentTree/contentModel";
 import {
@@ -19,7 +18,6 @@ import {
 } from "../contentTree/tree";
 import {
   StructureNodeMutable,
-  StructureRedBlackTree,
   isStructureRedBlackTreeMutable,
 } from "../structureTree/structureModel";
 import {
@@ -289,14 +287,8 @@ export function deleteNode<T extends NodeMutable>(
 
   if (tree.nodes[tree.nodes[x].parent].left === x) {
     if (isContentRedBlackTreeMutable(tree)) {
-      const newSizeLeft = calculateCharCount(
-        tree as ContentRedBlackTreeMutable,
-        x,
-      );
-      const newLFLeft = calculateLineFeedCount(
-        tree as ContentRedBlackTreeMutable,
-        x,
-      );
+      const newSizeLeft = calculateCharCount(tree, x);
+      const newLFLeft = calculateLineFeedCount(tree, x);
 
       if (
         newSizeLeft !== tree.nodes[tree.nodes[x].parent].leftCharCount ||
@@ -312,17 +304,14 @@ export function deleteNode<T extends NodeMutable>(
           leftLineFeedCount: newSizeLeft,
         };
         updateContentTreeMetadata(
-          tree as ContentRedBlackTreeMutable,
+          tree,
           tree.nodes[x].parent,
           charDelta,
           lineFeedDelta,
         );
       }
     } else if (isStructureRedBlackTreeMutable(tree)) {
-      const newLeftSubTreeLength = calculateLengthCount(
-        tree as StructureRedBlackTree,
-        x,
-      );
+      const newLeftSubTreeLength = calculateLengthCount(tree, x);
 
       if (
         newLeftSubTreeLength !==
@@ -331,11 +320,7 @@ export function deleteNode<T extends NodeMutable>(
         const lengthDelta =
           newLeftSubTreeLength -
           tree.nodes[tree.nodes[x].parent].leftSubTreeLength;
-        updateStructureTreeMetadata(
-          tree as StructureRedBlackTree,
-          tree.nodes[x].parent,
-          lengthDelta,
-        );
+        updateStructureTreeMetadata(tree, tree.nodes[x].parent, lengthDelta);
       }
     }
   }

@@ -2,15 +2,14 @@
  * Contains common items.
  */
 
-import { Color, PageContent, RedBlackTreeMutable } from "../pageModel";
-import { SENTINEL_INDEX, nextNode } from "../tree/tree";
 import {
-  BufferCursor,
-  ContentNode,
-  ContentNodeMutable,
-  ContentRedBlackTreeMutable,
-  ContentRedBlackTree,
-} from "./contentModel";
+  Color,
+  PageContent,
+  RedBlackTreeMutable,
+  RedBlackTree,
+} from "../pageModel";
+import { SENTINEL_INDEX, nextNode } from "../tree/tree";
+import { BufferCursor, ContentNode, ContentNodeMutable } from "./contentModel";
 
 /**
  * The maximum length of a buffer string.
@@ -65,7 +64,7 @@ export interface NodePositionOffset {
  * @param offset The offset.
  */
 export function findNodeAtOffset(
-  tree: ContentRedBlackTree,
+  tree: RedBlackTree<ContentNode>,
   offset: number,
 ): NodePositionOffset {
   let x = tree.root;
@@ -194,7 +193,7 @@ export function calculateCharCount(
  * @param index The index of the node in the `node` array of the page/piece table to find the line feed count for.
  */
 export function calculateLineFeedCount(
-  tree: ContentRedBlackTreeMutable,
+  tree: RedBlackTree<ContentNode>,
   index: number,
 ): number {
   if (index === SENTINEL_INDEX) {
@@ -213,7 +212,9 @@ export function calculateLineFeedCount(
  * This function does mutate the `SENTINEL` node, to ensure that `SENTINEL` is a singleton.
  * @param tree The red-black tree for the content.
  */
-export function resetSentinelContent(tree: ContentRedBlackTreeMutable): void {
+export function resetSentinelContent(
+  tree: RedBlackTreeMutable<ContentNode>,
+): void {
   (SENTINEL_CONTENT as ContentNodeMutable).bufferIndex = 0;
   (SENTINEL_CONTENT as ContentNodeMutable).start = { column: 0, line: 0 };
   (SENTINEL_CONTENT as ContentNodeMutable).end = { column: 0, line: 0 };
@@ -236,7 +237,7 @@ export function resetSentinelContent(tree: ContentRedBlackTreeMutable): void {
  * @param lineFeedCountDelta The line feed count delta to be applied.
  */
 export function updateContentTreeMetadata(
-  tree: ContentRedBlackTreeMutable,
+  tree: RedBlackTreeMutable<ContentNode>,
   x: number,
   charCountDelta: number,
   lineFeedCountDelta: number,

@@ -39,8 +39,3 @@ export interface StructureNodeMutable extends NodeMutable {
   tag: string;
   tagType: TagType;
 }
-
-export interface StructureRedBlackTree {
-  nodes: StructureNode[];
-  root: number;
-}
