@@ -49,7 +49,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -94,10 +93,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -148,7 +145,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -193,10 +189,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -247,7 +241,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -292,10 +285,8 @@ describe("delete content", () => {
             ],
             root: 2,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -346,7 +337,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -391,10 +381,8 @@ describe("delete content", () => {
             ],
             root: 2,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -447,7 +435,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -492,10 +479,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -546,7 +531,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -591,10 +575,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -645,7 +627,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -690,10 +671,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -744,7 +723,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -789,10 +767,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -843,7 +819,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -888,10 +863,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -942,7 +915,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -987,10 +959,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -1043,7 +1013,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1088,10 +1057,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -1142,7 +1109,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1187,10 +1153,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -1241,7 +1205,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1286,10 +1249,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -1340,7 +1301,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1385,10 +1345,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -1439,7 +1397,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1484,10 +1441,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -1538,7 +1493,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1583,10 +1537,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -1637,7 +1589,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1682,10 +1633,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -1738,7 +1687,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1796,10 +1744,8 @@ describe("delete content", () => {
             ],
             root: 3,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -1850,7 +1796,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -1908,10 +1853,8 @@ describe("delete content", () => {
             ],
             root: 3,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -1962,7 +1905,6 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: 1,
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -2020,10 +1962,8 @@ describe("delete content", () => {
             ],
             root: 3,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -2074,10 +2014,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         const expectedPage: PageContentMutable = {
@@ -2133,10 +2071,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -2187,10 +2123,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         const expectedPage: PageContentMutable = {
@@ -2246,10 +2180,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -2300,10 +2232,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         const expectedPage: PageContentMutable = {
@@ -2359,10 +2289,8 @@ describe("delete content", () => {
             ],
             root: 2,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -2413,10 +2341,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         const expectedPage: PageContentMutable = {
@@ -2472,10 +2398,8 @@ describe("delete content", () => {
             ],
             root: 3,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -2541,7 +2465,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Black,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
@@ -2549,7 +2473,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -2666,10 +2590,8 @@ describe("delete content", () => {
             ],
             root: 10,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -2731,7 +2653,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Black,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 65,
                 leftLineFeedCount: 1,
@@ -2739,7 +2661,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -2856,10 +2778,8 @@ describe("delete content", () => {
             ],
             root: 10,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -2921,7 +2841,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Black,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
@@ -2929,7 +2849,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -3046,10 +2966,8 @@ describe("delete content", () => {
             ],
             root: 10,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -3111,7 +3029,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Red,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
@@ -3119,7 +3037,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: 4,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -3236,10 +3154,8 @@ describe("delete content", () => {
             ],
             root: 8,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -3301,7 +3217,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Red,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
@@ -3309,7 +3225,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: 4,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -3426,10 +3342,8 @@ describe("delete content", () => {
             ],
             root: 2,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -3491,7 +3405,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Red,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
@@ -3499,7 +3413,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: 2,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -3616,10 +3530,8 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -3681,7 +3593,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Black,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
@@ -3689,7 +3601,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -3806,10 +3718,8 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -3871,7 +3781,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Black,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
@@ -3879,7 +3789,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: 2,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -3996,10 +3906,8 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -4063,7 +3971,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Black,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
@@ -4071,7 +3979,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -4188,10 +4096,8 @@ describe("delete content", () => {
             ],
             root: 8,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -4250,7 +4156,7 @@ describe("delete content", () => {
               {
                 bufferIndex: 0,
                 color: Color.Black,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
@@ -4258,7 +4164,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 bufferIndex: 1,
@@ -4374,10 +4280,8 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -4439,7 +4343,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Black,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: 1,
                 leftCharCount: 65,
                 leftLineFeedCount: 1,
@@ -4447,7 +4351,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: 4,
                 right: SENTINEL_INDEX,
-                start: { column: 32, line: 1 },
+                start: { column: 31, line: 1 },
               },
               {
                 // 4
@@ -4564,10 +4468,8 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -4629,7 +4531,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Red,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
@@ -4637,7 +4539,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: 2,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -4754,10 +4656,8 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -4821,7 +4721,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Black,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: 1,
                 leftCharCount: 31,
                 leftLineFeedCount: 0,
@@ -4829,7 +4729,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: 4,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -4946,10 +4846,8 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -5011,7 +4909,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Red,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
@@ -5019,7 +4917,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: 4,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -5136,10 +5034,8 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -5201,7 +5097,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Red,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
@@ -5209,7 +5105,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: 2,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -5326,10 +5222,8 @@ describe("delete content", () => {
             ],
             root: 7,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -5391,7 +5285,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Red,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
@@ -5399,7 +5293,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: 2,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -5516,10 +5410,8 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -5581,7 +5473,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Red,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
@@ -5589,7 +5481,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: 2,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -5706,10 +5598,8 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -5771,7 +5661,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Black,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 65,
                 leftLineFeedCount: 1,
@@ -5779,7 +5669,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: SENTINEL_INDEX,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -5896,10 +5786,8 @@ describe("delete content", () => {
             ],
             root: 1,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -5963,7 +5851,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Black,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: 1,
                 leftCharCount: 60,
                 leftLineFeedCount: 1,
@@ -5971,7 +5859,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: 4,
                 right: SENTINEL_INDEX,
-                start: { column: 32, line: 1 },
+                start: { column: 31, line: 1 },
               },
               {
                 // 4
@@ -6088,10 +5976,8 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -6153,7 +6039,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Black,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: 1,
                 leftCharCount: 30,
                 leftLineFeedCount: 0,
@@ -6161,7 +6047,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: 4,
                 right: SENTINEL_INDEX,
-                start: { column: 32, line: 1 },
+                start: { column: 31, line: 1 },
               },
               {
                 // 4
@@ -6278,10 +6164,8 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -6343,7 +6227,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Red,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
@@ -6351,7 +6235,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: 2,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -6468,10 +6352,8 @@ describe("delete content", () => {
             ],
             root: 8,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -6533,7 +6415,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Red,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
@@ -6541,7 +6423,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: 4,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -6658,10 +6540,8 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
@@ -6723,7 +6603,7 @@ describe("delete content", () => {
                 // 3
                 bufferIndex: 0,
                 color: Color.Red,
-                end: { column: 42, line: 1 },
+                end: { column: 41, line: 1 },
                 left: SENTINEL_INDEX,
                 leftCharCount: 0,
                 leftLineFeedCount: 0,
@@ -6731,7 +6611,7 @@ describe("delete content", () => {
                 lineFeedCount: 0,
                 parent: 2,
                 right: SENTINEL_INDEX,
-                start: { column: 28, line: 1 },
+                start: { column: 27, line: 1 },
               },
               {
                 // 4
@@ -6848,10 +6728,8 @@ describe("delete content", () => {
             ],
             root: 6,
           },
-          
           previouslyInsertedContentNodeIndex: null,
           previouslyInsertedContentNodeOffset: null,
-
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {

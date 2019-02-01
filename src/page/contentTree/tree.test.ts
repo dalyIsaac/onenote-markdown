@@ -120,13 +120,12 @@ export const getFinalTree = (): {
 export const getPage = (): PageContentMutable => ({
   buffers: [],
   content: { ...getFinalTree() },
-
   previouslyInsertedContentNodeIndex: null,
   previouslyInsertedContentNodeOffset: null,
   structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
 });
 
-describe("Functions for common tree operations on the piece table/red-black tree.", () => {
+describe("Functions for common tree operations on the piece table/content red-black tree.", () => {
   test("findNodeAtOffset", () => {
     const { nodes, root } = getFinalTree();
 
