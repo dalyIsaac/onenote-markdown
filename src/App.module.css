@@ -6,5 +6,5 @@ p {
 .wrapper {
   display: grid;
   grid-template-rows: 40px auto;
-  grid-template-columns: fr fr;
+  grid-template-columns: 50% 50%;
 }

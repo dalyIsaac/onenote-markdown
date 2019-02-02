@@ -1,12 +1,21 @@
 import React from "react";
 import styles from "./editorBase.module.css";
+import { PageContent } from "../page/pageModel";
 
-export default class EditorBaseComponent extends React.Component {
-  public render(): JSX.Element {
-    return (
-      <div className={styles.editor}>
-        <h1>Editor</h1>
-      </div>
-    );
+interface EditorBaseProps {
+  page?: PageContent;
+  getPage?: (page: PageContent) => JSX.Element[];
+}
+
+export default function EditorBaseComponent(
+  props: EditorBaseProps,
+): JSX.Element {
+  if (props.page && props.getPage) {
+    props.getPage(props.page);
   }
+  return (
+    <div className={styles.editor}>
+      {props.page && props.getPage ? props.getPage(props.page) : "Editor"}
+    </div>
+  );
 }

@@ -29,7 +29,7 @@ const sampleTextHtml =
   `<span style="font-weight:bold;text-decoration:underline">No italics but bold and underlined</span>` +
   `</p>` +
   `<p id="p:{044b9964-f242-02d2-3bb2-4b6e0d569c68}{11}" style="margin-top:0pt;margin-bottom:0pt">` +
-  `Nothing but` +
+  `Nothing but ` +
   `<span style="font-weight:bold">&quot;this is bold and in quotes&quot;</span>` +
   `</p>` +
   `<cite id="cite:{28216e73-1f0a-05fd-25c5-a04844147e70}{16}"` +
@@ -69,19 +69,17 @@ interface HeaderProps {
   loadSamplePageId: () => UpdateSelectedPageAction;
 }
 
-class HeaderComponent extends React.Component<HeaderProps> {
-  public render(): JSX.Element {
-    return (
-      <div className={styles.header}>
-        <button onClick={this.loadSample}>Load sample OneNote page</button>
-      </div>
-    );
+function HeaderComponent(props: HeaderProps): JSX.Element {
+  function loadSample(): void {
+    props.loadSampleContent();
+    props.loadSamplePageId();
   }
 
-  private loadSample = (): void => {
-    this.props.loadSampleContent();
-    this.props.loadSamplePageId();
-  };
+  return (
+    <div className={styles.header}>
+      <button onClick={loadSample}>Load sample OneNote page</button>
+    </div>
+  );
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): HeaderProps => ({
