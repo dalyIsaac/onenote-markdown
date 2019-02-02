@@ -17,8 +17,8 @@ const sampleTextHtml =
   `</head>` +
   `<body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">` +
   `<p id="p:{6cb59116-8e61-03a9-39ef-edf64004790d}{62}" style="margin-top:0pt;margin-bottom:0pt">` +
-  `<span style="font-weight:bold">Bold</span> text which has` +
-  `<span style="font-style:italic">italics</span> and` +
+  `<span style="font-weight:bold">Bold</span> text which has ` +
+  `<span style="font-style:italic">italics</span> and ` +
   `<span style="text-decoration:underline">underlines</span>` +
   `</p>` +
   `<p id="p:{a977e62e-3126-8e0d-1368-bcf55df0a6de}{15}" style="margin-top:0pt;margin-bottom:0pt">` +

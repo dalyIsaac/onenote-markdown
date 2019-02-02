@@ -7,7 +7,10 @@
     "@typescript-eslint/member-ordering": "error",
     "@typescript-eslint/array-type": ["error", "array-simple"],
     "@typescript-eslint/no-non-null-assertion": "off",
-    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "ignoreRestSiblings": true }
+    ],
     "require-yield": "error",
     "eqeqeq": ["error", "always"],
     "prefer-const": "error"

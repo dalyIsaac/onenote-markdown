@@ -54,7 +54,8 @@ function updateItem(
     "p",
     {
       ...node.attributes,
-      contentOffset,
+      contentoffset: contentOffset,
+      key: node.id,
     },
     children,
   );
@@ -94,7 +95,9 @@ function getPage(page: PageContent): JSX.Element[] {
   return stack as JSX.Element[];
 }
 
-function MarkdownEditorComponent(props: MarkdownEditorProps): JSX.Element {
+export function MarkdownEditorComponent(
+  props: MarkdownEditorProps,
+): JSX.Element {
   return (
     <div className={styles.editor}>
       <EditorBase getPage={getPage} page={props.page} />
