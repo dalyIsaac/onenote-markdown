@@ -433,11 +433,11 @@ describe("Parser tests", () => {
           {
             bufferIndex: 0,
             color: Color.Black,
-            end: { column: 117, line: 0 },
+            end: { column: 118, line: 0 },
             left: SENTINEL_INDEX,
             leftCharCount: 0,
             leftLineFeedCount: 0,
-            length: 117,
+            length: 118,
             lineFeedCount: 0,
             parent: SENTINEL_INDEX,
             right: SENTINEL_INDEX,
@@ -489,7 +489,7 @@ describe("Parser tests", () => {
             id: "cite:{28216e73-1f0a-05fd-25c5-a04844147e70}{16}",
             left: SENTINEL_INDEX,
             leftSubTreeLength: 0,
-            length: 15,
+            length: 16,
             parent: 2,
             right: 4,
             style: {
