@@ -22,6 +22,8 @@ import {
 import { insertStructureNode } from "./structureTree/insert";
 import { deleteStructureNode } from "./structureTree/delete";
 import { updateStructureNode } from "./structureTree/update";
+import { STORE_PAGE, StorePageAction } from "./tree/actions";
+import parse from "./tree/parser";
 
 /**
  * Reducer for the slice of the state referring to the storage of a page.
@@ -36,13 +38,21 @@ export default function pageReducer(
   let newState: StatePages;
 
   if (!action.hasOwnProperty("pageId")) {
-    console.error("The action does not contain the property pageId");
-    console.error(action);
     return state;
   } else if (!state.hasOwnProperty(action.pageId)) {
-    console.error(`The state does not contain the key ${action.pageId}`);
-    console.error(action);
-    return state;
+    if (action.type === STORE_PAGE) {
+      const { pageId, content } = action as StorePageAction;
+      const page = parse(content);
+      newState = {
+        ...state,
+        [pageId]: page,
+      };
+      return newState;
+    } else {
+      console.error(`The state does not contain the key ${action.pageId}`);
+      console.error(action);
+      return state;
+    }
   }
 
   switch (action.type) {

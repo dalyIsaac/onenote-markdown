@@ -1,13 +1,12 @@
 import { SENTINEL_INDEX } from "../tree/tree";
 import {
   ContentNodeMutable,
-  ContentNode,
-  isContentNode,
+  isContentRedBlackTreeMutable,
 } from "../contentTree/contentModel";
-import { RedBlackTree, NodeMutable } from "../pageModel";
+import { RedBlackTreeMutable, NodeMutable } from "../pageModel";
 import {
-  isStructureNode,
   StructureNodeMutable,
+  isStructureRedBlackTreeMutable,
 } from "../structureTree/structureModel";
 
 /**
@@ -15,7 +14,10 @@ import {
  * @param page The page/piece table.
  * @param nodeIndex The index of the node in the array for which the left rotation is performed on.
  */
-export function leftRotate(tree: RedBlackTree, nodeIndex: number): void {
+export function leftRotate<T extends NodeMutable>(
+  tree: RedBlackTreeMutable<T>,
+  nodeIndex: number,
+): void {
   const x = nodeIndex;
 
   if (tree.nodes[x].right === SENTINEL_INDEX) {
@@ -28,16 +30,14 @@ export function leftRotate(tree: RedBlackTree, nodeIndex: number): void {
   const y = tree.nodes[x].right;
   tree.nodes[y] = { ...tree.nodes[y] };
 
-  if (isContentNode(tree.nodes[y])) {
+  if (isContentRedBlackTreeMutable(tree)) {
     (tree.nodes[y] as ContentNodeMutable).leftCharCount +=
-      (tree.nodes[x] as ContentNode).leftCharCount +
-      (tree.nodes[x] as ContentNode).length;
+      tree.nodes[x].leftCharCount + tree.nodes[x].length;
     (tree.nodes[y] as ContentNodeMutable).leftLineFeedCount +=
-      (tree.nodes[x] as ContentNode).leftLineFeedCount +
-      (tree.nodes[x] as ContentNode).lineFeedCount;
-  } else if (isStructureNode(tree.nodes[y])) {
+      tree.nodes[x].leftLineFeedCount + tree.nodes[x].lineFeedCount;
+  } else if (isStructureRedBlackTreeMutable(tree)) {
     (tree.nodes[y] as StructureNodeMutable).leftSubTreeLength +=
-      (tree.nodes[x] as StructureNodeMutable).leftSubTreeLength + 1;
+      tree.nodes[x].leftSubTreeLength + 1;
   }
 
   (tree.nodes[x] as NodeMutable).right = tree.nodes[y].left;
@@ -72,7 +72,10 @@ export function leftRotate(tree: RedBlackTree, nodeIndex: number): void {
  * @param page The page/piece table.
  * @param nodeIndex The index of the node in the array for which the right rotation is performed on.
  */
-export function rightRotate(tree: RedBlackTree, nodeIndex: number): void {
+export function rightRotate<T extends NodeMutable>(
+  tree: RedBlackTreeMutable<T>,
+  nodeIndex: number,
+): void {
   const y = nodeIndex;
 
   if (tree.nodes[y].left === SENTINEL_INDEX) {
@@ -85,16 +88,14 @@ export function rightRotate(tree: RedBlackTree, nodeIndex: number): void {
 
   tree.nodes[y] = { ...tree.nodes[y] };
 
-  if (isContentNode(tree.nodes[y])) {
+  if (isContentRedBlackTreeMutable(tree)) {
     (tree.nodes[y] as ContentNodeMutable).leftCharCount -=
-      (tree.nodes[x] as ContentNodeMutable).leftCharCount +
-      (tree.nodes[x] as ContentNodeMutable).length;
+      tree.nodes[x].leftCharCount + tree.nodes[x].length;
     (tree.nodes[y] as ContentNodeMutable).leftLineFeedCount -=
-      (tree.nodes[x] as ContentNodeMutable).leftLineFeedCount +
-      (tree.nodes[x] as ContentNodeMutable).lineFeedCount;
-  } else if (isStructureNode(tree.nodes[y])) {
+      tree.nodes[x].leftLineFeedCount + tree.nodes[x].lineFeedCount;
+  } else if (isStructureRedBlackTreeMutable(tree)) {
     (tree.nodes[y] as StructureNodeMutable).leftSubTreeLength -=
-      (tree.nodes[x] as StructureNodeMutable).leftSubTreeLength + 1;
+      tree.nodes[x].leftSubTreeLength + 1;
   }
 
   (tree.nodes[y] as NodeMutable).left = tree.nodes[x].right;

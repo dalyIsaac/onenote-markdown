@@ -1,11 +1,6 @@
-import { Color } from "../pageModel";
+import { Color, RedBlackTree, RedBlackTreeMutable } from "../pageModel";
 import { SENTINEL_INDEX } from "../tree/tree";
-import {
-  StructureNode,
-  StructureRedBlackTree,
-  TagType,
-  StructureNodeMutable,
-} from "./structureModel";
+import { StructureNode, TagType, StructureNodeMutable } from "./structureModel";
 
 export const SENTINEL_STRUCTURE: StructureNode = {
   color: Color.Black,
@@ -25,7 +20,7 @@ export const SENTINEL_STRUCTURE: StructureNode = {
  * @param index The index of the node in the `nodes` array of the red-black tree.
  */
 export function calculateLengthCount(
-  tree: StructureRedBlackTree,
+  tree: RedBlackTree<StructureNode>,
   index: number,
 ): number {
   if (index === SENTINEL_INDEX) {
@@ -41,7 +36,9 @@ export function calculateLengthCount(
  * This function does mutate the `SENTINEL` node, to ensure that `SENTINEL` is a singleton.
  * @param tree The red-black tree for the content.
  */
-export function resetSentinelStructure(tree: StructureRedBlackTree): void {
+export function resetSentinelStructure(
+  tree: RedBlackTreeMutable<StructureNodeMutable>,
+): void {
   (SENTINEL_STRUCTURE as StructureNodeMutable).color = Color.Black;
   (SENTINEL_STRUCTURE as StructureNodeMutable).id = "SENTINEL";
   (SENTINEL_STRUCTURE as StructureNodeMutable).left = SENTINEL_INDEX;
@@ -60,7 +57,7 @@ export function resetSentinelStructure(tree: StructureRedBlackTree): void {
  * @param lengthDelta The length delta to be applied.
  */
 export function updateStructureTreeMetadata(
-  tree: StructureRedBlackTree,
+  tree: RedBlackTreeMutable<StructureNodeMutable>,
   x: number,
   lengthDelta: number,
 ): void {
@@ -70,8 +67,7 @@ export function updateStructureTreeMetadata(
       tree.nodes[tree.nodes[x].parent] = {
         ...tree.nodes[tree.nodes[x].parent],
         leftSubTreeLength:
-          (tree.nodes[tree.nodes[x].parent] as StructureNode)
-            .leftSubTreeLength + lengthDelta,
+          tree.nodes[tree.nodes[x].parent].leftSubTreeLength + lengthDelta,
       };
     }
 

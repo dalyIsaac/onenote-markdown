@@ -7,7 +7,10 @@ import {
   calculateLineFeedCount,
   findNodeAtOffset,
   SENTINEL_CONTENT,
+  getNodeContent,
+  getContentBetweenOffsets,
 } from "./tree";
+import { getStartPage } from "../reducer.test";
 
 export const getFinalTree = (): {
   nodes: ContentNode[];
@@ -120,122 +123,121 @@ export const getFinalTree = (): {
 export const getPage = (): PageContentMutable => ({
   buffers: [],
   content: { ...getFinalTree() },
-  
   previouslyInsertedContentNodeIndex: null,
   previouslyInsertedContentNodeOffset: null,
   structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
 });
 
-describe("Functions for common tree operations on the piece table/red-black tree.", () => {
+describe("Functions for common tree operations on the piece table/content red-black tree.", () => {
   test("findNodeAtOffset", () => {
     const { nodes, root } = getFinalTree();
 
-    expect(findNodeAtOffset(-1, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, -1)).toStrictEqual({
       node: SENTINEL_CONTENT,
       nodeIndex: 1,
       nodeStartOffset: 0,
       remainder: 0,
     });
 
-    expect(findNodeAtOffset(0, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 0)).toStrictEqual({
       node: nodes[1],
       nodeIndex: 1,
       nodeStartOffset: 0,
       remainder: 0,
     });
 
-    expect(findNodeAtOffset(30, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 30)).toStrictEqual({
       node: nodes[1],
       nodeIndex: 1,
       nodeStartOffset: 0,
       remainder: 30,
     });
 
-    expect(findNodeAtOffset(31, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 31)).toStrictEqual({
       node: nodes[2],
       nodeIndex: 2,
       nodeStartOffset: 31,
       remainder: 0,
     });
 
-    expect(findNodeAtOffset(32, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 32)).toStrictEqual({
       node: nodes[2],
       nodeIndex: 2,
       nodeStartOffset: 31,
       remainder: 1,
     });
 
-    expect(findNodeAtOffset(41, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 41)).toStrictEqual({
       node: nodes[2],
       nodeIndex: 2,
       nodeStartOffset: 31,
       remainder: 10,
     });
 
-    expect(findNodeAtOffset(42, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 42)).toStrictEqual({
       node: nodes[3],
       nodeIndex: 3,
       nodeStartOffset: 42,
       remainder: 0,
     });
 
-    expect(findNodeAtOffset(51, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 51)).toStrictEqual({
       node: nodes[3],
       nodeIndex: 3,
       nodeStartOffset: 42,
       remainder: 9,
     });
 
-    expect(findNodeAtOffset(52, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 52)).toStrictEqual({
       node: nodes[4],
       nodeIndex: 4,
       nodeStartOffset: 52,
       remainder: 0,
     });
 
-    expect(findNodeAtOffset(53, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 53)).toStrictEqual({
       node: nodes[4],
       nodeIndex: 4,
       nodeStartOffset: 52,
       remainder: 1,
     });
 
-    expect(findNodeAtOffset(54, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 54)).toStrictEqual({
       node: nodes[5],
       nodeIndex: 5,
       nodeStartOffset: 54,
       remainder: 0,
     });
 
-    expect(findNodeAtOffset(63, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 63)).toStrictEqual({
       node: nodes[5],
       nodeIndex: 5,
       nodeStartOffset: 54,
       remainder: 9,
     });
 
-    expect(findNodeAtOffset(64, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 64)).toStrictEqual({
       node: nodes[6],
       nodeIndex: 6,
       nodeStartOffset: 64,
       remainder: 0,
     });
 
-    expect(findNodeAtOffset(79, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 79)).toStrictEqual({
       node: nodes[6],
       nodeIndex: 6,
       nodeStartOffset: 64,
       remainder: 15,
     });
 
-    expect(findNodeAtOffset(80, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 80)).toStrictEqual({
       node: nodes[7],
       nodeIndex: 7,
       nodeStartOffset: 80,
       remainder: 0,
     });
 
-    expect(findNodeAtOffset(120, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 120)).toStrictEqual({
       node: nodes[7],
       nodeIndex: 7,
       nodeStartOffset: 80,
@@ -243,7 +245,7 @@ describe("Functions for common tree operations on the piece table/red-black tree
     });
 
     // out of range
-    expect(findNodeAtOffset(121, nodes, root)).toStrictEqual({
+    expect(findNodeAtOffset({ nodes, root }, 121)).toStrictEqual({
       node: nodes[7],
       nodeIndex: 7,
       nodeStartOffset: 80,
@@ -259,5 +261,54 @@ describe("Functions for common tree operations on the piece table/red-black tree
   test("Calculate character count", () => {
     const page = getPage();
     expect(calculateCharCount(page.content, page.content.root)).toBe(121);
+  });
+
+  test("getNodeContent", () => {
+    const page = getStartPage();
+
+    expect(getNodeContent(page, 1)).toBe(
+      "Do not go gentle into that good night,\nOld age should burn and ra",
+    );
+    expect(getNodeContent(page, 2)).toBe("v");
+    expect(getNodeContent(page, 3)).toBe("e at close of ");
+    expect(getNodeContent(page, 4)).toBe("day");
+    expect(getNodeContent(page, 5)).toBe(";\n");
+    expect(getNodeContent(page, 6)).toBe("Ra");
+    expect(getNodeContent(page, 7)).toBe("g");
+    expect(getNodeContent(page, 8)).toBe("e, ra");
+    expect(getNodeContent(page, 9)).toBe("g");
+    expect(getNodeContent(page, 10)).toBe("e against the dying of the light");
+    expect(getNodeContent(page, 11)).toBe(".");
+  });
+
+  describe("getContentBetweenOffset", () => {
+    const page = getStartPage();
+
+    test("Inside a single node", () => {
+      expect(getContentBetweenOffsets(page, 3, 50)).toBe(
+        "not go gentle into that good night,\nOld age sho",
+      );
+    });
+
+    test("An entire single node", () => {
+      expect(getContentBetweenOffsets(page, 0, 65)).toBe(
+        "Do not go gentle into that good night,\nOld age should burn and ra",
+      );
+    });
+
+    test("Across two nodes", () => {
+      expect(getContentBetweenOffsets(page, 63, 66)).toBe("rav");
+      expect(getContentBetweenOffsets(page, 70, 82)).toBe(" close of da");
+    });
+
+    test("Across two nodes to the end of the second node", () => {
+      expect(getContentBetweenOffsets(page, 70, 83)).toBe(" close of day");
+    });
+
+    test("Across multiple nodes", () => {
+      expect(getContentBetweenOffsets(page, 60, 83)).toBe(
+        "nd rave at close of day",
+      );
+    });
   });
 });

@@ -51,9 +51,14 @@ export interface NodeMutable {
 
 //#region PageContent
 
-export interface RedBlackTree {
-  nodes: Node[];
+export interface RedBlackTreeMutable<T extends Node> {
+  nodes: T[];
   root: number;
+}
+
+export interface RedBlackTree<T extends Node> {
+  readonly nodes: ReadonlyArray<T>;
+  readonly root: number;
 }
 
 /**

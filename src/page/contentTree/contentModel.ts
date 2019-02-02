@@ -1,4 +1,4 @@
-import { Node, NodeMutable } from "../pageModel";
+import { Node, NodeMutable, RedBlackTreeMutable } from "../pageModel";
 
 /**
  * Mutable objects are only used in constructing the next state.
@@ -68,13 +68,19 @@ export interface BufferCursorMutable {
 //#endregion
 
 //#region ContentNode
-/**
- * Represents a "piece" inside the piece table.
- */
 export function isContentNode(node: Node): node is ContentNode {
   return (node as ContentNode).leftCharCount !== undefined;
 }
 
+export function isContentRedBlackTreeMutable(
+  tree: RedBlackTreeMutable<Node>,
+): tree is RedBlackTreeMutable<ContentNode> {
+  return isContentNode(tree.nodes[0]);
+}
+
+/**
+ * Represents a "piece" inside the piece table.
+ */
 export interface ContentNode extends Node {
   /**
    * The index of the buffer which this node refers to.
@@ -150,8 +156,3 @@ export interface ContentNodeMutable extends NodeMutable {
 }
 
 //#endregion
-
-export interface ContentRedBlackTree {
-  nodes: ContentNode[];
-  root: number;
-}

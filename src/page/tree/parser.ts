@@ -32,22 +32,20 @@ export default function parse(content: string): PageContent {
   let lastTextNode: InsertStructureProps;
   let structureNodeOffset = 1;
   let contentOffset = 0;
-  let markdownStack: string[][] = [];
+  const markdownStack: string[][] = [];
   const charRef: Set<TokenType> = new Set([
     "charRef-decimal",
     "charRef-hex",
     "charRef-named",
   ] as TokenType[]);
   const tags: KeyValueStr = {
-    cite: "{<cite}",
+    cite: "{<cite} ",
     h1: "# ",
     h2: "## ",
     h3: "### ",
     h4: "#### ",
     h5: "##### ",
     h6: "###### ",
-    sub: "{<sub}",
-    sup: "{<sup}",
   };
 
   function consumeUpToType(...targetTypes: TokenType[]): TokenType {
@@ -122,7 +120,7 @@ export default function parse(content: string): PageContent {
 
   function title(): void {
     consumeUpToType("tag-end");
-    let [type, chunk] = stream.next().value;
+    const [type, chunk] = stream.next().value;
 
     if (type !== "rcdata") {
       throw new TypeError("Expected `rcdata` type.");
@@ -263,7 +261,7 @@ export default function parse(content: string): PageContent {
   }
 
   function start(): void {
-    let [, chunk] = stream.next().value;
+    const [, chunk] = stream.next().value;
 
     const tag = chunk.slice(1);
     switch (tag) {

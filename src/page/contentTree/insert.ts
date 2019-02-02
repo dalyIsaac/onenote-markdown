@@ -147,7 +147,7 @@ function insertInsideNode(
   nodePosition: NodePositionOffset,
 ): void {
   const oldNode = nodePosition.node;
-  const nodeContent = getNodeContent(nodePosition.nodeIndex, page);
+  const nodeContent = getNodeContent(page, nodePosition.nodeIndex);
   const firstPartContent = nodeContent.slice(0, nodePosition.remainder);
   const firstPartLineStarts = getLineStarts(firstPartContent);
 
@@ -269,11 +269,7 @@ export function insertContent(
   ) {
     insertAtEndPreviouslyInsertedNode(content, page, maxBufferLength);
   } else {
-    const nodePosition = findNodeAtOffset(
-      content.offset,
-      page.content.nodes,
-      page.content.root,
-    );
+    const nodePosition = findNodeAtOffset(page.content, content.offset);
     if (
       nodePosition.nodeStartOffset < content.offset &&
       content.offset < nodePosition.nodeStartOffset + nodePosition.node.length

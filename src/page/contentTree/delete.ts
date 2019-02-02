@@ -206,9 +206,8 @@ export function deleteContent(
   deleteRange: ContentDelete,
 ): void {
   const oldNodeStartPosition = findNodeAtOffset(
+    page.content,
     deleteRange.startOffset,
-    page.content.nodes,
-    page.content.root,
   );
   let oldNodeEndPosition: NodePositionOffset;
   const nodeBeforeContent = getNodeBeforeContent(
@@ -229,11 +228,7 @@ export function deleteContent(
     );
     oldNodeEndPosition = oldNodeStartPosition;
   } else {
-    oldNodeEndPosition = findNodeAtOffset(
-      deleteRange.endOffset,
-      page.content.nodes,
-      page.content.root,
-    );
+    oldNodeEndPosition = findNodeAtOffset(page.content, deleteRange.endOffset);
     nodeAfterContent = getNodeAfterContent(
       page,
       deleteRange,

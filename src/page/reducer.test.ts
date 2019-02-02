@@ -70,7 +70,7 @@ export const getStartPage = (): PageContentMutable => ({
         // 3
         bufferIndex: 0,
         color: Color.Red,
-        end: { column: 42, line: 1 },
+        end: { column: 41, line: 1 },
         left: SENTINEL_INDEX,
         leftCharCount: 0,
         leftLineFeedCount: 0,
@@ -78,7 +78,7 @@ export const getStartPage = (): PageContentMutable => ({
         lineFeedCount: 0,
         parent: 2,
         right: SENTINEL_INDEX,
-        start: { column: 28, line: 1 },
+        start: { column: 27, line: 1 },
       },
       {
         // 4
@@ -195,10 +195,8 @@ export const getStartPage = (): PageContentMutable => ({
     ],
     root: 6,
   },
-  
   previouslyInsertedContentNodeIndex: null,
   previouslyInsertedContentNodeOffset: null,
-
   structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
 });
 
@@ -285,7 +283,7 @@ describe("page/reducer", () => {
             // 3
             bufferIndex: 0,
             color: Color.Red,
-            end: { column: 42, line: 1 },
+            end: { column: 41, line: 1 },
             left: SENTINEL_INDEX,
             leftCharCount: 0,
             leftLineFeedCount: 0,
@@ -293,7 +291,7 @@ describe("page/reducer", () => {
             lineFeedCount: 0,
             parent: 2,
             right: SENTINEL_INDEX,
-            start: { column: 28, line: 1 },
+            start: { column: 27, line: 1 },
           },
           {
             // 4
@@ -424,7 +422,6 @@ describe("page/reducer", () => {
         ],
         root: 6,
       },
-      
       previouslyInsertedContentNodeIndex: 12,
       previouslyInsertedContentNodeOffset: 127,
       structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -501,7 +498,7 @@ describe("page/reducer", () => {
             // 3
             bufferIndex: 0,
             color: Color.Red,
-            end: { column: 42, line: 1 },
+            end: { column: 41, line: 1 },
             left: SENTINEL_INDEX,
             leftCharCount: 0,
             leftLineFeedCount: 0,
@@ -509,7 +506,7 @@ describe("page/reducer", () => {
             lineFeedCount: 0,
             parent: 2,
             right: SENTINEL_INDEX,
-            start: { column: 28, line: 1 },
+            start: { column: 27, line: 1 },
           },
           {
             // 4
@@ -626,10 +623,8 @@ describe("page/reducer", () => {
         ],
         root: 6,
       },
-      
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
-
       structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
     };
     const expectedState: StatePages = {
@@ -702,7 +697,7 @@ describe("page/reducer", () => {
             // 3
             bufferIndex: 0,
             color: Color.Red,
-            end: { column: 42, line: 1 },
+            end: { column: 41, line: 1 },
             left: SENTINEL_INDEX,
             leftCharCount: 0,
             leftLineFeedCount: 0,
@@ -710,7 +705,7 @@ describe("page/reducer", () => {
             lineFeedCount: 0,
             parent: 2,
             right: SENTINEL_INDEX,
-            start: { column: 28, line: 1 },
+            start: { column: 27, line: 1 },
           },
           {
             // 4
@@ -841,7 +836,6 @@ describe("page/reducer", () => {
         ],
         root: 6,
       },
-      
       previouslyInsertedContentNodeIndex: 12,
       previouslyInsertedContentNodeOffset: 126,
       structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -858,7 +852,6 @@ describe("page/reducer", () => {
     const page: PageContentMutable = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-      
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
       structure: {
@@ -886,7 +879,6 @@ describe("page/reducer", () => {
     const expectedPage: PageContentMutable = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-      
       previouslyInsertedContentNodeIndex: null,
       previouslyInsertedContentNodeOffset: null,
       structure: {

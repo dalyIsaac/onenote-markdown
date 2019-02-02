@@ -1,4 +1,4 @@
-import { Node, NodeMutable } from "../pageModel";
+import { Node, NodeMutable, RedBlackTreeMutable } from "../pageModel";
 
 export interface KeyValueStr {
   [key: string]: string;
@@ -12,6 +12,12 @@ export enum TagType {
 
 export function isStructureNode(node: Node): node is StructureNode {
   return (node as StructureNode).leftSubTreeLength !== undefined;
+}
+
+export function isStructureRedBlackTreeMutable(
+  tree: RedBlackTreeMutable<Node>,
+): tree is RedBlackTreeMutable<StructureNode> {
+  return isStructureNode(tree.nodes[0]);
 }
 
 export interface StructureNode extends Node {
@@ -32,9 +38,4 @@ export interface StructureNodeMutable extends NodeMutable {
   style?: KeyValueStr;
   tag: string;
   tagType: TagType;
-}
-
-export interface StructureRedBlackTree {
-  nodes: StructureNode[];
-  root: number;
 }
