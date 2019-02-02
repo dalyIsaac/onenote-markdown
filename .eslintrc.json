@@ -6,7 +6,11 @@
     "no-console": "warn",
     "@typescript-eslint/member-ordering": "error",
     "@typescript-eslint/array-type": ["error", "array-simple"],
-    "@typescript-eslint/no-non-null-assertion": "off"
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-unused-vars": "error",
+    "require-yield": "error",
+    "eqeqeq": ["error", "always"],
+    "prefer-const": "error"
   },
   "plugins": ["sort-keys-fix", "@typescript-eslint"],
   "parserOptions": {
