@@ -2,10 +2,22 @@ import MarkdownIt from "markdown-it";
 import Token from "markdown-it/lib/token";
 import StateCore from "markdown-it/lib/rules_core/state_core";
 
-function renderer(tokens: Token[], index: number): string {
+const STRING_CHAR_CODE = 0x20;
+
+type CustomSyntaxRule = "color";
+
+const rules: Array<[CustomSyntaxRule, RegExp]> = [
+  ["color", /\{color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/],
+];
+
+function renderer(
+  tokens: Token[],
+  index: number,
+  type: CustomSyntaxRule,
+): string {
   const token = tokens[index];
   if (token.nesting === 1) {
-    return `<span style="color:${token.attrGet("color")}">`;
+    return `<span style="${type}:${token.attrGet(type)}">`;
   } else if (token.nesting === -1) {
     return "</span>";
   } else {
@@ -13,7 +25,9 @@ function renderer(tokens: Token[], index: number): string {
   }
 }
 
-const STRING_CHAR_CODE = 0x20;
+function colorRenderer(tokens: Token[], index: number): string {
+  return renderer(tokens, index, "color");
+}
 
 function scanDelims(
   md: MarkdownIt,
@@ -71,73 +85,72 @@ function scanDelims(
   };
 }
 
-const colorMatcher = /\{color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/;
-
 function customSyntax(
   state: StateCore,
   token: Token,
   pos: number,
 ): Token[] | Token {
-  const matches = colorMatcher.exec(token.content);
-  if (matches) {
-    const match = matches[0];
-    const startIndex = matches.index;
-    const endIndex = matches.index + match.length;
+  for (const [type, rule] of rules) {
+    const matches = rule.exec(token.content);
+    if (matches) {
+      const match = matches[0];
+      const startIndex = matches.index;
+      const endIndex = matches.index + match.length;
 
-    const tokenBefore: Token = {
-      ...new Token(token.type, token.tag, token.nesting),
-      attrs: token.attrs,
-      block: token.block,
-      children: token.children,
-      content: token.content.slice(0, startIndex),
-      hidden: token.hidden,
-      info: token.info,
-      level: token.level,
-      map: token.map,
-      markup: token.markup,
-      meta: token.meta,
-      nesting: token.nesting,
-      tag: token.tag,
-      type: token.type,
-    };
+      const tokenBefore: Token = {
+        ...new Token(token.type, token.tag, token.nesting),
+        attrs: token.attrs,
+        block: token.block,
+        children: token.children,
+        content: token.content.slice(0, startIndex),
+        hidden: token.hidden,
+        info: token.info,
+        level: token.level,
+        map: token.map,
+        markup: token.markup,
+        meta: token.meta,
+        nesting: token.nesting,
+        tag: token.tag,
+        type: token.type,
+      };
 
-    const tokenAfter: Token = {
-      ...new Token(token.type, token.tag, token.nesting),
-      attrs: token.attrs,
-      block: token.block,
-      children: token.children,
-      content: token.content.slice(endIndex),
-      hidden: token.hidden,
-      info: token.info,
-      level: token.level,
-      map: token.map,
-      markup: token.markup,
-      meta: token.meta,
-      nesting: token.nesting,
-      tag: token.tag,
-      type: token.type,
-    };
+      const tokenAfter: Token = {
+        ...new Token(token.type, token.tag, token.nesting),
+        attrs: token.attrs,
+        block: token.block,
+        children: token.children,
+        content: token.content.slice(endIndex),
+        hidden: token.hidden,
+        info: token.info,
+        level: token.level,
+        map: token.map,
+        markup: token.markup,
+        meta: token.meta,
+        nesting: token.nesting,
+        tag: token.tag,
+        type: token.type,
+      };
 
-    const result = scanDelims(state.md, state.src, pos);
-    const colorToken: Token = new Token(
-      "color",
-      "span",
-      result.canOpen ? 1 : -1,
-    );
-    colorToken.attrPush(["color", match.split(":")[1].slice(0, -1)]);
+      const result = scanDelims(state.md, state.src, pos);
+      const matchedToken: Token = new Token(
+        type,
+        "span",
+        result.canOpen ? 1 : -1,
+      );
+      matchedToken.attrPush([type, match.split(":")[1].slice(0, -1)]);
 
-    return [tokenBefore, colorToken, tokenAfter].reduce(
-      (acc, curr) => {
-        if (curr.content || (curr.attrs && curr.attrGet("color"))) {
-          acc.push(curr);
-        }
-        return acc;
-      },
-      [] as Token[],
-    );
-  } else {
-    return token;
+      return [tokenBefore, matchedToken, tokenAfter].reduce(
+        (acc, curr) => {
+          if (curr.content || (curr.attrs && curr.attrGet(type))) {
+            acc.push(curr);
+          }
+          return acc;
+        },
+        [] as Token[],
+      );
+    }
   }
+  return token;
 }
 
 function rule(state: StateCore): void {
@@ -157,6 +170,6 @@ function rule(state: StateCore): void {
 }
 
 export function customSyntaxPlugin(md: MarkdownIt): void {
-  md.renderer.rules.color = renderer;
-  md.core.ruler.push("color", rule);
+  md.renderer.rules.color = colorRenderer;
+  md.core.ruler.push("customSyntaxRule", rule);
 }

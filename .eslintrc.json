@@ -9,7 +9,10 @@
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-unused-vars": [
       "error",
-      { "ignoreRestSiblings": true }
+      {
+        "ignoreRestSiblings": true,
+        "varsIgnorePattern": "^_"
+      }
     ],
     "require-yield": "error",
     "eqeqeq": ["error", "always"],
