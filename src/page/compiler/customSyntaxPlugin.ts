@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/camelcase */
+
 import MarkdownIt from "markdown-it";
 import Token from "markdown-it/lib/token";
 import StateCore from "markdown-it/lib/rules_core/state_core";
@@ -28,6 +30,26 @@ function renderer(
 function colorRenderer(tokens: Token[], index: number): string {
   return renderer(tokens, index, "color");
 }
+
+function strong_open(): string {
+  return "<span style=\"font-weight:bold\">";
+}
+
+function strong_close(): string {
+  return "</span>";
+}
+
+function em_open(): string {
+  return "<span style=\"font-style:italic\">";
+}
+
+function paragraph_open(): string {
+  return "";
+}
+
+const paragraph_close = paragraph_open;
+
+const em_close = strong_close;
 
 function scanDelims(
   md: MarkdownIt,
@@ -171,5 +193,11 @@ function rule(state: StateCore): void {
 
 export function customSyntaxPlugin(md: MarkdownIt): void {
   md.renderer.rules.color = colorRenderer;
+  md.renderer.rules.strong_open = strong_open;
+  md.renderer.rules.strong_close = strong_close;
+  md.renderer.rules.em_open = em_open;
+  md.renderer.rules.em_close = em_close;
+  md.renderer.rules.paragraph_open = paragraph_open;
+  md.renderer.rules.paragraph_close = paragraph_close;
   md.core.ruler.push("customSyntaxRule", rule);
 }
