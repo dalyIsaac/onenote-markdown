@@ -3,12 +3,13 @@ import { customSyntaxPlugin } from "./customSyntaxPlugin";
 import { PageContent } from "../pageModel";
 import { inorderTreeTraversal } from "../tree/tree";
 import { getContentBetweenOffsets } from "../contentTree/tree";
+import { StructureNode } from "../structureTree/structureModel";
 
 const md = new MarkdownIt("commonmark").use(customSyntaxPlugin);
 
 export function* getMarkdownFromPage(
   page: PageContent,
-): IterableIterator<string> {
+): IterableIterator<{ node: StructureNode; content: string }> {
   let startOffset = 0;
   for (const { node } of inorderTreeTraversal(page.structure)) {
     const content = getContentBetweenOffsets(
@@ -17,7 +18,7 @@ export function* getMarkdownFromPage(
       startOffset + node.length,
     );
     if (content) {
-      yield content;
+      yield { content, node };
     }
     startOffset += node.length;
   }

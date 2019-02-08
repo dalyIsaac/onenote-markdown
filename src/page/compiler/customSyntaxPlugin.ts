@@ -7,11 +7,14 @@ import { getAttributeName } from "../parser/parser";
 
 const STRING_CHAR_CODE = 0x20;
 
-type CustomSyntaxRule = "color" | "text-decoration";
+type CustomSyntaxRule = "color" | "text-decoration" | "background-color";
+
+const tagRule = /{![a-zA-Z][a-zA-Z0-9]*\} /;
 
 const rules: Array<[CustomSyntaxRule, RegExp]> = [
   ["color", /\{color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/],
   ["text-decoration", /\{text-decoration:underline\}/],
+  ["background-color", /\{background-color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/],
 ];
 
 // #region Renderers
@@ -36,6 +39,10 @@ function colorRenderer(tokens: Token[], index: number): string {
 
 function textDecorationRenderer(tokens: Token[], index: number): string {
   return renderer(tokens, index, "text-decoration");
+}
+
+function backgroundColorRenderer(tokens: Token[], index: number): string {
+  return renderer(tokens, index, "background-color");
 }
 
 function strong_open(): string {
@@ -139,6 +146,13 @@ function customSyntax(state: StateCore, token: Token, pos: number): Token[] {
   while (continueChecking) {
     continueChecking = false;
     const currentToken = tokens[tokens.length - 1];
+    const tagMatch = tagRule.exec(currentToken.content);
+    if (tagMatch) {
+      // assumes that the tag is at the start of the content
+      currentToken.content = currentToken.content.slice(
+        tagMatch.index + tagMatch[0].length,
+      );
+    }
     for (const [type, rule] of rules) {
       const matches = rule.exec(currentToken.content);
       if (matches) {
@@ -256,6 +270,7 @@ function rule(state: StateCore): void {
 export function customSyntaxPlugin(md: MarkdownIt): void {
   md.renderer.rules.color = colorRenderer;
   md.renderer.rules.textDecoration = textDecorationRenderer;
+  md.renderer.rules.backgroundColor = backgroundColorRenderer;
   md.renderer.rules.strong_open = strong_open;
   md.renderer.rules.strong_close = strong_close;
   md.renderer.rules.em_open = em_open;

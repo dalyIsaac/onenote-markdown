@@ -7,6 +7,9 @@ import {
   test_03_html,
   test_04_html,
   test_05_html,
+  test_06_html,
+  test_07_html,
+  test_08_html,
 } from "../parser/parser.test";
 import { PageContent } from "../pageModel";
 
@@ -38,7 +41,7 @@ describe("Custom markdown syntax", () => {
 
   function testbed(page: PageContent, expectedHtml: string[]): void {
     let i = 0;
-    for (const content of getMarkdownFromPage(page)) {
+    for (const { content } of getMarkdownFromPage(page)) {
       const compiledContent = compile(content);
       expect(compiledContent).toBe(expectedHtml[i]);
       i += 1;
@@ -84,6 +87,29 @@ describe("Custom markdown syntax", () => {
     const expectedHtml = [
       `<span style="font-weight:bold">&quot;this is bold and in quotes&quot;</span>`,
     ];
+    testbed(page, expectedHtml);
+  });
+
+  test("Test 1.06 HTML", () => {
+    const page = parse(test_06_html);
+    const expectedHtml = [
+      `<span style="font-weight:bold">Bold</span> text which has <span style="font-style:italic">italics</span> and <span style="text-decoration:underline">underlines</span>`,
+      "Citation",
+    ];
+    testbed(page, expectedHtml);
+  });
+
+  test("Test 1.07 HTML", () => {
+    const page = parse(test_07_html);
+    const expectedHtml = [
+      `<span style="background-color:yellow">Highlighted</span>`,
+    ];
+    testbed(page, expectedHtml);
+  });
+
+  test("Test 1.08 HTML", () => {
+    const page = parse(test_08_html);
+    const expectedHtml = [`<span style="color:red">Red text</span>`];
     testbed(page, expectedHtml);
   });
 });
