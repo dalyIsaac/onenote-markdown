@@ -3,13 +3,15 @@
 import MarkdownIt from "markdown-it";
 import Token from "markdown-it/lib/token";
 import StateCore from "markdown-it/lib/rules_core/state_core";
+import { getAttributeName } from "../parser/parser";
 
 const STRING_CHAR_CODE = 0x20;
 
-type CustomSyntaxRule = "color";
+type CustomSyntaxRule = "color" | "text-decoration";
 
 const rules: Array<[CustomSyntaxRule, RegExp]> = [
   ["color", /\{color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/],
+  ["text-decoration", /\{text-decoration:underline\}/],
 ];
 
 function renderer(
@@ -29,6 +31,10 @@ function renderer(
 
 function colorRenderer(tokens: Token[], index: number): string {
   return renderer(tokens, index, "color");
+}
+
+function textDecorationRenderer(tokens: Token[], index: number): string {
+  return renderer(tokens, index, "text-decoration");
 }
 
 function strong_open(): string {
@@ -107,72 +113,87 @@ function scanDelims(
   };
 }
 
-function customSyntax(
-  state: StateCore,
-  token: Token,
-  pos: number,
-): Token[] | Token {
-  for (const [type, rule] of rules) {
-    const matches = rule.exec(token.content);
-    if (matches) {
-      const match = matches[0];
-      const startIndex = matches.index;
-      const endIndex = matches.index + match.length;
+function customSyntax(state: StateCore, token: Token, pos: number): Token[] {
+  let tokens: Token[] = [token];
+  let continueChecking = true;
+  while (continueChecking) {
+    continueChecking = false;
+    const currentToken = tokens[tokens.length - 1];
+    for (const [type, rule] of rules) {
+      const matches = rule.exec(currentToken.content);
+      if (matches) {
+        continueChecking = true;
+        const match = matches[0];
+        const startIndex = matches.index;
+        const endIndex = matches.index + match.length;
 
-      const tokenBefore: Token = {
-        ...new Token(token.type, token.tag, token.nesting),
-        attrs: token.attrs,
-        block: token.block,
-        children: token.children,
-        content: token.content.slice(0, startIndex),
-        hidden: token.hidden,
-        info: token.info,
-        level: token.level,
-        map: token.map,
-        markup: token.markup,
-        meta: token.meta,
-        nesting: token.nesting,
-        tag: token.tag,
-        type: token.type,
-      };
+        const tokenBefore: Token = {
+          ...new Token(
+            currentToken.type,
+            currentToken.tag,
+            currentToken.nesting,
+          ),
+          attrs: currentToken.attrs,
+          block: currentToken.block,
+          children: currentToken.children,
+          content: currentToken.content.slice(0, startIndex),
+          hidden: currentToken.hidden,
+          info: currentToken.info,
+          level: currentToken.level,
+          map: currentToken.map,
+          markup: currentToken.markup,
+          meta: currentToken.meta,
+          nesting: currentToken.nesting,
+          tag: currentToken.tag,
+          type: currentToken.type,
+        };
 
-      const tokenAfter: Token = {
-        ...new Token(token.type, token.tag, token.nesting),
-        attrs: token.attrs,
-        block: token.block,
-        children: token.children,
-        content: token.content.slice(endIndex),
-        hidden: token.hidden,
-        info: token.info,
-        level: token.level,
-        map: token.map,
-        markup: token.markup,
-        meta: token.meta,
-        nesting: token.nesting,
-        tag: token.tag,
-        type: token.type,
-      };
+        const tokenAfter: Token = {
+          ...new Token(
+            currentToken.type,
+            currentToken.tag,
+            currentToken.nesting,
+          ),
+          attrs: currentToken.attrs,
+          block: currentToken.block,
+          children: currentToken.children,
+          content: currentToken.content.slice(endIndex),
+          hidden: currentToken.hidden,
+          info: currentToken.info,
+          level: currentToken.level,
+          map: currentToken.map,
+          markup: currentToken.markup,
+          meta: currentToken.meta,
+          nesting: currentToken.nesting,
+          tag: currentToken.tag,
+          type: currentToken.type,
+        };
 
-      const result = scanDelims(state.md, state.src, pos);
-      const matchedToken: Token = new Token(
-        type,
-        "span",
-        result.canOpen ? 1 : -1,
-      );
-      matchedToken.attrPush([type, match.split(":")[1].slice(0, -1)]);
+        const result = scanDelims(state.md, state.src, pos);
+        const matchedToken: Token = new Token(
+          getAttributeName(type, true),
+          "span",
+          result.canOpen ? 1 : -1,
+        );
+        matchedToken.attrPush([type, match.split(":")[1].slice(0, -1)]);
 
-      return [tokenBefore, matchedToken, tokenAfter].reduce(
-        (acc, curr) => {
-          if (curr.content || (curr.attrs && curr.attrGet(type))) {
-            acc.push(curr);
-          }
-          return acc;
-        },
-        [] as Token[],
-      );
+        tokens.pop();
+        tokens = tokens.concat(
+          [tokenBefore, matchedToken, tokenAfter].reduce(
+            (acc, curr) => {
+              if (curr.content || (curr.attrs && curr.attrGet(type))) {
+                acc.push(curr);
+              }
+              return acc;
+            },
+            [] as Token[],
+          ),
+        );
+        pos += tokenAfter.content.length;
+      }
     }
   }
-  return token;
+  return tokens;
 }
 
 function rule(state: StateCore): void {
@@ -193,6 +214,7 @@ function rule(state: StateCore): void {
 
 export function customSyntaxPlugin(md: MarkdownIt): void {
   md.renderer.rules.color = colorRenderer;
+  md.renderer.rules.textDecoration = textDecorationRenderer;
   md.renderer.rules.strong_open = strong_open;
   md.renderer.rules.strong_close = strong_close;
   md.renderer.rules.em_open = em_open;
