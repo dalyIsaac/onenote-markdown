@@ -14,6 +14,39 @@ interface Attributes {
   [key: string]: string;
 }
 
+export function getAttributeName(
+  name: string,
+  isStyleProperty = false,
+): string {
+  const newName = name.split("-").reduce((acc: string, curr: string) => {
+    if (isStyleProperty) {
+      if (acc) {
+        acc += curr[0].toUpperCase() + curr.slice(1);
+      } else {
+        acc = curr;
+      }
+      return acc;
+    } else {
+      return acc + curr;
+    }
+  }, "");
+  return newName;
+}
+
+export function getStyle(text: string): KeyValueStr {
+  return text
+    .split(";")
+    .reduce((acc: KeyValueStr, curr: string): KeyValueStr => {
+      const [key, value] = curr.split(":");
+      acc[getAttributeName(key, true)] = value;
+      return acc;
+    }, {});
+}
+
+/**
+ * Parses HTML content, and returns a new `PageContent` instance containing the parsed HTML.
+ * @param content The HTML content to parse.
+ */
 export default function parse(content: string): PageContent {
   const page: PageContentMutable = {
     buffers: [],
@@ -62,32 +95,6 @@ export default function parse(content: string): PageContent {
     const [, value] = stream.next().value;
     consumeUpToType("attribute-value-end");
     return { key, value };
-  }
-
-  function getAttributeName(name: string, isStyleProperty = false): string {
-    const newName = name.split("-").reduce((acc: string, curr: string) => {
-      if (isStyleProperty) {
-        if (acc) {
-          acc += curr[0].toUpperCase() + curr.slice(1);
-        } else {
-          acc = curr;
-        }
-        return acc;
-      } else {
-        return acc + curr;
-      }
-    }, "");
-    return newName;
-  }
-
-  function getStyle(text: string): KeyValueStr {
-    return text
-      .split(";")
-      .reduce((acc: KeyValueStr, curr: string): KeyValueStr => {
-        const [key, value] = curr.split(":");
-        acc[getAttributeName(key, true)] = value;
-        return acc;
-      }, {});
   }
 
   function getAttributes(): Attributes {
