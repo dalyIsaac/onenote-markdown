@@ -1,5 +1,5 @@
 import React from "react";
-import parse from "../../page/tree/parser";
+import parse from "../../page/parser/parser";
 import { configure, mount } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
 import { MarkdownEditorComponent } from "./markdownEditor";
