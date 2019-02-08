@@ -10,6 +10,14 @@ import {
   test_06_html,
   test_07_html,
   test_08_html,
+  test_09_html,
+  test_10_html,
+  test_11_html,
+  test_12_html,
+  test_13_html,
+  test_14_html,
+  test_15_html,
+  test_16_html,
 } from "../parser/parser.test";
 import { PageContent } from "../pageModel";
 import { Node } from "../pageModel";
@@ -64,7 +72,7 @@ describe("Custom markdown syntax", () => {
 
   test("Test 1.01 HTML", () => {
     const page = parse(test_01_html);
-    const expected: Expected[] = [
+    const expected = [
       {
         expectedHtml: `<span style="font-weight:bold">Bold</span> text which has <span style="font-style:italic">italics</span> and <span style="text-decoration:underline">underlines</span>`,
         node: {
@@ -218,7 +226,7 @@ describe("Custom markdown syntax", () => {
 
   test("Test 1.08 HTML", () => {
     const page = parse(test_08_html);
-    const expectedHtml = [
+    const expected = [
       {
         expectedHtml: `<span style="color:red">Red text</span>`,
         node: {
@@ -234,6 +242,186 @@ describe("Custom markdown syntax", () => {
         },
       },
     ];
-    testbed(page, expectedHtml);
+    testbed(page, expected);
+  });
+
+  test("Test 1.09 HTML", () => {
+    const page = parse(test_09_html);
+    const expected = [
+      {
+        expectedHtml: `This is <span style="font-weight:bold">heading</span> 1`,
+        node: {
+          id: "h1:{6cb59116-8e61-03a9-39ef-edf64004790d}{69}",
+          leftSubTreeLength: 0,
+          length: 23,
+          style: {
+            color: "#1e4e79",
+            fontSize: "16pt",
+            marginBottom: "0pt",
+            marginTop: "0pt",
+          },
+          tag: "h1",
+          tagType: TagType.StartTag,
+        },
+      },
+    ];
+    testbed(page, expected);
+  });
+
+  test("Test 1.10 HTML", () => {
+    const page = parse(test_10_html);
+    const expected = [
+      {
+        expectedHtml: `This is <span style="text-decoration:underline">heading</span> 2`,
+        node: {
+          id: "h2:{6cb59116-8e61-03a9-39ef-edf64004790d}{74}",
+          leftSubTreeLength: 0,
+          length: 74,
+          style: {
+            color: "#2e75b5",
+            fontSize: "14pt",
+            marginBottom: "0pt",
+            marginTop: "0pt",
+          },
+          tag: "h2",
+          tagType: TagType.StartTag,
+        },
+      },
+    ];
+    testbed(page, expected);
+  });
+
+  test("Test 1.11 HTML", () => {
+    const page = parse(test_11_html);
+    const expected = [
+      {
+        expectedHtml: `This is <span style="text-decoration:line-through">heading</span> 3`,
+        node: {
+          id: "h3:{6cb59116-8e61-03a9-39ef-edf64004790d}{79}",
+          leftSubTreeLength: 0,
+          length: 81,
+          style: {
+            color: "#377bac",
+            fontSize: "12pt",
+            marginBottom: "0pt",
+            marginTop: "0pt",
+          },
+          tag: "h3",
+          tagType: TagType.StartTag,
+        },
+      },
+    ];
+    testbed(page, expected);
+  });
+
+  test("Test 1.12 HTML", () => {
+    const page = parse(test_12_html);
+    const expected = [
+      {
+        expectedHtml: `This is heading 4`,
+        node: {
+          id: "h4:{6cb59116-8e61-03a9-39ef-edf64004790d}{84}",
+          leftSubTreeLength: 0,
+          length: 22,
+          style: {
+            color: "#377bac",
+            fontSize: "12pt",
+            fontStyle: "italic",
+            marginBottom: "0pt",
+            marginTop: "0pt",
+          },
+          tag: "h4",
+          tagType: TagType.StartTag,
+        },
+      },
+    ];
+    testbed(page, expected);
+  });
+
+  test("Test 1.13 HTML", () => {
+    const page = parse(test_13_html);
+    const expected = [
+      {
+        expectedHtml: `This is <span style="font-weight:bold"><span style="font-style:italic"><span style="text-decoration:line-through">heading</span></span></span> 5`,
+        node: {
+          id: "h5:{6cb59116-8e61-03a9-39ef-edf64004790d}{89}",
+          leftSubTreeLength: 0,
+          length: 89,
+          style: {
+            color: "#2e75b5",
+            marginBottom: "0pt",
+            marginTop: "0pt",
+          },
+          tag: "h5",
+          tagType: TagType.StartTag,
+        },
+      },
+    ];
+    testbed(page, expected);
+  });
+
+  test("Test 1.14 HTML", () => {
+    const page = parse(test_14_html);
+    const expected = [
+      {
+        expectedHtml: `This is heading 6`,
+        node: {
+          id: "h6:{6cb59116-8e61-03a9-39ef-edf64004790d}{94}",
+          leftSubTreeLength: 0,
+          length: 24,
+          style: {
+            color: "#2e75b5",
+            fontStyle: "italic",
+            marginBottom: "0pt",
+            marginTop: "0pt",
+          },
+          tag: "h6",
+          tagType: TagType.StartTag,
+        },
+      },
+    ];
+    testbed(page, expected);
+  });
+
+  test("Test 1.15 HTML", () => {
+    const page = parse(test_15_html);
+    const expected = [
+      {
+        expectedHtml: `Superscript x<sup>2</sup>`,
+        node: {
+          id: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{29}",
+          leftSubTreeLength: 0,
+          length: 25,
+          style: {
+            marginBottom: "0pt",
+            marginTop: "0pt",
+          },
+          tag: "p",
+          tagType: TagType.StartTag,
+        },
+      },
+    ];
+    testbed(page, expected);
+  });
+
+  test("Test 1.16 HTML", () => {
+    const page = parse(test_16_html);
+    const expected = [
+      {
+        expectedHtml: `Subscript x<sub>2</sub>`,
+        node: {
+          id: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{32}",
+          leftSubTreeLength: 0,
+          length: 23,
+          style: {
+            marginBottom: "0pt",
+            marginTop: "0pt",
+          },
+          tag: "p",
+          tagType: TagType.StartTag,
+        },
+      },
+    ];
+    testbed(page, expected);
   });
 });

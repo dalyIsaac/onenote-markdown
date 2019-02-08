@@ -13,7 +13,7 @@ const tagRule = /{![a-zA-Z][a-zA-Z0-9]*\} /;
 
 const rules: Array<[CustomSyntaxRule, RegExp]> = [
   ["color", /\{color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/],
-  ["text-decoration", /\{text-decoration:underline\}/],
+  ["text-decoration", /\{text-decoration:(underline|line-through)\}/],
   ["background-color", /\{background-color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/],
 ];
 
@@ -62,6 +62,10 @@ function paragraph_open(): string {
 }
 
 const paragraph_close = paragraph_open;
+
+const heading_open = paragraph_open;
+
+const heading_close = paragraph_close;
 
 const em_close = strong_close;
 // #endregion
@@ -277,5 +281,7 @@ export function customSyntaxPlugin(md: MarkdownIt): void {
   md.renderer.rules.em_close = em_close;
   md.renderer.rules.paragraph_open = paragraph_open;
   md.renderer.rules.paragraph_close = paragraph_close;
+  md.renderer.rules.heading_open = heading_open;
+  md.renderer.rules.heading_close = heading_close;
   md.core.ruler.push("customSyntaxRule", rule);
 }
