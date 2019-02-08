@@ -271,7 +271,7 @@ function rule(state: StateCore): void {
   });
 }
 
-export function customSyntaxPlugin(md: MarkdownIt): void {
+export default function customSyntaxPlugin(md: MarkdownIt): void {
   md.renderer.rules.color = colorRenderer;
   md.renderer.rules.textDecoration = textDecorationRenderer;
   md.renderer.rules.backgroundColor = backgroundColorRenderer;

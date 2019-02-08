@@ -1,5 +1,5 @@
 import MarkdownIt from "markdown-it";
-import { customSyntaxPlugin } from "./customSyntaxPlugin";
+import customSyntaxPlugin from "./customSyntaxPlugin";
 import { PageContent } from "../pageModel";
 import { inorderTreeTraversal } from "../tree/tree";
 import { getContentBetweenOffsets } from "../contentTree/tree";
