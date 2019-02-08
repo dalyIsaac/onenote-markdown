@@ -23,7 +23,7 @@ import { insertStructureNode } from "./structureTree/insert";
 import { deleteStructureNode } from "./structureTree/delete";
 import { updateStructureNode } from "./structureTree/update";
 import { STORE_PAGE, StorePageAction } from "./tree/actions";
-import parse from "./tree/parser";
+import parse from "./parser/parser";
 
 /**
  * Reducer for the slice of the state referring to the storage of a page.
