@@ -14,6 +14,7 @@ const rules: Array<[CustomSyntaxRule, RegExp]> = [
   ["text-decoration", /\{text-decoration:underline\}/],
 ];
 
+// #region Renderers
 function renderer(
   tokens: Token[],
   index: number,
@@ -56,7 +57,15 @@ function paragraph_open(): string {
 const paragraph_close = paragraph_open;
 
 const em_close = strong_close;
+// #endregion
 
+/**
+ * Scans delimiters based, and indicates whether the token can be an open and/or closing tag.
+ * Based on https://github.com/markdown-it/markdown-it/blob/1ad3aec2041cd2defa7e299543cc1e42184b680d/lib/rules_inline/state_inline.js#L69
+ * @param md The `MarkdownIt` instance.
+ * @param src The markdown source/content.
+ * @param start The index of the starting location to scan.
+ */
 function scanDelims(
   md: MarkdownIt,
   src: string,
@@ -113,6 +122,17 @@ function scanDelims(
   };
 }
 
+/**
+ * Contains a stack of the string of the delimiting tokens - i.e. the strings of the markdown tokens.
+ */
+const delimStack: string[] = [];
+
+/**
+ * Plugin for `markdown-it` with the custom syntax.
+ * @param state The state of the compiler.
+ * @param token The current token.
+ * @param pos The position of the position to start the scan inside the content.
+ */
 function customSyntax(state: StateCore, token: Token, pos: number): Token[] {
   let tokens: Token[] = [token];
   let continueChecking = true;
@@ -173,8 +193,25 @@ function customSyntax(state: StateCore, token: Token, pos: number): Token[] {
         const matchedToken: Token = new Token(
           getAttributeName(type, true),
           "span",
-          result.canOpen ? 1 : -1,
+          result.canClose ? -1 : 1,
         );
+
+        if (
+          result.canClose &&
+          delimStack[delimStack.length - 1] &&
+          delimStack[delimStack.length - 1] === match
+        ) {
+          delimStack.pop();
+          matchedToken.nesting = -1;
+        } else {
+          result.canClose = false;
+          if (result.canOpen) {
+            delimStack.push(match);
+            matchedToken.nesting = 1;
+          } else {
+            matchedToken.nesting = 0;
+          }
+        }
         matchedToken.attrPush([type, match.split(":")[1].slice(0, -1)]);
 
         tokens.pop();
@@ -196,6 +233,10 @@ function customSyntax(state: StateCore, token: Token, pos: number): Token[] {
   return tokens;
 }
 
+/**
+ * The `markdown-it` rule for the custom syntax.
+ * @param state The state of the compiler.
+ */
 function rule(state: StateCore): void {
   state.tokens.forEach((token) => {
     if (token.type === "inline") {

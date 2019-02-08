@@ -55,7 +55,7 @@ export const test_04_html =
   `<body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">` +
   `<p id="p:{a977e62e-3126-8e0d-1368-bcf55df0a6de}{15}" style="margin-top:0pt;margin-bottom:0pt">` +
   `<span style="font-weight:bold;font-style:italic;text-decoration:underline">` +
-  `Bold and underlined and italics. ` +
+  `Bold and underlined and italics.` +
   `</span>` +
   `</p>` +
   `</body>` +
@@ -395,7 +395,7 @@ describe("Parser tests", () => {
       buffers: [
         {
           content:
-            "**_{text-decoration:underline}Bold and underlined and italics. {text-decoration:underline}_**",
+            "**_{text-decoration:underline}Bold and underlined and italics.{text-decoration:underline}_**",
           isReadOnly: true,
           lineStarts: [0],
         },
@@ -407,11 +407,11 @@ describe("Parser tests", () => {
           {
             bufferIndex: 0,
             color: Color.Black,
-            end: { column: 93, line: 0 },
+            end: { column: 92, line: 0 },
             left: SENTINEL_INDEX,
             leftCharCount: 0,
             leftLineFeedCount: 0,
-            length: 93,
+            length: 92,
             lineFeedCount: 0,
             parent: SENTINEL_INDEX,
             right: SENTINEL_INDEX,
@@ -437,7 +437,7 @@ describe("Parser tests", () => {
             id: "p:{a977e62e-3126-8e0d-1368-bcf55df0a6de}{15}",
             left: SENTINEL_INDEX,
             leftSubTreeLength: 0,
-            length: 93,
+            length: 92,
             parent: SENTINEL_INDEX,
             right: 2,
             style: {

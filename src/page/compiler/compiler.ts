@@ -11,11 +11,14 @@ export function* getMarkdownFromPage(
 ): IterableIterator<string> {
   let startOffset = 0;
   for (const { node } of inorderTreeTraversal(page.structure)) {
-    yield getContentBetweenOffsets(
+    const content = getContentBetweenOffsets(
       page,
       startOffset,
       startOffset + node.length,
     );
+    if (content) {
+      yield content;
+    }
     startOffset += node.length;
   }
 }
