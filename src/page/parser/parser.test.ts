@@ -548,7 +548,7 @@ describe("Parser tests", () => {
       buffers: [
         {
           content:
-            "**Bold** text which has _italics_ and {text-decoration:underline}underlines{text-decoration:underline}{<cite} Citation",
+            "**Bold** text which has _italics_ and {text-decoration:underline}underlines{text-decoration:underline}{!cite} Citation",
           isReadOnly: true,
           lineStarts: [0],
         },

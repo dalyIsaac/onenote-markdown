@@ -72,7 +72,7 @@ export default function parse(content: string): PageContent {
     "charRef-named",
   ] as TokenType[]);
   const tags: KeyValueStr = {
-    cite: "{<cite} ",
+    cite: "{!cite} ",
     h1: "# ",
     h2: "## ",
     h3: "### ",

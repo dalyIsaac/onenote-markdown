@@ -101,7 +101,7 @@ describe("Markdown output", () => {
         key: "p:{044b9964-f242-02d2-3bb2-4b6e0d569c68}{11}",
       },
       {
-        children: "{<cite} Citation",
+        children: "{!cite} Citation",
         contentoffset: 330,
         key: "cite:{28216e73-1f0a-05fd-25c5-a04844147e70}{16}",
       },
