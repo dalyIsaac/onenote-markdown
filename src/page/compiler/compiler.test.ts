@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 
-import { compile, getMarkdownFromPage } from "./compiler";
+import { compile, getHtmlContentFromPage } from "./compiler";
 import parse from "../parser/parser";
 import {
   test_01_html,
@@ -59,7 +59,7 @@ describe("Custom markdown syntax", () => {
 
   function testbed(page: PageContent, expectedHtml: Expected[]): void {
     let i = 0;
-    for (const { content, node } of getMarkdownFromPage(page)) {
+    for (const { content, node } of getHtmlContentFromPage(page)) {
       const compiledContent = compile(content);
       expect(compiledContent).toBe(expectedHtml[i].expectedHtml);
       for (const key in expectedHtml[i].node) {
@@ -87,6 +87,16 @@ describe("Custom markdown syntax", () => {
           tagType: TagType.StartTag,
         },
       },
+      {
+        expectedHtml: "",
+        node: {
+          id: "p:{6cb59116-8e61-03a9-39ef-edf64004790d}{62}",
+          leftSubTreeLength: 0,
+          length: 0,
+          tag: "p",
+          tagType: TagType.EndTag,
+        },
+      },
     ];
     testbed(page, expected);
   });
@@ -111,6 +121,16 @@ describe("Custom markdown syntax", () => {
           },
           tag: "p",
           tagType: TagType.StartTag,
+        },
+      },
+      {
+        expectedHtml: "",
+        node: {
+          id: "p:{6cb59116-8e61-03a9-39ef-edf64004790d}{62}",
+          leftSubTreeLength: 0,
+          length: 0,
+          tag: "p",
+          tagType: TagType.EndTag,
         },
       },
     ];
@@ -141,6 +161,16 @@ describe("Custom markdown syntax", () => {
           tagType: TagType.StartTag,
         },
       },
+      {
+        expectedHtml: "",
+        node: {
+          id: "p:{a977e62e-3126-8e0d-1368-bcf55df0a6de}{15}",
+          leftSubTreeLength: 0,
+          length: 0,
+          tag: "p",
+          tagType: TagType.EndTag,
+        },
+      },
     ];
     testbed(page, expected);
   });
@@ -160,6 +190,16 @@ describe("Custom markdown syntax", () => {
           },
           tag: "p",
           tagType: TagType.StartTag,
+        },
+      },
+      {
+        expectedHtml: "",
+        node: {
+          id: "p:{6cb59116-8e61-03a9-39ef-edf64004790d}{130}",
+          leftSubTreeLength: 0,
+          length: 0,
+          tag: "p",
+          tagType: TagType.EndTag,
         },
       },
     ];
@@ -184,6 +224,17 @@ describe("Custom markdown syntax", () => {
         },
       },
       {
+        expectedHtml: "",
+        node: {
+          id: "p:{6cb59116-8e61-03a9-39ef-edf64004790d}{62}",
+          leftSubTreeLength: 1,
+          length: 0,
+
+          tag: "p",
+          tagType: TagType.EndTag,
+        },
+      },
+      {
         expectedHtml: "Citation",
         node: {
           id: "cite:{28216e73-1f0a-05fd-25c5-a04844147e70}{16}",
@@ -197,6 +248,16 @@ describe("Custom markdown syntax", () => {
           },
           tag: "cite",
           tagType: TagType.StartTag,
+        },
+      },
+      {
+        expectedHtml: "",
+        node: {
+          id: "cite:{28216e73-1f0a-05fd-25c5-a04844147e70}{16}",
+          leftSubTreeLength: 0,
+          length: 0,
+          tag: "cite",
+          tagType: TagType.EndTag,
         },
       },
     ];
@@ -220,6 +281,16 @@ describe("Custom markdown syntax", () => {
           tagType: TagType.StartTag,
         },
       },
+      {
+        expectedHtml: "",
+        node: {
+          id: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{23}",
+          leftSubTreeLength: 0,
+          length: 0,
+          tag: "p",
+          tagType: TagType.EndTag,
+        },
+      },
     ];
     testbed(page, expected);
   });
@@ -239,6 +310,16 @@ describe("Custom markdown syntax", () => {
           },
           tag: "p",
           tagType: TagType.StartTag,
+        },
+      },
+      {
+        expectedHtml: "",
+        node: {
+          id: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{26}",
+          leftSubTreeLength: 0,
+          length: 0,
+          tag: "p",
+          tagType: TagType.EndTag,
         },
       },
     ];
@@ -264,6 +345,16 @@ describe("Custom markdown syntax", () => {
           tagType: TagType.StartTag,
         },
       },
+      {
+        expectedHtml: "",
+        node: {
+          id: "h1:{6cb59116-8e61-03a9-39ef-edf64004790d}{69}",
+          leftSubTreeLength: 0,
+          length: 0,
+          tag: "h1",
+          tagType: TagType.EndTag,
+        },
+      },
     ];
     testbed(page, expected);
   });
@@ -287,6 +378,16 @@ describe("Custom markdown syntax", () => {
           tagType: TagType.StartTag,
         },
       },
+      {
+        expectedHtml: "",
+        node: {
+          id: "h2:{6cb59116-8e61-03a9-39ef-edf64004790d}{74}",
+          leftSubTreeLength: 0,
+          length: 0,
+          tag: "h2",
+          tagType: TagType.EndTag,
+        },
+      },
     ];
     testbed(page, expected);
   });
@@ -308,6 +409,16 @@ describe("Custom markdown syntax", () => {
           },
           tag: "h3",
           tagType: TagType.StartTag,
+        },
+      },
+      {
+        expectedHtml: "",
+        node: {
+          id: "h3:{6cb59116-8e61-03a9-39ef-edf64004790d}{79}",
+          leftSubTreeLength: 0,
+          length: 0,
+          tag: "h3",
+          tagType: TagType.EndTag,
         },
       },
     ];
@@ -334,6 +445,16 @@ describe("Custom markdown syntax", () => {
           tagType: TagType.StartTag,
         },
       },
+      {
+        expectedHtml: "",
+        node: {
+          id: "h4:{6cb59116-8e61-03a9-39ef-edf64004790d}{84}",
+          leftSubTreeLength: 0,
+          length: 0,
+          tag: "h4",
+          tagType: TagType.EndTag,
+        },
+      },
     ];
     testbed(page, expected);
   });
@@ -354,6 +475,16 @@ describe("Custom markdown syntax", () => {
           },
           tag: "h5",
           tagType: TagType.StartTag,
+        },
+      },
+      {
+        expectedHtml: "",
+        node: {
+          id: "h5:{6cb59116-8e61-03a9-39ef-edf64004790d}{89}",
+          leftSubTreeLength: 0,
+          length: 0,
+          tag: "h5",
+          tagType: TagType.EndTag,
         },
       },
     ];
@@ -379,6 +510,16 @@ describe("Custom markdown syntax", () => {
           tagType: TagType.StartTag,
         },
       },
+      {
+        expectedHtml: "",
+        node: {
+          id: "h6:{6cb59116-8e61-03a9-39ef-edf64004790d}{94}",
+          leftSubTreeLength: 0,
+          length: 0,
+          tag: "h6",
+          tagType: TagType.EndTag,
+        },
+      },
     ];
     testbed(page, expected);
   });
@@ -400,6 +541,16 @@ describe("Custom markdown syntax", () => {
           tagType: TagType.StartTag,
         },
       },
+      {
+        expectedHtml: "",
+        node: {
+          id: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{29}",
+          leftSubTreeLength: 0,
+          length: 0,
+          tag: "p",
+          tagType: TagType.EndTag,
+        },
+      },
     ];
     testbed(page, expected);
   });
@@ -419,6 +570,16 @@ describe("Custom markdown syntax", () => {
           },
           tag: "p",
           tagType: TagType.StartTag,
+        },
+      },
+      {
+        expectedHtml: "",
+        node: {
+          id: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{32}",
+          leftSubTreeLength: 0,
+          length: 0,
+          tag: "p",
+          tagType: TagType.EndTag,
         },
       },
     ];

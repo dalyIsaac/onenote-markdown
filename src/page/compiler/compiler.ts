@@ -7,7 +7,7 @@ import { StructureNode } from "../structureTree/structureModel";
 
 const md = new MarkdownIt("commonmark").use(customSyntaxPlugin);
 
-export function* getMarkdownFromPage(
+export function* getHtmlContentFromPage(
   page: PageContent,
 ): IterableIterator<{ node: StructureNode; content: string }> {
   let startOffset = 0;
@@ -17,9 +17,7 @@ export function* getMarkdownFromPage(
       startOffset,
       startOffset + node.length,
     );
-    if (content) {
-      yield { content, node };
-    }
+    yield { content, node };
     startOffset += node.length;
   }
 }
