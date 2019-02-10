@@ -9,15 +9,33 @@ const STRING_CHAR_CODE = 0x20;
 
 type Attributes = "color" | "textDecoration" | "backgroundColor";
 
+const attributes: { [key in Attributes]: Attributes } = {
+  backgroundColor: "backgroundColor",
+  color: "color",
+  textDecoration: "textDecoration",
+};
+
+type InlineTags = "sup" | "sub";
+
+const inlineTags: { [key in InlineTags]: InlineTags } = {
+  sub: "sub",
+  sup: "sup",
+};
+
 const tagRule = /{![a-zA-Z][a-zA-Z0-9]*\} /;
 
-const rules: Array<[Attributes, RegExp]> = [
-  ["color", /\{color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/],
+const rules: Array<[Attributes | InlineTags, RegExp]> = [
+  [attributes.color, /\{color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/],
   [
-    "textDecoration",
+    attributes.textDecoration,
     /\{text-decoration:((underline( line-through){0,1})|(line-through( underline){0,1}))\}/,
   ],
-  ["backgroundColor", /\{background-color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/],
+  [
+    attributes.backgroundColor,
+    /\{background-color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/,
+  ],
+  [inlineTags.sup, /{!sup}/],
+  [inlineTags.sub, /{!sub}/],
 ];
 
 export interface Item {
@@ -93,15 +111,41 @@ function renderer(tokens: Token[], index: number, type: Attributes): string {
 }
 
 function colorRenderer(tokens: Token[], index: number): string {
-  return renderer(tokens, index, "color");
+  return renderer(tokens, index, attributes.color);
 }
 
 function textDecorationRenderer(tokens: Token[], index: number): string {
-  return renderer(tokens, index, "textDecoration");
+  return renderer(tokens, index, attributes.textDecoration);
 }
 
 function backgroundColorRenderer(tokens: Token[], index: number): string {
-  return renderer(tokens, index, "backgroundColor");
+  return renderer(tokens, index, attributes.backgroundColor);
+}
+
+function inlineTagsRenderer(tokens: Token[], index: number): string {
+  const token = tokens[index];
+  const tagType = token.nesting === 1 ? TagType.StartTag : TagType.EndTag;
+  if (getJSX) {
+    elements.push({
+      tag: token.tag,
+      tagType,
+    });
+    return "";
+  } else {
+    if (tagType === TagType.StartTag) {
+      return `<${token.tag}>`;
+    } else {
+      return `</${token.tag}>`;
+    }
+  }
+}
+
+function supRenderer(tokens: Token[], index: number): string {
+  return inlineTagsRenderer(tokens, index);
+}
+
+function subRenderer(tokens: Token[], index: number): string {
+  return inlineTagsRenderer(tokens, index);
 }
 
 /**
@@ -327,7 +371,7 @@ function customSyntax(state: StateCore, token: Token, pos: number): Token[] {
         const result = scanDelims(state.md, state.src, pos);
         const matchedToken: Token = new Token(
           type,
-          "span",
+          type in inlineTags ? type : "span",
           result.canClose ? -1 : 1,
         );
 
@@ -347,13 +391,19 @@ function customSyntax(state: StateCore, token: Token, pos: number): Token[] {
             matchedToken.nesting = 0;
           }
         }
-        matchedToken.attrPush([type, match.split(":")[1].slice(0, -1)]);
+        if (!(type in inlineTags)) {
+          matchedToken.attrPush([type, match.split(":")[1].slice(0, -1)]);
+        }
 
         tokens.pop();
         tokens = tokens.concat(
           [tokenBefore, matchedToken, tokenAfter].reduce(
             (acc, curr) => {
-              if (curr.content || (curr.attrs && curr.attrGet(type))) {
+              if (
+                curr.content ||
+                (curr.attrs && curr.attrGet(type)) ||
+                curr.type in inlineTags
+              ) {
                 acc.push(curr);
               }
               return acc;
@@ -398,6 +448,8 @@ function customSyntaxPlugin(md: MarkdownIt): void {
   md.renderer.rules.color = colorRenderer;
   md.renderer.rules.textDecoration = textDecorationRenderer;
   md.renderer.rules.backgroundColor = backgroundColorRenderer;
+  md.renderer.rules.sup = supRenderer;
+  md.renderer.rules.sub = subRenderer;
   md.renderer.rules.strong_open = strong_open;
   md.renderer.rules.strong_close = strong_close;
   md.renderer.rules.em_open = em_open;

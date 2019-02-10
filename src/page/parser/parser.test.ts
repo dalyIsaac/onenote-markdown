@@ -1292,7 +1292,7 @@ describe("Parser tests", () => {
     const expectedPage: PageContent = {
       buffers: [
         {
-          content: "Superscript x<sup>2</sup>",
+          content: "Superscript x{!sup}2{!sup}",
           isReadOnly: true,
           lineStarts: [0],
         },
@@ -1304,11 +1304,11 @@ describe("Parser tests", () => {
           {
             bufferIndex: 0,
             color: Color.Black,
-            end: { column: 25, line: 0 },
+            end: { column: 26, line: 0 },
             left: SENTINEL_INDEX,
             leftCharCount: 0,
             leftLineFeedCount: 0,
-            length: 25,
+            length: 26,
             lineFeedCount: 0,
             parent: SENTINEL_INDEX,
             right: SENTINEL_INDEX,
@@ -1334,7 +1334,7 @@ describe("Parser tests", () => {
             id: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{29}",
             left: SENTINEL_INDEX,
             leftSubTreeLength: 0,
-            length: 25,
+            length: 26,
             parent: SENTINEL_INDEX,
             right: 2,
             style: {
@@ -1368,7 +1368,7 @@ describe("Parser tests", () => {
     const expectedPage: PageContent = {
       buffers: [
         {
-          content: "Subscript x<sub>2</sub>",
+          content: "Subscript x{!sub}2{!sub}",
           isReadOnly: true,
           lineStarts: [0],
         },
@@ -1380,11 +1380,11 @@ describe("Parser tests", () => {
           {
             bufferIndex: 0,
             color: Color.Black,
-            end: { column: 23, line: 0 },
+            end: { column: 24, line: 0 },
             left: SENTINEL_INDEX,
             leftCharCount: 0,
             leftLineFeedCount: 0,
-            length: 23,
+            length: 24,
             lineFeedCount: 0,
             parent: SENTINEL_INDEX,
             right: SENTINEL_INDEX,
@@ -1410,7 +1410,7 @@ describe("Parser tests", () => {
             id: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{32}",
             left: SENTINEL_INDEX,
             leftSubTreeLength: 0,
-            length: 23,
+            length: 24,
             parent: SENTINEL_INDEX,
             right: 2,
             style: {
