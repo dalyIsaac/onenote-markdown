@@ -32,11 +32,11 @@ const sampleTextHtml =
   `Nothing but ` +
   `<span style="font-weight:bold">&quot;this is bold and in quotes&quot;</span>` +
   `</p>` +
-  `<cite id="cite:{28216e73-1f0a-05fd-25c5-a04844147e70}{16}"` +
+  `<cite id="cite:{28216e73-1f0a-05fd-25c5-a04844147e70}{16}" ` +
   `style="font-size:9pt;color:#595959;margin-top:0pt;margin-bottom:0pt">` +
   `Citation` +
   `</cite>` +
-  `<p id="p:{28216e73-1f0a-05fd-25c5-a04844147e70}{19}"` +
+  `<p id="p:{28216e73-1f0a-05fd-25c5-a04844147e70}{19}" ` +
   `style="color:#595959;font-style:italic;margin-top:0pt;margin-bottom:0pt">` +
   `Quote` +
   `</p>` +
@@ -56,7 +56,7 @@ const sampleTextHtml =
   `<p id="p:{28216e73-1f0a-05fd-25c5-a04844147e70}{35}" style="margin-top:0pt;margin-bottom:0pt">` +
   `<span style="text-decoration:line-through">Crossed out</span>` +
   `</p>` +
-  `<p id="p:{28216e73-1f0a-05fd-25c5-a04844147e70}{38}" data-id="p:{60c45a4d-c9e5-01bd-2ce3-6937733a7742}{11}"` +
+  `<p id="p:{28216e73-1f0a-05fd-25c5-a04844147e70}{38}" data-id="p:{60c45a4d-c9e5-01bd-2ce3-6937733a7742}{11} "` +
   `style="margin-top:0pt;margin-bottom:0pt"> <span style="text-decoration:line-through underline">` +
   `Underlined and crossed out` +
   `</span >` +

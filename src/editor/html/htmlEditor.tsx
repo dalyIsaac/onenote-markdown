@@ -36,9 +36,6 @@ function updateChildItem(
   const newStack = stack.slice(0, stackIndex);
   const children: Stack<ChildStackItem> = stack.slice(stackIndex + 1);
   const props = node.style ? { style: node.style } : null;
-  if (props && props.style["font-style"]) {
-    console.log(props);
-  }
   const element = React.createElement(node.tag, props, children);
   newStack.push(element);
   return newStack;
