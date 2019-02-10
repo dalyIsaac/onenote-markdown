@@ -233,7 +233,27 @@ function scanDelims(
 /**
  * Contains a stack of the string of the delimiting tokens - i.e. the strings of the markdown tokens.
  */
-const delimStack: string[] = [];
+let delimStack: string[] = [];
+
+const equivalentValues = [
+  new Set([
+    "{text-decoration:underline line-through}",
+    "{text-decoration:line-through underline}",
+  ]),
+];
+
+function compareDelimStackItems(val1: string, val2: string): boolean {
+  if (val1 === val2) {
+    return true;
+  } else {
+    for (const valueSet of equivalentValues) {
+      if (valueSet.has(val1) && valueSet.has(val2)) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
 
 /**
  * Plugin for `markdown-it` with the custom syntax.
@@ -314,7 +334,7 @@ function customSyntax(state: StateCore, token: Token, pos: number): Token[] {
         if (
           result.canClose &&
           delimStack[delimStack.length - 1] &&
-          delimStack[delimStack.length - 1] === match
+          compareDelimStackItems(delimStack[delimStack.length - 1], match)
         ) {
           delimStack.pop();
           matchedToken.nesting = -1;
@@ -363,6 +383,12 @@ function rule(state: StateCore): void {
         );
         pos += currentToken.content.length || currentToken.markup.length;
       });
+      delimStack.forEach(() => {
+        const newToken = new Token("unfinishedEnd", "span", -1);
+        newToken.children = [];
+        inlineTokens.push(newToken);
+      });
+      delimStack = [];
       token.children = inlineTokens;
     }
   });

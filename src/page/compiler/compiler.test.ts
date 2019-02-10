@@ -615,4 +615,27 @@ describe("Custom markdown syntax", () => {
     ];
     testbed(page, expected);
   });
+
+  test("Underlined and crossed out edge case 1", () => {
+    const md =
+      "{text-decoration:underline line-through}Hello, world!{text-decoration:underline line-through}";
+    const expectedHtml = `<span style="text-decoration:underline line-through">Hello, world!</span>`;
+    const html = compile(md);
+    expect(html).toBe(expectedHtml);
+  });
+
+  test("Underlined and crossed out edge case 2", () => {
+    const md =
+      "{text-decoration:underline line-through}Hello, world!{text-decoration:line-through underline}";
+    const expectedHtml = `<span style="text-decoration:underline line-through">Hello, world!</span>`;
+    const html = compile(md);
+    expect(html).toBe(expectedHtml);
+  });
+
+  test("Unterminated tags", () => {
+    const md = "{color:red}Hello{color:green}Hello";
+    const expectedHtml = `<span style="color:red">Hello<span style="color:green">Hello</span></span>`;
+    const html = compile(md);
+    expect(html).toBe(expectedHtml);
+  });
 });
