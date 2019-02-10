@@ -271,7 +271,7 @@ export function getContentBetweenOffsets(
   startOffset: number,
   endOffset: number,
 ): string {
-  let position = findNodeAtOffset(page.content, startOffset);
+  const position = findNodeAtOffset(page.content, startOffset);
   const length = endOffset - startOffset;
   let content = getNodeContent(page, position.nodeIndex).slice(
     startOffset - position.nodeStartOffset,
@@ -280,7 +280,7 @@ export function getContentBetweenOffsets(
     content = content.slice(0, length);
   } else {
     let offset = startOffset;
-    let { nodeIndex } = position;
+    const { nodeIndex } = position;
     let next = nextNode(page.content.nodes, nodeIndex);
     while (offset + (next.node as ContentNode).length <= endOffset) {
       content += getNodeContent(page, next.index);

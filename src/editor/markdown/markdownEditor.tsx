@@ -1,5 +1,9 @@
 import React from "react";
-import EditorBase from "../editorBase";
+import EditorBase, {
+  Stack,
+  LastStartNode,
+  getLastStartItem,
+} from "../editorBase";
 import styles from "./markdownEditor.module.css";
 import { connect } from "react-redux";
 import { PageContent } from "../../page/pageModel";
@@ -7,7 +11,6 @@ import { State } from "../../reducer";
 import {
   StructureNode,
   TagType,
-  isStructureNode,
 } from "../../page/structureTree/structureModel";
 import { inorderTreeTraversal } from "../../page/tree/tree";
 import { getContentBetweenOffsets } from "../../page/contentTree/tree";
@@ -22,27 +25,13 @@ interface StackItem {
   contentOffset: number;
 }
 
-type LastStackItem = StackItem & { stackIndex: number };
-
-type Stack = Array<StackItem | JSX.Element>;
-
-function getLastStartItem(stack: Stack): LastStackItem | null {
-  for (let stackIndex = stack.length - 1; stackIndex >= 0; stackIndex--) {
-    const { node, contentOffset } = stack[stackIndex] as StackItem;
-    if (isStructureNode(node) && node.tagType === TagType.StartTag) {
-      return { contentOffset, node, stackIndex };
-    }
-  }
-  return null;
-}
-
 function updateItem(
   page: PageContent,
-  stack: Stack,
-  { contentOffset, node, stackIndex }: LastStackItem,
-): Stack {
+  stack: Stack<StackItem>,
+  { contentOffset, node, stackIndex }: LastStartNode<StackItem>,
+): Stack<StackItem> {
   const newStack = stack.slice(0, stackIndex);
-  let children: Stack | string;
+  let children: Stack<StackItem> | string;
   if (stackIndex === stack.length - 1) {
     const startOffset = contentOffset;
     const endOffset = contentOffset + node.length;
@@ -63,7 +52,10 @@ function updateItem(
   return newStack;
 }
 
-function updateStack(page: PageContent, stack: Stack): Stack {
+function updateStack(
+  page: PageContent,
+  stack: Stack<StackItem>,
+): Stack<StackItem> {
   const lastStartStackItem = getLastStartItem(stack);
   if (lastStartStackItem) {
     return updateItem(page, stack, lastStartStackItem);
@@ -75,7 +67,7 @@ function updateStack(page: PageContent, stack: Stack): Stack {
 }
 
 function getPage(page: PageContent): JSX.Element[] {
-  let stack: Stack = [];
+  let stack: Stack<StackItem> = [];
   let contentOffset = 0;
   for (const { node } of inorderTreeTraversal(page.structure)) {
     switch (node.tagType) {
