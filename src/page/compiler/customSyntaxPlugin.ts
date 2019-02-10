@@ -3,33 +3,92 @@
 import MarkdownIt from "markdown-it";
 import Token from "markdown-it/lib/token";
 import StateCore from "markdown-it/lib/rules_core/state_core";
-import { getAttributeName } from "../parser/parser";
+import { KeyValueStr, TagType } from "../structureTree/structureModel";
 
 const STRING_CHAR_CODE = 0x20;
 
-type CustomSyntaxRule = "color" | "text-decoration" | "background-color";
+type Attributes = "color" | "textDecoration" | "backgroundColor";
 
 const tagRule = /{![a-zA-Z][a-zA-Z0-9]*\} /;
 
-const rules: Array<[CustomSyntaxRule, RegExp]> = [
+const rules: Array<[Attributes, RegExp]> = [
   ["color", /\{color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/],
-  ["text-decoration", /\{text-decoration:(underline|line-through)\}/],
-  ["background-color", /\{background-color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/],
+  [
+    "textDecoration",
+    /\{text-decoration:((underline( line-through){0,1})|(line-through( underline){0,1}))\}/,
+  ],
+  ["backgroundColor", /\{background-color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/],
 ];
 
+export interface Item {
+  tag: string;
+  tagType: TagType;
+  style?: KeyValueStr;
+}
+
+export function isItem(val: Element): val is Item {
+  if ((val as Item).tag) {
+    return true;
+  }
+  return false;
+}
+
+export type Element = JSX.Element | Item | string;
+
+let getJSX = false;
+let elements: Element[] = [];
+
+/**
+ * Converts the value from camelCase to kebab-case.
+ */
+function camelToKebab(val: string): string {
+  return val.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
+}
+
 // #region Renderers
-function renderer(
-  tokens: Token[],
-  index: number,
-  type: CustomSyntaxRule,
-): string {
+/**
+ * Renderer for the custom markdown syntax.
+ * @param tokens Array of tokens.
+ * @param index The index of the token with the custom markdown syntax.
+ * @param type The calling attribute.
+ */
+function renderer(tokens: Token[], index: number, type: Attributes): string {
   const token = tokens[index];
-  if (token.nesting === 1) {
-    return `<span style="${type}:${token.attrGet(type)}">`;
-  } else if (token.nesting === -1) {
-    return "</span>";
+  if (getJSX) {
+    const tag = tokens[index].tag;
+    if (token.nesting === 1) {
+      elements.push({
+        style: {
+          [type]: token.attrGet(type) || "",
+        },
+        tag,
+        tagType: TagType.StartTag,
+      });
+      return "";
+    } else if (token.nesting === -1) {
+      elements.push({
+        tag,
+        tagType: TagType.EndTag,
+      });
+      return "";
+    } else {
+      elements.push({
+        style: {
+          [type]: token.attrGet(type) || "",
+        },
+        tag,
+        tagType: TagType.EndTag,
+      });
+      return "";
+    }
   } else {
-    return "";
+    if (token.nesting === 1) {
+      return `<span style="${camelToKebab(type)}:${token.attrGet(type)}">`;
+    } else if (token.nesting === -1) {
+      return "</span>";
+    } else {
+      return "";
+    }
   }
 }
 
@@ -38,23 +97,50 @@ function colorRenderer(tokens: Token[], index: number): string {
 }
 
 function textDecorationRenderer(tokens: Token[], index: number): string {
-  return renderer(tokens, index, "text-decoration");
+  return renderer(tokens, index, "textDecoration");
 }
 
 function backgroundColorRenderer(tokens: Token[], index: number): string {
-  return renderer(tokens, index, "background-color");
+  return renderer(tokens, index, "backgroundColor");
+}
+
+/**
+ * Returns the custom HTML tags.
+ * @param attribute Attribute in camel case.
+ * @param value Attribute value
+ */
+function builtInRendererOverrides(attribute: string, value: string): string {
+  if (getJSX) {
+    elements.push({
+      style: {
+        [attribute]: value,
+      },
+      tag: "span",
+      tagType: TagType.StartTag,
+    });
+    return "";
+  } else {
+    return `<span style="${camelToKebab(attribute)}:${value}">`;
+  }
 }
 
 function strong_open(): string {
-  return "<span style=\"font-weight:bold\">";
+  return builtInRendererOverrides("fontWeight", "bold");
 }
 
 function strong_close(): string {
+  if (getJSX) {
+    elements.push({
+      tag: "span",
+      tagType: TagType.EndTag,
+    });
+    return "";
+  }
   return "</span>";
 }
 
 function em_open(): string {
-  return "<span style=\"font-style:italic\">";
+  return builtInRendererOverrides("fontStyle", "italic");
 }
 
 function paragraph_open(): string {
@@ -68,6 +154,17 @@ const heading_open = paragraph_open;
 const heading_close = paragraph_close;
 
 const em_close = strong_close;
+
+function text(tokens: Token[], index: number): string {
+  const content = tokens[index].content;
+  if (getJSX) {
+    elements.push(content);
+    return "";
+  } else {
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    return markdownCompiler.utils.escapeHtml(content);
+  }
+}
 // #endregion
 
 /**
@@ -209,7 +306,7 @@ function customSyntax(state: StateCore, token: Token, pos: number): Token[] {
 
         const result = scanDelims(state.md, state.src, pos);
         const matchedToken: Token = new Token(
-          getAttributeName(type, true),
+          type,
           "span",
           result.canClose ? -1 : 1,
         );
@@ -271,7 +368,7 @@ function rule(state: StateCore): void {
   });
 }
 
-export default function customSyntaxPlugin(md: MarkdownIt): void {
+function customSyntaxPlugin(md: MarkdownIt): void {
   md.renderer.rules.color = colorRenderer;
   md.renderer.rules.textDecoration = textDecorationRenderer;
   md.renderer.rules.backgroundColor = backgroundColorRenderer;
@@ -283,5 +380,19 @@ export default function customSyntaxPlugin(md: MarkdownIt): void {
   md.renderer.rules.paragraph_close = paragraph_close;
   md.renderer.rules.heading_open = heading_open;
   md.renderer.rules.heading_close = heading_close;
+  md.renderer.rules.text = text;
   md.core.ruler.push("customSyntaxRule", rule);
+}
+
+export const markdownCompiler = new MarkdownIt("commonmark").use(
+  customSyntaxPlugin,
+);
+
+export function getElements(content: string): Element[] {
+  getJSX = true;
+  markdownCompiler.render(content);
+  const outElements = elements; // reassigning for the garbage collector
+  elements = [];
+  getJSX = false;
+  return outElements;
 }

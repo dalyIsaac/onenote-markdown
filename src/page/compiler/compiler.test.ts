@@ -18,6 +18,7 @@ import {
   test_14_html,
   test_15_html,
   test_16_html,
+  test_17_html,
 } from "../parser/parser.test";
 import { PageContent } from "../pageModel";
 import { Node } from "../pageModel";
@@ -60,8 +61,7 @@ describe("Custom markdown syntax", () => {
   function testbed(page: PageContent, expectedHtml: Expected[]): void {
     let i = 0;
     for (const { content, node } of getHtmlContentFromPage(page)) {
-      const compiledContent = compile(content);
-      expect(compiledContent).toBe(expectedHtml[i].expectedHtml);
+      expect(content).toBe(expectedHtml[i].expectedHtml);
       for (const key in expectedHtml[i].node) {
         const element = expectedHtml[i].node[key as keyof ExpectedNode];
         expect(node[key as keyof StructureNode]).toStrictEqual(element!);
@@ -576,6 +576,36 @@ describe("Custom markdown syntax", () => {
         expectedHtml: "",
         node: {
           id: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{32}",
+          leftSubTreeLength: 0,
+          length: 0,
+          tag: "p",
+          tagType: TagType.EndTag,
+        },
+      },
+    ];
+    testbed(page, expected);
+  });
+
+  test("Test 1.17 HTML", () => {
+    const page = parse(test_17_html);
+    const expected = [
+      {
+        expectedHtml: `<span style="text-decoration:line-through underline">Underlined and crossed out</span>`,
+        node: {
+          attributes: {
+            dataid: "p:{60c45a4d-c9e5-01bd-2ce3-6937733a7742}{11}",
+          },
+          id: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{38}",
+          leftSubTreeLength: 0,
+          length: 107,
+          tag: "p",
+          tagType: TagType.StartTag,
+        },
+      },
+      {
+        expectedHtml: "",
+        node: {
+          id: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{38}",
           leftSubTreeLength: 0,
           length: 0,
           tag: "p",

@@ -208,6 +208,22 @@ export const test_16_html =
   `</body>` +
   `</html>`;
 
+export const test_17_html =
+  `<html lang="en-NZ">` +
+  `<head>` +
+  `<title>This is the title</title>` +
+  `<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />` +
+  `<meta name="created" content="2018-09-03T14:08:00.0000000" />` +
+  `</head>` +
+  `<body data-absolute-enabled="true" style="font-family:Calibri;font-size:11pt">` +
+  `<p id="p:{28216e73-1f0a-05fd-25c5-a04844147e70}{38}" data-id="p:{60c45a4d-c9e5-01bd-2ce3-6937733a7742}{11}"` +
+  `style="margin-top:0pt;margin-bottom:0pt"> <span style="text-decoration:line-through underline">` +
+  `Underlined and crossed out` +
+  `</span >` +
+  `</p>` +
+  `</body>` +
+  `</html>`;
+
 describe("Parser tests", () => {
   test("1.01 Tests that the reducer works for parsing content.", () => {
     const action: StorePageAction = {
@@ -1407,6 +1423,82 @@ describe("Parser tests", () => {
           {
             color: Color.Red,
             id: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{32}",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 0,
+            parent: 1,
+            right: SENTINEL_INDEX,
+            tag: "p",
+            tagType: TagType.EndTag,
+          },
+        ],
+        root: 1,
+      },
+      title: "This is the title",
+    };
+    expect(page).toStrictEqual(expectedPage);
+  });
+
+  test("1.17 Line through and underline", () => {
+    const page = parse(test_17_html);
+    const expectedPage: PageContent = {
+      buffers: [
+        {
+          content:
+            " {text-decoration:line-through underline}Underlined and crossed out{text-decoration:line-through underline}",
+          isReadOnly: true,
+          lineStarts: [0],
+        },
+      ],
+      charset: "utf-8",
+      content: {
+        nodes: [
+          SENTINEL_CONTENT,
+          {
+            bufferIndex: 0,
+            color: Color.Black,
+            end: { column: 107, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 107,
+            lineFeedCount: 0,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            start: { column: 0, line: 0 },
+          },
+        ],
+        root: 1,
+      },
+      created: "2018-09-03T14:08:00.0000000",
+      dataAbsoluteEnabled: true,
+      defaultStyle: {
+        fontFamily: "Calibri",
+        fontSize: "11pt",
+      },
+      language: "en-NZ",
+      previouslyInsertedContentNodeIndex: 1,
+      previouslyInsertedContentNodeOffset: 0,
+      structure: {
+        nodes: [
+          SENTINEL_STRUCTURE,
+          {
+            attributes: {
+              dataid: "p:{60c45a4d-c9e5-01bd-2ce3-6937733a7742}{11}",
+            },
+            color: Color.Black,
+            id: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{38}",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 107,
+            parent: SENTINEL_INDEX,
+            right: 2,
+            tag: "p",
+            tagType: TagType.StartTag,
+          },
+          {
+            color: Color.Red,
+            id: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{38}",
             left: SENTINEL_INDEX,
             leftSubTreeLength: 0,
             length: 0,
