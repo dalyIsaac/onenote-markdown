@@ -532,7 +532,7 @@ describe("Custom markdown syntax", () => {
         node: {
           id: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{29}",
           leftSubTreeLength: 0,
-          length: 25,
+          length: 26,
           style: {
             marginBottom: "0pt",
             marginTop: "0pt",
@@ -563,7 +563,7 @@ describe("Custom markdown syntax", () => {
         node: {
           id: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{32}",
           leftSubTreeLength: 0,
-          length: 23,
+          length: 24,
           style: {
             marginBottom: "0pt",
             marginTop: "0pt",

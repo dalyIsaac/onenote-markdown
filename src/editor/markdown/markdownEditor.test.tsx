@@ -127,25 +127,25 @@ describe("Markdown output", () => {
         key: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{26}",
       },
       {
-        children: "Superscript x<sup>2</sup>",
+        children: "Superscript x{!sup}2{!sup}",
         contentoffset: 448,
         key: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{29}",
       },
       {
-        children: "Subscript x<sub>2</sub>",
-        contentoffset: 473,
+        children: "Subscript x{!sub}2{!sub}",
+        contentoffset: 474,
         key: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{32}",
       },
       {
         children:
           "{text-decoration:line-through}Crossed out{text-decoration:line-through}",
-        contentoffset: 496,
+        contentoffset: 498,
         key: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{35}",
       },
       {
         children:
           "{text-decoration:line-through underline}Underlined and crossed out{text-decoration:line-through underline}",
-        contentoffset: 567,
+        contentoffset: 569,
         dataid: "p:{60c45a4d-c9e5-01bd-2ce3-6937733a7742}{11}",
         key: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{38}",
       },

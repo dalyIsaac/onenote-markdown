@@ -206,8 +206,10 @@ export default function parse(content: string): PageContent {
             content += span();
             break;
           case "<sub":
+            content += "{!sub}";
+            break;
           case "<sup":
-            content += chunk + ">";
+            content += "{!sup}";
             break;
           default:
             break;
@@ -218,8 +220,10 @@ export default function parse(content: string): PageContent {
             content += spanEnd();
             break;
           case "</sub":
+            content += "{!sub}";
+            break;
           case "</sup":
-            content += chunk + ">";
+            content += "{!sup}";
             break;
           default:
             break;
