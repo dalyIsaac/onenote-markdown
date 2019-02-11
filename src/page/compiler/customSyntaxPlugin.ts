@@ -202,7 +202,9 @@ const em_close = strong_close;
 function text(tokens: Token[], index: number): string {
   const content = tokens[index].content;
   if (getJSX) {
-    elements.push(content);
+    if (content) {
+      elements.push(content);
+    }
     return "";
   } else {
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
