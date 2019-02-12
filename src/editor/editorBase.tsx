@@ -10,7 +10,7 @@ interface EditorBaseProps {
 
 export type Stack<T> = Array<T | JSX.Element>;
 
-interface BasicNode {
+export interface BasicNode {
   style?: KeyValueStr;
   tag: string;
   tagType: TagType;

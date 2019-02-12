@@ -3,6 +3,7 @@ import EditorBase, {
   Stack,
   getLastStartItem,
   LastStartNode,
+  BasicNode,
 } from "../editorBase";
 import { PageContent } from "../../page/pageModel";
 import {
@@ -13,6 +14,8 @@ import { getHtmlContentElementsFromPage } from "../../page/compiler/compiler";
 import { connect } from "react-redux";
 import { State } from "../../reducer";
 import { Element, Item, isItem } from "../../page/compiler/customSyntaxPlugin";
+import { alea } from "seedrandom";
+import stringify from "safe-stable-stringify";
 
 interface HtmlEditorProps {
   page: PageContent;
@@ -29,22 +32,74 @@ type ChildStackItem = { node: Item } | string;
 
 type ChildStack = Stack<ChildStackItem>;
 
+interface KeyGenerators {
+  [key: string]: () => number;
+}
+
+/**
+ * Generates a unique number given the generator and the set of existing
+ * numbers.
+ * @param gen The random number generator.
+ * @param existingNumbers A set containing numbers which already exist inside
+ * the array as prior keys.
+ */
+function getUniqueKey(gen: () => number, existingNumbers: Set<number>): number {
+  let value = gen();
+  while (existingNumbers.has(value)) {
+    value = gen();
+  }
+  return value;
+}
+
+/**
+ * Generates a unique stable key for the child item inside the array.
+ *
+ * It works by first stringifying the properties of the node. If the generated
+ * string already exists `keyGens`, then it retrieves the generator, and
+ * passes it to `getUniqueKey`. If the generated string does not already exist,
+ * inside `keyGens`, then a new generator is created with the generated string
+ * as the seed.
+ *
+ * @param node The node which is the "seed" for the random number generator.
+ * @param existingNumbers A set containing numbers which already exist inside
+ * the array as prior keys.
+ * @param keyGens Object/dictionary of keys, and their associated keys.
+ */
+function getKey(
+  node: BasicNode | (Item & BasicNode),
+  existingNumbers: Set<number>,
+  keyGens: KeyGenerators,
+): number {
+  const propString = stringify(node);
+  if (!(propString in keyGens)) {
+    keyGens[propString] = alea(propString);
+  }
+  return getUniqueKey(keyGens[propString], existingNumbers);
+}
+
 function updateChildItem(
   stack: ChildStack,
   { stackIndex, node }: LastStartNode<ChildStackItem>,
+  existingNumbers: Set<number>,
+  keyGens: KeyGenerators,
 ): ChildStack {
   const newStack = stack.slice(0, stackIndex);
   const children: Stack<ChildStackItem> = stack.slice(stackIndex + 1);
-  const props = node.style ? { style: node.style } : null;
+  const key = getKey(node, existingNumbers, keyGens);
+  const props = node.style ? { key, style: node.style } : { key };
   const element = React.createElement(node.tag, props, children);
   newStack.push(element);
   return newStack;
 }
 
-function updateChildStack(stack: ChildStack): ChildStack {
+function updateChildStack(
+  stack: ChildStack,
+  randomNumbers: Set<number>,
+  keyGens: KeyGenerators,
+): ChildStack {
   const lastStart = getLastStartItem(stack);
   if (lastStart) {
-    return updateChildItem(stack, lastStart);
+    return updateChildItem(stack, lastStart, randomNumbers, keyGens);
   } else {
     throw new Error(
       "There's a mismatch between the number of start and end tags",
@@ -54,6 +109,8 @@ function updateChildStack(stack: ChildStack): ChildStack {
 
 function createChildElements(children: Element[]): JSX.Element[] {
   let stack: ChildStack = [];
+  const randomNumbers: Set<number> = new Set();
+  const keyGens: KeyGenerators = {};
   for (const child of children) {
     if (isItem(child)) {
       switch (child.tagType) {
@@ -62,7 +119,7 @@ function createChildElements(children: Element[]): JSX.Element[] {
           break;
         }
         case TagType.EndTag: {
-          stack = updateChildStack(stack);
+          stack = updateChildStack(stack, randomNumbers, keyGens);
           break;
         }
         case TagType.StartEndTag: {
