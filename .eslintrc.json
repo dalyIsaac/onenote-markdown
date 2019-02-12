@@ -16,7 +16,9 @@
     ],
     "require-yield": "error",
     "eqeqeq": ["error", "always"],
-    "prefer-const": "error"
+    "prefer-const": "error",
+    "max-len": "error",
+    "max-depth": "error"
   },
   "plugins": ["sort-keys-fix", "@typescript-eslint"],
   "parserOptions": {

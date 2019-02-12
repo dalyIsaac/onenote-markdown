@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from "react";
 import parse from "../../page/parser/parser";
 import { configure, mount } from "enzyme";
