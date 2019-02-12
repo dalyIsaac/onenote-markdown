@@ -38,20 +38,20 @@ const rules: Array<[Attributes | InlineTags, RegExp]> = [
   [inlineTags.sub, /{!sub}/],
 ];
 
-export interface Item {
+export interface TagItem {
   tag: string;
   tagType: TagType;
   style?: KeyValueStr;
 }
 
-export function isItem(val: Element): val is Item {
-  if ((val as Item).tag) {
+export function isItem(val: Element): val is TagItem {
+  if ((val as TagItem).tag) {
     return true;
   }
   return false;
 }
 
-export type Element = JSX.Element | Item | string;
+export type Element = TagItem | string;
 
 let getJSX = false;
 let elements: Element[] = [];

@@ -15,16 +15,34 @@ import {
 import { inorderTreeTraversal } from "../../page/tree/tree";
 import { getContentBetweenOffsets } from "../../page/contentTree/tree";
 
+/**
+ * Props for the `MarkdownEditorComponent`
+ */
 interface MarkdownEditorProps {
   page: PageContent;
   pageId: string;
 }
 
+/**
+ * Definition for items which reside on the stack of elements to be rendered.
+ */
 interface StackItem {
   node: StructureNode;
+
+  /**
+   * The offset of the start of the content for the `StructureNode`.
+   */
   contentOffset: number;
 }
 
+/**
+ * Updates the stack by compiling the last `StackItem` which has a
+ * `tagType === TagType.StartTag` is compiled, with all the elements on the
+ * stack after the last start tag being children.
+ * @param stack The stack of `StackItem`s.
+ * @param lastStartNode The last `StackItem`, which has
+ * `tagType === TagType.StartTag`.
+ */
 function updateItem(
   page: PageContent,
   stack: Stack<StackItem>,
@@ -52,6 +70,11 @@ function updateItem(
   return newStack;
 }
 
+/**
+ * Returns the updated stack. The last `StackItem` which has a
+ * `tagType === TagType.StartTag` is compiled, with all the elements on the
+ * stack after the last start tag being children.
+ */
 function updateStack(
   page: PageContent,
   stack: Stack<StackItem>,
@@ -66,6 +89,10 @@ function updateStack(
   }
 }
 
+/**
+ * Returns a `JSX.Element[]` of the OneNote page.
+ * @param page The page to render.
+ */
 function getPage(page: PageContent): JSX.Element[] {
   let stack: Stack<StackItem> = [];
   let contentOffset = 0;
