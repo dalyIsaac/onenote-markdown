@@ -16,7 +16,7 @@ import { State } from "../../reducer";
 import {
   Element,
   TagItem,
-  isItem,
+  isTagItem,
 } from "../../page/compiler/customSyntaxPlugin";
 import { alea } from "seedrandom";
 import stringify from "safe-stable-stringify";
@@ -167,7 +167,7 @@ function createChildElements(children: Element[]): JSX.Element[] {
   const randomNumbers: Set<number> = new Set();
   const keyGens: KeyGenerators = {};
   for (const child of children) {
-    if (isItem(child)) {
+    if (isTagItem(child)) {
       switch (child.tagType) {
         case TagType.StartTag: {
           stack.push({ node: child });

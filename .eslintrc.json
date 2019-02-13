@@ -17,7 +17,7 @@
     "require-yield": "error",
     "eqeqeq": ["error", "always"],
     "prefer-const": "error",
-    "max-len": "error",
+    "max-len": "warn",
     "max-depth": "error"
   },
   "plugins": ["sort-keys-fix", "@typescript-eslint"],

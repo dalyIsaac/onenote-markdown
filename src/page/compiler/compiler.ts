@@ -4,6 +4,10 @@ import { getContentBetweenOffsets } from "../contentTree/tree";
 import { StructureNode } from "../structureTree/structureModel";
 import { Element, markdownCompiler, getElements } from "./customSyntaxPlugin";
 
+/**
+ * Compiles and returns the given HTML content into markdown.
+ * @param content The markdown to compile into HTML.
+ */
 export function compile(content: string): string {
   return markdownCompiler.render(content).trim();
 }
@@ -27,6 +31,12 @@ export function* getHtmlContentFromPage(
   }
 }
 
+/**
+ * Iterates over the page, and yields a `StructureNode`, and the associated
+ * children. The children are either a string, or contain an object which
+ * contains the data needed for markdown styling.
+ * @param page The page to get the HTML elements from.
+ */
 export function* getHtmlContentElementsFromPage(
   page: PageContent,
 ): IterableIterator<{ node: StructureNode; children: Element[] }> {

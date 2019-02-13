@@ -7,53 +7,80 @@ import { KeyValueStr, TagType } from "../structureTree/structureModel";
 
 const STRING_CHAR_CODE = 0x20;
 
-type Attributes = "color" | "textDecoration" | "backgroundColor";
+/**
+ * Style attribute names
+ */
+enum Attributes {
+  backgroundColor = "backgroundColor",
+  color = "color",
+  textDecoration = "textDecoration",
+}
 
-const attributes: { [key in Attributes]: Attributes } = {
-  backgroundColor: "backgroundColor",
-  color: "color",
-  textDecoration: "textDecoration",
-};
+/**
+ * Name of inline tags.
+ */
+enum InlineTags {
+  sub = "sub",
+  sup = "sup",
+}
 
-type InlineTags = "sup" | "sub";
-
-const inlineTags: { [key in InlineTags]: InlineTags } = {
-  sub: "sub",
-  sup: "sup",
-};
-
+/**
+ * Regex rule for detecting inline tags.
+ */
 const tagRule = /{![a-zA-Z][a-zA-Z0-9]*\} /;
 
+/**
+ * Array of tuples of rule names and regex.
+ */
 const rules: Array<[Attributes | InlineTags, RegExp]> = [
-  [attributes.color, /\{color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/],
+  [Attributes.color, /\{color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/],
   [
-    attributes.textDecoration,
+    Attributes.textDecoration,
+    // eslint-disable-next-line max-len
     /\{text-decoration:((underline( line-through){0,1})|(line-through( underline){0,1}))\}/,
   ],
   [
-    attributes.backgroundColor,
+    Attributes.backgroundColor,
     /\{background-color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/,
   ],
-  [inlineTags.sup, /{!sup}/],
-  [inlineTags.sub, /{!sub}/],
+  [InlineTags.sup, /{!sup}/],
+  [InlineTags.sub, /{!sub}/],
 ];
 
-export interface TagItem {
-  tag: string;
-  tagType: TagType;
-  style?: KeyValueStr;
-}
-
-export function isItem(val: Element): val is TagItem {
+/**
+ * Type guard for `TagItem`.
+ */
+export function isTagItem(val: Element): val is TagItem {
   if ((val as TagItem).tag) {
     return true;
   }
   return false;
 }
 
+/**
+ * Definition of tags inside the tag items inside the `elements` array.
+ */
+export interface TagItem {
+  tag: string;
+  tagType: TagType;
+  style?: KeyValueStr;
+}
+
+/**
+ * Definition of items elements inside the `elements` array.
+ */
 export type Element = TagItem | string;
 
+/**
+ * Set to true when `getElements` is called, so that `elements` is populated
+ * with items for use in `HtmlEditorComponent`.
+ */
 let getJSX = false;
+
+/**
+ * When `getJSX` is set to true, then `elements` is populated with items for
+ * use in `HtmlEditorComponent`.
+ */
 let elements: Element[] = [];
 
 /**
@@ -111,18 +138,18 @@ function renderer(tokens: Token[], index: number, type: Attributes): string {
 }
 
 function colorRenderer(tokens: Token[], index: number): string {
-  return renderer(tokens, index, attributes.color);
+  return renderer(tokens, index, Attributes.color);
 }
 
 function textDecorationRenderer(tokens: Token[], index: number): string {
-  return renderer(tokens, index, attributes.textDecoration);
+  return renderer(tokens, index, Attributes.textDecoration);
 }
 
 function backgroundColorRenderer(tokens: Token[], index: number): string {
-  return renderer(tokens, index, attributes.backgroundColor);
+  return renderer(tokens, index, Attributes.backgroundColor);
 }
 
-function inlineTagsRenderer(tokens: Token[], index: number): string {
+function InlineTagsRenderer(tokens: Token[], index: number): string {
   const token = tokens[index];
   const tagType = token.nesting === 1 ? TagType.StartTag : TagType.EndTag;
   if (getJSX) {
@@ -141,11 +168,11 @@ function inlineTagsRenderer(tokens: Token[], index: number): string {
 }
 
 function supRenderer(tokens: Token[], index: number): string {
-  return inlineTagsRenderer(tokens, index);
+  return InlineTagsRenderer(tokens, index);
 }
 
 function subRenderer(tokens: Token[], index: number): string {
-  return inlineTagsRenderer(tokens, index);
+  return InlineTagsRenderer(tokens, index);
 }
 
 /**
@@ -214,7 +241,8 @@ function text(tokens: Token[], index: number): string {
 // #endregion
 
 /**
- * Scans delimiters based, and indicates whether the token can be an open and/or closing tag.
+ * Scans delimiters based, and indicates whether the token can be an open
+ * and/or closing tag.
  * Based on https://github.com/markdown-it/markdown-it/blob/1ad3aec2041cd2defa7e299543cc1e42184b680d/lib/rules_inline/state_inline.js#L69
  * @param md The `MarkdownIt` instance.
  * @param src The markdown source/content.
@@ -277,10 +305,14 @@ function scanDelims(
 }
 
 /**
- * Contains a stack of the string of the delimiting tokens - i.e. the strings of the markdown tokens.
+ * Contains a stack of the string of the delimiting tokens - i.e. the strings
+ * of the markdown tokens.
  */
 let delimStack: string[] = [];
 
+/**
+ * An array of sets which contain equivalent strings inside the markdown.
+ */
 const equivalentValues = [
   new Set([
     "{text-decoration:underline line-through}",
@@ -288,6 +320,10 @@ const equivalentValues = [
   ]),
 ];
 
+/**
+ * Compares the two values to see if they're identical strings, or if they have
+ * equivalent values, as specified in `equivalentValues`.
+ */
 function compareDelimStackItems(val1: string, val2: string): boolean {
   if (val1 === val2) {
     return true;
@@ -373,7 +409,7 @@ function customSyntax(state: StateCore, token: Token, pos: number): Token[] {
         const result = scanDelims(state.md, state.src, pos);
         const matchedToken: Token = new Token(
           type,
-          type in inlineTags ? type : "span",
+          type in InlineTags ? type : "span",
           result.canClose ? -1 : 1,
         );
 
@@ -393,7 +429,7 @@ function customSyntax(state: StateCore, token: Token, pos: number): Token[] {
             matchedToken.nesting = 0;
           }
         }
-        if (!(type in inlineTags)) {
+        if (!(type in InlineTags)) {
           matchedToken.attrPush([type, match.split(":")[1].slice(0, -1)]);
         }
 
@@ -404,7 +440,7 @@ function customSyntax(state: StateCore, token: Token, pos: number): Token[] {
               if (
                 curr.content ||
                 (curr.attrs && curr.attrGet(type)) ||
-                curr.type in inlineTags
+                curr.type in InlineTags
               ) {
                 acc.push(curr);
               }
@@ -446,6 +482,9 @@ function rule(state: StateCore): void {
   });
 }
 
+/**
+ * markdown-it extension for the custom syntax.
+ */
 function customSyntaxPlugin(md: MarkdownIt): void {
   md.renderer.rules.color = colorRenderer;
   md.renderer.rules.textDecoration = textDecorationRenderer;
@@ -464,10 +503,16 @@ function customSyntaxPlugin(md: MarkdownIt): void {
   md.core.ruler.push("customSyntaxRule", rule);
 }
 
+/**
+ * markdown-it instance.
+ */
 export const markdownCompiler = new MarkdownIt("commonmark").use(
   customSyntaxPlugin,
 );
 
+/**
+ * Gets all the elements from the OneNote page given content.
+ */
 export function getElements(content: string): Element[] {
   getJSX = true;
   markdownCompiler.render(content);
