@@ -14,6 +14,21 @@ interface Attributes {
   [key: string]: string;
 }
 
+/**
+ * Gets the attribute name for the given string. It strips out the `-`, and
+ * makes it all lower-case, unless `isStyleProperty` is true, upon which it
+ * transforms the string into camelCase.
+ *
+ * For example, with `isStyleProperty == false`:
+ * - `hello-world` => `helloworld`
+ * - `hello-World` => `helloworld`
+ *
+ * For example, with `isStyleProperty == true`:
+ * - `hello-world` => `helloWorld`
+ * @param name The name to get the new name for.
+ * @param isStyleProperty If true, then gets the CSS-in-JS attribute name of a
+ * key - i.e. kebab-case to camelCase.
+ */
 export function getAttributeName(
   name: string,
   isStyleProperty = false,
@@ -33,6 +48,10 @@ export function getAttributeName(
   return newName;
 }
 
+/**
+ * Given a string, it returns an object of key-value string pairs of the style,
+ * with CSS-in-JS compatible keys.
+ */
 export function getStyle(text: string): KeyValueStr {
   return text
     .split(";")
@@ -44,7 +63,8 @@ export function getStyle(text: string): KeyValueStr {
 }
 
 /**
- * Parses HTML content, and returns a new `PageContent` instance containing the parsed HTML.
+ * Parses HTML content, and returns a new `PageContent` instance containing
+ * the parsed HTML.
  * @param content The HTML content to parse.
  */
 export default function parse(content: string): PageContent {
@@ -81,6 +101,11 @@ export default function parse(content: string): PageContent {
     h6: "###### ",
   };
 
+  /**
+   * Consume all the tokens until it reaches a token in `targetTypes`.
+   * @param targetTypes The tokens which when reached, consumption of tokens
+   * should end. The terminating token is returned.
+   */
   function consumeUpToType(...targetTypes: TokenType[]): TokenType {
     let [type] = stream.next().value;
     const target = new Set(targetTypes);
@@ -90,13 +115,19 @@ export default function parse(content: string): PageContent {
     return type;
   }
 
-  function getNextAttribute(key: string): { key: string; value: string } {
+  /**
+   * Gets the next attribute value from the HTML.
+   */
+  function getNextAttributeValue(): string {
     consumeUpToType("attribute-value-start");
     const [, value] = stream.next().value;
     consumeUpToType("attribute-value-end");
-    return { key, value };
+    return value;
   }
 
+  /**
+   * Gets all the attributes and their values, until it leaves the current tag.
+   */
   function getAttributes(): Attributes {
     const attributes: Attributes = {};
     // eslint-disable-next-line no-constant-condition
@@ -111,13 +142,16 @@ export default function parse(content: string): PageContent {
         if (type === "tag-end" || type === "tag-end-autoclose") {
           return attributes;
         }
-        attributes[chunk] = getNextAttribute(chunk).value;
+        attributes[chunk] = getNextAttributeValue();
       } else {
         return attributes;
       }
     }
   }
 
+  /**
+   * Handles the start of a HTML tag.
+   */
   function html(): void {
     const attributes = getAttributes();
     if (attributes.lang) {
@@ -125,6 +159,9 @@ export default function parse(content: string): PageContent {
     }
   }
 
+  /**
+   * Handles the start of a title tag.
+   */
   function title(): void {
     consumeUpToType("tag-end");
     const [type, chunk] = stream.next().value;
@@ -137,6 +174,9 @@ export default function parse(content: string): PageContent {
     consumeUpToType("tag-end");
   }
 
+  /**
+   * Handles the start of a meta tag.
+   */
   function meta(): void {
     const attributes = getAttributes();
     if (attributes["http-equiv"] === "Content-Type" && attributes["content"]) {
@@ -146,6 +186,9 @@ export default function parse(content: string): PageContent {
     }
   }
 
+  /**
+   * Handles the start of a body tag.
+   */
   function body(): void {
     const attributes = getAttributes();
     if (attributes["data-absolute-enabled"]) {
@@ -156,6 +199,9 @@ export default function parse(content: string): PageContent {
     }
   }
 
+  /**
+   * Handles the start of a span tag.
+   */
   function span(): string {
     const style = getStyle(getAttributes().style);
     const markdown: string[] = [];
@@ -178,6 +224,9 @@ export default function parse(content: string): PageContent {
     return markdown.join("");
   }
 
+  /**
+   * Handles the end of a span tag.
+   */
   function spanEnd(): string {
     consumeUpToType("tag-end");
     const forwardsContent = markdownStack.pop()!;
