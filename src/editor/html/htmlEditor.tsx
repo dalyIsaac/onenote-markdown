@@ -13,11 +13,7 @@ import {
 import { getHtmlContentElementsFromPage } from "../../page/compiler/compiler";
 import { connect } from "react-redux";
 import { State } from "../../reducer";
-import {
-  Element,
-  TagItem,
-  isTagItem,
-} from "../../page/compiler/customSyntaxPlugin";
+import { Element, TagItem, isTagItem } from "../../page/compiler/renderers";
 import { alea } from "seedrandom";
 import stringify from "safe-stable-stringify";
 
