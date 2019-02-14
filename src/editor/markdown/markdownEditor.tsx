@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import EditorBase, {
   Stack,
   LastStartNode,
@@ -38,6 +38,12 @@ interface StackItem {
   index: number;
 }
 
+let cursorSelection: {
+  nodeIndex: number;
+  selectionOffset: number;
+} | null = null;
+const selectionRef = React.createRef();
+
 /**
  * Updates the stack by compiling the last `StackItem` which has a
  * `tagType === TagType.StartTag` is compiled, with all the elements on the
@@ -60,6 +66,10 @@ function updateItem(
   } else {
     children = stack.slice(stackIndex);
   }
+  const ref =
+    cursorSelection && cursorSelection.nodeIndex === index
+      ? selectionRef
+      : null;
   const element = React.createElement(
     "p",
     {
@@ -67,6 +77,7 @@ function updateItem(
       contentoffset: contentOffset,
       nodeindex: index,
       key: node.id,
+      ref,
     },
     children,
   );
@@ -119,8 +130,19 @@ function getPage(page: PageContent): JSX.Element[] {
 }
 
 interface SelectionOffset {
+  /**
+   * The offset of the start of the node, in terms of the page's content.
+   */
   startOffset: number;
+
+  /**
+   * The offset of the selection, in terms of the page's content.
+   */
   selectionOffset: number;
+
+  /**
+   * The offset of the end of the node, in terms of the page's content.
+   */
   endOffset: number;
 }
 
@@ -184,15 +206,31 @@ export function MarkdownEditorComponent(
         "nodeindex",
       );
       if (structureNodeIndex) {
+        const nodeIndexValue = Number(structureNodeIndex.value);
+        cursorSelection = {
+          nodeIndex: nodeIndexValue,
+          selectionOffset: anchorOffset,
+        };
         props.insertContent(
           props.pageId,
           e.data,
           startOffsets.selectionOffset,
-          Number(structureNodeIndex.value),
+          nodeIndexValue,
         );
       }
     }
   }
+
+  useEffect(() => {
+    if (cursorSelection) {
+      const selection = window.getSelection();
+      selection.empty();
+      const range = document.createRange();
+      const node = (selectionRef.current as HTMLSpanElement).firstChild;
+      range.setStart(node!, cursorSelection.selectionOffset + 1);
+      selection.addRange(range);
+    }
+  });
 
   return (
     <div className={styles.editor}>
