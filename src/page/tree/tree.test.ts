@@ -180,7 +180,7 @@ describe("Common tree operations", () => {
 
         let i = 0;
         let offset = 0;
-        for (const result of inorderTreeTraversal(page.content)) {
+        for (const result of inorderTreeTraversal(page.structure)) {
           expect(result).toEqual({ ...expectedResult[i], offset });
           offset += result.node.length;
           i++;

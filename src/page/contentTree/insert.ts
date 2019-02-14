@@ -1,12 +1,18 @@
 import { insertNode, fixInsert } from "../tree/insert";
 import { Color, PageContentMutable } from "../pageModel";
-import { SENTINEL_INDEX, EMPTY_TREE_ROOT } from "../tree/tree";
+import {
+  SENTINEL_INDEX,
+  EMPTY_TREE_ROOT,
+  NodePosition,
+  prevNode,
+} from "../tree/tree";
 import { Buffer, ContentNode, ContentNodeMutable } from "./contentModel";
 import {
   findNodeAtOffset,
   getLineStarts,
   getNodeContent,
   NodePositionOffset,
+  updateContentTreeMetadata,
 } from "./tree";
 
 /**
@@ -21,10 +27,12 @@ export interface ContentInsert {
  * Creates a new node, and creates a new buffer to contain the new content.
  * @param content The content to insert into the page.
  * @param page The page to insert the content into.
+ * @param indexToInsertAfter The index of the node to insert the new node after.
  */
 function createNodeCreateBuffer(
   content: ContentInsert,
   page: PageContentMutable,
+  indexToInsertAfter?: number,
 ): void {
   const newBuffer: Buffer = {
     content: content.content,
@@ -52,17 +60,19 @@ function createNodeCreateBuffer(
   page.previouslyInsertedContentNodeIndex = page.content.nodes.length;
   page.previouslyInsertedContentNodeOffset = content.offset;
   page.buffers.push(newBuffer);
-  insertNode(page.content, newNode, content.offset);
+  insertNode(page.content, newNode, content.offset, indexToInsertAfter);
 }
 
 /**
  * Creates a new node, and appends the content to an existing buffer.
  * @param content The content to insert into the page.
  * @param page The page to insert the content into.
+ * @param indexToInsertAfter The index of the node to insert the new node after.
  */
 function createNodeAppendToBuffer(
   content: ContentInsert,
   page: PageContentMutable,
+  indexToInsertAfter?: number,
 ): void {
   const oldBuffer = page.buffers[page.buffers.length - 1];
   const newContent = oldBuffer.content + content.content;
@@ -99,12 +109,12 @@ function createNodeAppendToBuffer(
   page.buffers[page.buffers.length - 1] = updatedBuffer;
   page.previouslyInsertedContentNodeIndex = page.content.nodes.length;
   page.previouslyInsertedContentNodeOffset = content.offset;
-  insertNode(page.content, newNode, content.offset);
+  insertNode(page.content, newNode, content.offset, indexToInsertAfter);
 }
 
 /**
- * Inserts the given content into a page, by creating a node which is inserted either immediately before or after an
- * existing node.
+ * Inserts the given content into a page, by creating a node which is inserted
+ * either immediately before or after an existing node.
  * @param content The content to insert into the page.
  * @param page The page to insert the content into.
  * @param maxBufferLength The maximum length of a buffer's content/string.
@@ -113,7 +123,15 @@ function insertAtNodeExtremity(
   content: ContentInsert,
   page: PageContentMutable,
   maxBufferLength: number,
+  nodePosition?: NodePosition<ContentNodeMutable>,
 ): void {
+  let indexToInsertAfter: number | undefined;
+  if (nodePosition) {
+    indexToInsertAfter = prevNode(page.content.nodes, nodePosition.index).index;
+    if (indexToInsertAfter === 0) {
+      indexToInsertAfter = undefined;
+    }
+  }
   // check buffer size
   if (
     content.content.length +
@@ -134,11 +152,13 @@ function insertAtNodeExtremity(
 }
 
 /**
- * Inserts the given content into a page, inside a range which is currently encapsulated by an existing node.
+ * Inserts the given content into a page, inside a range which is currently
+ * encapsulated by an existing node.
  * @param content The content to insert into the page.
  * @param page The page to insert the content into.
  * @param maxBufferLength The maximum length of a buffer's content/string.
- * @param nodePosition Information about the node which contains the offset which the content is to be inserted at.
+ * @param nodePosition Information about the node which contains the offset
+ * which the content is to be inserted at.
  */
 function insertInsideNode(
   content: ContentInsert,
@@ -179,6 +199,14 @@ function insertInsideNode(
     right: SENTINEL_INDEX,
     start: firstPartNode.end,
   };
+  // Remove the length of the second part node from the parent's leftCharCount,
+  // and similiarly with line feed
+  updateContentTreeMetadata(
+    page.content,
+    nodePosition.nodeIndex,
+    -secondPartNode.length,
+    -secondPartNode.lineFeedCount,
+  );
 
   insertNode(page.content, secondPartNode, content.offset);
   fixInsert(page.content, page.content.nodes.length - 1);
@@ -188,7 +216,8 @@ function insertInsideNode(
 }
 
 /**
- * Inserts the given content into a page, at the end of the previously inserted node.
+ * Inserts the given content into a page, at the end of the previously
+ * inserted node.
  * @param content The content to insert into the page.
  * @param page The page to insert the content into.
  * @param maxBufferLength The maximum length of a buffer's content/string.
@@ -241,11 +270,14 @@ function insertAtEndPreviouslyInsertedNode(
  * Inserts the given content into a page.
  * @param content The content to insert into the page.
  * @param page The page to insert the content into.
+ * @param structureNodeIndex The index of the structure node in the
+ * `structure.nodes` array.
  * @param maxBufferLength The maximum length of a buffer's content/string.
  */
 export function insertContent(
   page: PageContentMutable,
   content: ContentInsert,
+  structureNodeIndex: number,
   maxBufferLength: number,
 ): void {
   if (page.content.root === EMPTY_TREE_ROOT) {
@@ -255,8 +287,8 @@ export function insertContent(
   let previouslyInsertedNode: ContentNode | undefined;
 
   if (
-    page.previouslyInsertedContentNodeIndex != null &&
-    page.previouslyInsertedContentNodeOffset != null
+    page.previouslyInsertedContentNodeIndex !== null &&
+    page.previouslyInsertedContentNodeOffset !== null
   ) {
     previouslyInsertedNode =
       page.content.nodes[page.previouslyInsertedContentNodeIndex];
@@ -282,5 +314,10 @@ export function insertContent(
 
   if (page) {
     fixInsert(page.content, page.content.nodes.length - 1);
+  }
+  if (structureNodeIndex !== SENTINEL_INDEX) {
+    const node = { ...page.structure.nodes[structureNodeIndex] };
+    node.length += 1;
+    page.structure.nodes[structureNodeIndex] = node;
   }
 }

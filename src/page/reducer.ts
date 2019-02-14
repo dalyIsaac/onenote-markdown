@@ -39,7 +39,7 @@ function handleStorePage(
 
 function handleInsertContent(
   state: StatePages,
-  { pageId, content, offset }: InsertContentAction,
+  { pageId, content, offset, structureNodeIndex }: InsertContentAction,
 ): StatePages {
   const extractedPage: PageContent = {
     ...state[pageId],
@@ -52,6 +52,7 @@ function handleInsertContent(
   insertContent(
     extractedPage as PageContentMutable,
     { content: content, offset: offset },
+    structureNodeIndex,
     MAX_BUFFER_LENGTH,
   );
   const newState: StatePages = {
@@ -63,7 +64,19 @@ function handleInsertContent(
 
 function handleDeleteContent(
   state: StatePages,
-  { pageId, endOffset, startOffset }: DeleteContentAction,
+  {
+    pageId,
+    contentLocations: {
+      start: {
+        contentOffset: startOffset,
+        structureNodeIndex: startStructureNodeIndex,
+      },
+      end: {
+        contentOffset: endOffset,
+        structureNodeIndex: endStructureNodeIndex,
+      },
+    },
+  }: DeleteContentAction,
 ): StatePages {
   const extractedPage: PageContent = {
     ...state[pageId],
@@ -86,7 +99,20 @@ function handleDeleteContent(
 
 function handleReplaceContent(
   state: StatePages,
-  { pageId, content, endOffset, startOffset }: ReplaceContentAction,
+  {
+    pageId,
+    content,
+    contentLocations: {
+      start: {
+        contentOffset: startOffset,
+        structureNodeIndex: startStructureNodeIndex,
+      },
+      end: {
+        contentOffset: endOffset,
+        structureNodeIndex: endStructureNodeIndex,
+      },
+    },
+  }: ReplaceContentAction,
 ): StatePages {
   const extractedPage: PageContent = {
     ...state[pageId],
@@ -106,6 +132,7 @@ function handleReplaceContent(
       content: content,
       offset: startOffset,
     },
+    startStructureNodeIndex,
     MAX_BUFFER_LENGTH,
   );
   const newState: StatePages = {

@@ -2,7 +2,7 @@ import { PageContent, PageContentMutable } from "../pageModel";
 import { SENTINEL_CONTENT, MAX_BUFFER_LENGTH } from "../contentTree/tree";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { chunks, TokenType } from "tiny-html-lexer";
-import { EMPTY_TREE_ROOT } from "../tree/tree";
+import { EMPTY_TREE_ROOT, SENTINEL_INDEX } from "../tree/tree";
 import { KeyValueStr, TagType } from "../structureTree/structureModel";
 import { InsertStructureProps } from "../structureTree/actions";
 import he from "he";
@@ -293,7 +293,12 @@ export default function parse(content: string): PageContent {
     });
     structureNodeOffset += 1;
 
-    insertContent(page, { content, offset: contentOffset }, MAX_BUFFER_LENGTH);
+    insertContent(
+      page,
+      { content, offset: contentOffset },
+      SENTINEL_INDEX, // because the length has already been set
+      MAX_BUFFER_LENGTH,
+    );
     contentOffset += content.length;
     consumeUpToType("tag-end");
   }

@@ -68,7 +68,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       content: "b",
       offset: 1,
     };
-    insertContent(page, content, MAX_BUFFER_LENGTH);
+    insertContent(page, content, SENTINEL_INDEX, MAX_BUFFER_LENGTH);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -146,7 +146,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       offset: 5,
     };
     const maxBufferLength = 5;
-    insertContent(page, content, maxBufferLength);
+    insertContent(page, content, SENTINEL_INDEX, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -250,7 +250,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       offset: 2,
     };
     const maxBufferLength = 8;
-    insertContent(page, content, maxBufferLength);
+    insertContent(page, content, SENTINEL_INDEX, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -351,7 +351,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       offset: 9,
     };
     const maxBufferLength = 8;
-    insertContent(page, content, maxBufferLength);
+    insertContent(page, content, SENTINEL_INDEX, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -457,7 +457,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       offset: 2,
     };
     const maxBufferLength = 8;
-    insertContent(page, content, maxBufferLength);
+    insertContent(page, content, SENTINEL_INDEX, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -528,7 +528,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expectedPage.previouslyInsertedContentNodeIndex = 2;
     expectedPage.previouslyInsertedContentNodeOffset = 5;
     const maxBufferLength = 8;
-    insertContent(page, content, maxBufferLength);
+    insertContent(page, content, SENTINEL_INDEX, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -663,7 +663,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       offset: 0,
     };
     const maxBufferLength = 8;
-    insertContent(page as PageContentMutable, content, maxBufferLength);
+    insertContent(
+      page as PageContentMutable,
+      content,
+      SENTINEL_INDEX,
+      maxBufferLength,
+    );
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -793,7 +798,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       offset: 0,
     };
     const maxBufferLength = 8;
-    insertContent(page as PageContentMutable, content, maxBufferLength);
+    insertContent(
+      page as PageContentMutable,
+      content,
+      SENTINEL_INDEX,
+      maxBufferLength,
+    );
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -898,7 +908,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       offset: 0,
     };
     const maxBufferLength = 8;
-    insertContent(page as PageContentMutable, content, maxBufferLength);
+    insertContent(
+      page as PageContentMutable,
+      content,
+      SENTINEL_INDEX,
+      maxBufferLength,
+    );
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -1050,7 +1065,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       offset: 5,
     };
     const maxBufferLength = 16;
-    insertContent(page as PageContentMutable, content, maxBufferLength);
+    insertContent(
+      page as PageContentMutable,
+      content,
+      SENTINEL_INDEX,
+      maxBufferLength,
+    );
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -1207,7 +1227,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       offset: 8,
     };
     const maxBufferLength = 16;
-    insertContent(page as PageContentMutable, content, maxBufferLength);
+    insertContent(
+      page as PageContentMutable,
+      content,
+      SENTINEL_INDEX,
+      maxBufferLength,
+    );
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -1313,7 +1338,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       offset: 1,
     };
     const maxBufferLength = 8;
-    insertContent(page as PageContentMutable, content, maxBufferLength);
+    insertContent(
+      page as PageContentMutable,
+      content,
+      SENTINEL_INDEX,
+      maxBufferLength,
+    );
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -1364,7 +1394,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
 
     const resultState = pageReducer(
       state,
-      InsertContentActionCreator("pageId", "Hello\nWorld", 0),
+      InsertContentActionCreator("pageId", "Hello\nWorld", 0, 0),
     );
     expect(resultState).toStrictEqual(expectedState);
   });

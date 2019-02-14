@@ -48,7 +48,8 @@ export interface NodePositionOffset {
   readonly nodeIndex: number;
 
   /**
-   * The remainder between the offset and the character count of the left subtree
+   * The remainder between the offset and the character count of the left
+   * subtree.
    */
   readonly remainder: number;
 
@@ -111,7 +112,8 @@ export function findNodeAtOffset(
     }
   }
   console.error(
-    `Reaching here means that \`nodes[x]\` is a SENTINEL node, and stored inside the piece table's \`nodes\` array.`,
+    "Reaching here means that `nodes[x]` is a SENTINEL node, and stored " +
+      "inside the piece table's `nodes` array.",
   );
   // attempt to gracefully handle the error
   return {
@@ -161,18 +163,21 @@ export function getNodeContent(page: PageContent, nodeIndex: number): string {
   if (nodeIndex === SENTINEL_INDEX) {
     return "";
   }
-  const node = page.content.nodes[nodeIndex];
+  const node = page.content.nodes[nodeIndex] as ContentNode;
+  if (node.bufferIndex === undefined) {
+    return "";
+  }
   const buffer = page.buffers[node.bufferIndex];
   const startOffset = getOffsetInBuffer(page, node.bufferIndex, node.start);
   const endOffset = getOffsetInBuffer(page, node.bufferIndex, node.end);
   const currentContent = buffer.content.slice(startOffset, endOffset);
   return currentContent;
 }
-
 /**
  * Calculates the character count for the node and its subtrees.
  * @param tree The red-black tree for the content.
- * @param index The index of the node in the `node` array of the page/piece table to find the character count for.
+ * @param index The index of the node in the `node` array of the page/piece
+ * table to find the character count for.
  */
 export function calculateCharCount(
   tree: RedBlackTreeMutable<ContentNode>,
@@ -190,7 +195,8 @@ export function calculateCharCount(
 /**
  * Calculates the line feed count for the node and subtrees.
  * @param tree The red-black tree for the content.
- * @param index The index of the node in the `node` array of the page/piece table to find the line feed count for.
+ * @param index The index of the node in the `node` array of the page/piece
+ * table to find the line feed count for.
  */
 export function calculateLineFeedCount(
   tree: RedBlackTree<ContentNode>,
@@ -208,8 +214,9 @@ export function calculateLineFeedCount(
 }
 
 /**
- * Ensures that the `SENTINEL` node in the piece table is true to the values of the `SENTINEL` node.
- * This function does mutate the `SENTINEL` node, to ensure that `SENTINEL` is a singleton.
+ * Ensures that the `SENTINEL` node in the piece table is true to the values
+ * of the `SENTINEL` node. This function does mutate the `SENTINEL` node, to
+ * ensure that `SENTINEL` is a singleton.
  * @param tree The red-black tree for the content.
  */
 export function resetSentinelContent(
@@ -282,7 +289,7 @@ export function getContentBetweenOffsets(
     let offset = startOffset;
     const { nodeIndex } = position;
     let next = nextNode(page.content.nodes, nodeIndex);
-    while (offset + (next.node as ContentNode).length <= endOffset) {
+    while (offset <= endOffset) {
       content += getNodeContent(page, next.index);
       offset += (next.node as ContentNode).length;
       next = nextNode(page.content.nodes, next.index);

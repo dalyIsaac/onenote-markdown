@@ -35,7 +35,7 @@ export const SENTINEL_INDEX = 0;
 export const EMPTY_TREE_ROOT = -1;
 
 /**
- * Contains a node and its index in a page/piece table.
+ * Contains a node and its index in a red-black tree.
  */
 export interface NodePosition<T extends Node> {
   readonly node: T;
@@ -135,9 +135,11 @@ export function prevNode<T extends Node>(
 }
 
 /**
- * Recomputes the metadata for the tree based on the newly inserted/updated node.
+ * Recomputes the metadata for the tree based on the newly inserted/updated
+ * node.
  * @param tree The red-black tree for the content.
- * @param index The index of the node in the `node` array, which is the basis for updating the tree.
+ * @param index The index of the node in the `node` array, which is the basis
+ * for updating the tree.
  */
 export function recomputeTreeMetadata<T extends Node>(
   tree: RedBlackTreeMutable<T>,
@@ -151,9 +153,10 @@ export function recomputeTreeMetadata<T extends Node>(
     return;
   }
 
-  tree.nodes[x] = { ...tree.nodes[x] }; // go upwards till the node whose left subtree is changed.
+  tree.nodes[x] = { ...tree.nodes[x] };
 
   while (
+    // go upwards till the node whose left subtree is changed.
     x !== tree.root &&
     x === tree.nodes[tree.nodes[x].parent].right &&
     x !== SENTINEL_INDEX
@@ -178,7 +181,7 @@ export function recomputeTreeMetadata<T extends Node>(
       calculateLineFeedCount(tree, tree.nodes[x].left) -
       tree.nodes[x].leftLineFeedCount;
     (tree.nodes[x] as ContentNodeMutable).leftCharCount += lengthDelta;
-    (tree.nodes[x] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta; // go upwards till root. O(logN)
+    (tree.nodes[x] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta;
   } else if (isStructureRedBlackTreeMutable(tree)) {
     lengthDelta =
       calculateLengthCount(tree, tree.nodes[x].left) -
@@ -190,6 +193,7 @@ export function recomputeTreeMetadata<T extends Node>(
     return;
   }
 
+  // go upwards till root. O(logN)
   while (x !== tree.root) {
     if (tree.nodes[tree.nodes[x].parent].left === x) {
       tree.nodes[tree.nodes[x].parent] = {
@@ -216,8 +220,9 @@ export function recomputeTreeMetadata<T extends Node>(
 }
 
 /**
- * Ensures that the `SENTINEL` node in the piece table is true to the values of the `SENTINEL` node.
- * This function does mutate the `SENTINEL` node, to ensure that `SENTINEL` is a singleton.
+ * Ensures that the `SENTINEL` node in the piece table is true to the values
+ * of the `SENTINEL` node. This function does mutate the `SENTINEL` node,
+ * to ensure that `SENTINEL` is a singleton.
  * @param tree The red-black tree for the content.
  */
 export function resetSentinel<T extends NodeMutable>(
@@ -238,17 +243,10 @@ export function* inorderTreeTraversal<T extends Node>(
 ): IterableIterator<{ readonly offset: number } & NodePosition<T>> {
   let value = treeMinimum(tree.nodes, tree.root);
   let offset = 0;
-  if (isContentNode(value.node)) {
-    offset = 0;
-  } else if (isStructureNode(value.node)) {
-    offset = 1;
-  }
   while (value.index !== SENTINEL_INDEX) {
     yield { ...value, offset };
-    if (isContentNode(value.node)) {
+    if (isContentNode(value.node) || isStructureNode(value.node)) {
       offset += value.node.length;
-    } else if (isStructureNode(value.node)) {
-      offset += 1;
     }
     value = nextNode(tree.nodes, value.index);
   }
