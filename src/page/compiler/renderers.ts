@@ -109,7 +109,7 @@ export function backgroundColorRenderer(
   return renderer(tokens, index, Attributes.backgroundColor);
 }
 
-function InlineTagsRenderer(tokens: Token[], index: number): string {
+function inlineTagsRenderer(tokens: Token[], index: number): string {
   const token = tokens[index];
   const tagType = token.nesting === 1 ? TagType.StartTag : TagType.EndTag;
   if (getJSX) {
@@ -127,12 +127,16 @@ function InlineTagsRenderer(tokens: Token[], index: number): string {
   }
 }
 
+export function unfinishedEnd(tokens: Token[], index: number): string {
+  return inlineTagsRenderer(tokens, index);
+}
+
 export function supRenderer(tokens: Token[], index: number): string {
-  return InlineTagsRenderer(tokens, index);
+  return inlineTagsRenderer(tokens, index);
 }
 
 export function subRenderer(tokens: Token[], index: number): string {
-  return InlineTagsRenderer(tokens, index);
+  return inlineTagsRenderer(tokens, index);
 }
 
 /**

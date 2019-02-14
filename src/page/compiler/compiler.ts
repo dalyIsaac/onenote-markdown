@@ -21,6 +21,7 @@ import {
   heading_open,
   heading_close,
   text,
+  unfinishedEnd,
 } from "./renderers";
 import { rule } from "./parser";
 
@@ -28,6 +29,7 @@ import { rule } from "./parser";
  * markdown-it extension for the custom syntax.
  */
 function customSyntaxPlugin(md: MarkdownIt): void {
+  md.renderer.rules.unfinishedEnd = unfinishedEnd;
   md.renderer.rules.color = colorRenderer;
   md.renderer.rules.textDecoration = textDecorationRenderer;
   md.renderer.rules.backgroundColor = backgroundColorRenderer;

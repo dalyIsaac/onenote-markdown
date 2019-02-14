@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/camelcase */
 
 import { compile, getHtmlContentFromPage } from "./compiler";
