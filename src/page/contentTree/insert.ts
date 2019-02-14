@@ -317,7 +317,7 @@ export function insertContent(
   }
   if (structureNodeIndex !== SENTINEL_INDEX) {
     const node = { ...page.structure.nodes[structureNodeIndex] };
-    node.length += 1;
+    node.length += content.content.length;
     page.structure.nodes[structureNodeIndex] = node;
   }
 }
