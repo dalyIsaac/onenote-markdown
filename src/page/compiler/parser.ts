@@ -111,10 +111,9 @@ function scanDelims(
 }
 
 /**
- * Contains a stack of the string of the delimiting tokens - i.e. the strings
- * of the markdown tokens.
+ * Contains a stack of the delimiting tokens.
  */
-let delimStack: string[] = [];
+let delimStack: Token[] = [];
 
 /**
  * An array of sets which contain equivalent strings inside the markdown.
@@ -189,15 +188,16 @@ function handleMatch(
     ruleName in InlineTags ? ruleName : "span",
     result.canClose ? -1 : 1,
   );
+  matchedToken.markup = currentToken.content.slice(startIndex, endIndex);
   if (
     result.canClose &&
     delimStack[delimStack.length - 1] &&
-    compareDelimStackItems(delimStack[delimStack.length - 1], content)
+    compareDelimStackItems(delimStack[delimStack.length - 1].markup, content)
   ) {
     delimStack.pop();
     matchedToken.nesting = -1;
   } else {
-    delimStack.push(content);
+    delimStack.push(matchedToken);
     matchedToken.nesting = 1;
   }
   if (!(ruleName in InlineTags)) {
@@ -290,10 +290,35 @@ function customSyntax(state: StateCore, token: Token, pos: number): Token[] {
 }
 
 /**
- * The `markdown-it` rule for the custom syntax.
- * @param state The state of the compiler.
+ * Closes the open tags which have no corresponding closing tags by appending
+ * new tokens to `inlineTokens`.
+ * @param inlineTokens The array to which the new tags are to be appended to.
  */
-export function rule(state: StateCore): void {
+function closeTags(inlineTokens: Token[]): void {
+  delimStack.forEach(() => {
+    const newToken = new Token("unfinishedEnd", "span", -1);
+    newToken.children = [];
+    inlineTokens.push(newToken);
+  });
+}
+
+/**
+ * Changes the open tags which have no corresponding closing tags to be normal
+ * text tags.
+ */
+function revertUnclosedTags(): void {
+  delimStack.forEach((token) => {
+    token.type = "text";
+    token.content = token.markup;
+    token.markup = "";
+    token.tag = "";
+    token.attrs = [];
+    token.nesting = 0;
+  });
+}
+
+
+function rule(state: StateCore, closeOpenTags = false): void {
   state.tokens.forEach((token) => {
     if (token.type === "inline") {
       let inlineTokens: Token[] = [];
@@ -304,13 +329,22 @@ export function rule(state: StateCore): void {
         );
         pos += currentToken.content.length || currentToken.markup.length;
       });
-      delimStack.forEach(() => {
-        const newToken = new Token("unfinishedEnd", "span", -1);
-        newToken.children = [];
-        inlineTokens.push(newToken);
-      });
+
+      if (closeOpenTags) {
+        closeTags(inlineTokens);
+      } else {
+        revertUnclosedTags();
+      }
       delimStack = [];
       token.children = inlineTokens;
     }
   });
+}
+
+export function autoCloseRule(state: StateCore): void {
+  rule(state, true);
+}
+
+export function nonAutoCloseRule(state: StateCore): void {
+  rule(state, false);
 }

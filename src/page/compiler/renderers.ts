@@ -3,7 +3,7 @@
 import Token from "markdown-it/lib/token";
 import { KeyValueStr, TagType } from "../structureTree/structureModel";
 import { Attributes } from "./parser";
-import { markdownCompiler } from "./compiler";
+import { getCompiler } from "./compiler";
 
 /**
  * Type guard for `TagItem`.
@@ -198,7 +198,7 @@ export function text(tokens: Token[], index: number): string {
     }
     return "";
   } else {
-    return markdownCompiler.utils.escapeHtml(content);
+    return getCompiler().utils.escapeHtml(content);
   }
 }
 
@@ -207,7 +207,7 @@ export function text(tokens: Token[], index: number): string {
  */
 export function getElements(content: string): Element[] {
   getJSX = true;
-  markdownCompiler.render(content);
+  getCompiler().render(content);
   const outElements = elements; // reassigning for the garbage collector
   elements = [];
   getJSX = false;

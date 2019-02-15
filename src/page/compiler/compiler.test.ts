@@ -633,10 +633,16 @@ describe("Custom markdown syntax", () => {
     expect(html).toBe(expectedHtml);
   });
 
-  test("Unterminated tags", () => {
+  test("Autoclosing unterminated tags", () => {
     const md = "{color:red}Hello{color:green}Hello";
     const expectedHtml = `<span style="color:red">Hello<span style="color:green">Hello</span></span>`;
-    const html = compile(md);
+    const html = compile(md, true);
     expect(html).toBe(expectedHtml);
+  });
+
+  test("Not autoclosing unterminated tags", () => {
+    const md = "{color:red}Hello{color:green}Hello";
+    const html = compile(md);
+    expect(html).toBe(md);
   });
 });
