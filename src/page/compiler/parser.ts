@@ -21,6 +21,8 @@ enum InlineTags {
   sup = "sup",
 }
 
+type RuleNames = Attributes | InlineTags;
+
 /**
  * Regex rule for detecting inline tags.
  */
@@ -29,7 +31,7 @@ const tagRule = /{![a-zA-Z][a-zA-Z0-9]*\} /;
 /**
  * Array of tuples of rule names and regex.
  */
-const rules: Array<[Attributes | InlineTags, RegExp]> = [
+const rules: Array<[RuleNames, RegExp]> = [
   [Attributes.color, /\{color:(([a-zA-Z]*)|#([0-9a-fA-F]*))\}/],
   [
     Attributes.textDecoration,
@@ -141,26 +143,14 @@ function compareDelimStackItems(val1: string, val2: string): boolean {
   return false;
 }
 
-/**
- * Handles a match for the custom markdown syntax.
- * @param state markdown-it's state.
- * @param ruleName The name of the rule.
- * @param matches The regex match.
- * @param currentToken The current token being processed.
- * @param pos The position of inside `state.src`.
- * @param tokens Array of the current tokens.
- */
 function handleMatch(
   state: StateCore,
-  ruleName: Attributes | InlineTags,
-  matches: RegExpExecArray,
+  { ruleName, content, startIndex }: Match,
   currentToken: Token,
   pos: number,
   tokens: Token[],
 ): { pos: number; tokens: Token[] } {
-  const match = matches[0];
-  const startIndex = matches.index;
-  const endIndex = matches.index + match.length;
+  const endIndex = startIndex + content.length;
   const tokenBefore: Token = {
     ...new Token(currentToken.type, currentToken.tag, currentToken.nesting),
     attrs: currentToken.attrs,
@@ -202,21 +192,21 @@ function handleMatch(
   if (
     result.canClose &&
     delimStack[delimStack.length - 1] &&
-    compareDelimStackItems(delimStack[delimStack.length - 1], match)
+    compareDelimStackItems(delimStack[delimStack.length - 1], content)
   ) {
     delimStack.pop();
     matchedToken.nesting = -1;
   } else {
     result.canClose = false;
     if (result.canOpen) {
-      delimStack.push(match);
+      delimStack.push(content);
       matchedToken.nesting = 1;
     } else {
       matchedToken.nesting = 0;
     }
   }
   if (!(ruleName in InlineTags)) {
-    matchedToken.attrPush([ruleName, match.split(":")[1].slice(0, -1)]);
+    matchedToken.attrPush([ruleName, content.split(":")[1].slice(0, -1)]);
   }
   tokens.pop();
   tokens = tokens.concat(
@@ -234,8 +224,40 @@ function handleMatch(
       [] as Token[],
     ),
   );
-  pos += tokenAfter.content.length;
-  return { pos, tokens };
+  return { pos: endIndex, tokens };
+}
+
+interface Match {
+  content: string;
+  ruleName: RuleNames;
+  startIndex: number;
+}
+
+function compare(a: Match, b: Match): number {
+  if (a.startIndex < b.startIndex) {
+    return -1;
+  }
+  if (a.startIndex > b.startIndex) {
+    return 1;
+  }
+  // a must be equal to b
+  return 0;
+}
+
+function getMatches(content: string): Match[] {
+  const matches: Match[] = [];
+  for (const [ruleName, rule] of rules) {
+    const match = rule.exec(content);
+    if (match) {
+      matches.push({
+        content: match[0],
+        ruleName,
+        startIndex: match.index,
+      });
+    }
+  }
+  matches.sort(compare);
+  return matches;
 }
 
 /**
@@ -246,33 +268,30 @@ function handleMatch(
  */
 function customSyntax(state: StateCore, token: Token, pos: number): Token[] {
   let tokens: Token[] = [token];
-  let continueChecking = true;
-  while (continueChecking) {
-    continueChecking = false;
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
     const currentToken = tokens[tokens.length - 1];
+
     const tagMatch = tagRule.exec(currentToken.content);
     if (tagMatch) {
-      // assumes that the tag is at the start of the content
       currentToken.content = currentToken.content.slice(
         tagMatch.index + tagMatch[0].length,
       );
-    }
-    for (const [ruleName, rule] of rules) {
-      const matches = rule.exec(currentToken.content);
-      if (matches) {
-        continueChecking = true;
-        ({ pos, tokens } = handleMatch(
-          state,
-          ruleName,
-          matches,
-          currentToken,
-          pos,
-          tokens,
-        ));
+      pos += tagMatch[0].length;
+    } else {
+      const matches = getMatches(currentToken.content);
+      if (matches.length === 0) {
+        return tokens;
       }
+      ({ pos, tokens } = handleMatch(
+        state,
+        matches[0],
+        currentToken,
+        pos,
+        tokens,
+      ));
     }
   }
-  return tokens;
 }
 
 /**

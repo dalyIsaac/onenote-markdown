@@ -94,7 +94,7 @@ function HeaderComponent(props: HeaderProps): JSX.Element {
     props.loadSampleContent();
     props.loadSamplePageId();
   }
-
+  loadSample();
   return (
     <div className={styles.header}>
       <button onClick={loadSample}>Load sample OneNote page</button>
