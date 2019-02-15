@@ -130,7 +130,7 @@ const equivalentValues = [
  * equivalent values, as specified in `equivalentValues`.
  */
 function compareDelimStackItems(val1: string, val2: string): boolean {
-  if (val1 === val2) {
+  if (val1.toLowerCase() === val2.toLowerCase()) {
     return true;
   } else {
     for (const valueSet of equivalentValues) {
@@ -316,7 +316,6 @@ function revertUnclosedTags(): void {
     token.nesting = 0;
   });
 }
-
 
 function rule(state: StateCore, closeOpenTags = false): void {
   state.tokens.forEach((token) => {
