@@ -21,13 +21,15 @@ import {
   heading_open,
   heading_close,
   text,
+  unfinishedEnd,
 } from "./renderers";
-import { rule } from "./parser";
+import { autoCloseRule, nonAutoCloseRule } from "./parser";
 
 /**
  * markdown-it extension for the custom syntax.
  */
 function customSyntaxPlugin(md: MarkdownIt): void {
+  md.renderer.rules.unfinishedEnd = unfinishedEnd;
   md.renderer.rules.color = colorRenderer;
   md.renderer.rules.textDecoration = textDecorationRenderer;
   md.renderer.rules.backgroundColor = backgroundColorRenderer;
@@ -42,22 +44,48 @@ function customSyntaxPlugin(md: MarkdownIt): void {
   md.renderer.rules.heading_open = heading_open;
   md.renderer.rules.heading_close = heading_close;
   md.renderer.rules.text = text;
-  md.core.ruler.push("customSyntaxRule", rule);
+  md.core.ruler.push("customSyntaxRuleAutoClose", autoCloseRule);
+  md.core.ruler.push("customSyntaxRuleNonAutoClose", nonAutoCloseRule);
 }
 
+const _markdownCompiler = new MarkdownIt("commonmark").use(customSyntaxPlugin);
+
 /**
- * markdown-it instance.
+ * Returns the `MarkdownIt` compiler.
+ * @param closeOpenTags `true` if unclosed tags should automatically be closed.
+ *
+ * Example for `true`: `{color:red}Hello{color:green}Hello` becomes
+ * `<span style="color:red">Hello<span style="color:green">Hello</span></span>`.
+ *
+ * Example for `false`: `{color:red}Hello{color:green}Hello` stays
+ * `{color:red}Hello{color:green}Hello`
  */
-export const markdownCompiler = new MarkdownIt("commonmark").use(
-  customSyntaxPlugin,
-);
+export function getCompiler(closeOpenTags = false): MarkdownIt {
+  if (closeOpenTags === true) {
+    _markdownCompiler.enable("customSyntaxRuleAutoClose");
+    _markdownCompiler.disable("customSyntaxRuleNonAutoClose");
+  } else if (closeOpenTags === false) {
+    _markdownCompiler.disable("customSyntaxRuleAutoClose");
+    _markdownCompiler.enable("customSyntaxRuleNonAutoClose");
+  }
+  return _markdownCompiler;
+}
 
 /**
  * Compiles and returns the given HTML content into markdown.
  * @param content The markdown to compile into HTML.
+ * @param closeOpenTags `true` if unclosed tags should automatically be closed.
+ *
+ * Example for `true`: `{color:red}Hello{color:green}Hello` becomes
+ * `<span style="color:red">Hello<span style="color:green">Hello</span></span>`.
+ *
+ * Example for `false`: `{color:red}Hello{color:green}Hello` stays
+ * `{color:red}Hello{color:green}Hello`
  */
-export function compile(content: string): string {
-  return markdownCompiler.render(content).trim();
+export function compile(content: string, closeOpenTags = false): string {
+  return getCompiler(closeOpenTags)
+    .render(content)
+    .trim();
 }
 
 /**

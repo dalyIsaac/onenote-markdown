@@ -1,5 +1,10 @@
 import { Color, RedBlackTreeMutable, NodeMutable } from "../pageModel";
-import { SENTINEL_INDEX, recomputeTreeMetadata, EMPTY_TREE_ROOT } from "./tree";
+import {
+  SENTINEL_INDEX,
+  recomputeTreeMetadata,
+  EMPTY_TREE_ROOT,
+  nextNode,
+} from "./tree";
 import { isContentNode } from "../contentTree/contentModel";
 import { leftRotate, rightRotate } from "./rotate";
 import { isStructureNode } from "../structureTree/structureModel";
@@ -7,7 +12,8 @@ import { isStructureNode } from "../structureTree/structureModel";
 /**
  * Restores the properties of a red-black tree after the insertion of a node.
  * @param page The page/piece table.
- * @param x The index of the node in the `node` array, which is the basis for fixing the tree.
+ * @param x The index of the node in the `node` array, which is the basis for
+ * fixing the tree.
  */
 export function fixInsert<T extends NodeMutable>(
   tree: RedBlackTreeMutable<T>,
@@ -102,7 +108,8 @@ export function fixInsert<T extends NodeMutable>(
 }
 
 /**
- * Returns the value for the LHS check for binary search for the red-black tree, for different types.
+ * Returns the value for the LHS check for binary search for the red-black tree
+ * , for different types.
  */
 function getLHSValue(currentNode: NodeMutable): number {
   if (isContentNode(currentNode)) {
@@ -115,7 +122,8 @@ function getLHSValue(currentNode: NodeMutable): number {
 }
 
 /**
- * Returns the value for the RHS check for binary search for the red-black tree, for different types.
+ * Returns the value for the RHS check for binary search for the red-black tree
+ * , for different types.
  */
 function getRHSValue(currentNode: NodeMutable): number {
   if (isContentNode(currentNode)) {
@@ -127,18 +135,49 @@ function getRHSValue(currentNode: NodeMutable): number {
   }
 }
 
+function insertAfterNode<T extends NodeMutable>(
+  tree: RedBlackTreeMutable<T>,
+  newNode: T,
+  indexToInsertAfter: number,
+): void {
+  if (tree.nodes[indexToInsertAfter].right === SENTINEL_INDEX) {
+    tree.nodes[indexToInsertAfter] = {
+      ...tree.nodes[indexToInsertAfter],
+      right: tree.nodes.length - 1,
+    };
+    newNode.parent = indexToInsertAfter;
+  } else {
+    const next = nextNode(tree.nodes, indexToInsertAfter);
+    tree.nodes[next.index] = {
+      ...tree.nodes[next.index],
+      left: tree.nodes.length - 1,
+    };
+    newNode.parent = next.index;
+  }
+}
+
 /**
- * Modifies the metadata of nodes to "insert" a node. **The node should already exist inside `page.nodes`.**
+ * Modifies the metadata of nodes to "insert" a node. **The node should
+ * already exist inside `page.nodes`.**
  * @param tree The red-black tree.
- * @param newNode Reference to the newly created node. The node already exists inside `page.nodes`.
+ * @param newNode Reference to the newly created node. The node already exists
+ * inside `page.nodes`.
  * @param offset The offset of the new node.
+ * @param indexToInsertAfter The index of the node to insert the new node after.
  */
 export function insertNode<T extends NodeMutable>(
   tree: RedBlackTreeMutable<T>,
   newNode: T,
   offset: number,
+  indexToInsertAfter?: number,
 ): void {
   tree.nodes.push(newNode);
+
+  if (indexToInsertAfter) {
+    insertAfterNode(tree, newNode, indexToInsertAfter);
+    return;
+  }
+
   let prevIndex = SENTINEL_INDEX;
 
   let currentIndex = tree.root;
@@ -183,11 +222,13 @@ export function insertNode<T extends NodeMutable>(
     } else {
       // middle
       throw RangeError(
-        "Looking for the place to insert a node should never result in looking in the middle of another node.",
+        "Looking for the place to insert a node should never result in " +
+          "looking in the middle of another node.",
       );
     }
   }
   throw RangeError(
-    "The currentIndex has reached a SENTINEL node before locating a suitable insertion location.",
+    "The currentIndex has reached a SENTINEL node before locating a suitable " +
+      "insertion location.",
   );
 }

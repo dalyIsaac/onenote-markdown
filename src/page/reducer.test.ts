@@ -229,6 +229,7 @@ describe("page/reducer", () => {
       content: "Hello world",
       offset: 127,
       pageId: PAGE_ID,
+      structureNodeIndex: SENTINEL_INDEX,
       type: INSERT_CONTENT,
     };
 
@@ -440,9 +441,17 @@ describe("page/reducer", () => {
 
   test("Deletion", () => {
     const action: DeleteContentAction = {
-      endOffset: 127,
+      contentLocations: {
+        end: {
+          contentOffset: 127,
+          structureNodeIndex: SENTINEL_INDEX,
+        },
+        start: {
+          contentOffset: 126,
+          structureNodeIndex: SENTINEL_INDEX,
+        },
+      },
       pageId: PAGE_ID,
-      startOffset: 126,
       type: DELETE_CONTENT,
     };
     const state = getState();
@@ -638,9 +647,17 @@ describe("page/reducer", () => {
   test("Replacement", () => {
     const action: ReplaceContentAction = {
       content: "Hello world",
-      endOffset: 127,
+      contentLocations: {
+        end: {
+          contentOffset: 127,
+          structureNodeIndex: SENTINEL_INDEX,
+        },
+        start: {
+          contentOffset: 126,
+          structureNodeIndex: SENTINEL_INDEX,
+        },
+      },
       pageId: PAGE_ID,
-      startOffset: 126,
       type: REPLACE_CONTENT,
     };
     const state = getState();

@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import EditorBase, {
   Stack,
   LastStartNode,
   getLastStartItem,
+  BeforeInputType,
 } from "../editorBase";
 import styles from "./markdownEditor.module.css";
 import { connect } from "react-redux";
@@ -14,14 +15,11 @@ import {
 } from "../../page/structureTree/structureModel";
 import { inorderTreeTraversal } from "../../page/tree/tree";
 import { getContentBetweenOffsets } from "../../page/contentTree/tree";
-
-/**
- * Props for the `MarkdownEditorComponent`
- */
-interface MarkdownEditorProps {
-  page: PageContent;
-  pageId: string;
-}
+import {
+  insertContent,
+  InsertContentAction,
+} from "../../page/contentTree/actions";
+import { Dispatch } from "redux";
 
 /**
  * Definition for items which reside on the stack of elements to be rendered.
@@ -33,7 +31,18 @@ interface StackItem {
    * The offset of the start of the content for the `StructureNode`.
    */
   contentOffset: number;
+
+  /**
+   * The index of the `node` inside the array `structure.nodes`.
+   */
+  index: number;
 }
+
+let cursorSelection: {
+  nodeIndex: number;
+  selectionOffset: number;
+} | null = null;
+const selectionRef = React.createRef();
 
 /**
  * Updates the stack by compiling the last `StackItem` which has a
@@ -46,7 +55,7 @@ interface StackItem {
 function updateItem(
   page: PageContent,
   stack: Stack<StackItem>,
-  { contentOffset, node, stackIndex }: LastStartNode<StackItem>,
+  { contentOffset, index, node, stackIndex }: LastStartNode<StackItem>,
 ): Stack<StackItem> {
   const newStack = stack.slice(0, stackIndex);
   let children: Stack<StackItem> | string;
@@ -57,12 +66,18 @@ function updateItem(
   } else {
     children = stack.slice(stackIndex);
   }
+  const ref =
+    cursorSelection && cursorSelection.nodeIndex === index
+      ? selectionRef
+      : null;
   const element = React.createElement(
     "p",
     {
       ...node.attributes,
       contentoffset: contentOffset,
+      nodeindex: index,
       key: node.id,
+      ref,
     },
     children,
   );
@@ -96,10 +111,10 @@ function updateStack(
 function getPage(page: PageContent): JSX.Element[] {
   let stack: Stack<StackItem> = [];
   let contentOffset = 0;
-  for (const { node } of inorderTreeTraversal(page.structure)) {
+  for (const { index, node } of inorderTreeTraversal(page.structure)) {
     switch (node.tagType) {
       case TagType.StartTag: {
-        stack.push({ contentOffset, node });
+        stack.push({ contentOffset, index, node });
         contentOffset += node.length;
         break;
       }
@@ -114,19 +129,155 @@ function getPage(page: PageContent): JSX.Element[] {
   return stack as JSX.Element[];
 }
 
+interface SelectionOffset {
+  /**
+   * The offset of the start of the node, in terms of the page's content.
+   */
+  startOffset: number;
+
+  /**
+   * The offset of the selection, in terms of the page's content.
+   */
+  selectionOffset: number;
+
+  /**
+   * The offset of the end of the node, in terms of the page's content.
+   */
+  endOffset: number;
+}
+
+/**
+ * Returns the start, selection point, and end offsets inside the entire page,
+ * given the node and selection offset.
+ */
+function getOffsets(node: Node, selectionOffset: number): SelectionOffset {
+  if (node.parentElement) {
+    const startOffsetStr = node.parentElement.attributes.getNamedItem(
+      "contentoffset",
+    );
+    if (!startOffsetStr) {
+      throw new Error("Unable to retrieve the contentoffset for the node.");
+    }
+    const startOffset = Number(startOffsetStr.value);
+    if (node.textContent) {
+      return {
+        endOffset: startOffset + node.textContent.length,
+        selectionOffset: startOffset + selectionOffset,
+        startOffset,
+      };
+    } else {
+      throw new Error("The DOM node does not contain text.");
+    }
+  } else {
+    throw new Error("DOM node doesn't have a parent node.");
+  }
+}
+
+/**
+ * Compares two `SelectionOffset` objects to see if they're identical.
+ */
+function offsetsAreEqual(
+  firstOffset: SelectionOffset,
+  secondOffset: SelectionOffset,
+): boolean {
+  return (
+    firstOffset.startOffset === secondOffset.startOffset &&
+    firstOffset.selectionOffset === secondOffset.selectionOffset &&
+    firstOffset.endOffset === secondOffset.endOffset
+  );
+}
+
 export function MarkdownEditorComponent(
-  props: MarkdownEditorProps,
+  props: MarkdownEditorStateProps & MarkdownEditorDispatchProps,
 ): JSX.Element {
+  function onBeforeInput(e: BeforeInputType): void {
+    e.preventDefault();
+    const {
+      anchorNode,
+      anchorOffset,
+      focusNode,
+      focusOffset,
+    } = window.getSelection();
+    const startOffsets = getOffsets(anchorNode, anchorOffset);
+    const endOffsets = getOffsets(focusNode, focusOffset);
+
+    if (offsetsAreEqual(startOffsets, endOffsets) && props.insertContent) {
+      const structureNodeIndex = anchorNode.parentElement!.attributes.getNamedItem(
+        "nodeindex",
+      );
+      if (structureNodeIndex) {
+        const nodeIndexValue = Number(structureNodeIndex.value);
+        cursorSelection = {
+          nodeIndex: nodeIndexValue,
+          selectionOffset: anchorOffset,
+        };
+        props.insertContent(
+          props.pageId,
+          e.data,
+          startOffsets.selectionOffset,
+          nodeIndexValue,
+        );
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (cursorSelection) {
+      const selection = window.getSelection();
+      selection.empty();
+      const range = document.createRange();
+      const node = (selectionRef.current as HTMLSpanElement).firstChild;
+      range.setStart(node!, cursorSelection.selectionOffset + 1);
+      selection.addRange(range);
+    }
+  });
+
   return (
     <div className={styles.editor}>
-      <EditorBase getPage={getPage} page={props.page} />
+      <EditorBase
+        getPage={getPage}
+        page={props.page}
+        onBeforeInput={onBeforeInput}
+      />
     </div>
   );
 }
 
-const mapStateToProps = (state: State): MarkdownEditorProps => ({
+/**
+ * Props for the `MarkdownEditorComponent`
+ */
+interface MarkdownEditorStateProps {
+  pageId: string;
+  page: PageContent;
+}
+
+interface MarkdownEditorDispatchProps {
+  insertContent?: (
+    pageId: string,
+    content: string,
+    offset: number,
+    structureNodeIndex: number,
+  ) => InsertContentAction;
+}
+
+const mapStateToProps = (state: State): MarkdownEditorStateProps => ({
   page: state.pages[state.selectedPage],
   pageId: state.selectedPage,
 });
 
-export default connect(mapStateToProps)(MarkdownEditorComponent);
+const mapDispatchToProps = (
+  dispatch: Dispatch,
+): MarkdownEditorDispatchProps => ({
+  insertContent: (
+    pageId,
+    content,
+    offset,
+    structureNodeIndex,
+  ): InsertContentAction =>
+    dispatch(insertContent(pageId, content, offset, structureNodeIndex)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(MarkdownEditorComponent);

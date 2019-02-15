@@ -75,6 +75,7 @@ describe("Markdown output", () => {
     const expectedChildren: Array<{
       children: string;
       contentoffset: number;
+      nodeindex: number;
       key: string;
       dataid?: string;
     }> = [
@@ -83,65 +84,77 @@ describe("Markdown output", () => {
           "**Bold** text which has _italics_ and {text-decoration:underline}underlines{text-decoration:underline}",
         contentoffset: 0,
         key: "p:{6cb59116-8e61-03a9-39ef-edf64004790d}{62}",
+        nodeindex: 1,
       },
       {
         children:
           "**_{text-decoration:underline}Bold and underlined and italics.{text-decoration:underline}_**",
         contentoffset: 102,
         key: "p:{a977e62e-3126-8e0d-1368-bcf55df0a6de}{15}",
+        nodeindex: 3,
       },
       {
         children:
           "**{text-decoration:underline}No italics but bold and underlined{text-decoration:underline}**",
         contentoffset: 194,
         key: "p:{ee695e3a-1d4a-0a68-043f-8be19ed60633}{11}",
+        nodeindex: 5,
       },
       {
         children: 'Nothing but **"this is bold and in quotes"**',
         contentoffset: 286,
         key: "p:{044b9964-f242-02d2-3bb2-4b6e0d569c68}{11}",
+        nodeindex: 7,
       },
       {
         children: "{!cite} Citation",
         contentoffset: 330,
         key: "cite:{28216e73-1f0a-05fd-25c5-a04844147e70}{16}",
+        nodeindex: 9,
       },
       {
         children: "Quote",
         contentoffset: 346,
         key: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{19}",
+        nodeindex: 11,
       },
       {
         children: "Normal",
         contentoffset: 351,
         key: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{21}",
+        nodeindex: 13,
       },
       {
         children:
           "{background-color:yellow}Highlighted{background-color:yellow}",
         contentoffset: 357,
         key: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{23}",
+        nodeindex: 15,
       },
       {
         children: "{color:red}Red text{color:red}",
         contentoffset: 418,
         key: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{26}",
+        nodeindex: 17,
       },
       {
         children: "Superscript x{!sup}2{!sup}",
         contentoffset: 448,
         key: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{29}",
+        nodeindex: 19,
       },
       {
         children: "Subscript x{!sub}2{!sub}",
         contentoffset: 474,
         key: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{32}",
+        nodeindex: 21,
       },
       {
         children:
           "{text-decoration:line-through}Crossed out{text-decoration:line-through}",
         contentoffset: 498,
         key: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{35}",
+        nodeindex: 23,
       },
       {
         children:
@@ -149,6 +162,7 @@ describe("Markdown output", () => {
         contentoffset: 569,
         dataid: "p:{60c45a4d-c9e5-01bd-2ce3-6937733a7742}{11}",
         key: "p:{28216e73-1f0a-05fd-25c5-a04844147e70}{38}",
+        nodeindex: 25,
       },
     ];
     expectedChildren.forEach(

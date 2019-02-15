@@ -3,7 +3,7 @@
 import Token from "markdown-it/lib/token";
 import { KeyValueStr, TagType } from "../structureTree/structureModel";
 import { Attributes } from "./parser";
-import { markdownCompiler } from "./compiler";
+import { getCompiler } from "./compiler";
 
 /**
  * Type guard for `TagItem`.
@@ -109,7 +109,7 @@ export function backgroundColorRenderer(
   return renderer(tokens, index, Attributes.backgroundColor);
 }
 
-function InlineTagsRenderer(tokens: Token[], index: number): string {
+function inlineTagsRenderer(tokens: Token[], index: number): string {
   const token = tokens[index];
   const tagType = token.nesting === 1 ? TagType.StartTag : TagType.EndTag;
   if (getJSX) {
@@ -127,12 +127,16 @@ function InlineTagsRenderer(tokens: Token[], index: number): string {
   }
 }
 
+export function unfinishedEnd(tokens: Token[], index: number): string {
+  return inlineTagsRenderer(tokens, index);
+}
+
 export function supRenderer(tokens: Token[], index: number): string {
-  return InlineTagsRenderer(tokens, index);
+  return inlineTagsRenderer(tokens, index);
 }
 
 export function subRenderer(tokens: Token[], index: number): string {
-  return InlineTagsRenderer(tokens, index);
+  return inlineTagsRenderer(tokens, index);
 }
 
 /**
@@ -194,7 +198,7 @@ export function text(tokens: Token[], index: number): string {
     }
     return "";
   } else {
-    return markdownCompiler.utils.escapeHtml(content);
+    return getCompiler().utils.escapeHtml(content);
   }
 }
 
@@ -203,7 +207,7 @@ export function text(tokens: Token[], index: number): string {
  */
 export function getElements(content: string): Element[] {
   getJSX = true;
-  markdownCompiler.render(content);
+  getCompiler().render(content);
   const outElements = elements; // reassigning for the garbage collector
   elements = [];
   getJSX = false;

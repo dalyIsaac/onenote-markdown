@@ -4,11 +4,19 @@ import { PageContent } from "../page/pageModel";
 import { TagType, KeyValueStr } from "../page/structureTree/structureModel";
 
 /**
+ * Type of the received event object for `onBeforeInput`.
+ */
+export type BeforeInputType = React.FormEvent<HTMLDivElement> & {
+  data: string;
+};
+
+/**
  * Props for the `EditorBaseComponent`.
  */
 interface EditorBaseProps {
   page?: PageContent;
   getPage?: (page: PageContent) => JSX.Element[];
+  onBeforeInput?: (e: BeforeInputType) => void;
 }
 
 /**
@@ -55,10 +63,17 @@ export default function EditorBaseComponent(
 ): JSX.Element {
   if (props.page && props.getPage) {
     props.getPage(props.page);
+    const editable = props.onBeforeInput ? true : false;
+    return (
+      <div
+        className={styles.editor}
+        contentEditable={editable}
+        suppressContentEditableWarning={editable}
+        onBeforeInput={props.onBeforeInput ? props.onBeforeInput : undefined}
+      >
+        {props.getPage(props.page)}
+      </div>
+    );
   }
-  return (
-    <div className={styles.editor}>
-      {props.page && props.getPage ? props.getPage(props.page) : "Editor"}
-    </div>
-  );
+  return <div className={styles.editor}>{"Editor"}</div>;
 }

@@ -1,4 +1,9 @@
-import { Color, PageContent, PageContentMutable, StatePages } from "../pageModel";
+import {
+  Color,
+  PageContent,
+  PageContentMutable,
+  StatePages,
+} from "../pageModel";
 import { SENTINEL_INDEX, EMPTY_TREE_ROOT } from "../tree/tree";
 import { SENTINEL_STRUCTURE } from "./tree";
 import { SENTINEL_CONTENT } from "../contentTree/tree";
@@ -9,7 +14,6 @@ import { TagType } from "./structureModel";
 export const getBigTree = (): PageContent => ({
   buffers: [],
   content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-
   previouslyInsertedContentNodeIndex: null,
   previouslyInsertedContentNodeOffset: null,
   structure: {
@@ -186,7 +190,7 @@ export const getBigTree = (): PageContent => ({
     ],
     root: 5,
   },
-})
+});
 
 describe("structureTree insert tests", () => {
   test("Less than insertion - left side", () => {
