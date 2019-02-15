@@ -197,13 +197,8 @@ function handleMatch(
     delimStack.pop();
     matchedToken.nesting = -1;
   } else {
-    result.canClose = false;
-    if (result.canOpen) {
-      delimStack.push(content);
-      matchedToken.nesting = 1;
-    } else {
-      matchedToken.nesting = 0;
-    }
+    delimStack.push(content);
+    matchedToken.nesting = 1;
   }
   if (!(ruleName in InlineTags)) {
     matchedToken.attrPush([ruleName, content.split(":")[1].slice(0, -1)]);
