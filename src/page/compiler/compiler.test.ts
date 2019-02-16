@@ -645,4 +645,18 @@ describe("Custom markdown syntax", () => {
     const html = compile(md);
     expect(html).toBe(md);
   });
+
+  test("Checks that start and end tags with different cases can end eachother", () => {
+    const md = "{color:red}Red{color:Red} text{color:red}";
+    const expectedHtml = `<span style="color:red">Red</span> text{color:red}`;
+    const html = compile(md);
+    expect(html).toBe(expectedHtml);
+  });
+
+  test("Checks that the order of the custom syntax tags is respected", () => {
+    const md = "{background-color:yellow}High{background-color:yellow}lighted{background-color:yellow}";
+    const expectedHtml = `<span style="background-color:yellow">High</span>lighted{background-color:yellow}`;
+    const html = compile(md);
+    expect(html).toBe(expectedHtml);
+  });
 });
