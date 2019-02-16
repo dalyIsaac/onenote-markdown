@@ -146,10 +146,10 @@ function handleMatch(
   state: StateCore,
   { ruleName, content, startIndex }: Match,
   currentToken: Token,
-  pos: number,
   tokens: Token[],
 ): { pos: number; tokens: Token[] } {
   const endIndex = startIndex + content.length;
+  const pos = state.src.length - currentToken.content.length + startIndex;
   const tokenBefore: Token = {
     ...new Token(currentToken.type, currentToken.tag, currentToken.nesting),
     attrs: currentToken.attrs,
@@ -219,7 +219,7 @@ function handleMatch(
       [] as Token[],
     ),
   );
-  return { pos: endIndex, tokens };
+  return { pos, tokens };
 }
 
 interface Match {
@@ -259,9 +259,8 @@ function getMatches(content: string): Match[] {
  * Plugin for `markdown-it` with the custom syntax.
  * @param state The state of the compiler.
  * @param token The current token.
- * @param pos The position of the position to start the scan inside the content.
  */
-function customSyntax(state: StateCore, token: Token, pos: number): Token[] {
+function customSyntax(state: StateCore, token: Token): Token[] {
   let tokens: Token[] = [token];
   // eslint-disable-next-line no-constant-condition
   while (true) {
@@ -272,19 +271,12 @@ function customSyntax(state: StateCore, token: Token, pos: number): Token[] {
       currentToken.content = currentToken.content.slice(
         tagMatch.index + tagMatch[0].length,
       );
-      pos += tagMatch[0].length;
     } else {
       const matches = getMatches(currentToken.content);
       if (matches.length === 0) {
         return tokens;
       }
-      ({ pos, tokens } = handleMatch(
-        state,
-        matches[0],
-        currentToken,
-        pos,
-        tokens,
-      ));
+      ({ tokens } = handleMatch(state, matches[0], currentToken, tokens));
     }
   }
 }
@@ -321,12 +313,8 @@ function rule(state: StateCore, closeOpenTags = false): void {
   state.tokens.forEach((token) => {
     if (token.type === "inline") {
       let inlineTokens: Token[] = [];
-      let pos = 0;
       token.children.forEach((currentToken) => {
-        inlineTokens = inlineTokens.concat(
-          customSyntax(state, currentToken, pos),
-        );
-        pos += currentToken.content.length || currentToken.markup.length;
+        inlineTokens = inlineTokens.concat(customSyntax(state, currentToken));
       });
 
       if (closeOpenTags) {
