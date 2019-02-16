@@ -262,22 +262,22 @@ function getMatches(content: string): Match[] {
  */
 function customSyntax(state: StateCore, token: Token): Token[] {
   let tokens: Token[] = [token];
+  let currentToken = tokens[tokens.length - 1];
+  const tagMatch = tagRule.exec(currentToken.content);
+  if (tagMatch) {
+    currentToken.content = currentToken.content.slice(
+      tagMatch.index + tagMatch[0].length,
+    );
+  }
+
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    const currentToken = tokens[tokens.length - 1];
-
-    const tagMatch = tagRule.exec(currentToken.content);
-    if (tagMatch) {
-      currentToken.content = currentToken.content.slice(
-        tagMatch.index + tagMatch[0].length,
-      );
-    } else {
-      const matches = getMatches(currentToken.content);
-      if (matches.length === 0) {
-        return tokens;
-      }
-      ({ tokens } = handleMatch(state, matches[0], currentToken, tokens));
+    currentToken = tokens[tokens.length - 1];
+    const matches = getMatches(currentToken.content);
+    if (matches.length === 0) {
+      return tokens;
     }
+    ({ tokens } = handleMatch(state, matches[0], currentToken, tokens));
   }
 }
 

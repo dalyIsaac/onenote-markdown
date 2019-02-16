@@ -654,8 +654,16 @@ describe("Custom markdown syntax", () => {
   });
 
   test("Checks that the order of the custom syntax tags is respected", () => {
-    const md = "{background-color:yellow}High{background-color:yellow}lighted{background-color:yellow}";
+    const md =
+      "{background-color:yellow}High{background-color:yellow}lighted{background-color:yellow}";
     const expectedHtml = `<span style="background-color:yellow">High</span>lighted{background-color:yellow}`;
+    const html = compile(md);
+    expect(html).toBe(expectedHtml);
+  });
+
+  test("Tests that new inline `StructureNode` syntax inside a line is ignored.", () => {
+    const md = "{!cite} Citat{!cite} ion";
+    const expectedHtml = `Citat{!cite} ion`;
     const html = compile(md);
     expect(html).toBe(expectedHtml);
   });
