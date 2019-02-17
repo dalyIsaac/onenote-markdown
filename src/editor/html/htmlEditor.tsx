@@ -236,6 +236,29 @@ function updateStack(
 }
 
 /**
+ * Adds a React element for a `StartEnd` tag.
+ */
+function addStartEndTag<T>(
+  stack: Stack<T>,
+  node: StructureNode,
+  contentOffset: number,
+): void {
+  switch (node.tag) {
+    case "br": {
+      const props = {
+        contentoffset: contentOffset,
+        isbreak: "true",
+        key: node.id,
+      };
+      stack.push(<br {...props} />);
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+/**
  * Returns a `JSX.Element[]` of the OneNote page.
  * @param page The page to render.
  */
@@ -253,8 +276,10 @@ function getPage(page: PageContent): JSX.Element[] {
         stack = updateStack(stack);
         break;
       }
-      case TagType.StartEndTag:
+      case TagType.StartEndTag: {
+        addStartEndTag(stack, node, contentOffset);
         break;
+      }
     }
   }
   return stack as JSX.Element[];

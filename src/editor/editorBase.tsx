@@ -1,7 +1,10 @@
 import React from "react";
 import styles from "./editorBase.module.css";
 import { PageContent } from "../page/pageModel";
-import { TagType, KeyValueStr } from "../page/structureTree/structureModel";
+import {
+  TagType,
+  KeyValueStr,
+} from "../page/structureTree/structureModel";
 
 /**
  * Type of the received event object for `onBeforeInput`.
