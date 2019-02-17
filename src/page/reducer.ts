@@ -18,12 +18,15 @@ import {
   DeleteStructureAction,
   UPDATE_STRUCTURE_NODE,
   UpdateStructureAction,
+  SPLIT_STRUCTURE_NODE,
+  SplitStructureAction,
 } from "./structureTree/actions";
 import { insertStructureNode } from "./structureTree/insert";
 import { deleteStructureNode } from "./structureTree/delete";
 import { updateStructureNode } from "./structureTree/update";
 import { STORE_PAGE, StorePageAction } from "./tree/actions";
 import parse from "./parser/parser";
+import { splitStructureNode } from "./structureTree/split";
 
 function handleStorePage(
   state: StatePages,
@@ -199,6 +202,25 @@ function handleUpdateStructureNode(
   return newState;
 }
 
+function handleSplitStructureNode(
+  state: StatePages,
+  { pageId, ...action }: SplitStructureAction,
+): StatePages {
+  const extractedPage: PageContent = {
+    ...state[pageId],
+    structure: {
+      nodes: [...state[pageId].structure.nodes],
+      root: state[pageId].structure.root,
+    },
+  };
+  splitStructureNode(extractedPage as PageContentMutable, action);
+  const newState: StatePages = {
+    ...state,
+    [pageId]: extractedPage,
+  };
+  return newState;
+}
+
 /**
  * Reducer for the slice of the state referring to the storage of a page.
  * @param state
@@ -236,6 +258,9 @@ export default function pageReducer(
     }
     case UPDATE_STRUCTURE_NODE: {
       return handleUpdateStructureNode(state, action as UpdateStructureAction);
+    }
+    case SPLIT_STRUCTURE_NODE: {
+      return handleSplitStructureNode(state, action as SplitStructureAction);
     }
     default: {
       return state;

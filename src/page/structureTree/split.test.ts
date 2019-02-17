@@ -2,13 +2,19 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { test_06_html } from "../parser/parser.test";
 import parse from "../parser/parser";
-import { PageContent, Color, PageContentMutable } from "../pageModel";
+import {
+  PageContent,
+  Color,
+  PageContentMutable,
+  StatePages,
+} from "../pageModel";
 import { SENTINEL_CONTENT } from "../contentTree/tree";
 import { SENTINEL_INDEX } from "../tree/tree";
 import { SENTINEL_STRUCTURE } from "./tree";
 import { TagType } from "./structureModel";
 import { SplitStructureAction, SPLIT_STRUCTURE_NODE } from "./actions";
 import { splitStructureNode } from "./split";
+import pageReducer from "../reducer";
 
 Date.now = jest.fn();
 (Date.now as jest.Mock).mockReturnValue(1234567890);
@@ -1184,5 +1190,22 @@ describe("Tests for splitting `StructureNode`s.", () => {
     };
     splitStructureNode(page as PageContentMutable, action);
     expect(page).toStrictEqual(expectedPage);
+  });
+
+  test("1.5 Reducer test", () => {
+    const state: StatePages = {
+      pageId: parse(test_06_html),
+    };
+    const action: SplitStructureAction = {
+      localContentOffset: 16,
+      nodeContentOffset: 115,
+      nodeIndex: 3,
+      pageId: "pageId",
+      type: SPLIT_STRUCTURE_NODE,
+    };
+    const newState = pageReducer(state, action);
+    expect(newState).toStrictEqual({
+      pageId: expectedPage_1_2_1(),
+    });
   });
 });

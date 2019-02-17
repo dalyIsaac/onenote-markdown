@@ -5,6 +5,7 @@ import { StructureNodeMutable, TagType, StructureNode } from "./structureModel";
 import { SENTINEL_INDEX } from "../tree/tree";
 import { insertNode, fixInsert } from "../tree/insert";
 import { deleteStructureNode } from "./delete";
+import { Omit } from "react-redux";
 
 function splitPopulatedNode(
   page: PageContentMutable,
@@ -98,7 +99,7 @@ export function splitStructureNode(
     nodeIndex: startNodeIndex,
     localContentOffset,
     nodeContentOffset,
-  }: SplitStructureAction,
+  }: Omit<SplitStructureAction, "pageId">,
 ): void {
   const startNode: StructureNodeMutable = {
     ...page.structure.nodes[startNodeIndex],

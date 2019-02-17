@@ -103,4 +103,17 @@ export interface SplitStructureAction extends PageActionPartial {
    */
   readonly nodeContentOffset: number;
 }
+
+export const splitStructureNode = (
+  pageId: string,
+  nodeIndex: number,
+  nodeContentOffset: number,
+  localContentOffset: number,
+): SplitStructureAction => ({
+  localContentOffset,
+  nodeContentOffset,
+  nodeIndex,
+  pageId,
+  type: SPLIT_STRUCTURE_NODE,
+});
 //#endregion
