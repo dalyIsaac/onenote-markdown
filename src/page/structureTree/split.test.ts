@@ -15,6 +15,7 @@ import { TagType } from "./structureModel";
 import { SplitStructureAction, SPLIT_STRUCTURE_NODE } from "./actions";
 import { splitStructureNode } from "./split";
 import pageReducer from "../reducer";
+import { splitStructureNode as splitStructureNodeActionCreator } from "./actions";
 
 Date.now = jest.fn();
 (Date.now as jest.Mock).mockReturnValue(1234567890);
@@ -1196,13 +1197,7 @@ describe("Tests for splitting `StructureNode`s.", () => {
     const state: StatePages = {
       pageId: parse(test_06_html),
     };
-    const action: SplitStructureAction = {
-      localContentOffset: 16,
-      nodeContentOffset: 115,
-      nodeIndex: 3,
-      pageId: "pageId",
-      type: SPLIT_STRUCTURE_NODE,
-    };
+    const action = splitStructureNodeActionCreator("pageId", 3, 115, 16);
     const newState = pageReducer(state, action);
     expect(newState).toStrictEqual({
       pageId: expectedPage_1_2_1(),

@@ -20,6 +20,10 @@ import {
   InsertContentAction,
 } from "../../page/contentTree/actions";
 import { Dispatch } from "redux";
+import {
+  SplitStructureAction,
+  splitStructureNode,
+} from "../../page/structureTree/actions";
 
 /**
  * Definition for items which reside on the stack of elements to be rendered.
@@ -190,6 +194,34 @@ function offsetsAreEqual(
 export function MarkdownEditorComponent(
   props: MarkdownEditorStateProps & MarkdownEditorDispatchProps,
 ): JSX.Element {
+  function insertContent(
+    structureNodeIndex: Attr,
+    anchorOffset: number,
+    data: string,
+    startOffsets: SelectionOffset,
+  ): void {
+    const structureNodeIndexValue = Number(structureNodeIndex.value);
+    if (data === "\n") {
+      props.splitStructureNode(
+        props.pageId,
+        structureNodeIndexValue,
+        startOffsets.selectionOffset,
+        anchorOffset,
+      );
+    } else {
+      cursorSelection = {
+        nodeIndex: structureNodeIndexValue,
+        selectionOffset: anchorOffset,
+      };
+      props.insertContent(
+        props.pageId,
+        data,
+        startOffsets.selectionOffset,
+        structureNodeIndexValue,
+      );
+    }
+  }
+
   function onBeforeInput(e: BeforeInputType): void {
     e.preventDefault();
     const {
@@ -201,22 +233,12 @@ export function MarkdownEditorComponent(
     const startOffsets = getOffsets(anchorNode, anchorOffset);
     const endOffsets = getOffsets(focusNode, focusOffset);
 
-    if (offsetsAreEqual(startOffsets, endOffsets) && props.insertContent) {
+    if (offsetsAreEqual(startOffsets, endOffsets)) {
       const structureNodeIndex = anchorNode.parentElement!.attributes.getNamedItem(
         "nodeindex",
       );
       if (structureNodeIndex) {
-        const nodeIndexValue = Number(structureNodeIndex.value);
-        cursorSelection = {
-          nodeIndex: nodeIndexValue,
-          selectionOffset: anchorOffset,
-        };
-        props.insertContent(
-          props.pageId,
-          e.data,
-          startOffsets.selectionOffset,
-          nodeIndexValue,
-        );
+        insertContent(structureNodeIndex, anchorOffset, e.data, startOffsets);
       }
     }
   }
@@ -252,12 +274,18 @@ interface MarkdownEditorStateProps {
 }
 
 interface MarkdownEditorDispatchProps {
-  insertContent?: (
+  insertContent: (
     pageId: string,
     content: string,
     offset: number,
     structureNodeIndex: number,
   ) => InsertContentAction;
+  splitStructureNode: (
+    pageId: string,
+    nodeIndex: number,
+    nodeContentOffset: number,
+    localContentOffset: number,
+  ) => SplitStructureAction;
 }
 
 const mapStateToProps = (state: State): MarkdownEditorStateProps => ({
@@ -275,6 +303,20 @@ const mapDispatchToProps = (
     structureNodeIndex,
   ): InsertContentAction =>
     dispatch(insertContent(pageId, content, offset, structureNodeIndex)),
+  splitStructureNode: (
+    pageId: string,
+    nodeIndex: number,
+    nodeContentOffset: number,
+    localContentOffset: number,
+  ): SplitStructureAction =>
+    dispatch(
+      splitStructureNode(
+        pageId,
+        nodeIndex,
+        nodeContentOffset,
+        localContentOffset,
+      ),
+    ),
 });
 
 export default connect(
