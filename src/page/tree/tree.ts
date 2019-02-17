@@ -237,11 +237,23 @@ export function resetSentinel<T extends NodeMutable>(
 
 /**
  * Performs an in-order tree traversal of the given tree.
+ * @param startNode The node to start to tree-traversal from.
  */
 export function* inorderTreeTraversal<T extends Node>(
   tree: RedBlackTree<T>,
+  startNode?: number,
 ): IterableIterator<{ readonly offset: number } & NodePosition<T>> {
-  let value = treeMinimum(tree.nodes, tree.root);
+  let value: NodePosition<T>;
+  if (startNode) {
+    if (startNode >= tree.nodes.length) {
+      throw new RangeError(
+        `The given start node of ${startNode} is too large for this tree.`,
+      );
+    }
+    value = { index: startNode, node: tree.nodes[startNode] };
+  } else {
+    value = treeMinimum(tree.nodes, tree.root);
+  }
   let offset = 0;
   while (value.index !== SENTINEL_INDEX) {
     yield { ...value, offset };

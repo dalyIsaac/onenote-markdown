@@ -163,16 +163,16 @@ function insertAfterNode<T extends NodeMutable>(
  * @param newNode Reference to the newly created node. The node already exists
  * inside `page.nodes`.
  * @param offset The offset of the new node.
+ * @param nodeIndex The index of the new node inside `tree`.
  * @param indexToInsertAfter The index of the node to insert the new node after.
  */
-export function insertNode<T extends NodeMutable>(
+export function insertNodeWithoutInserting<T extends NodeMutable>(
   tree: RedBlackTreeMutable<T>,
   newNode: T,
   offset: number,
+  nodeIndex: number,
   indexToInsertAfter?: number,
 ): void {
-  tree.nodes.push(newNode);
-
   if (indexToInsertAfter) {
     insertAfterNode(tree, newNode, indexToInsertAfter);
     return;
@@ -190,7 +190,6 @@ export function insertNode<T extends NodeMutable>(
   let currentNode = tree.nodes[currentIndex];
 
   let nodeStartOffset = 0;
-  const nodeIndex = tree.nodes.length - 1; // the index of the new node
 
   while (currentIndex !== SENTINEL_INDEX) {
     prevIndex = currentIndex;
@@ -230,5 +229,29 @@ export function insertNode<T extends NodeMutable>(
   throw RangeError(
     "The currentIndex has reached a SENTINEL node before locating a suitable " +
       "insertion location.",
+  );
+}
+
+/**
+ * Modifies the metadata of nodes to "insert" a node.
+ * @param tree The red-black tree.
+ * @param newNode Reference to the newly created node. The node already exists
+ * inside `page.nodes`.
+ * @param offset The offset of the new node.
+ * @param indexToInsertAfter The index of the node to insert the new node after.
+ */
+export function insertNode<T extends NodeMutable>(
+  tree: RedBlackTreeMutable<T>,
+  newNode: T,
+  offset: number,
+  indexToInsertAfter?: number,
+): void {
+  tree.nodes.push(newNode);
+  insertNodeWithoutInserting(
+    tree,
+    newNode,
+    offset,
+    tree.nodes.length - 1,
+    indexToInsertAfter,
   );
 }

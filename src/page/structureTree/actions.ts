@@ -86,3 +86,21 @@ export const updateStructure = (
   values,
 });
 //#endregion
+
+//#region Split structure node
+export const SPLIT_STRUCTURE_NODE = "SPLIT_STRUCTURE_NODE";
+
+export interface SplitStructureAction extends PageActionPartial {
+  readonly nodeIndex: number;
+
+  /**
+   * The local content offset inside the `StructureNode` where the s
+   */
+  readonly localContentOffset: number;
+
+  /**
+   * The content offset of the start of the node.
+   */
+  readonly nodeContentOffset: number;
+}
+//#endregion
