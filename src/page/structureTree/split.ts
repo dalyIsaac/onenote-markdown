@@ -4,7 +4,6 @@ import { findEndTag, generateNewId } from "./tree";
 import { StructureNodeMutable, TagType, StructureNode } from "./structureModel";
 import { SENTINEL_INDEX } from "../tree/tree";
 import { insertNode, fixInsert } from "../tree/insert";
-import { deleteStructureNode } from "./delete";
 import { Omit } from "react-redux";
 
 function splitPopulatedNode(
@@ -71,23 +70,7 @@ function insertNewBreak(
     tagType: TagType.StartEndTag,
   };
   insertNode(page.structure, newNode, nodeContentOffset, previousBreakIndex);
-}
-
-/**
- * Converts the empty `StructureNode` into a `<br />` tag, and removes the
- * paired end tag.
- */
-function makeEmptyBreak(
-  page: PageContentMutable,
-  startNodeIndex: number,
-  startNode: StructureNodeMutable,
-  endIndex: number,
-): void {
-  const { attributes, style, ...newStartNode } = startNode;
-  newStartNode.tag = "br";
-  newStartNode.tagType = TagType.StartEndTag;
-  page.structure.nodes[startNodeIndex] = newStartNode;
-  deleteStructureNode(page, endIndex);
+  fixInsert(page.structure, page.structure.nodes.length - 1);
 }
 
 /**
@@ -104,20 +87,24 @@ export function splitStructureNode(
   const startNode: StructureNodeMutable = {
     ...page.structure.nodes[startNodeIndex],
   };
+
   if (startNode.tag === "br" && startNode.tagType === TagType.StartEndTag) {
     insertNewBreak(page, nodeContentOffset, startNodeIndex);
     return;
   }
+
   const endTag = findEndTag(page.structure, startNode.id, startNodeIndex);
   if (endTag === null) {
     throw new RangeError(
       `Could not find the expected node whose id is ${startNode.id}`,
     );
   }
-  page.structure.nodes[startNodeIndex] = startNode;
   const { index: endIndex } = endTag;
 
-  if (startNode.length > 0) {
+  if (startNode.length === localContentOffset) {
+    insertNewBreak(page, nodeContentOffset, endIndex);
+  } else {
+    page.structure.nodes[startNodeIndex] = startNode;
     splitPopulatedNode(
       page,
       startNode,
@@ -125,7 +112,5 @@ export function splitStructureNode(
       nodeContentOffset,
       endIndex,
     );
-  } else {
-    makeEmptyBreak(page, startNodeIndex, startNode, endIndex);
   }
 }
