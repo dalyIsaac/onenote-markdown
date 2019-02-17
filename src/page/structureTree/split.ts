@@ -50,7 +50,7 @@ export function splitStructureNode(
 
   startNode.length = localContentOffset;
 
-  // TODO: check if `startNode` has a length of 0, then handle appropriately
+  // TODO: check if secondStartNode has a length of 0, then handle appropriately
   page.structure.nodes[startNodeIndex] = startNode;
 
   insertNode(
