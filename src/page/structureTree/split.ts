@@ -4,26 +4,15 @@ import { findEndTag, generateNewId } from "./tree";
 import { StructureNodeMutable, TagType } from "./structureModel";
 import { SENTINEL_INDEX } from "../tree/tree";
 import { insertNode, fixInsert } from "../tree/insert";
+import { deleteStructureNode } from "./delete";
 
-export function splitStructureNode(
+function splitPopulatedNode(
   page: PageContentMutable,
-  {
-    nodeIndex: startNodeIndex,
-    localContentOffset,
-    nodeContentOffset,
-  }: SplitStructureAction,
+  startNode: StructureNodeMutable,
+  localContentOffset: number,
+  nodeContentOffset: number,
+  endIndex: number,
 ): void {
-  const startNode: StructureNodeMutable = {
-    ...page.structure.nodes[startNodeIndex],
-  };
-  const endTag = findEndTag(page.structure, startNode.id, startNodeIndex);
-  if (endTag === null) {
-    throw new RangeError(
-      `Could not find the expected node whose id is ${startNode.id}`,
-    );
-  }
-  const { index: endIndex } = endTag;
-
   const secondStartNode: StructureNodeMutable = {
     color: Color.Red,
     id: generateNewId(),
@@ -47,12 +36,7 @@ export function splitStructureNode(
     tag: "p",
     tagType: TagType.EndTag,
   };
-
   startNode.length = localContentOffset;
-
-  // TODO: check if secondStartNode has a length of 0, then handle appropriately
-  page.structure.nodes[startNodeIndex] = startNode;
-
   insertNode(
     page.structure,
     secondStartNode,
@@ -67,4 +51,48 @@ export function splitStructureNode(
     page.structure.nodes.length - 1,
   );
   fixInsert(page.structure, page.structure.nodes.length - 1);
+}
+
+function makeEmptyBreak(
+  page: PageContentMutable,
+  startNode: StructureNodeMutable,
+  endIndex: number,
+): void {
+  startNode.tag = "br";
+  startNode.tagType = TagType.StartEndTag;
+  deleteStructureNode(page, endIndex);
+}
+
+export function splitStructureNode(
+  page: PageContentMutable,
+  {
+    nodeIndex: startNodeIndex,
+    localContentOffset,
+    nodeContentOffset,
+  }: SplitStructureAction,
+): void {
+  const startNode: StructureNodeMutable = {
+    ...page.structure.nodes[startNodeIndex],
+  };
+  const endTag = findEndTag(page.structure, startNode.id, startNodeIndex);
+  if (endTag === null) {
+    throw new RangeError(
+      `Could not find the expected node whose id is ${startNode.id}`,
+    );
+  }
+  page.structure.nodes[startNodeIndex] = startNode;
+  const { index: endIndex } = endTag;
+
+  if (startNode.length > 0) {
+    splitPopulatedNode(
+      page,
+      startNode,
+      localContentOffset,
+      nodeContentOffset,
+      endIndex,
+    );
+  } else {
+    // TODO: check if the node is a <br /> tag
+    makeEmptyBreak(page, startNode, endIndex);
+  }
 }
