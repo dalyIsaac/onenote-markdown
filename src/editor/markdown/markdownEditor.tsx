@@ -4,6 +4,9 @@ import EditorBase, {
   LastStartNode,
   getLastStartItem,
   BeforeInputType,
+  CONTENT_OFFSET,
+  IS_BREAK,
+  NODE_INDEX,
 } from "../editorBase";
 import styles from "./markdownEditor.module.css";
 import { connect } from "react-redux";
@@ -24,6 +27,7 @@ import {
   SplitStructureAction,
   splitStructureNode,
 } from "../../page/structureTree/actions";
+import { is } from "ts-type-guards";
 
 /**
  * Definition for items which reside on the stack of elements to be rendered.
@@ -78,8 +82,8 @@ function updateItem(
     "p",
     {
       ...node.attributes,
-      contentoffset: contentOffset,
-      nodeindex: index,
+      [CONTENT_OFFSET]: contentOffset,
+      [NODE_INDEX]: index,
       key: node.id,
       ref,
     },
@@ -114,16 +118,23 @@ function updateStack(
 function addStartEndTag<T>(
   stack: Stack<T>,
   node: StructureNode,
+  nodeIndex: number,
   contentOffset: number,
 ): void {
   switch (node.tag) {
     case "br": {
+      const ref =
+        cursorSelection && cursorSelection.nodeIndex === nodeIndex
+          ? selectionRef
+          : null;
       const props = {
+        [NODE_INDEX]: nodeIndex,
         contentoffset: contentOffset,
         isbreak: "true",
         key: node.id,
+        ref,
       };
-      stack.push(<p {...props}>&nbsp;</p>);
+      stack.push(React.createElement("p", props, <br />));
       break;
     }
     default:
@@ -150,7 +161,7 @@ function getPage(page: PageContent): JSX.Element[] {
         break;
       }
       case TagType.StartEndTag: {
-        addStartEndTag(stack, node, contentOffset);
+        addStartEndTag(stack, node, index, contentOffset);
         break;
       }
     }
@@ -179,11 +190,20 @@ interface SelectionOffset {
  * Returns the start, selection point, and end offsets inside the entire page,
  * given the node and selection offset.
  */
-function getOffsets(node: Node, selectionOffset: number): SelectionOffset {
-  if (node.parentElement) {
-    const startOffsetStr = node.parentElement.attributes.getNamedItem(
-      "contentoffset",
-    );
+function getOffsets(
+  node: Node | Element,
+  selectionOffset: number,
+): SelectionOffset {
+  let target: Element | null;
+  if (is(Element)(node) && node.attributes.length !== 0) {
+    // node.attributes.length === 0 when node is <br />
+    target = node;
+  } else {
+    target = node.parentElement;
+  }
+
+  if (target) {
+    const startOffsetStr = target.attributes.getNamedItem(CONTENT_OFFSET);
     if (!startOffsetStr) {
       throw new Error("Unable to retrieve the contentoffset for the node.");
     }
@@ -192,6 +212,12 @@ function getOffsets(node: Node, selectionOffset: number): SelectionOffset {
       return {
         endOffset: startOffset + node.textContent.length,
         selectionOffset: startOffset + selectionOffset,
+        startOffset,
+      };
+    } else if (target.attributes.getNamedItem(IS_BREAK)) {
+      return {
+        endOffset: startOffset,
+        selectionOffset: 0,
         startOffset,
       };
     } else {
@@ -216,34 +242,96 @@ function offsetsAreEqual(
   );
 }
 
+function isBreak(
+  element: Element,
+): { result: boolean; element: Element | null } {
+  let currentElement: Element | null;
+  if (element.attributes.length === 0) {
+    currentElement = element.parentElement;
+  } else {
+    currentElement = element;
+  }
+
+  if (currentElement) {
+    const breakAttr = currentElement.attributes.getNamedItem(IS_BREAK);
+    if (breakAttr && breakAttr.value === true.toString()) {
+      return { element: currentElement, result: true };
+    }
+  }
+  return { element: currentElement, result: false };
+}
+
 export function MarkdownEditorComponent(
   props: MarkdownEditorStateProps & MarkdownEditorDispatchProps,
 ): JSX.Element {
   function insertContent(
-    structureNodeIndex: Attr,
+    parentElement: Element | null,
     anchorOffset: number,
-    data: string,
+    content: string,
     startOffsets: SelectionOffset,
   ): void {
-    const structureNodeIndexValue = Number(structureNodeIndex.value);
-    if (data === "\n") {
-      props.splitStructureNode(
-        props.pageId,
-        structureNodeIndexValue,
-        startOffsets.selectionOffset,
-        anchorOffset,
+    if (parentElement) {
+      const structureNodeIndex = parentElement.attributes.getNamedItem(
+        NODE_INDEX,
       );
-    } else {
-      cursorSelection = {
-        nodeIndex: structureNodeIndexValue,
-        selectionOffset: anchorOffset,
-      };
-      props.insertContent(
-        props.pageId,
-        data,
-        startOffsets.selectionOffset,
-        structureNodeIndexValue,
-      );
+      if (structureNodeIndex) {
+        const structureNodeIndexValue = Number(structureNodeIndex.value);
+        if (content === "\n") {
+          cursorSelection = {
+            nodeIndex: props.page.structure.nodes.length,
+            selectionOffset: 0,
+          };
+          props.splitStructureNode(
+            props.pageId,
+            structureNodeIndexValue,
+            startOffsets.selectionOffset,
+            anchorOffset,
+          );
+        } else {
+          cursorSelection = {
+            nodeIndex: structureNodeIndexValue,
+            selectionOffset: anchorOffset + content.length,
+          };
+          props.insertContent(
+            props.pageId,
+            content,
+            startOffsets.selectionOffset,
+            structureNodeIndexValue,
+          );
+        }
+      }
+    }
+  }
+
+  function inputOnBreak(element: Element, content: string): void {
+    const structureNodeIndex = element.attributes.getNamedItem(NODE_INDEX);
+    const contentOffset = element.attributes.getNamedItem(CONTENT_OFFSET);
+    if (structureNodeIndex && contentOffset) {
+      const structureNodeIndexValue = Number(structureNodeIndex.value);
+      const contentOffsetValue = Number(contentOffset.value);
+      if (content === "\n") {
+        cursorSelection = {
+          nodeIndex: structureNodeIndexValue,
+          selectionOffset: 0,
+        };
+        props.splitStructureNode(
+          props.pageId,
+          structureNodeIndexValue,
+          contentOffsetValue,
+          0,
+        );
+      } else {
+        cursorSelection = {
+          nodeIndex: structureNodeIndexValue,
+          selectionOffset: content.length,
+        };
+        props.insertContent(
+          props.pageId,
+          content,
+          contentOffsetValue,
+          structureNodeIndexValue,
+        );
+      }
     }
   }
 
@@ -259,11 +347,18 @@ export function MarkdownEditorComponent(
     const endOffsets = getOffsets(focusNode, focusOffset);
 
     if (offsetsAreEqual(startOffsets, endOffsets)) {
-      const structureNodeIndex = anchorNode.parentElement!.attributes.getNamedItem(
-        "nodeindex",
-      );
-      if (structureNodeIndex) {
-        insertContent(structureNodeIndex, anchorOffset, e.data, startOffsets);
+      if (is(Element)(anchorNode)) {
+        const { result, element } = isBreak(anchorNode);
+        if (result && element) {
+          inputOnBreak(element, e.data);
+        }
+      } else {
+        insertContent(
+          anchorNode.parentElement,
+          anchorOffset,
+          e.data,
+          startOffsets,
+        );
       }
     }
   }
@@ -274,7 +369,7 @@ export function MarkdownEditorComponent(
       selection.empty();
       const range = document.createRange();
       const node = (selectionRef.current as HTMLSpanElement).firstChild;
-      range.setStart(node!, cursorSelection.selectionOffset + 1);
+      range.setStart(node!, cursorSelection.selectionOffset);
       selection.addRange(range);
     }
   });

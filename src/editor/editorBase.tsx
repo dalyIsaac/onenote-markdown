@@ -1,10 +1,7 @@
 import React from "react";
 import styles from "./editorBase.module.css";
 import { PageContent } from "../page/pageModel";
-import {
-  TagType,
-  KeyValueStr,
-} from "../page/structureTree/structureModel";
+import { TagType, KeyValueStr } from "../page/structureTree/structureModel";
 
 /**
  * Type of the received event object for `onBeforeInput`.
@@ -45,6 +42,10 @@ export type LastStartNode<T> = T & {
   node: BasicNode;
   stackIndex: number;
 };
+
+export const CONTENT_OFFSET = "contentoffset";
+export const IS_BREAK = "isbreak";
+export const NODE_INDEX = "nodeindex";
 
 /**
  * Gets the last item on the stack where the `TagType` is `TagType.StartTag`.
