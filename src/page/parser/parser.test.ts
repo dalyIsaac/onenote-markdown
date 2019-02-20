@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/camelcase */
 import parse from "./parser";
 import { PageContent, Color } from "../pageModel";

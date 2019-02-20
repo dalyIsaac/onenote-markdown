@@ -1,5 +1,5 @@
 import { insertNode, fixInsert } from "../tree/insert";
-import { Color, PageContentMutable } from "../pageModel";
+import { Color, PageContentMutable, RedBlackTreeMutable } from "../pageModel";
 import {
   SENTINEL_INDEX,
   EMPTY_TREE_ROOT,
@@ -14,6 +14,7 @@ import {
   NodePositionOffset,
   updateContentTreeMetadata,
 } from "./tree";
+import { StructureNodeMutable, TagType } from "../structureTree/structureModel";
 
 /**
  * The desired content and offset for an insertion operation.
@@ -266,6 +267,36 @@ function insertAtEndPreviouslyInsertedNode(
   }
 }
 
+function convertBreakToParagraph(
+  tree: RedBlackTreeMutable<StructureNodeMutable>,
+  contentOffset: number,
+  structureNodeIndex: number,
+): void {
+  const startNode: StructureNodeMutable = {
+    ...tree.nodes[structureNodeIndex],
+    style: {
+      marginBottom: "0pt",
+      marginTop: "0pt",
+    },
+    tag: "p",
+    tagType: TagType.StartTag,
+  };
+  tree.nodes[structureNodeIndex] = startNode;
+  const endNode: StructureNodeMutable = {
+    color: Color.Red,
+    id: tree.nodes[structureNodeIndex].id,
+    left: SENTINEL_INDEX,
+    leftSubTreeLength: 0,
+    length: 0,
+    parent: SENTINEL_INDEX,
+    right: SENTINEL_INDEX,
+    tag: "p",
+    tagType: TagType.EndTag,
+  };
+  insertNode(tree, endNode, contentOffset, structureNodeIndex);
+  fixInsert(tree, tree.nodes.length - 1);
+}
+
 /**
  * Inserts the given content into a page.
  * @param content The content to insert into the page.
@@ -280,6 +311,10 @@ export function insertContent(
   structureNodeIndex: number,
   maxBufferLength: number,
 ): void {
+  if (page.structure.nodes[structureNodeIndex].tag === "br") {
+    console.log("Input on <br />");
+    convertBreakToParagraph(page.structure, content.offset, structureNodeIndex);
+  }
   if (page.content.root === EMPTY_TREE_ROOT) {
     createNodeCreateBuffer(content, page);
     return;

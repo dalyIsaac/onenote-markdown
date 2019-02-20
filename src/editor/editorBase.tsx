@@ -43,6 +43,10 @@ export type LastStartNode<T> = T & {
   stackIndex: number;
 };
 
+export const CONTENT_OFFSET = "contentoffset";
+export const IS_BREAK = "isbreak";
+export const NODE_INDEX = "nodeindex";
+
 /**
  * Gets the last item on the stack where the `TagType` is `TagType.StartTag`.
  */

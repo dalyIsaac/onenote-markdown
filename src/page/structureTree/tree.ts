@@ -1,5 +1,10 @@
 import { Color, RedBlackTree, RedBlackTreeMutable } from "../pageModel";
-import { SENTINEL_INDEX } from "../tree/tree";
+import {
+  SENTINEL_INDEX,
+  inorderTreeTraversal,
+  NodePosition,
+  nextNode,
+} from "../tree/tree";
 import { StructureNode, TagType, StructureNodeMutable } from "./structureModel";
 
 export const SENTINEL_STRUCTURE: StructureNode = {
@@ -17,7 +22,8 @@ export const SENTINEL_STRUCTURE: StructureNode = {
 /**
  * Calculates the number of nodes below a node, inclusive.
  * @param tree The red-black tree for the content.
- * @param index The index of the node in the `nodes` array of the red-black tree.
+ * @param index The index of the node in the `nodes` array of the red-black
+ * tree.
  */
 export function calculateLengthCount(
   tree: RedBlackTree<StructureNode>,
@@ -32,8 +38,9 @@ export function calculateLengthCount(
 }
 
 /**
- * Ensures that the `SENTINEL` node in the piece table is true to the values of the `SENTINEL` node.
- * This function does mutate the `SENTINEL` node, to ensure that `SENTINEL` is a singleton.
+ * Ensures that the `SENTINEL` node in the piece table is true to the values of
+ * the `SENTINEL` node. This function does mutate the `SENTINEL` node, to ensure
+ * that `SENTINEL` is a singleton.
  * @param tree The red-black tree for the content.
  */
 export function resetSentinelStructure(
@@ -73,4 +80,32 @@ export function updateStructureTreeMetadata(
 
     x = tree.nodes[x].parent;
   }
+}
+
+/**
+ * Finds the corresponding end tag for a given id. Returns `null` if the `id`
+ * cannot be found.
+ * @param id The `id` of the `StructureNode`.
+ * @param startIndex The `id` of the start `StructureNode`.
+ */
+export function findEndTag(
+  tree: RedBlackTree<StructureNode> | RedBlackTreeMutable<StructureNode>,
+  id: string,
+  startIndex: number,
+): NodePosition<StructureNode> | null {
+  const { index: indexAfterStart } = nextNode(tree.nodes, startIndex);
+  for (const { index, node } of inorderTreeTraversal(tree, indexAfterStart)) {
+    if (node.id === id) {
+      return { index, node };
+    }
+  }
+  return null;
+}
+
+/**
+ * Generates a new `id` for a `StructureNode`. This is only to be used
+ * locally, and will not be synced to the Microsoft Graph.
+ */
+export function generateNewId(): string {
+  return `{!localGeneratedId}${Date.now()}`;
 }
