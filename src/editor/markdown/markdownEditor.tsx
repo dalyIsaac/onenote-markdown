@@ -311,7 +311,7 @@ export function MarkdownEditorComponent(
       const contentOffsetValue = Number(contentOffset.value);
       if (content === "\n") {
         cursorSelection = {
-          nodeIndex: structureNodeIndexValue,
+          nodeIndex: props.page.structure.nodes.length,
           selectionOffset: 0,
         };
         props.splitStructureNode(
@@ -363,6 +363,7 @@ export function MarkdownEditorComponent(
     }
   }
 
+  window.getSelection().empty();
   useEffect(() => {
     if (cursorSelection) {
       const selection = window.getSelection();
