@@ -7,6 +7,9 @@ import { MarkdownEditorComponent } from "./markdownEditor";
 import EditorBaseComponent from "../editorBase";
 
 configure({ adapter: new Adapter() });
+// TODO: Redo when writing tests for the GUI.
+window.getSelection = jest.fn();
+(window.getSelection as jest.Mock).mockReturnValue({ empty: () => undefined });
 
 describe("Markdown output", () => {
   test("Basic text", () => {
