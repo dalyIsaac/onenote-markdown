@@ -4,8 +4,8 @@ import pageReducer from "./page/reducer";
 import selectedPageReducer from "./selectedPage/reducer";
 
 export interface State {
-  readonly pages: StatePages;
-  readonly selectedPage: string;
+  pages: StatePages;
+  selectedPage: string;
 }
 
 export default combineReducers({

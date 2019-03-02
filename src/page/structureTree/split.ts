@@ -1,19 +1,19 @@
-import { PageContentMutable, Color } from "../pageModel";
+import { PageContent, Color } from "../pageModel";
 import { SplitStructureAction } from "./actions";
 import { findEndTag, generateNewId } from "./tree";
-import { StructureNodeMutable, TagType, StructureNode } from "./structureModel";
+import { TagType, StructureNode } from "./structureModel";
 import { SENTINEL_INDEX } from "../tree/tree";
 import { insertNode, fixInsert } from "../tree/insert";
 import { Omit } from "react-redux";
 
 function splitPopulatedNode(
-  page: PageContentMutable,
-  startNode: StructureNodeMutable,
+  page: PageContent,
+  startNode: StructureNode,
   localContentOffset: number,
   nodeContentOffset: number,
   endIndex: number,
 ): void {
-  const secondStartNode: StructureNodeMutable = {
+  const secondStartNode: StructureNode = {
     color: Color.Red,
     id: generateNewId(),
     left: SENTINEL_INDEX,
@@ -25,7 +25,7 @@ function splitPopulatedNode(
     tag: "p",
     tagType: TagType.StartTag,
   };
-  const secondEndNode: StructureNodeMutable = {
+  const secondEndNode: StructureNode = {
     color: Color.Red,
     id: secondStartNode.id,
     left: SENTINEL_INDEX,
@@ -54,7 +54,7 @@ function splitPopulatedNode(
 }
 
 function insertNewBreak(
-  page: PageContentMutable,
+  page: PageContent,
   nodeContentOffset: number,
   previousBreakIndex: number,
 ): void {
@@ -77,14 +77,14 @@ function insertNewBreak(
  * Splits a `StructureNode` if the node is populated, or inserts a `<br />` tag.
  */
 export function splitStructureNode(
-  page: PageContentMutable,
+  page: PageContent,
   {
     nodeIndex: startNodeIndex,
     localContentOffset,
     nodeContentOffset,
   }: Omit<SplitStructureAction, "pageId">,
 ): void {
-  const startNode: StructureNodeMutable = {
+  const startNode: StructureNode = {
     ...page.structure.nodes[startNodeIndex],
   };
 

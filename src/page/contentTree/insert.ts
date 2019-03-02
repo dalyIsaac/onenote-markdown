@@ -1,12 +1,12 @@
 import { insertNode, fixInsert } from "../tree/insert";
-import { Color, PageContentMutable, RedBlackTreeMutable } from "../pageModel";
+import { Color, PageContent, RedBlackTree } from "../pageModel";
 import {
   SENTINEL_INDEX,
   EMPTY_TREE_ROOT,
   NodePosition,
   prevNode,
 } from "../tree/tree";
-import { Buffer, ContentNode, ContentNodeMutable } from "./contentModel";
+import { Buffer, ContentNode } from "./contentModel";
 import {
   findNodeAtOffset,
   getLineStarts,
@@ -14,14 +14,14 @@ import {
   NodePositionOffset,
   updateContentTreeMetadata,
 } from "./tree";
-import { StructureNodeMutable, TagType } from "../structureTree/structureModel";
+import { TagType, StructureNode } from "../structureTree/structureModel";
 
 /**
  * The desired content and offset for an insertion operation.
  */
 export interface ContentInsert {
-  readonly content: string;
-  readonly offset: number;
+  content: string;
+  offset: number;
 }
 
 /**
@@ -32,7 +32,7 @@ export interface ContentInsert {
  */
 function createNodeCreateBuffer(
   content: ContentInsert,
-  page: PageContentMutable,
+  page: PageContent,
   indexToInsertAfter?: number,
 ): void {
   const newBuffer: Buffer = {
@@ -72,7 +72,7 @@ function createNodeCreateBuffer(
  */
 function createNodeAppendToBuffer(
   content: ContentInsert,
-  page: PageContentMutable,
+  page: PageContent,
   indexToInsertAfter?: number,
 ): void {
   const oldBuffer = page.buffers[page.buffers.length - 1];
@@ -122,9 +122,9 @@ function createNodeAppendToBuffer(
  */
 function insertAtNodeExtremity(
   content: ContentInsert,
-  page: PageContentMutable,
+  page: PageContent,
   maxBufferLength: number,
-  nodePosition?: NodePosition<ContentNodeMutable>,
+  nodePosition?: NodePosition<ContentNode>,
 ): void {
   let indexToInsertAfter: number | undefined;
   if (nodePosition) {
@@ -163,7 +163,7 @@ function insertAtNodeExtremity(
  */
 function insertInsideNode(
   content: ContentInsert,
-  page: PageContentMutable,
+  page: PageContent,
   maxBufferLength: number,
   nodePosition: NodePositionOffset,
 ): void {
@@ -225,7 +225,7 @@ function insertInsideNode(
  */
 function insertAtEndPreviouslyInsertedNode(
   content: ContentInsert,
-  page: PageContentMutable,
+  page: PageContent,
   maxBufferLength: number,
 ): void {
   // check buffer size
@@ -245,7 +245,7 @@ function insertAtEndPreviouslyInsertedNode(
       lineStarts: getLineStarts(newContent),
     };
 
-    const node: ContentNodeMutable = {
+    const node: ContentNode = {
       ...page.content.nodes[page.content.nodes.length - 1],
       end: {
         column:
@@ -268,11 +268,11 @@ function insertAtEndPreviouslyInsertedNode(
 }
 
 function convertBreakToParagraph(
-  tree: RedBlackTreeMutable<StructureNodeMutable>,
+  tree: RedBlackTree<StructureNode>,
   contentOffset: number,
   structureNodeIndex: number,
 ): void {
-  const startNode: StructureNodeMutable = {
+  const startNode: StructureNode = {
     ...tree.nodes[structureNodeIndex],
     style: {
       marginBottom: "0pt",
@@ -282,7 +282,7 @@ function convertBreakToParagraph(
     tagType: TagType.StartTag,
   };
   tree.nodes[structureNodeIndex] = startNode;
-  const endNode: StructureNodeMutable = {
+  const endNode: StructureNode = {
     color: Color.Red,
     id: tree.nodes[structureNodeIndex].id,
     left: SENTINEL_INDEX,
@@ -306,7 +306,7 @@ function convertBreakToParagraph(
  * @param maxBufferLength The maximum length of a buffer's content/string.
  */
 export function insertContent(
-  page: PageContentMutable,
+  page: PageContent,
   content: ContentInsert,
   structureNodeIndex: number,
   maxBufferLength: number,

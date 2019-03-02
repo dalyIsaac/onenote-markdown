@@ -1,11 +1,11 @@
-import { Color, RedBlackTree, RedBlackTreeMutable } from "../pageModel";
+import { Color, RedBlackTree } from "../pageModel";
 import {
   SENTINEL_INDEX,
   inorderTreeTraversal,
   NodePosition,
   nextNode,
 } from "../tree/tree";
-import { StructureNode, TagType, StructureNodeMutable } from "./structureModel";
+import { StructureNode, TagType } from "./structureModel";
 
 export const SENTINEL_STRUCTURE: StructureNode = {
   color: Color.Black,
@@ -44,16 +44,16 @@ export function calculateLengthCount(
  * @param tree The red-black tree for the content.
  */
 export function resetSentinelStructure(
-  tree: RedBlackTreeMutable<StructureNodeMutable>,
+  tree: RedBlackTree<StructureNode>,
 ): void {
-  (SENTINEL_STRUCTURE as StructureNodeMutable).color = Color.Black;
-  (SENTINEL_STRUCTURE as StructureNodeMutable).id = "SENTINEL";
-  (SENTINEL_STRUCTURE as StructureNodeMutable).left = SENTINEL_INDEX;
-  (SENTINEL_STRUCTURE as StructureNodeMutable).leftSubTreeLength = 0;
-  (SENTINEL_STRUCTURE as StructureNodeMutable).parent = SENTINEL_INDEX;
-  (SENTINEL_STRUCTURE as StructureNodeMutable).right = SENTINEL_INDEX;
-  (SENTINEL_STRUCTURE as StructureNodeMutable).tag = "";
-  (SENTINEL_STRUCTURE as StructureNodeMutable).tagType = TagType.StartEndTag;
+  SENTINEL_STRUCTURE.color = Color.Black;
+  SENTINEL_STRUCTURE.id = "SENTINEL";
+  SENTINEL_STRUCTURE.left = SENTINEL_INDEX;
+  SENTINEL_STRUCTURE.leftSubTreeLength = 0;
+  SENTINEL_STRUCTURE.parent = SENTINEL_INDEX;
+  SENTINEL_STRUCTURE.right = SENTINEL_INDEX;
+  SENTINEL_STRUCTURE.tag = "";
+  SENTINEL_STRUCTURE.tagType = TagType.StartEndTag;
   tree.nodes[0] = SENTINEL_STRUCTURE;
 }
 
@@ -64,7 +64,7 @@ export function resetSentinelStructure(
  * @param lengthDelta The length delta to be applied.
  */
 export function updateStructureTreeMetadata(
-  tree: RedBlackTreeMutable<StructureNodeMutable>,
+  tree: RedBlackTree<StructureNode>,
   x: number,
   lengthDelta: number,
 ): void {
@@ -89,7 +89,7 @@ export function updateStructureTreeMetadata(
  * @param startIndex The `id` of the start `StructureNode`.
  */
 export function findEndTag(
-  tree: RedBlackTree<StructureNode> | RedBlackTreeMutable<StructureNode>,
+  tree: RedBlackTree<StructureNode> | RedBlackTree<StructureNode>,
   id: string,
   startIndex: number,
 ): NodePosition<StructureNode> | null {

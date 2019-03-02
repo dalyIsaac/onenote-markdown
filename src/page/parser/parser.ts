@@ -1,4 +1,4 @@
-import { PageContent, PageContentMutable } from "../pageModel";
+import { PageContent } from "../pageModel";
 import { SENTINEL_CONTENT, MAX_BUFFER_LENGTH } from "../contentTree/tree";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { chunks, TokenType } from "tiny-html-lexer";
@@ -8,7 +8,7 @@ import { InsertStructureProps } from "../structureTree/actions";
 import he from "he";
 import { insertContent } from "../contentTree/insert";
 import { insertStructureNode } from "../structureTree/insert";
-import { BufferMutable } from "../contentTree/contentModel";
+import { Buffer } from "../contentTree/contentModel";
 
 interface Attributes {
   [key: string]: string;
@@ -68,7 +68,7 @@ export function getStyle(text: string): KeyValueStr {
  * @param content The HTML content to parse.
  */
 export default function parse(content: string): PageContent {
-  const page: PageContentMutable = {
+  const page: PageContent = {
     buffers: [],
     content: {
       nodes: [SENTINEL_CONTENT],
@@ -378,7 +378,7 @@ export default function parse(content: string): PageContent {
     start();
   }
   page.buffers.forEach((x) => {
-    (x as BufferMutable).isReadOnly = true;
+    x.isReadOnly = true;
   });
   return page as PageContent;
 }

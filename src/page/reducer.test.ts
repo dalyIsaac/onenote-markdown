@@ -11,7 +11,6 @@ import { SENTINEL_CONTENT } from "./contentTree/tree";
 import {
   Color,
   PageContent,
-  PageContentMutable,
   StatePages,
 } from "./pageModel";
 import pageReducer from "./reducer";
@@ -20,7 +19,7 @@ import { SENTINEL_INDEX } from "./tree/tree";
 import { TagType } from "./structureTree/structureModel";
 import { deleteStructure } from "./structureTree/actions";
 
-export const getStartPage = (): PageContentMutable => ({
+export const getStartPage = (): PageContent => ({
   buffers: [
     {
       content:
@@ -866,7 +865,7 @@ describe("page/reducer", () => {
   });
 
   test("Delete structure node", () => {
-    const page: PageContentMutable = {
+    const page: PageContent = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
       previouslyInsertedContentNodeIndex: null,
@@ -893,7 +892,7 @@ describe("page/reducer", () => {
     const state: StatePages = {
       pageId: page,
     };
-    const expectedPage: PageContentMutable = {
+    const expectedPage: PageContent = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
       previouslyInsertedContentNodeIndex: null,

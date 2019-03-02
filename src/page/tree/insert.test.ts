@@ -1,14 +1,14 @@
-import { PageContentMutable, Color, PageContent } from "../pageModel";
+import { PageContent, Color } from "../pageModel";
 import { SENTINEL_CONTENT } from "../contentTree/tree";
 import { SENTINEL_INDEX } from "./tree";
-import { ContentNodeMutable } from "../contentTree/contentModel";
+import { ContentNode } from "../contentTree/contentModel";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { fixInsert } from "./insert";
 
 describe("fix insert function", () => {
   describe("black uncle cases", () => {
     test("Scenario 1: Left left case", () => {
-      const page: PageContentMutable = {
+      const page: PageContent = {
         buffers: [],
         content: {
           nodes: [
@@ -241,7 +241,7 @@ describe("fix insert function", () => {
     });
 
     test("Scenario 2: Left right case", () => {
-      const page: PageContentMutable = {
+      const page: PageContent = {
         buffers: [],
         content: {
           nodes: [
@@ -472,7 +472,7 @@ describe("fix insert function", () => {
     });
 
     test("Scenario 3: Right right case", () => {
-      const page: PageContentMutable = {
+      const page: PageContent = {
         buffers: [],
         content: {
           nodes: [
@@ -703,7 +703,7 @@ describe("fix insert function", () => {
     });
 
     test("Scenario 4: Right left case", () => {
-      const page: PageContentMutable = {
+      const page: PageContent = {
         buffers: [],
         content: {
           nodes: [
@@ -936,7 +936,7 @@ describe("fix insert function", () => {
 
   describe("red uncle cases", () => {
     test("Right red uncle", () => {
-      const page: PageContentMutable = {
+      const page: PageContent = {
         buffers: [],
         content: {
           nodes: [
@@ -1129,7 +1129,7 @@ describe("fix insert function", () => {
     });
 
     test("Left red uncle", () => {
-      const page: PageContentMutable = {
+      const page: PageContent = {
         buffers: [],
         content: {
           nodes: [
@@ -1323,7 +1323,7 @@ describe("fix insert function", () => {
   });
 
   test("Inserted node is root", () => {
-    const getPage = (): PageContentMutable => ({
+    const getPage = (): PageContent => ({
       buffers: [
         {
           content: "a",
@@ -1361,7 +1361,7 @@ describe("fix insert function", () => {
       structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
     });
     const expectedPage = getPage();
-    (expectedPage.content.nodes[1] as ContentNodeMutable).color = Color.Black;
+    (expectedPage.content.nodes[1] as ContentNode).color = Color.Black;
     const page = getPage();
     fixInsert(page.content, 1);
     expect(page).toStrictEqual(expectedPage);

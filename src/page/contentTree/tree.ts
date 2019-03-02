@@ -2,14 +2,9 @@
  * Contains common items.
  */
 
-import {
-  Color,
-  PageContent,
-  RedBlackTreeMutable,
-  RedBlackTree,
-} from "../pageModel";
+import { Color, PageContent, RedBlackTree } from "../pageModel";
 import { SENTINEL_INDEX, nextNode } from "../tree/tree";
-import { BufferCursor, ContentNode, ContentNodeMutable } from "./contentModel";
+import { BufferCursor, ContentNode } from "./contentModel";
 
 /**
  * The maximum length of a buffer string.
@@ -40,23 +35,23 @@ export interface NodePositionOffset {
   /**
    * Piece Index
    */
-  readonly node: ContentNode;
+  node: ContentNode;
 
   /**
    * The index of the node inside the array.
    */
-  readonly nodeIndex: number;
+  nodeIndex: number;
 
   /**
    * The remainder between the offset and the character count of the left
    * subtree.
    */
-  readonly remainder: number;
+  remainder: number;
 
   /**
    * The offset of the node against the start of the content.
    */
-  readonly nodeStartOffset: number;
+  nodeStartOffset: number;
 }
 
 /**
@@ -180,7 +175,7 @@ export function getNodeContent(page: PageContent, nodeIndex: number): string {
  * table to find the character count for.
  */
 export function calculateCharCount(
-  tree: RedBlackTreeMutable<ContentNode>,
+  tree: RedBlackTree<ContentNode>,
   index: number,
 ): number {
   if (index === SENTINEL_INDEX) {
@@ -219,20 +214,18 @@ export function calculateLineFeedCount(
  * ensure that `SENTINEL` is a singleton.
  * @param tree The red-black tree for the content.
  */
-export function resetSentinelContent(
-  tree: RedBlackTreeMutable<ContentNode>,
-): void {
-  (SENTINEL_CONTENT as ContentNodeMutable).bufferIndex = 0;
-  (SENTINEL_CONTENT as ContentNodeMutable).start = { column: 0, line: 0 };
-  (SENTINEL_CONTENT as ContentNodeMutable).end = { column: 0, line: 0 };
-  (SENTINEL_CONTENT as ContentNodeMutable).leftCharCount = 0;
-  (SENTINEL_CONTENT as ContentNodeMutable).leftLineFeedCount = 0;
-  (SENTINEL_CONTENT as ContentNodeMutable).length = 0;
-  (SENTINEL_CONTENT as ContentNodeMutable).lineFeedCount = 0;
-  (SENTINEL_CONTENT as ContentNodeMutable).color = Color.Black;
-  (SENTINEL_CONTENT as ContentNodeMutable).parent = SENTINEL_INDEX;
-  (SENTINEL_CONTENT as ContentNodeMutable).left = SENTINEL_INDEX;
-  (SENTINEL_CONTENT as ContentNodeMutable).right = SENTINEL_INDEX;
+export function resetSentinelContent(tree: RedBlackTree<ContentNode>): void {
+  SENTINEL_CONTENT.bufferIndex = 0;
+  SENTINEL_CONTENT.start = { column: 0, line: 0 };
+  SENTINEL_CONTENT.end = { column: 0, line: 0 };
+  SENTINEL_CONTENT.leftCharCount = 0;
+  SENTINEL_CONTENT.leftLineFeedCount = 0;
+  SENTINEL_CONTENT.length = 0;
+  SENTINEL_CONTENT.lineFeedCount = 0;
+  SENTINEL_CONTENT.color = Color.Black;
+  SENTINEL_CONTENT.parent = SENTINEL_INDEX;
+  SENTINEL_CONTENT.left = SENTINEL_INDEX;
+  SENTINEL_CONTENT.right = SENTINEL_INDEX;
   tree.nodes[0] = SENTINEL_CONTENT;
 }
 
@@ -244,7 +237,7 @@ export function resetSentinelContent(
  * @param lineFeedCountDelta The line feed count delta to be applied.
  */
 export function updateContentTreeMetadata(
-  tree: RedBlackTreeMutable<ContentNode>,
+  tree: RedBlackTree<ContentNode>,
   x: number,
   charCountDelta: number,
   lineFeedCountDelta: number,
@@ -252,15 +245,12 @@ export function updateContentTreeMetadata(
   // node length change or line feed count change
   while (x !== tree.root && x !== SENTINEL_INDEX) {
     if (tree.nodes[tree.nodes[x].parent].left === x) {
-      tree.nodes[tree.nodes[x].parent] = {
-        ...tree.nodes[tree.nodes[x].parent],
-        leftCharCount:
-          (tree.nodes[tree.nodes[x].parent] as ContentNode).leftCharCount +
-          charCountDelta,
-        leftLineFeedCount:
-          (tree.nodes[tree.nodes[x].parent] as ContentNode).leftLineFeedCount +
-          lineFeedCountDelta,
-      };
+      tree.nodes[tree.nodes[x].parent].leftCharCount =
+        (tree.nodes[tree.nodes[x].parent] as ContentNode).leftCharCount +
+        charCountDelta;
+      tree.nodes[tree.nodes[x].parent].leftLineFeedCount =
+        (tree.nodes[tree.nodes[x].parent] as ContentNode).leftLineFeedCount +
+        lineFeedCountDelta;
     }
 
     x = tree.nodes[x].parent;

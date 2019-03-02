@@ -16,13 +16,13 @@ export interface InsertStructureProps {
 }
 
 export interface InsertStructureAction extends PageActionPartial {
-  readonly tag: string;
-  readonly tagType: TagType;
-  readonly id: string;
-  readonly style?: KeyValueStr;
-  readonly attributes?: KeyValueStr;
-  readonly offset: number;
-  readonly length: number;
+  tag: string;
+  tagType: TagType;
+  id: string;
+  style?: KeyValueStr;
+  attributes?: KeyValueStr;
+  offset: number;
+  length: number;
 }
 
 /**
@@ -54,7 +54,7 @@ export const insertStructure = (
 export const DELETE_STRUCTURE_NODE = "DELETE_STRUCTURE_NODE";
 
 export interface DeleteStructureAction extends PageActionPartial {
-  readonly nodeIndex: number;
+  nodeIndex: number;
 }
 
 export const deleteStructure = (
@@ -71,8 +71,8 @@ export const deleteStructure = (
 export const UPDATE_STRUCTURE_NODE = "UPDATE_STRUCTURE_NODE";
 
 export interface UpdateStructureAction extends PageActionPartial {
-  readonly nodeIndex: number;
-  readonly values: UpdateStructureValues;
+  nodeIndex: number;
+  values: UpdateStructureValues;
 }
 
 export const updateStructure = (
@@ -91,17 +91,17 @@ export const updateStructure = (
 export const SPLIT_STRUCTURE_NODE = "SPLIT_STRUCTURE_NODE";
 
 export interface SplitStructureAction extends PageActionPartial {
-  readonly nodeIndex: number;
+  nodeIndex: number;
 
   /**
    * The local content offset inside the `StructureNode` where the s
    */
-  readonly localContentOffset: number;
+  localContentOffset: number;
 
   /**
    * The content offset of the start of the node.
    */
-  readonly nodeContentOffset: number;
+  nodeContentOffset: number;
 }
 
 export const splitStructureNode = (

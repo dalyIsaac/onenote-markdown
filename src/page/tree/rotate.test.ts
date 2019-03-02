@@ -1,4 +1,5 @@
-import { Color, PageContentMutable } from "../pageModel";
+/* eslint-disable max-len */
+import { Color, PageContent } from "../pageModel";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { SENTINEL_INDEX } from "./tree";
 import { ContentNode } from "../contentTree/contentModel";
@@ -8,7 +9,7 @@ import { StructureNode, TagType } from "../structureTree/structureModel";
 
 describe("Functions for performing rotations on the piece table/red-black tree.", () => {
   describe("Content nodes", () => {
-    const constructSimplePieceTableBeforeLeftRotate = (): PageContentMutable => {
+    const constructSimplePieceTableBeforeLeftRotate = (): PageContent => {
       const nodes: ContentNode[] = [
         SENTINEL_CONTENT,
         {
@@ -77,10 +78,10 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           start: { column: 0, line: 0 },
         },
       ];
-      const pieceTable: PageContentMutable = {
+      const pieceTable: PageContent = {
         buffers: [],
         content: { nodes, root: 2 },
-        
+
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -89,7 +90,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
     };
     const constructSimplePieceTableAfterRightRotate = constructSimplePieceTableBeforeLeftRotate;
 
-    const constructSimplePieceTableAfterLeftRotate = (): PageContentMutable => {
+    const constructSimplePieceTableAfterLeftRotate = (): PageContent => {
       const nodes: ContentNode[] = [
         SENTINEL_CONTENT,
         {
@@ -158,10 +159,10 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           start: { column: 0, line: 0 },
         },
       ];
-      const pieceTable: PageContentMutable = {
+      const pieceTable: PageContent = {
         buffers: [],
         content: { nodes, root: 4 },
-        
+
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -170,7 +171,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
     };
     const constructSimplePieceTableBeforeRightRotate = constructSimplePieceTableAfterLeftRotate;
 
-    const constructComplexPieceTableBeforeLeftRotate = (): PageContentMutable => {
+    const constructComplexPieceTableBeforeLeftRotate = (): PageContent => {
       const nodes: ContentNode[] = [
         SENTINEL_CONTENT,
         {
@@ -356,10 +357,10 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           start: { column: 0, line: 0 },
         },
       ];
-      const pieceTable: PageContentMutable = {
+      const pieceTable: PageContent = {
         buffers: [],
         content: { nodes, root: 5 },
-        
+
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -368,7 +369,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
     };
     const constructComplexPieceTableAfterRightRotate = constructComplexPieceTableBeforeLeftRotate;
 
-    const constructComplexPieceTableAfterLeftRotate = (): PageContentMutable => {
+    const constructComplexPieceTableAfterLeftRotate = (): PageContent => {
       const nodes: ContentNode[] = [
         SENTINEL_CONTENT,
         {
@@ -554,10 +555,10 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           start: { column: 0, line: 0 },
         },
       ];
-      const pieceTable: PageContentMutable = {
+      const pieceTable: PageContent = {
         buffers: [],
         content: { nodes, root: 5 },
-        
+
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -566,7 +567,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
     };
     const constructComplexPieceTableBeforeRightRotate = constructComplexPieceTableAfterLeftRotate;
 
-    const constructOneNodePieceTable = (): PageContentMutable => ({
+    const constructOneNodePieceTable = (): PageContent => ({
       buffers: [],
       content: {
         nodes: [
@@ -587,7 +588,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
         ],
         root: 1,
       },
-      
+
       previouslyInsertedContentNodeIndex: 1,
       previouslyInsertedContentNodeOffset: 0,
       structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
@@ -642,7 +643,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
   });
 
   describe("Structure nodes", () => {
-    const constructComplexPieceTableBeforeLeftRotate = (): PageContentMutable => {
+    const constructComplexPieceTableBeforeLeftRotate = (): PageContent => {
       const nodes: StructureNode[] = [
         SENTINEL_STRUCTURE,
         {
@@ -814,10 +815,10 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           tagType: TagType.StartEndTag,
         },
       ];
-      const pieceTable: PageContentMutable = {
+      const pieceTable: PageContent = {
         buffers: [],
         content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-        
+
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes, root: 5 },
@@ -826,7 +827,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
     };
     const constructComplexPieceTableAfterRightRotate = constructComplexPieceTableBeforeLeftRotate;
 
-    const constructComplexPieceTableAfterLeftRotate = (): PageContentMutable => {
+    const constructComplexPieceTableAfterLeftRotate = (): PageContent => {
       const nodes: StructureNode[] = [
         SENTINEL_STRUCTURE,
         {
@@ -998,10 +999,10 @@ describe("Functions for performing rotations on the piece table/red-black tree."
           tagType: TagType.StartEndTag,
         },
       ];
-      const pieceTable: PageContentMutable = {
+      const pieceTable: PageContent = {
         buffers: [],
         content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
-        
+
         previouslyInsertedContentNodeIndex: null,
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes, root: 5 },

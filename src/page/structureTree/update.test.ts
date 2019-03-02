@@ -1,4 +1,4 @@
-import { PageContentMutable, Color, StatePages } from "../pageModel";
+import { PageContent, Color, StatePages } from "../pageModel";
 import { SENTINEL_CONTENT } from "../contentTree/tree";
 import { SENTINEL_INDEX } from "../tree/tree";
 import { SENTINEL_STRUCTURE } from "./tree";
@@ -7,7 +7,7 @@ import pageReducer from "../reducer";
 import { updateStructure } from "./actions";
 
 describe("Update a structure node", () => {
-  const getPage = (): PageContentMutable => ({
+  const getPage = (): PageContent => ({
     buffers: [],
     content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
 
@@ -71,7 +71,7 @@ describe("Update a structure node", () => {
     },
   });
 
-  const getExpectedPage = (): PageContentMutable => ({
+  const getExpectedPage = (): PageContent => ({
     buffers: [],
     content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
 

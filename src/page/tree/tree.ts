@@ -3,20 +3,13 @@ import {
   calculateLineFeedCount,
   resetSentinelContent,
 } from "../contentTree/tree";
+import { Node, RedBlackTree } from "../pageModel";
 import {
-  Node,
-  NodeMutable,
-  RedBlackTreeMutable,
-  RedBlackTree,
-} from "../pageModel";
-import {
-  ContentNodeMutable,
-  isContentRedBlackTreeMutable,
+  isContentRedBlackTree,
   isContentNode,
 } from "../contentTree/contentModel";
 import {
-  StructureNodeMutable,
-  isStructureRedBlackTreeMutable,
+  isStructureRedBlackTree,
   isStructureNode,
 } from "../structureTree/structureModel";
 import {
@@ -38,8 +31,8 @@ export const EMPTY_TREE_ROOT = -1;
  * Contains a node and its index in a red-black tree.
  */
 export interface NodePosition<T extends Node> {
-  readonly node: T;
-  readonly index: number;
+  node: T;
+  index: number;
 }
 
 /**
@@ -48,7 +41,7 @@ export interface NodePosition<T extends Node> {
  * @param x The index from which to find the minimum of that subtree.
  */
 export function treeMinimum<T extends Node>(
-  nodes: ReadonlyArray<T>,
+  nodes: T[],
   x: number,
 ): NodePosition<T> {
   while (nodes[x].left !== SENTINEL_INDEX) {
@@ -63,7 +56,7 @@ export function treeMinimum<T extends Node>(
  * @param x The index from which to find the maximum of that subtree.
  */
 export function treeMaximum<T extends Node>(
-  nodes: ReadonlyArray<T>,
+  nodes: T[],
   x: number,
 ): NodePosition<T> {
   while (nodes[x].right !== SENTINEL_INDEX) {
@@ -78,7 +71,7 @@ export function treeMaximum<T extends Node>(
  * @param currentNode The index of the current node in the `nodes` array.
  */
 export function nextNode<T extends Node>(
-  nodes: ReadonlyArray<T>,
+  nodes: T[],
   currentNode: number,
 ): NodePosition<T> {
   if (nodes[currentNode].right !== SENTINEL_INDEX) {
@@ -109,7 +102,7 @@ export function nextNode<T extends Node>(
  * @param currentNode The index of the current node in the `nodes` array.
  */
 export function prevNode<T extends Node>(
-  nodes: ReadonlyArray<T>,
+  nodes: T[],
   currentNode: number,
 ): NodePosition<T> {
   if (nodes[currentNode].left !== SENTINEL_INDEX) {
@@ -142,7 +135,7 @@ export function prevNode<T extends Node>(
  * for updating the tree.
  */
 export function recomputeTreeMetadata<T extends Node>(
-  tree: RedBlackTreeMutable<T>,
+  tree: RedBlackTree<T>,
   x: number,
 ): void {
   // content node
@@ -173,20 +166,20 @@ export function recomputeTreeMetadata<T extends Node>(
   x = tree.nodes[x].parent;
   tree.nodes[x] = { ...tree.nodes[x] };
 
-  if (isContentRedBlackTreeMutable(tree)) {
+  if (isContentRedBlackTree(tree)) {
     lengthDelta =
       calculateCharCount(tree, tree.nodes[x].left) -
-      (tree.nodes[x] as ContentNodeMutable).leftCharCount;
+      tree.nodes[x].leftCharCount;
     lineFeedDelta =
       calculateLineFeedCount(tree, tree.nodes[x].left) -
       tree.nodes[x].leftLineFeedCount;
-    (tree.nodes[x] as ContentNodeMutable).leftCharCount += lengthDelta;
-    (tree.nodes[x] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta;
-  } else if (isStructureRedBlackTreeMutable(tree)) {
+    tree.nodes[x].leftCharCount += lengthDelta;
+    tree.nodes[x].leftLineFeedCount += lineFeedDelta;
+  } else if (isStructureRedBlackTree(tree)) {
     lengthDelta =
       calculateLengthCount(tree, tree.nodes[x].left) -
       tree.nodes[x].leftSubTreeLength;
-    (tree.nodes[x] as StructureNodeMutable).leftSubTreeLength += lengthDelta;
+    tree.nodes[x].leftSubTreeLength += lengthDelta;
   }
 
   if (length !== undefined && !(lengthDelta !== 0 || lineFeedDelta !== 0)) {
@@ -200,17 +193,11 @@ export function recomputeTreeMetadata<T extends Node>(
         ...tree.nodes[tree.nodes[x].parent],
       };
 
-      if (isContentRedBlackTreeMutable(tree)) {
-        (tree.nodes[
-          tree.nodes[x].parent
-        ] as ContentNodeMutable).leftCharCount += lengthDelta!;
-        (tree.nodes[
-          tree.nodes[x].parent
-        ] as ContentNodeMutable).leftLineFeedCount += lineFeedDelta!;
-      } else if (isStructureRedBlackTreeMutable(tree)) {
-        (tree.nodes[
-          tree.nodes[x].parent
-        ] as StructureNodeMutable).leftSubTreeLength += lengthDelta!;
+      if (isContentRedBlackTree(tree)) {
+        tree.nodes[tree.nodes[x].parent].leftCharCount += lengthDelta!;
+        tree.nodes[tree.nodes[x].parent].leftLineFeedCount += lineFeedDelta!;
+      } else if (isStructureRedBlackTree(tree)) {
+        tree.nodes[tree.nodes[x].parent].leftSubTreeLength += lengthDelta!;
       }
     }
 
@@ -225,12 +212,10 @@ export function recomputeTreeMetadata<T extends Node>(
  * to ensure that `SENTINEL` is a singleton.
  * @param tree The red-black tree for the content.
  */
-export function resetSentinel<T extends NodeMutable>(
-  tree: RedBlackTreeMutable<T>,
-): void {
-  if (isContentRedBlackTreeMutable(tree)) {
+export function resetSentinel<T extends Node>(tree: RedBlackTree<T>): void {
+  if (isContentRedBlackTree(tree)) {
     resetSentinelContent(tree);
-  } else if (isStructureRedBlackTreeMutable(tree)) {
+  } else if (isStructureRedBlackTree(tree)) {
     resetSentinelStructure(tree);
   }
 }
@@ -242,7 +227,7 @@ export function resetSentinel<T extends NodeMutable>(
 export function* inorderTreeTraversal<T extends Node>(
   tree: RedBlackTree<T>,
   startNode?: number,
-): IterableIterator<{ readonly offset: number } & NodePosition<T>> {
+): IterableIterator<{ offset: number } & NodePosition<T>> {
   let value: NodePosition<T>;
   if (startNode) {
     if (startNode >= tree.nodes.length) {

@@ -1,4 +1,4 @@
-import { PageContentMutable } from "../pageModel";
+import { PageContent } from "../pageModel";
 import { deleteNode } from "../tree/delete";
 
 /**
@@ -7,7 +7,7 @@ import { deleteNode } from "../tree/delete";
  * @param nodeIndex The index of the structure node to delete.
  */
 export function deleteStructureNode(
-  page: PageContentMutable,
+  page: PageContent,
   nodeIndex: number,
 ): void {
   deleteNode(page.structure, nodeIndex);

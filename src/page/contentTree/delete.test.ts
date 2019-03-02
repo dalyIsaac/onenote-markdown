@@ -1,4 +1,4 @@
-import { Color, PageContentMutable } from "../pageModel";
+import { Color, PageContent } from "../pageModel";
 import { getStartPage } from "../reducer.test";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { SENTINEL_INDEX } from "../tree/tree";
@@ -9,7 +9,7 @@ describe("delete content", () => {
   describe("Scenario 1", () => {
     describe("Scenario 1a: delete the content from an entire node", () => {
       test("Scenario 1a: Test 1", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -53,7 +53,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -105,7 +105,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1a: Test 2", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -149,7 +149,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -201,7 +201,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1a: Test 3", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -245,7 +245,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -297,7 +297,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1a: Test 4", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -341,7 +341,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -395,7 +395,7 @@ describe("delete content", () => {
 
     describe("Scenario 1b: delete from the start of a node to a point in the node", () => {
       test("Scenario 1b: Test 1", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -439,7 +439,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -491,7 +491,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1b: Test 2", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -535,7 +535,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -587,7 +587,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1b: Test 3", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -631,7 +631,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -683,7 +683,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1b: Test 4", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -727,7 +727,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -779,7 +779,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1b: Test 5", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -823,7 +823,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -875,7 +875,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1b: Test 6", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -919,7 +919,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -973,7 +973,7 @@ describe("delete content", () => {
 
     describe("Scenario 1c: delete from a point in a node to the end of the node", () => {
       test("Scenario 1c: Test 1", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1017,7 +1017,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1069,7 +1069,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1c: Test 2", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1113,7 +1113,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1165,7 +1165,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1c: Test 3", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1209,7 +1209,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1261,7 +1261,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1c: Test 4", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndzef",
@@ -1305,7 +1305,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndzef",
@@ -1357,7 +1357,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1c: Test 5", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1401,7 +1401,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1453,7 +1453,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1c: Test 6", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1497,7 +1497,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1549,7 +1549,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1c: Test 7", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1593,7 +1593,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 0,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1647,7 +1647,7 @@ describe("delete content", () => {
 
     describe("Scenario 1d: delete from a point in a node to another point in the node", () => {
       test("Scenario 1d: Test 1", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1691,7 +1691,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1756,7 +1756,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1d: Test 2", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1800,7 +1800,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1865,7 +1865,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1d: Test 3", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1909,7 +1909,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: 5,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -1974,7 +1974,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1d: Test 4", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -2018,7 +2018,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -2083,7 +2083,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1d: Test 5", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -2127,7 +2127,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndef",
@@ -2192,7 +2192,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1d: Test 6", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndefgh",
@@ -2236,7 +2236,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndefgh",
@@ -2301,7 +2301,7 @@ describe("delete content", () => {
       });
 
       test("Scenario 1d: Test 7", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [
             {
               content: "abc\ndefgh",
@@ -2345,7 +2345,7 @@ describe("delete content", () => {
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content: "abc\ndefgh",
@@ -2415,7 +2415,7 @@ describe("delete content", () => {
     describe("Scenario 2a: delete from the start of a node to the end of another node", () => {
       test("Scenario 2a: Test 1", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -2603,7 +2603,7 @@ describe("delete content", () => {
 
       test("Scenario 2a: Test 2", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -2791,7 +2791,7 @@ describe("delete content", () => {
 
       test("Scenario 2a: Test 3", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -2979,7 +2979,7 @@ describe("delete content", () => {
 
       test("Scenario 2a: Test 4", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -3167,7 +3167,7 @@ describe("delete content", () => {
 
       test("Scenario 2a: Test 5", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -3355,7 +3355,7 @@ describe("delete content", () => {
 
       test("Scenario 2a: Test 6", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -3543,7 +3543,7 @@ describe("delete content", () => {
 
       test("Scenario 2a: Test 7", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -3731,7 +3731,7 @@ describe("delete content", () => {
 
       test("Scenario 2a: Test 8", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -3921,7 +3921,7 @@ describe("delete content", () => {
     describe("Scenario 2b: delete from the start of a node to a point in another node", () => {
       test("Scenario 2b: Test 1", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -4109,7 +4109,7 @@ describe("delete content", () => {
 
       test("Scenario 2b: Test 2", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -4293,7 +4293,7 @@ describe("delete content", () => {
 
       test("Scenario 2b: Test 3", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -4481,7 +4481,7 @@ describe("delete content", () => {
 
       test("Scenario 2b: Test 4", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -4671,7 +4671,7 @@ describe("delete content", () => {
     describe("Scenario 2c: delete from a point in a node to the end of another node", () => {
       test("Scenario 2c: Test 1", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -4859,7 +4859,7 @@ describe("delete content", () => {
 
       test("Scenario 2c: Test 2", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -5047,7 +5047,7 @@ describe("delete content", () => {
 
       test("Scenario 2c: Test 3", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -5235,7 +5235,7 @@ describe("delete content", () => {
 
       test("Scenario 2c: Test 4", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -5423,7 +5423,7 @@ describe("delete content", () => {
 
       test("Scenario 2c: Test 5", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -5611,7 +5611,7 @@ describe("delete content", () => {
 
       test("Scenario 2c: Test 6", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -5801,7 +5801,7 @@ describe("delete content", () => {
     describe("Scenario 2d: delete from a point in a node to a point in another node", () => {
       test("Scenario 2d: Test 1", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -5989,7 +5989,7 @@ describe("delete content", () => {
 
       test("Scenario 2d: Test 2", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -6177,7 +6177,7 @@ describe("delete content", () => {
 
       test("Scenario 2d: Test 3", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -6365,7 +6365,7 @@ describe("delete content", () => {
 
       test("Scenario 2d: Test 4", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:
@@ -6553,7 +6553,7 @@ describe("delete content", () => {
 
       test("Scenario 2d: Test 5", () => {
         const page = getStartPage();
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [
             {
               content:

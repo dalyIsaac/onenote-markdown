@@ -1,5 +1,5 @@
-import { PageContentMutable } from "../pageModel";
-import { KeyValueStr, StructureNodeMutable } from "./structureModel";
+import { PageContent } from "../pageModel";
+import { KeyValueStr } from "./structureModel";
 
 export interface UpdateStructureValues {
   length?: number;
@@ -8,15 +8,14 @@ export interface UpdateStructureValues {
 }
 
 export function updateStructureNode(
-  page: PageContentMutable,
+  page: PageContent,
   nodeIndex: number,
   props: UpdateStructureValues,
 ): void {
   const node = page.structure.nodes[nodeIndex];
-  const newNode: StructureNodeMutable = { ...node };
   const { length, style, attributes } = props;
-  newNode.style = style || newNode.style;
-  newNode.attributes = attributes || newNode.attributes;
-  newNode.length = length || newNode.length;
-  page.structure.nodes[nodeIndex] = newNode;
+  node.style = style || node.style;
+  node.attributes = attributes || node.attributes;
+  node.length = length || node.length;
+  page.structure.nodes[nodeIndex] = node;
 }
