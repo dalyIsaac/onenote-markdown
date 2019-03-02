@@ -165,37 +165,35 @@ function insertInsideNode(
   content: ContentInsert,
   page: PageContent,
   maxBufferLength: number,
-  nodePosition: NodePositionOffset,
+  { node, nodeIndex, remainder }: NodePositionOffset,
 ): void {
-  const oldNode = nodePosition.node;
-  const nodeContent = getNodeContent(page, nodePosition.nodeIndex);
-  const firstPartContent = nodeContent.slice(0, nodePosition.remainder);
+  const nodeContent = getNodeContent(page, nodeIndex);
+  const firstPartContent = nodeContent.slice(0, remainder);
   const firstPartLineStarts = getLineStarts(firstPartContent);
 
   const firstPartNode: ContentNode = {
-    ...oldNode,
+    ...node,
     end: {
       column:
         firstPartContent.length -
         firstPartLineStarts[firstPartLineStarts.length - 1] +
-        oldNode.start.column,
-      line: firstPartLineStarts.length - 1 + oldNode.start.line,
+        node.start.column,
+      line: firstPartLineStarts.length - 1 + node.start.line,
     },
     length: firstPartContent.length,
     lineFeedCount: firstPartLineStarts.length - 1,
   };
-
-  page.content.nodes[nodePosition.nodeIndex] = firstPartNode;
+  page.content.nodes[nodeIndex] = firstPartNode;
 
   const secondPartNode: ContentNode = {
-    bufferIndex: oldNode.bufferIndex,
+    bufferIndex: node.bufferIndex,
     color: Color.Red,
-    end: oldNode.end,
+    end: node.end,
     left: SENTINEL_INDEX,
     leftCharCount: 0,
     leftLineFeedCount: 0,
-    length: oldNode.length - firstPartNode.length,
-    lineFeedCount: oldNode.lineFeedCount - firstPartNode.lineFeedCount,
+    length: node.length - firstPartNode.length,
+    lineFeedCount: node.lineFeedCount - firstPartNode.lineFeedCount,
     parent: SENTINEL_INDEX,
     right: SENTINEL_INDEX,
     start: firstPartNode.end,
@@ -204,7 +202,7 @@ function insertInsideNode(
   // and similiarly with line feed
   updateContentTreeMetadata(
     page.content,
-    nodePosition.nodeIndex,
+    nodeIndex,
     -secondPartNode.length,
     -secondPartNode.lineFeedCount,
   );
@@ -244,21 +242,15 @@ function insertAtEndPreviouslyInsertedNode(
       isReadOnly: oldBuffer.isReadOnly,
       lineStarts: getLineStarts(newContent),
     };
-
-    const node: ContentNode = {
-      ...page.content.nodes[page.content.nodes.length - 1],
-      end: {
-        column:
-          buffer.content.length -
-          buffer.lineStarts[buffer.lineStarts.length - 1],
-        line: buffer.lineStarts.length - 1,
-      },
-      lineFeedCount: buffer.lineStarts.length - 1,
+    const node = page.content.nodes[page.content.nodes.length - 1];
+    node.end = {
+      column:
+        buffer.content.length - buffer.lineStarts[buffer.lineStarts.length - 1],
+      line: buffer.lineStarts.length - 1,
     };
+    node.lineFeedCount = buffer.lineStarts.length - 1;
     node.length += content.content.length;
-
     page.buffers[page.buffers.length - 1] = buffer;
-    page.content.nodes[page.content.nodes.length - 1] = node;
   } else {
     // scenario 2: cannot fit inside the previous buffer
     // creates a new node
@@ -272,15 +264,13 @@ function convertBreakToParagraph(
   contentOffset: number,
   structureNodeIndex: number,
 ): void {
-  const startNode: StructureNode = {
-    ...tree.nodes[structureNodeIndex],
-    style: {
-      marginBottom: "0pt",
-      marginTop: "0pt",
-    },
-    tag: "p",
-    tagType: TagType.StartTag,
+  const startNode = tree.nodes[structureNodeIndex];
+  startNode.style = {
+    marginBottom: "0pt",
+    marginTop: "0pt",
   };
+  startNode.tag = "p";
+  startNode.tagType = TagType.StartTag;
   tree.nodes[structureNodeIndex] = startNode;
   const endNode: StructureNode = {
     color: Color.Red,
@@ -351,8 +341,6 @@ export function insertContent(
     fixInsert(page.content, page.content.nodes.length - 1);
   }
   if (structureNodeIndex !== SENTINEL_INDEX) {
-    const node = { ...page.structure.nodes[structureNodeIndex] };
-    node.length += content.content.length;
-    page.structure.nodes[structureNodeIndex] = node;
+    page.structure.nodes[structureNodeIndex].length += content.content.length;
   }
 }

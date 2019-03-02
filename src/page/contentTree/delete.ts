@@ -19,7 +19,8 @@ export interface ContentDelete {
 }
 
 /**
- * Gets the number of line feeds before, between, and after a start and end offset.
+ * Gets the number of line feeds before, between, and after a start and end
+ * offset.
  * Returns `-1` if nodePosition.remainder === nodePosition.nodeStartOffset.
  * @param page The page/piece table.
  * @param nodePosition The position of the node which contains the offset.
@@ -129,23 +130,22 @@ function getNodeAfterContent(
 }
 
 /**
- * Gets the node after the content.
+ * Gets the node before the content.
  * @param page The page/piece table.
  * @param deleteRange The start and end offset of the content to delete.
- * @param nodePosition The position of the old node before the content to delete.
+ * @param nodePosition The position of the old node before the content to
+ * delete.
  */
 function getNodeBeforeContent(
   page: PageContent,
   deleteRange: ContentDelete,
-  nodePosition: NodePositionOffset,
+  { node, nodeIndex, nodeStartOffset, remainder }: NodePositionOffset,
 ): ContentNode {
   // "local" offsets refer to local within the buffer
   const localStartOffset =
-    page.buffers[nodePosition.node.bufferIndex].lineStarts[
-      nodePosition.node.start.line
-    ] +
-    nodePosition.node.start.column +
-    nodePosition.remainder;
+    page.buffers[node.bufferIndex].lineStarts[node.start.line] +
+    node.start.column +
+    remainder;
   const deletedLength = deleteRange.endOffset - deleteRange.startOffset;
   const localEndOffset = localStartOffset + deletedLength + 1;
   const {
@@ -153,22 +153,22 @@ function getNodeBeforeContent(
     lineFeedCountAfterNodeStartBeforeStart,
   } = getLineFeedCountsForOffsets(
     page,
-    nodePosition,
+    { node, nodeIndex, nodeStartOffset, remainder },
     localStartOffset,
     localEndOffset,
   );
   const nodeBeforeContent: ContentNode = {
-    ...nodePosition.node,
+    ...node,
     end: {
       column:
         localStartOffset -
-        page.buffers[nodePosition.node.bufferIndex].lineStarts[
+        page.buffers[node.bufferIndex].lineStarts[
           lineFeedCountBeforeNodeStart + lineFeedCountAfterNodeStartBeforeStart
         ],
       line:
         lineFeedCountBeforeNodeStart + lineFeedCountAfterNodeStartBeforeStart,
     },
-    length: nodePosition.remainder,
+    length: remainder,
     lineFeedCount: lineFeedCountAfterNodeStartBeforeStart,
   };
   return nodeBeforeContent;

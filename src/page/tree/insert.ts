@@ -107,17 +107,11 @@ function insertAfterNode<T extends Node>(
   indexToInsertAfter: number,
 ): void {
   if (tree.nodes[indexToInsertAfter].right === SENTINEL_INDEX) {
-    tree.nodes[indexToInsertAfter] = {
-      ...tree.nodes[indexToInsertAfter],
-      right: tree.nodes.length - 1,
-    };
+    tree.nodes[indexToInsertAfter].right = tree.nodes.length - 1;
     newNode.parent = indexToInsertAfter;
   } else {
     const next = nextNode(tree.nodes, indexToInsertAfter);
-    tree.nodes[next.index] = {
-      ...tree.nodes[next.index],
-      left: tree.nodes.length - 1,
-    };
+    tree.nodes[next.index].left = tree.nodes.length - 1;
     newNode.parent = next.index;
   }
 }

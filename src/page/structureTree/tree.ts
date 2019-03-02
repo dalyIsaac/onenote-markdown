@@ -71,13 +71,9 @@ export function updateStructureTreeMetadata(
   // node length change or line feed count change
   while (x !== tree.root && x !== SENTINEL_INDEX) {
     if (tree.nodes[tree.nodes[x].parent].left === x) {
-      tree.nodes[tree.nodes[x].parent] = {
-        ...tree.nodes[tree.nodes[x].parent],
-        leftSubTreeLength:
-          tree.nodes[tree.nodes[x].parent].leftSubTreeLength + lengthDelta,
-      };
+      tree.nodes[tree.nodes[x].parent].leftSubTreeLength =
+        tree.nodes[tree.nodes[x].parent].leftSubTreeLength + lengthDelta;
     }
-
     x = tree.nodes[x].parent;
   }
 }

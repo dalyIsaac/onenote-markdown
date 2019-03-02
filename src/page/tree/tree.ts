@@ -146,8 +146,6 @@ export function recomputeTreeMetadata<T extends Node>(
     return;
   }
 
-  tree.nodes[x] = { ...tree.nodes[x] };
-
   while (
     // go upwards till the node whose left subtree is changed.
     x !== tree.root &&
@@ -164,7 +162,6 @@ export function recomputeTreeMetadata<T extends Node>(
 
   // tree.nodes[x] is the node whose right subtree is changed.
   x = tree.nodes[x].parent;
-  tree.nodes[x] = { ...tree.nodes[x] };
 
   if (isContentRedBlackTree(tree)) {
     lengthDelta =
@@ -189,10 +186,6 @@ export function recomputeTreeMetadata<T extends Node>(
   // go upwards till root. O(logN)
   while (x !== tree.root) {
     if (tree.nodes[tree.nodes[x].parent].left === x) {
-      tree.nodes[tree.nodes[x].parent] = {
-        ...tree.nodes[tree.nodes[x].parent],
-      };
-
       if (isContentRedBlackTree(tree)) {
         tree.nodes[tree.nodes[x].parent].leftCharCount += lengthDelta!;
         tree.nodes[tree.nodes[x].parent].leftLineFeedCount += lineFeedDelta!;
@@ -202,7 +195,6 @@ export function recomputeTreeMetadata<T extends Node>(
     }
 
     x = tree.nodes[x].parent;
-    tree.nodes[x] = { ...tree.nodes[x] };
   }
 }
 
