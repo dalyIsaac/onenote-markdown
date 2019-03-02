@@ -10,7 +10,7 @@ import {
 import { deleteContent } from "./contentTree/delete";
 import { insertContent } from "./contentTree/insert";
 import { MAX_BUFFER_LENGTH } from "./contentTree/tree";
-import { PageContent, PageContentMutable, StatePages } from "./pageModel";
+import { PageContent, StatePages } from "./pageModel";
 import {
   INSERT_STRUCTURE_NODE,
   InsertStructureAction,
@@ -27,42 +27,28 @@ import { updateStructureNode } from "./structureTree/update";
 import { STORE_PAGE, StorePageAction } from "./tree/actions";
 import parse from "./parser/parser";
 import { splitStructureNode } from "./structureTree/split";
+import produce from "immer";
 
 function handleStorePage(
   state: StatePages,
   { pageId, content }: StorePageAction,
 ): StatePages {
   const page = parse(content);
-  const newState: StatePages = {
-    ...state,
-    [pageId]: page,
-  };
-  return newState;
+  state[pageId] = page;
+  return state;
 }
 
 function handleInsertContent(
   state: StatePages,
   { pageId, content, offset, structureNodeIndex }: InsertContentAction,
 ): StatePages {
-  const extractedPage: PageContent = {
-    ...state[pageId],
-    buffers: [...state[pageId].buffers],
-    content: {
-      nodes: [...state[pageId].content.nodes],
-      root: state[pageId].content.root,
-    },
-  };
   insertContent(
-    extractedPage as PageContentMutable,
+    state[pageId] as PageContent,
     { content: content, offset: offset },
     structureNodeIndex,
     MAX_BUFFER_LENGTH,
   );
-  const newState: StatePages = {
-    ...state,
-    [pageId]: extractedPage,
-  };
-  return newState;
+  return state;
 }
 
 function handleDeleteContent(
@@ -72,32 +58,20 @@ function handleDeleteContent(
     contentLocations: {
       start: {
         contentOffset: startOffset,
-        structureNodeIndex: startStructureNodeIndex,
+        // structureNodeIndex: startStructureNodeIndex,
       },
       end: {
         contentOffset: endOffset,
-        structureNodeIndex: endStructureNodeIndex,
+        // structureNodeIndex: endStructureNodeIndex,
       },
     },
   }: DeleteContentAction,
 ): StatePages {
-  const extractedPage: PageContent = {
-    ...state[pageId],
-    buffers: [...state[pageId].buffers],
-    content: {
-      nodes: [...state[pageId].content.nodes],
-      root: state[pageId].content.root,
-    },
-  };
-  deleteContent(extractedPage as PageContentMutable, {
+  deleteContent(state[pageId] as PageContent, {
     endOffset: endOffset,
     startOffset: startOffset,
   });
-  const newState: StatePages = {
-    ...state,
-    [pageId]: extractedPage,
-  };
-  return newState;
+  return state;
 }
 
 function handleReplaceContent(
@@ -112,25 +86,17 @@ function handleReplaceContent(
       },
       end: {
         contentOffset: endOffset,
-        structureNodeIndex: endStructureNodeIndex,
+        // structureNodeIndex: endStructureNodeIndex,
       },
     },
   }: ReplaceContentAction,
 ): StatePages {
-  const extractedPage: PageContent = {
-    ...state[pageId],
-    buffers: [...state[pageId].buffers],
-    content: {
-      nodes: [...state[pageId].content.nodes],
-      root: state[pageId].content.root,
-    },
-  };
-  deleteContent(extractedPage as PageContentMutable, {
+  deleteContent(state[pageId] as PageContent, {
     endOffset: endOffset,
     startOffset: startOffset,
   });
   insertContent(
-    extractedPage as PageContentMutable,
+    state[pageId] as PageContent,
     {
       content: content,
       offset: startOffset,
@@ -138,87 +104,39 @@ function handleReplaceContent(
     startStructureNodeIndex,
     MAX_BUFFER_LENGTH,
   );
-  const newState: StatePages = {
-    ...state,
-    [pageId]: extractedPage,
-  };
-  return newState;
+  return state;
 }
 
 function handleInsertStructureNode(
   state: StatePages,
   { pageId, ...props }: InsertStructureAction,
 ): StatePages {
-  const extractedPage: PageContent = {
-    ...state[pageId],
-    structure: {
-      nodes: [...state[pageId].structure.nodes],
-      root: state[pageId].structure.root,
-    },
-  };
-  insertStructureNode(extractedPage as PageContentMutable, props);
-  const newState: StatePages = {
-    ...state,
-    [pageId]: extractedPage,
-  };
-  return newState;
+  insertStructureNode(state[pageId] as PageContent, props);
+  return state;
 }
 
 function handleDeleteStructureNode(
   state: StatePages,
   { pageId, nodeIndex }: DeleteStructureAction,
 ): StatePages {
-  const extractedPage: PageContent = {
-    ...state[pageId],
-    structure: {
-      nodes: [...state[pageId].structure.nodes],
-      root: state[pageId].structure.root,
-    },
-  };
-  deleteStructureNode(extractedPage as PageContentMutable, nodeIndex);
-  const newState: StatePages = {
-    ...state,
-    [pageId]: extractedPage,
-  };
-  return newState;
+  deleteStructureNode(state[pageId] as PageContent, nodeIndex);
+  return state;
 }
 
 function handleUpdateStructureNode(
   state: StatePages,
   { pageId, nodeIndex, values }: UpdateStructureAction,
 ): StatePages {
-  const extractedPage: PageContent = {
-    ...state[pageId],
-    structure: {
-      nodes: [...state[pageId].structure.nodes],
-      root: state[pageId].structure.root,
-    },
-  };
-  updateStructureNode(extractedPage as PageContentMutable, nodeIndex, values);
-  const newState: StatePages = {
-    ...state,
-    [pageId]: extractedPage,
-  };
-  return newState;
+  updateStructureNode(state[pageId] as PageContent, nodeIndex, values);
+  return state;
 }
 
 function handleSplitStructureNode(
   state: StatePages,
   { pageId, ...action }: SplitStructureAction,
 ): StatePages {
-  const extractedPage: PageContent = {
-    ...state[pageId],
-    structure: {
-      nodes: [...state[pageId].structure.nodes],
-      root: state[pageId].structure.root,
-    },
-  };
-  splitStructureNode(extractedPage as PageContentMutable, action);
-  const newState: StatePages = {
-    ...state,
-    [pageId]: extractedPage,
-  };
-  return newState;
+  splitStructureNode(state[pageId] as PageContent, action);
+  return state;
 }
 
 /**
@@ -226,44 +144,59 @@ function handleSplitStructureNode(
  * @param state
  * @param action
  */
-export default function pageReducer(
+export const pageReducer = (
   state: StatePages = {},
   action: PageActionPartial,
-): StatePages {
-  if (!action.hasOwnProperty("pageId")) {
-    return state;
-  } else if (!state.hasOwnProperty(action.pageId)) {
-    if (action.type === STORE_PAGE) {
-      return handleStorePage(state, action as StorePageAction);
-    } else {
-      return state;
+): StatePages =>
+  produce(state, (draftState) => {
+    if (!action.hasOwnProperty("pageId")) {
+      return draftState;
+    } else if (!draftState.hasOwnProperty(action.pageId)) {
+      if (action.type === STORE_PAGE) {
+        return handleStorePage(draftState, action as StorePageAction);
+      } else {
+        return draftState;
+      }
     }
-  }
 
-  switch (action.type) {
-    case INSERT_CONTENT: {
-      return handleInsertContent(state, action as InsertContentAction);
+    switch (action.type) {
+      case INSERT_CONTENT: {
+        return handleInsertContent(draftState, action as InsertContentAction);
+      }
+      case DELETE_CONTENT: {
+        return handleDeleteContent(draftState, action as DeleteContentAction);
+      }
+      case REPLACE_CONTENT: {
+        return handleReplaceContent(draftState, action as ReplaceContentAction);
+      }
+      case INSERT_STRUCTURE_NODE: {
+        return handleInsertStructureNode(
+          draftState,
+          action as InsertStructureAction,
+        );
+      }
+      case DELETE_STRUCTURE_NODE: {
+        return handleDeleteStructureNode(
+          draftState,
+          action as DeleteStructureAction,
+        );
+      }
+      case UPDATE_STRUCTURE_NODE: {
+        return handleUpdateStructureNode(
+          draftState,
+          action as UpdateStructureAction,
+        );
+      }
+      case SPLIT_STRUCTURE_NODE: {
+        return handleSplitStructureNode(
+          draftState,
+          action as SplitStructureAction,
+        );
+      }
+      default: {
+        return draftState;
+      }
     }
-    case DELETE_CONTENT: {
-      return handleDeleteContent(state, action as DeleteContentAction);
-    }
-    case REPLACE_CONTENT: {
-      return handleReplaceContent(state, action as ReplaceContentAction);
-    }
-    case INSERT_STRUCTURE_NODE: {
-      return handleInsertStructureNode(state, action as InsertStructureAction);
-    }
-    case DELETE_STRUCTURE_NODE: {
-      return handleDeleteStructureNode(state, action as DeleteStructureAction);
-    }
-    case UPDATE_STRUCTURE_NODE: {
-      return handleUpdateStructureNode(state, action as UpdateStructureAction);
-    }
-    case SPLIT_STRUCTURE_NODE: {
-      return handleSplitStructureNode(state, action as SplitStructureAction);
-    }
-    default: {
-      return state;
-    }
-  }
-}
+  });
+
+export default pageReducer;

@@ -23,13 +23,13 @@ export const insertContent = (
 //#endregion
 
 export interface Location {
-  readonly contentOffset: number;
-  readonly structureNodeIndex: number;
+  contentOffset: number;
+  structureNodeIndex: number;
 }
 
 export interface ContentLocations {
-  readonly start: Location;
-  readonly end: Location;
+  start: Location;
+  end: Location;
 }
 
 //#region Delete content
@@ -53,8 +53,8 @@ export const deleteContent = (
 export const REPLACE_CONTENT = "REPLACE_CONTENT";
 
 export interface ReplaceContentAction extends PageActionPartial {
-  readonly content: string;
-  readonly contentLocations: ContentLocations;
+  content: string;
+  contentLocations: ContentLocations;
 }
 
 export const replaceContent = (

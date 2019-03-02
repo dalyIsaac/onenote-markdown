@@ -1,5 +1,5 @@
-import { PageContentMutable, Color } from "../pageModel";
-import { StructureNode, StructureNodeMutable } from "./structureModel";
+import { PageContent, Color } from "../pageModel";
+import { StructureNode } from "./structureModel";
 import { SENTINEL_INDEX } from "../tree/tree";
 import { insertNode, fixInsert } from "../tree/insert";
 import { InsertStructureProps } from "./actions";
@@ -10,7 +10,7 @@ import { InsertStructureProps } from "./actions";
  * @param insertStructureAction The insertion action.
  */
 export function insertStructureNode(
-  page: PageContentMutable,
+  page: PageContent,
   insertStructureAction: InsertStructureProps,
 ): void {
   const {
@@ -34,10 +34,10 @@ export function insertStructureNode(
     tagType,
   };
   if (style) {
-    (newNode as StructureNodeMutable).style = style;
+    newNode.style = style;
   }
   if (attributes) {
-    (newNode as StructureNodeMutable).attributes = attributes;
+    newNode.attributes = attributes;
   }
   insertNode(page.structure, newNode, offset);
   fixInsert(page.structure, page.structure.nodes.length - 1);

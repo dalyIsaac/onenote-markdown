@@ -6,7 +6,7 @@ import {
   inorderTreeTraversal,
   NodePosition,
 } from "./tree";
-import { ContentNodeMutable, ContentNode } from "../contentTree/contentModel";
+import { ContentNode } from "../contentTree/contentModel";
 import { getStartPage } from "../reducer.test";
 import { getBigTree } from "../structureTree/insert.test";
 import { StructureNode } from "../structureTree/structureModel";
@@ -86,12 +86,11 @@ describe("Common tree operations", () => {
 
   test("Recompute tree metadata: add a node in the middle", () => {
     const page = getPage(); // hypothetically added node 5
-    (page.content.nodes[6] as ContentNodeMutable).leftCharCount = 12;
-    (page.content.nodes[5] as ContentNodeMutable).lineFeedCount = 5;
+    (page.content.nodes[6] as ContentNode).leftCharCount = 12;
+    (page.content.nodes[5] as ContentNode).lineFeedCount = 5;
     const expectedPage = getPage();
-    (expectedPage.content
-      .nodes[6] as ContentNodeMutable).leftLineFeedCount += 5;
-    (expectedPage.content.nodes[5] as ContentNodeMutable).lineFeedCount += 5;
+    (expectedPage.content.nodes[6] as ContentNode).leftLineFeedCount += 5;
+    (expectedPage.content.nodes[5] as ContentNode).lineFeedCount += 5;
 
     recomputeTreeMetadata(page.content, 4);
     expect(page).toStrictEqual(expectedPage);
@@ -131,9 +130,9 @@ describe("Common tree operations", () => {
 
       test("Big tree which has its order adjusted", () => {
         const page = getStartPage();
-        (page.content.nodes[7] as ContentNodeMutable).parent = 3;
-        (page.content.nodes[8] as ContentNodeMutable).left = 0;
-        (page.content.nodes[3] as ContentNodeMutable).right = 7;
+        (page.content.nodes[7] as ContentNode).parent = 3;
+        (page.content.nodes[8] as ContentNode).left = 0;
+        (page.content.nodes[3] as ContentNode).right = 7;
         const expectedResult: Array<NodePosition<ContentNode>> = [
           { index: 1, node: page.content.nodes[1] },
           { index: 2, node: page.content.nodes[2] },

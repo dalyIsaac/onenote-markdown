@@ -4,8 +4,8 @@ import { PageActionPartial } from "../actions";
 export const STORE_PAGE = "STORE_PAGE";
 
 export interface StorePageAction extends PageActionPartial {
-  readonly content: string;
-  readonly pageId: string;
+  content: string;
+  pageId: string;
 }
 
 export const storePage = (

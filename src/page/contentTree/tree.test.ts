@@ -1,4 +1,4 @@
-import { Color, PageContentMutable } from "../pageModel";
+import { Color, PageContent } from "../pageModel";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { SENTINEL_INDEX } from "../tree/tree";
 import { ContentNode } from "./contentModel";
@@ -120,7 +120,7 @@ export const getFinalTree = (): {
   root: 2,
 });
 
-export const getPage = (): PageContentMutable => ({
+export const getPage = (): PageContent => ({
   buffers: [],
   content: { ...getFinalTree() },
   previouslyInsertedContentNodeIndex: null,

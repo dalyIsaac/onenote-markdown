@@ -2,12 +2,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { test_06_html } from "../parser/parser.test";
 import parse from "../parser/parser";
-import {
-  PageContent,
-  Color,
-  PageContentMutable,
-  StatePages,
-} from "../pageModel";
+import { PageContent, Color, StatePages } from "../pageModel";
 import { SENTINEL_CONTENT } from "../contentTree/tree";
 import { SENTINEL_INDEX } from "../tree/tree";
 import { SENTINEL_STRUCTURE } from "./tree";
@@ -396,7 +391,7 @@ describe("Tests for splitting `StructureNode`s.", () => {
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };
-    splitStructureNode(page as PageContentMutable, action);
+    splitStructureNode(page as PageContent, action);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -541,7 +536,7 @@ describe("Tests for splitting `StructureNode`s.", () => {
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };
-    splitStructureNode(page as PageContentMutable, action);
+    splitStructureNode(page as PageContent, action);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -554,7 +549,7 @@ describe("Tests for splitting `StructureNode`s.", () => {
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };
-    splitStructureNode(page as PageContentMutable, action);
+    splitStructureNode(page as PageContent, action);
     expect(page).toStrictEqual(expectedPage_1_2_1());
   });
 
@@ -567,7 +562,7 @@ describe("Tests for splitting `StructureNode`s.", () => {
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };
-    splitStructureNode(page as PageContentMutable, action);
+    splitStructureNode(page as PageContent, action);
     expect(page).toStrictEqual(expectedPage_1_2_2());
   });
 
@@ -708,7 +703,7 @@ describe("Tests for splitting `StructureNode`s.", () => {
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };
-    splitStructureNode(page as PageContentMutable, action);
+    splitStructureNode(page as PageContent, action);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -849,7 +844,7 @@ describe("Tests for splitting `StructureNode`s.", () => {
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };
-    splitStructureNode(page as PageContentMutable, action);
+    splitStructureNode(page as PageContent, action);
     expect(page).toStrictEqual(expectedPage);
   });
 

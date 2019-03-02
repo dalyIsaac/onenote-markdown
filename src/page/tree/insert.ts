@@ -1,4 +1,4 @@
-import { Color, RedBlackTreeMutable, NodeMutable } from "../pageModel";
+import { Color, RedBlackTree, Node } from "../pageModel";
 import {
   SENTINEL_INDEX,
   recomputeTreeMetadata,
@@ -15,13 +15,12 @@ import { isStructureNode } from "../structureTree/structureModel";
  * @param x The index of the node in the `node` array, which is the basis for
  * fixing the tree.
  */
-export function fixInsert<T extends NodeMutable>(
-  tree: RedBlackTreeMutable<T>,
+export function fixInsert<T extends Node>(
+  tree: RedBlackTree<T>,
   x: number,
 ): void {
   recomputeTreeMetadata(tree, x);
 
-  tree.nodes[x] = { ...tree.nodes[x] };
   if (x === tree.root) {
     (tree.nodes[x] as T).color = Color.Black;
     return;
@@ -37,81 +36,48 @@ export function fixInsert<T extends NodeMutable>(
       tree.nodes[tree.nodes[tree.nodes[x].parent].parent].left
     ) {
       const y = tree.nodes[tree.nodes[tree.nodes[x].parent].parent].right;
-      tree.nodes[y] = { ...tree.nodes[y] };
       if (tree.nodes[y].color === Color.Red) {
-        tree.nodes[tree.nodes[x].parent] = {
-          ...tree.nodes[tree.nodes[x].parent],
-          color: Color.Black,
-        };
+        tree.nodes[tree.nodes[x].parent].color = Color.Black;
         (tree.nodes[y] as T).color = Color.Black;
-        tree.nodes[tree.nodes[tree.nodes[x].parent].parent] = {
-          ...tree.nodes[tree.nodes[tree.nodes[x].parent].parent],
-          color: Color.Red,
-        };
+        tree.nodes[tree.nodes[tree.nodes[x].parent].parent].color = Color.Red;
         x = tree.nodes[tree.nodes[x].parent].parent;
-        tree.nodes[x] = { ...tree.nodes[x] };
       } else {
         if (x === tree.nodes[tree.nodes[x].parent].right) {
           x = tree.nodes[x].parent;
-          tree.nodes[x] = { ...tree.nodes[x] };
           leftRotate(tree, x);
         }
-        tree.nodes[tree.nodes[x].parent] = {
-          ...tree.nodes[tree.nodes[x].parent],
-          color: Color.Black,
-        };
-        tree.nodes[tree.nodes[tree.nodes[x].parent].parent] = {
-          ...tree.nodes[tree.nodes[tree.nodes[x].parent].parent],
-          color: Color.Red,
-        };
+        tree.nodes[tree.nodes[x].parent].color = Color.Black;
+        tree.nodes[tree.nodes[tree.nodes[x].parent].parent].color = Color.Red;
         rightRotate(tree, tree.nodes[tree.nodes[x].parent].parent);
       }
     } else {
       const y = tree.nodes[tree.nodes[tree.nodes[x].parent].parent].left;
-      tree.nodes[y] = { ...tree.nodes[y] };
       if (tree.nodes[y].color === Color.Red) {
-        tree.nodes[tree.nodes[x].parent] = {
-          ...tree.nodes[tree.nodes[x].parent],
-          color: Color.Black,
-        };
+        tree.nodes[tree.nodes[x].parent].color = Color.Black;
         (tree.nodes[y] as T).color = Color.Black;
-        tree.nodes[tree.nodes[tree.nodes[x].parent].parent] = {
-          ...tree.nodes[tree.nodes[tree.nodes[x].parent].parent],
-          color: Color.Red,
-        };
+        tree.nodes[tree.nodes[tree.nodes[x].parent].parent].color = Color.Red;
         x = tree.nodes[tree.nodes[x].parent].parent;
-        tree.nodes[x] = { ...tree.nodes[x] };
       } else {
         if (
           tree.nodes[x] === tree.nodes[tree.nodes[tree.nodes[x].parent].left]
         ) {
           x = tree.nodes[x].parent;
-          tree.nodes[x] = { ...tree.nodes[x] };
           rightRotate(tree, x);
         }
-        tree.nodes[tree.nodes[x].parent] = {
-          ...tree.nodes[tree.nodes[x].parent],
-          color: Color.Black,
-        };
-        tree.nodes[tree.nodes[tree.nodes[x].parent].parent] = {
-          ...tree.nodes[tree.nodes[tree.nodes[x].parent].parent],
-          color: Color.Red,
-        };
+        tree.nodes[tree.nodes[x].parent].color = Color.Black;
+        tree.nodes[tree.nodes[tree.nodes[x].parent].parent].color = Color.Red;
         leftRotate(tree, tree.nodes[tree.nodes[x].parent].parent);
       }
     }
   }
-  tree.nodes[tree.root] = {
-    ...tree.nodes[tree.root],
-    color: Color.Black,
-  };
+  tree.nodes[tree.root].color = Color.Black;
 }
 
 /**
  * Returns the value for the LHS check for binary search for the red-black tree
  * , for different types.
  */
-function getLHSValue(currentNode: NodeMutable): number {
+function getLHSValue(currentNode: Node): number {
   if (isContentNode(currentNode)) {
     return currentNode.leftCharCount;
   } else if (isStructureNode(currentNode)) {
@@ -125,7 +91,7 @@ function getLHSValue(currentNode: NodeMutable): number {
  * Returns the value for the RHS check for binary search for the red-black tree
  * , for different types.
  */
-function getRHSValue(currentNode: NodeMutable): number {
+function getRHSValue(currentNode: Node): number {
   if (isContentNode(currentNode)) {
     return currentNode.leftCharCount + currentNode.length;
   } else if (isStructureNode(currentNode)) {
@@ -135,8 +101,8 @@ function getRHSValue(currentNode: NodeMutable): number {
   }
 }
 
-function insertAfterNode<T extends NodeMutable>(
-  tree: RedBlackTreeMutable<T>,
+function insertAfterNode<T extends Node>(
+  tree: RedBlackTree<T>,
   newNode: T,
   indexToInsertAfter: number,
 ): void {
@@ -166,8 +132,8 @@ function insertAfterNode<T extends NodeMutable>(
  * @param nodeIndex The index of the new node inside `tree`.
  * @param indexToInsertAfter The index of the node to insert the new node after.
  */
-export function insertNodeWithoutInserting<T extends NodeMutable>(
-  tree: RedBlackTreeMutable<T>,
+export function insertNodeWithoutInserting<T extends Node>(
+  tree: RedBlackTree<T>,
   newNode: T,
   offset: number,
   nodeIndex: number,
@@ -197,10 +163,7 @@ export function insertNodeWithoutInserting<T extends NodeMutable>(
       // left
       currentIndex = currentNode.left;
       if (currentIndex === SENTINEL_INDEX) {
-        tree.nodes[prevIndex] = {
-          ...tree.nodes[prevIndex],
-          left: nodeIndex,
-        };
+        tree.nodes[prevIndex].left = nodeIndex;
         newNode.parent = prevIndex; // can mutate the node since it's new
         return;
       }
@@ -210,10 +173,7 @@ export function insertNodeWithoutInserting<T extends NodeMutable>(
       nodeStartOffset += getRHSValue(currentNode);
       currentIndex = currentNode.right;
       if (currentIndex === SENTINEL_INDEX) {
-        tree.nodes[prevIndex] = {
-          ...tree.nodes[prevIndex],
-          right: nodeIndex,
-        };
+        tree.nodes[prevIndex].right = nodeIndex;
         newNode.parent = prevIndex; // can mutate the node since it's new
         return;
       }
@@ -240,8 +200,8 @@ export function insertNodeWithoutInserting<T extends NodeMutable>(
  * @param offset The offset of the new node.
  * @param indexToInsertAfter The index of the node to insert the new node after.
  */
-export function insertNode<T extends NodeMutable>(
-  tree: RedBlackTreeMutable<T>,
+export function insertNode<T extends Node>(
+  tree: RedBlackTree<T>,
   newNode: T,
   offset: number,
   indexToInsertAfter?: number,

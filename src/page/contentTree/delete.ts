@@ -1,12 +1,12 @@
 import { deleteNode, deleteBetweenNodes } from "../tree/delete";
-import { Color, PageContent, PageContentMutable } from "../pageModel";
+import { Color, PageContent } from "../pageModel";
 import {
   nextNode,
   SENTINEL_INDEX,
   recomputeTreeMetadata,
   resetSentinel,
 } from "../tree/tree";
-import { ContentNode, ContentNodeMutable } from "./contentModel";
+import { ContentNode } from "./contentModel";
 import { insertNode, fixInsert } from "../tree/insert";
 import { findNodeAtOffset, NodePositionOffset } from "./tree";
 
@@ -14,8 +14,8 @@ import { findNodeAtOffset, NodePositionOffset } from "./tree";
  * The logical offset range for the content to be deleted.
  */
 export interface ContentDelete {
-  readonly startOffset: number;
-  readonly endOffset: number;
+  startOffset: number;
+  endOffset: number;
 }
 
 /**
@@ -175,16 +175,16 @@ function getNodeBeforeContent(
 }
 
 /**
- * Updates the new node with tree metadata provided by the old node. The node is then placed inside the tree, and
- * tree metadata is recomputed.
+ * Updates the new node with tree metadata provided by the old node. The node is
+ *  then placed inside the tree, and tree metadata is recomputed.
  * @param page The page/piece table.
  * @param index The index of the old node.
  * @param newNode The new node to replace the old node.
  */
 function updateNode(
-  page: PageContentMutable,
+  page: PageContent,
   index: number,
-  newNode: ContentNodeMutable,
+  newNode: ContentNode,
 ): void {
   newNode.leftCharCount = page.content.nodes[index].leftCharCount;
   newNode.leftLineFeedCount = page.content.nodes[index].leftLineFeedCount;
@@ -202,7 +202,7 @@ function updateNode(
  * @param deleteRange The start and end offset of the content to delete.
  */
 export function deleteContent(
-  page: PageContentMutable,
+  page: PageContent,
   deleteRange: ContentDelete,
 ): void {
   const oldNodeStartPosition = findNodeAtOffset(
@@ -244,9 +244,7 @@ export function deleteContent(
     nodeAfterContent.length > 0
   ) {
     // delete from a point in the node to another point in the node
-    (page.content.nodes[
-      oldNodeStartPosition.nodeIndex
-    ] as ContentNodeMutable) = nodeBeforeContent;
+    page.content.nodes[oldNodeStartPosition.nodeIndex] = nodeBeforeContent;
     insertNode(page.content, nodeAfterContent, deleteRange.startOffset);
     fixInsert(page.content, page.content.nodes.length - 1);
   } else if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
@@ -256,9 +254,7 @@ export function deleteContent(
     firstNodeToDelete = nextNode(page.content.nodes, firstNodeToDelete).index;
   } else if (nodeBeforeContent.length > 0) {
     // delete from a point in the node to the end of the node
-    (page.content.nodes[
-      oldNodeStartPosition.nodeIndex
-    ] as ContentNodeMutable) = nodeBeforeContent;
+    page.content.nodes[oldNodeStartPosition.nodeIndex] = nodeBeforeContent;
     if (oldNodeStartPosition !== oldNodeEndPosition) {
       // deleting from a point in a node to the end of the content
       deleteNode(page.content, oldNodeEndPosition.nodeIndex);

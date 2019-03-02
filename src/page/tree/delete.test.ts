@@ -1,4 +1,5 @@
-import { PageContentMutable, Color } from "../pageModel";
+/* eslint-disable max-len */
+import { PageContent, Color } from "../pageModel";
 import { TagType } from "../structureTree/structureModel";
 import { SENTINEL_CONTENT } from "../contentTree/tree";
 import { SENTINEL_INDEX } from "./tree";
@@ -8,7 +9,7 @@ import { deleteNode } from "../tree/delete";
 describe("delete node", () => {
   describe("Content nodes", () => {
     test("Content: Scenario 1: Simple case", () => {
-      const page: PageContentMutable = {
+      const page: PageContent = {
         buffers: [],
         content: {
           nodes: [
@@ -99,7 +100,7 @@ describe("delete node", () => {
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
       };
-      const expectedPage: PageContentMutable = {
+      const expectedPage: PageContent = {
         buffers: [],
         content: {
           nodes: [
@@ -196,7 +197,7 @@ describe("delete node", () => {
 
     describe("Sibling s is black and at least one of s's children is red", () => {
       test("Content: Scenario 2: Right right case", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [],
           content: {
             nodes: [
@@ -304,7 +305,7 @@ describe("delete node", () => {
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [],
           content: {
             nodes: [
@@ -417,7 +418,7 @@ describe("delete node", () => {
       });
 
       test("Content: Scenario 3: Right left case", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [],
           content: {
             nodes: [
@@ -508,7 +509,7 @@ describe("delete node", () => {
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [],
           content: {
             nodes: [
@@ -602,7 +603,7 @@ describe("delete node", () => {
       });
 
       test("Content: Scenario 4: Left left case", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [],
           content: {
             nodes: [
@@ -710,7 +711,7 @@ describe("delete node", () => {
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [],
           content: {
             nodes: [
@@ -823,7 +824,7 @@ describe("delete node", () => {
       });
 
       test("Content: Scenario 5: Left right case", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [],
           content: {
             nodes: [
@@ -912,7 +913,7 @@ describe("delete node", () => {
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [],
           content: {
             nodes: [
@@ -1007,7 +1008,7 @@ describe("delete node", () => {
     });
 
     test("Content: Scenario 6: Sibling s is black, and both its children are black", () => {
-      const page: PageContentMutable = {
+      const page: PageContent = {
         buffers: [],
         content: {
           nodes: [
@@ -1077,7 +1078,7 @@ describe("delete node", () => {
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
       };
-      const expectedPage: PageContentMutable = {
+      const expectedPage: PageContent = {
         buffers: [],
         content: {
           nodes: [
@@ -1153,7 +1154,7 @@ describe("delete node", () => {
 
     describe("Sibling s is red", () => {
       test("Content: Scenario 7: sibling s is right child of its parent", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [],
           content: {
             nodes: [
@@ -1261,7 +1262,7 @@ describe("delete node", () => {
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [],
           content: {
             nodes: [
@@ -1374,7 +1375,7 @@ describe("delete node", () => {
       });
 
       test("Content: Scenario 8: sibling s is left child of its parent", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [],
           content: {
             nodes: [
@@ -1482,7 +1483,7 @@ describe("delete node", () => {
           previouslyInsertedContentNodeOffset: null,
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [],
           content: {
             nodes: [
@@ -1596,7 +1597,7 @@ describe("delete node", () => {
     });
 
     test("Content: Scenario 9: delete root", () => {
-      const page: PageContentMutable = {
+      const page: PageContent = {
         buffers: [],
         content: {
           nodes: [
@@ -1628,7 +1629,7 @@ describe("delete node", () => {
         previouslyInsertedContentNodeOffset: null,
         structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
       };
-      const expectedPage: PageContentMutable = {
+      const expectedPage: PageContent = {
         buffers: [],
         content: {
           nodes: [
@@ -1667,7 +1668,7 @@ describe("delete node", () => {
 
   describe("Structure nodes", () => {
     test("Structure: Scenario 1: Simple case", () => {
-      const page: PageContentMutable = {
+      const page: PageContent = {
         buffers: [],
         content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
         
@@ -1730,7 +1731,7 @@ describe("delete node", () => {
           root: 3,
         },
       };
-      const expectedPage: PageContentMutable = {
+      const expectedPage: PageContent = {
         buffers: [],
         content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
         
@@ -1799,7 +1800,7 @@ describe("delete node", () => {
 
     describe("Sibling s is black and at least one of s's children is red", () => {
       test("Structure: Scenario 2: Right right case", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
           
@@ -1872,7 +1873,7 @@ describe("delete node", () => {
             root: 2,
           },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
           
@@ -1950,7 +1951,7 @@ describe("delete node", () => {
       });
 
       test("Structure: Scenario 3: Right left case", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
           
@@ -2013,7 +2014,7 @@ describe("delete node", () => {
             root: 2,
           },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
           
@@ -2079,7 +2080,7 @@ describe("delete node", () => {
       });
 
       test("Structure: Scenario 4: Left left case", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
           
@@ -2152,7 +2153,7 @@ describe("delete node", () => {
             root: 4,
           },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
           
@@ -2230,7 +2231,7 @@ describe("delete node", () => {
       });
 
       test("Structure: Scenario 5: Left right case", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
           
@@ -2291,7 +2292,7 @@ describe("delete node", () => {
             root: 3,
           },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
           
@@ -2358,7 +2359,7 @@ describe("delete node", () => {
     });
 
     test("Structure: Scenario 6: Sibling s is black, and both its children are black", () => {
-      const page: PageContentMutable = {
+      const page: PageContent = {
         buffers: [],
         content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
         
@@ -2407,7 +2408,7 @@ describe("delete node", () => {
           root: 2,
         },
       };
-      const expectedPage: PageContentMutable = {
+      const expectedPage: PageContent = {
         buffers: [],
         content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
         
@@ -2462,7 +2463,7 @@ describe("delete node", () => {
 
     describe("Sibling s is red", () => {
       test("Structure: Scenario 7: sibling s is right child of its parent", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
           
@@ -2535,7 +2536,7 @@ describe("delete node", () => {
             root: 2,
           },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
           
@@ -2613,7 +2614,7 @@ describe("delete node", () => {
       });
 
       test("Structure: Scenario 8: sibling s is left child of its parent", () => {
-        const page: PageContentMutable = {
+        const page: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
           
@@ -2686,7 +2687,7 @@ describe("delete node", () => {
             root: 4,
           },
         };
-        const expectedPage: PageContentMutable = {
+        const expectedPage: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
           
@@ -2765,7 +2766,7 @@ describe("delete node", () => {
     });
 
     test("Structure: Scenario 9: delete root", () => {
-      const page: PageContentMutable = {
+      const page: PageContent = {
         buffers: [],
         content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
         
@@ -2790,7 +2791,7 @@ describe("delete node", () => {
           root: 1,
         },
       };
-      const expectedPage: PageContentMutable = {
+      const expectedPage: PageContent = {
         buffers: [],
         content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
         

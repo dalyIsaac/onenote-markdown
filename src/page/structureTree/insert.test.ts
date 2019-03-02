@@ -1,7 +1,6 @@
 import {
   Color,
   PageContent,
-  PageContentMutable,
   StatePages,
 } from "../pageModel";
 import { SENTINEL_INDEX, EMPTY_TREE_ROOT } from "../tree/tree";
@@ -194,7 +193,7 @@ export const getBigTree = (): PageContent => ({
 
 describe("structureTree insert tests", () => {
   test("Less than insertion - left side", () => {
-    const page: PageContentMutable = {
+    const page: PageContent = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
 
@@ -379,7 +378,7 @@ describe("structureTree insert tests", () => {
   });
 
   test("Less than insertion - right side", () => {
-    const page: PageContentMutable = {
+    const page: PageContent = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
 
@@ -552,7 +551,7 @@ describe("structureTree insert tests", () => {
       pageId: page,
     };
 
-    const expectedPage: PageContentMutable = {
+    const expectedPage: PageContent = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
 
@@ -754,7 +753,7 @@ describe("structureTree insert tests", () => {
   });
 
   test("Greater than insertion", () => {
-    const page: PageContentMutable = {
+    const page: PageContent = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
 
@@ -927,7 +926,7 @@ describe("structureTree insert tests", () => {
       pageId: page,
     };
 
-    const expectedPage: PageContentMutable = {
+    const expectedPage: PageContent = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
 
