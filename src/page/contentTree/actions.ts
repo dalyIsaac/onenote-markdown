@@ -6,6 +6,7 @@ export const INSERT_CONTENT = "INSERT_CONTENT";
 
 export interface InsertContentAction extends PageActionPartial, ContentInsert {
   structureNodeIndex: number;
+  structureNodeOffset?: number;
 }
 
 export const insertContent = (
@@ -13,11 +14,13 @@ export const insertContent = (
   content: string,
   offset: number,
   structureNodeIndex: number,
+  structureNodeOffset?: number,
 ): InsertContentAction => ({
   content,
   offset,
   pageId,
   structureNodeIndex,
+  structureNodeOffset,
   type: INSERT_CONTENT,
 });
 //#endregion

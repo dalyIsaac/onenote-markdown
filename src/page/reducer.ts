@@ -40,13 +40,20 @@ function handleStorePage(
 
 function handleInsertContent(
   state: StatePages,
-  { pageId, content, offset, structureNodeIndex }: InsertContentAction,
+  {
+    pageId,
+    content,
+    offset,
+    structureNodeIndex,
+    structureNodeOffset,
+  }: InsertContentAction,
 ): StatePages {
   insertContent(
     state[pageId] as PageContent,
     { content: content, offset: offset },
     structureNodeIndex,
     MAX_BUFFER_LENGTH,
+    structureNodeOffset,
   );
   return state;
 }

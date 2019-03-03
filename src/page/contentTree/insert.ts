@@ -13,8 +13,11 @@ import {
   getNodeContent,
   NodePositionOffset,
   updateContentTreeMetadata,
+  getContentBetweenOffsets,
 } from "./tree";
 import { TagType, StructureNode } from "../structureTree/structureModel";
+import { hasStartTag } from "../compiler/parser";
+import { updateNodePairTag } from "../structureTree/tree";
 
 /**
  * The desired content and offset for an insertion operation.
@@ -294,15 +297,17 @@ function convertBreakToParagraph(
  * @param structureNodeIndex The index of the structure node in the
  * `structure.nodes` array.
  * @param maxBufferLength The maximum length of a buffer's content/string.
+ * @param structureNodeOffset The starting offset of the structure node.
  */
 export function insertContent(
   page: PageContent,
   content: ContentInsert,
   structureNodeIndex: number,
   maxBufferLength: number,
+  structureNodeOffset?: number,
 ): void {
-  if (page.structure.nodes[structureNodeIndex].tag === "br") {
-    console.log("Input on <br />");
+  const structureNode = page.structure.nodes[structureNodeIndex];
+  if (structureNode.tag === "br") {
     convertBreakToParagraph(page.structure, content.offset, structureNodeIndex);
   }
   if (page.content.root === EMPTY_TREE_ROOT) {
@@ -341,6 +346,18 @@ export function insertContent(
     fixInsert(page.content, page.content.nodes.length - 1);
   }
   if (structureNodeIndex !== SENTINEL_INDEX) {
-    page.structure.nodes[structureNodeIndex].length += content.content.length;
+    structureNode.length += content.content.length;
+  }
+  if (structureNodeOffset) {
+    const hasStart = hasStartTag(
+      getContentBetweenOffsets(
+        page,
+        structureNodeOffset,
+        structureNodeOffset + structureNode.length,
+      ),
+    );
+    if (hasStart) {
+      updateNodePairTag(page, structureNodeIndex, hasStart.tag);
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { PageContent, Color } from "../pageModel";
 import { SplitStructureAction } from "./actions";
-import { findEndTag, generateNewId } from "./tree";
+import { findEndNode, generateNewId } from "./tree";
 import { TagType, StructureNode } from "./structureModel";
 import { SENTINEL_INDEX } from "../tree/tree";
 import { insertNode, fixInsert } from "../tree/insert";
@@ -91,7 +91,7 @@ export function splitStructureNode(
     return;
   }
 
-  const endTag = findEndTag(page.structure, startNode.id, startNodeIndex);
+  const endTag = findEndNode(page.structure, startNode.id, startNodeIndex);
   if (endTag === null) {
     throw new RangeError(
       `Could not find the expected node whose id is ${startNode.id}`,

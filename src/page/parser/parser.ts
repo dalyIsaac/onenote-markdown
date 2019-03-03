@@ -8,7 +8,6 @@ import { InsertStructureProps } from "../structureTree/actions";
 import he from "he";
 import { insertContent } from "../contentTree/insert";
 import { insertStructureNode } from "../structureTree/insert";
-import { Buffer } from "../contentTree/contentModel";
 
 interface Attributes {
   [key: string]: string;
