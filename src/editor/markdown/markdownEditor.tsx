@@ -274,8 +274,12 @@ export function MarkdownEditorComponent(
       const structureNodeIndex = parentElement.attributes.getNamedItem(
         NODE_INDEX,
       );
-      if (structureNodeIndex) {
+      const contentOffset = parentElement.attributes.getNamedItem(
+        CONTENT_OFFSET,
+      );
+      if (structureNodeIndex && contentOffset) {
         const structureNodeIndexValue = Number(structureNodeIndex.value);
+        const contentOffsetValue = Number(contentOffset.value);
         if (content === "\n") {
           cursorSelection = {
             nodeIndex: props.page.structure.nodes.length,
@@ -297,6 +301,7 @@ export function MarkdownEditorComponent(
             content,
             startOffsets.selectionOffset,
             structureNodeIndexValue,
+            contentOffsetValue,
           );
         }
       }
@@ -330,6 +335,7 @@ export function MarkdownEditorComponent(
           content,
           contentOffsetValue,
           structureNodeIndexValue,
+          contentOffsetValue,
         );
       }
     }
@@ -400,6 +406,7 @@ interface MarkdownEditorDispatchProps {
     content: string,
     offset: number,
     structureNodeIndex: number,
+    structureNodeOffset: number,
   ) => InsertContentAction;
   splitStructureNode: (
     pageId: string,
@@ -422,8 +429,17 @@ const mapDispatchToProps = (
     content,
     offset,
     structureNodeIndex,
+    structureNodeOffset,
   ): InsertContentAction =>
-    dispatch(insertContent(pageId, content, offset, structureNodeIndex)),
+    dispatch(
+      insertContent(
+        pageId,
+        content,
+        offset,
+        structureNodeIndex,
+        structureNodeOffset,
+      ),
+    ),
   splitStructureNode: (
     pageId: string,
     nodeIndex: number,

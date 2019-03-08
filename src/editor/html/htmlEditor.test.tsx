@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React from "react";
 import { configure, mount, ReactWrapper } from "enzyme";
 import Adapter from "enzyme-adapter-react-16";
@@ -6,6 +7,10 @@ import { HtmlEditorComponent } from "./htmlEditor";
 import { KeyValueStr } from "../../page/structureTree/structureModel";
 import isStringLodash from "lodash.isstring";
 import EditorBaseComponent from "../editorBase";
+
+jest.mock("seedrandom", () => ({
+  alea: () => jest.fn().mockReturnValue(1234567890),
+}));
 
 configure({ adapter: new Adapter() });
 
@@ -187,6 +192,11 @@ describe("HTML output", () => {
           marginTop: "0pt",
         },
         tag: "cite",
+      },
+      {
+        children: [],
+        key: "{!localGeneratedId}1234567890",
+        tag: "br",
       },
       {
         children: ["Quote"],

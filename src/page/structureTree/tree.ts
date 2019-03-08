@@ -1,4 +1,4 @@
-import { Color, RedBlackTree } from "../pageModel";
+import { Color, RedBlackTree, PageContent } from "../pageModel";
 import {
   SENTINEL_INDEX,
   inorderTreeTraversal,
@@ -6,6 +6,7 @@ import {
   nextNode,
 } from "../tree/tree";
 import { StructureNode, TagType } from "./structureModel";
+import { alea } from "seedrandom";
 
 export const SENTINEL_STRUCTURE: StructureNode = {
   color: Color.Black,
@@ -79,13 +80,13 @@ export function updateStructureTreeMetadata(
 }
 
 /**
- * Finds the corresponding end tag for a given id. Returns `null` if the `id`
+ * Finds the corresponding end node for a given id. Returns `null` if the `id`
  * cannot be found.
  * @param id The `id` of the `StructureNode`.
  * @param startIndex The `id` of the start `StructureNode`.
  */
-export function findEndTag(
-  tree: RedBlackTree<StructureNode> | RedBlackTree<StructureNode>,
+export function findEndNode(
+  tree: RedBlackTree<StructureNode>,
   id: string,
   startIndex: number,
 ): NodePosition<StructureNode> | null {
@@ -98,10 +99,31 @@ export function findEndTag(
   return null;
 }
 
+const aleaGen = alea(Date.now().toString());
+
 /**
  * Generates a new `id` for a `StructureNode`. This is only to be used
  * locally, and will not be synced to the Microsoft Graph.
  */
 export function generateNewId(): string {
-  return `{!localGeneratedId}${Date.now()}`;
+  return `{!localGeneratedId}${aleaGen()}`;
+}
+
+/**
+ * Updates the start node, with the new tag, and the end node if it exists.
+ * @param page The page.
+ * @param nodeIndex The index of the start `StructureNode`.
+ * @param newTag The new tag.
+ */
+export function updateNodePairTag(
+  page: PageContent,
+  nodeIndex: number,
+  newTag: string,
+): void {
+  const startNode = page.structure.nodes[nodeIndex];
+  startNode.tag = newTag;
+  const endNodePosition = findEndNode(page.structure, startNode.id, nodeIndex);
+  if (endNodePosition) {
+    endNodePosition.node.tag = newTag;
+  }
 }

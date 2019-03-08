@@ -16,6 +16,7 @@ import { State } from "../../reducer";
 import { Element, TagItem, isTagItem } from "../../page/compiler/renderers";
 import { alea } from "seedrandom";
 import stringify from "safe-stable-stringify";
+import { generateNewId } from "../../page/structureTree/tree";
 
 /**
  * Props for the `HtmlEditorComponent`
@@ -274,6 +275,17 @@ function getPage(page: PageContent): JSX.Element[] {
       }
       case TagType.EndTag: {
         stack = updateStack(stack);
+        if (node.tag === "cite") {
+          // console.log(stack);
+          stack.push(
+            React.createElement("br", {
+              contentoffset: contentOffset,
+              ignoreinsync: "true",
+              isbreak: "true",
+              key: generateNewId(),
+            }),
+          );
+        }
         break;
       }
       case TagType.StartEndTag: {

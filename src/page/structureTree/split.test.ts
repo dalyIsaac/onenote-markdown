@@ -12,8 +12,9 @@ import { splitStructureNode } from "./split";
 import pageReducer from "../reducer";
 import { splitStructureNode as splitStructureNodeActionCreator } from "./actions";
 
-Date.now = jest.fn();
-(Date.now as jest.Mock).mockReturnValue(1234567890);
+jest.mock("seedrandom", () => ({
+  alea: () => jest.fn().mockReturnValue(1234567890),
+}));
 
 const expectedPage_1_2_1 = (): PageContent => ({
   buffers: [

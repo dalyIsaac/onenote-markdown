@@ -150,7 +150,7 @@ export function getOffsetInBuffer(
 }
 
 /**
- * Gets the contents of a node.
+ * Gets the contents of a content node.
  * @param page The page/piece table.
  * @param nodeIndex The index of the node in `page.nodes`.
  */

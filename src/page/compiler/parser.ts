@@ -21,12 +21,32 @@ enum InlineTags {
   sup = "sup",
 }
 
+enum StartTags {
+  cite = "cite",
+  h1 = "h1",
+  h2 = "h2",
+  h3 = "h3",
+  h4 = "h4",
+  h5 = "h5",
+  h6 = "h6",
+}
+
 type RuleNames = Attributes | InlineTags;
 
 /**
  * Regex rule for detecting inline tags.
  */
 const tagRule = /{![a-zA-Z][a-zA-Z0-9]*\} /;
+
+const tagRules: { [key: string]: StartTags } = {
+  "{!cite} ": StartTags.cite,
+  "{!h1} ": StartTags.h1,
+  "{!h2} ": StartTags.h2,
+  "{!h3} ": StartTags.h3,
+  "{!h4} ": StartTags.h4,
+  "{!h5} ": StartTags.h5,
+  "{!h6} ": StartTags.h6,
+};
 
 /**
  * Array of tuples of rule names and regex.
@@ -256,6 +276,23 @@ function getMatches(content: string): Match[] {
 }
 
 /**
+ * Checks if the start of the given content
+ * @param content
+ */
+export function hasStartTag(
+  content: string,
+): { length: number; tag: StartTags } | null {
+  const match = tagRule.exec(content);
+  if (match && match.index === 0 && tagRules.hasOwnProperty(match[0])) {
+    return {
+      length: match[0].length,
+      tag: tagRules[match[0]],
+    };
+  }
+  return null;
+}
+
+/**
  * Plugin for `markdown-it` with the custom syntax.
  * @param state The state of the compiler.
  * @param token The current token.
@@ -263,11 +300,9 @@ function getMatches(content: string): Match[] {
 function customSyntax(state: StateCore, token: Token): Token[] {
   let tokens: Token[] = [token];
   let currentToken = tokens[tokens.length - 1];
-  const tagMatch = tagRule.exec(currentToken.content);
-  if (tagMatch) {
-    currentToken.content = currentToken.content.slice(
-      tagMatch.index + tagMatch[0].length,
-    );
+  const hasStart = hasStartTag(currentToken.content);
+  if (hasStart) {
+    currentToken.content = currentToken.content.slice(hasStart.length);
   }
 
   // eslint-disable-next-line no-constant-condition
