@@ -106,7 +106,7 @@ const aleaGen = alea(Date.now().toString());
  * locally, and will not be synced to the Microsoft Graph.
  */
 export function generateNewId(): string {
-  return `{!localGeneratedId}${Date.now()}${aleaGen()}`;
+  return `{!localGeneratedId}${aleaGen()}`;
 }
 
 /**
