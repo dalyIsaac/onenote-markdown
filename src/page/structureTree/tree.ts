@@ -3,7 +3,7 @@ import {
   SENTINEL_INDEX,
   inorderTreeTraversal,
   NodePosition,
-  nextNode,
+  getNextNode,
 } from "../tree/tree";
 import { StructureNode, TagType } from "./structureModel";
 import { alea } from "seedrandom";
@@ -90,7 +90,7 @@ export function findEndNode(
   id: string,
   startIndex: number,
 ): NodePosition<StructureNode> | null {
-  const { index: indexAfterStart } = nextNode(tree.nodes, startIndex);
+  const { index: indexAfterStart } = getNextNode(tree.nodes, startIndex);
   for (const { index, node } of inorderTreeTraversal(tree, indexAfterStart)) {
     if (node.id === id) {
       return { index, node };

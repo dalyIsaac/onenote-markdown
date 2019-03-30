@@ -3,7 +3,7 @@ import {
   SENTINEL_INDEX,
   recomputeTreeMetadata,
   EMPTY_TREE_ROOT,
-  nextNode,
+  getNextNode,
 } from "./tree";
 import { isContentNode } from "../contentTree/contentModel";
 import { leftRotate, rightRotate } from "./rotate";
@@ -110,7 +110,7 @@ function insertAfterNode<T extends Node>(
     tree.nodes[indexToInsertAfter].right = tree.nodes.length - 1;
     newNode.parent = indexToInsertAfter;
   } else {
-    const next = nextNode(tree.nodes, indexToInsertAfter);
+    const next = getNextNode(tree.nodes, indexToInsertAfter);
     tree.nodes[next.index].left = tree.nodes.length - 1;
     newNode.parent = next.index;
   }

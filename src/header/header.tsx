@@ -97,7 +97,8 @@ function HeaderComponent(props: HeaderProps): JSX.Element {
   loadSample();
   return (
     <div className={styles.header}>
-      <button onClick={loadSample}>Load sample OneNote page</button>
+      {/* <button onClick={loadSample}>Load sample OneNote page</button> */}
+      <i>Text insertion: working. Text deletion: in progress.</i>
     </div>
   );
 }

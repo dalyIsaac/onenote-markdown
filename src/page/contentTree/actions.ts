@@ -28,6 +28,7 @@ export const insertContent = (
 export interface Location {
   contentOffset: number;
   structureNodeIndex: number;
+  structureNodeContentOffset?: number;
 }
 
 export interface ContentLocations {
@@ -38,15 +39,20 @@ export interface ContentLocations {
 //#region Delete content
 export const DELETE_CONTENT = "DELETE_CONTENT";
 
+export type DeletionType = "Backspace" | "Delete";
+
 export interface DeleteContentAction extends PageActionPartial {
   contentLocations: ContentLocations;
+  deletionType?: DeletionType;
 }
 
 export const deleteContent = (
   pageId: string,
   contentLocations: ContentLocations,
+  deletionType?: DeletionType,
 ): DeleteContentAction => ({
   contentLocations,
+  deletionType,
   pageId,
   type: DELETE_CONTENT,
 });

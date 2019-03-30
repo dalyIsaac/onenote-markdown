@@ -19,8 +19,12 @@ import {
 import { inorderTreeTraversal } from "../../page/tree/tree";
 import { getContentBetweenOffsets } from "../../page/contentTree/tree";
 import {
+  deleteContent,
   insertContent,
   InsertContentAction,
+  DeleteContentAction,
+  Location,
+  DeletionType,
 } from "../../page/contentTree/actions";
 import { Dispatch } from "redux";
 import {
@@ -128,9 +132,9 @@ function addStartEndTag<T>(
           ? selectionRef
           : null;
       const props = {
+        [CONTENT_OFFSET]: contentOffset,
+        [IS_BREAK]: "true",
         [NODE_INDEX]: nodeIndex,
-        contentoffset: contentOffset,
-        isbreak: "true",
         key: node.id,
         ref,
       };
@@ -308,6 +312,57 @@ export function MarkdownEditorComponent(
     }
   }
 
+  function deleteContent(
+    parentElement: Element | null,
+    startOffsets: SelectionOffset,
+    endOffsets: SelectionOffset,
+    deletionType?: DeletionType,
+  ): void {
+    if (parentElement) {
+      const structureNodeIndex = parentElement.attributes.getNamedItem(
+        NODE_INDEX,
+      );
+      if (structureNodeIndex) {
+        const structureNodeIndexValue = Number(structureNodeIndex.value);
+        const structureNodeContentOffset = Number(
+          parentElement.attributes.getNamedItem(CONTENT_OFFSET)!.value,
+        );
+        const start: Location = {
+          contentOffset: startOffsets.selectionOffset,
+          structureNodeContentOffset,
+          structureNodeIndex: structureNodeIndexValue,
+        };
+        const end: Location = {
+          contentOffset: endOffsets.selectionOffset,
+          structureNodeIndex: structureNodeIndexValue,
+        };
+
+        props.deleteContent(
+          props.pageId,
+          start,
+          end,
+          offsetsAreEqual(startOffsets, endOffsets) ? deletionType : undefined,
+        );
+      }
+    }
+  }
+
+  function onKeyDown(e: React.KeyboardEvent<HTMLDivElement>): void {
+    if (e.key === "Backspace" || e.key === "Delete") {
+      e.preventDefault();
+      const {
+        anchorNode,
+        anchorOffset,
+        focusNode,
+        focusOffset,
+      } = window.getSelection();
+      const startOffsets = getOffsets(anchorNode, anchorOffset);
+      const endOffsets = getOffsets(focusNode, focusOffset);
+
+      deleteContent(anchorNode.parentElement, startOffsets, endOffsets, e.key);
+    }
+  }
+
   function inputOnBreak(element: Element, content: string): void {
     const structureNodeIndex = element.attributes.getNamedItem(NODE_INDEX);
     const contentOffset = element.attributes.getNamedItem(CONTENT_OFFSET);
@@ -387,6 +442,7 @@ export function MarkdownEditorComponent(
         getPage={getPage}
         page={props.page}
         onBeforeInput={onBeforeInput}
+        onKeyDown={onKeyDown}
       />
     </div>
   );
@@ -408,6 +464,12 @@ interface MarkdownEditorDispatchProps {
     structureNodeIndex: number,
     structureNodeOffset: number,
   ) => InsertContentAction;
+  deleteContent: (
+    pageId: string,
+    start: Location,
+    end: Location,
+    deletionType?: DeletionType,
+  ) => DeleteContentAction;
   splitStructureNode: (
     pageId: string,
     nodeIndex: number,
@@ -424,6 +486,8 @@ const mapStateToProps = (state: State): MarkdownEditorStateProps => ({
 const mapDispatchToProps = (
   dispatch: Dispatch,
 ): MarkdownEditorDispatchProps => ({
+  deleteContent: (pageId, start, end, deletionType): DeleteContentAction =>
+    dispatch(deleteContent(pageId, { end, start }, deletionType)),
   insertContent: (
     pageId,
     content,

@@ -3,7 +3,7 @@
  */
 
 import { Color, PageContent, RedBlackTree } from "../pageModel";
-import { SENTINEL_INDEX, nextNode } from "../tree/tree";
+import { SENTINEL_INDEX, getNextNode } from "../tree/tree";
 import { BufferCursor, ContentNode } from "./contentModel";
 
 /**
@@ -278,11 +278,11 @@ export function getContentBetweenOffsets(
   } else {
     let offset = startOffset;
     const { nodeIndex } = position;
-    let next = nextNode(page.content.nodes, nodeIndex);
+    let next = getNextNode(page.content.nodes, nodeIndex);
     while (offset <= endOffset) {
       content += getNodeContent(page, next.index);
       offset += (next.node as ContentNode).length;
-      next = nextNode(page.content.nodes, next.index);
+      next = getNextNode(page.content.nodes, next.index);
     }
     content = content.slice(0, length);
   }

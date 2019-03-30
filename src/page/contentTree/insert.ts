@@ -4,7 +4,7 @@ import {
   SENTINEL_INDEX,
   EMPTY_TREE_ROOT,
   NodePosition,
-  prevNode,
+  getPrevNode,
 } from "../tree/tree";
 import { Buffer, ContentNode } from "./contentModel";
 import {
@@ -131,7 +131,8 @@ function insertAtNodeExtremity(
 ): void {
   let indexToInsertAfter: number | undefined;
   if (nodePosition) {
-    indexToInsertAfter = prevNode(page.content.nodes, nodePosition.index).index;
+    indexToInsertAfter = getPrevNode(page.content.nodes, nodePosition.index)
+      .index;
     if (indexToInsertAfter === 0) {
       indexToInsertAfter = undefined;
     }

@@ -1,7 +1,7 @@
 import { Color, RedBlackTree, Node } from "../pageModel";
 import {
   SENTINEL_INDEX,
-  nextNode,
+  getNextNode,
   treeMinimum,
   recomputeTreeMetadata,
   resetSentinel,
@@ -276,7 +276,7 @@ export function deleteBetweenNodes<T extends Node>(
 
   while (nextIndex !== endIndex) {
     currentIndex = nextIndex;
-    nextIndex = nextNode(tree.nodes, currentIndex).index;
+    nextIndex = getNextNode(tree.nodes, currentIndex).index;
     deleteNode(tree, currentIndex);
   }
 }

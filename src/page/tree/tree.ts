@@ -70,7 +70,7 @@ export function treeMaximum<T extends Node>(
  * @param nodes The red-black tree.
  * @param currentNode The index of the current node in the `nodes` array.
  */
-export function nextNode<T extends Node>(
+export function getNextNode<T extends Node>(
   nodes: T[],
   currentNode: number,
 ): NodePosition<T> {
@@ -101,7 +101,7 @@ export function nextNode<T extends Node>(
  * @param nodes The red-black tree.
  * @param currentNode The index of the current node in the `nodes` array.
  */
-export function prevNode<T extends Node>(
+export function getPrevNode<T extends Node>(
   nodes: T[],
   currentNode: number,
 ): NodePosition<T> {
@@ -237,6 +237,6 @@ export function* inorderTreeTraversal<T extends Node>(
     if (isContentNode(value.node) || isStructureNode(value.node)) {
       offset += value.node.length;
     }
-    value = nextNode(tree.nodes, value.index);
+    value = getNextNode(tree.nodes, value.index);
   }
 }

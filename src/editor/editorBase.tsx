@@ -17,6 +17,7 @@ interface EditorBaseProps {
   page?: PageContent;
   getPage?: (page: PageContent) => JSX.Element[];
   onBeforeInput?: (e: BeforeInputType) => void;
+  onKeyDown?: (e: React.KeyboardEvent<HTMLDivElement>) => void;
 }
 
 /**
@@ -66,14 +67,14 @@ export default function EditorBaseComponent(
   props: EditorBaseProps,
 ): JSX.Element {
   if (props.page && props.getPage) {
-    props.getPage(props.page);
     const editable = props.onBeforeInput ? true : false;
     return (
       <div
         className={styles.editor}
         contentEditable={editable}
         suppressContentEditableWarning={editable}
-        onBeforeInput={props.onBeforeInput ? props.onBeforeInput : undefined}
+        onBeforeInput={props.onBeforeInput}
+        onKeyDown={props.onKeyDown}
       >
         {props.getPage(props.page)}
       </div>

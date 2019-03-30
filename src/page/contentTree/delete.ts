@@ -1,22 +1,19 @@
 import { deleteNode, deleteBetweenNodes } from "../tree/delete";
 import { Color, PageContent } from "../pageModel";
 import {
-  nextNode,
+  getNextNode,
   SENTINEL_INDEX,
   recomputeTreeMetadata,
   resetSentinel,
+  getPrevNode,
+  NodePosition,
 } from "../tree/tree";
 import { ContentNode } from "./contentModel";
 import { insertNode, fixInsert } from "../tree/insert";
 import { findNodeAtOffset, NodePositionOffset } from "./tree";
-
-/**
- * The logical offset range for the content to be deleted.
- */
-export interface ContentDelete {
-  startOffset: number;
-  endOffset: number;
-}
+import { StructureNode, TagType } from "../structureTree/structureModel";
+import { deleteStructureNode } from "../structureTree/delete";
+import { ContentLocations } from "./actions";
 
 /**
  * Gets the number of line feeds before, between, and after a start and end
@@ -76,7 +73,7 @@ function getLineFeedCountsForOffsets(
  */
 function getNodeAfterContent(
   page: PageContent,
-  deleteRange: ContentDelete,
+  deleteRange: ContentLocations,
   nodePosition: NodePositionOffset,
 ): ContentNode {
   // localStartOffset is the index of nodePosition.startOffset inside the buffer
@@ -84,9 +81,11 @@ function getNodeAfterContent(
     page.buffers[nodePosition.node.bufferIndex].lineStarts[
       nodePosition.node.start.line
     ] + nodePosition.node.start.column;
-  const deletedLength = deleteRange.endOffset - deleteRange.startOffset;
+  const deletedLength =
+    deleteRange.end.contentOffset - deleteRange.start.contentOffset;
 
-  const firstSection = nodePosition.nodeStartOffset - deleteRange.startOffset;
+  const firstSection =
+    nodePosition.nodeStartOffset - deleteRange.start.contentOffset;
   const secondSection = deletedLength - firstSection;
   // localEndOffset is the offset of the content after the deleted content
   const localEndOffset = localStartOffset + secondSection + 1;
@@ -94,7 +93,7 @@ function getNodeAfterContent(
   const length =
     nodePosition.nodeStartOffset +
     nodePosition.node.length -
-    deleteRange.endOffset;
+    deleteRange.end.contentOffset;
   const {
     lineFeedCountAfterNodeStartBeforeStart,
     lineFeedCountBetweenOffset,
@@ -138,7 +137,7 @@ function getNodeAfterContent(
  */
 function getNodeBeforeContent(
   page: PageContent,
-  deleteRange: ContentDelete,
+  deleteRange: ContentLocations,
   { node, nodeIndex, nodeStartOffset, remainder }: NodePositionOffset,
 ): ContentNode {
   // "local" offsets refer to local within the buffer
@@ -146,7 +145,8 @@ function getNodeBeforeContent(
     page.buffers[node.bufferIndex].lineStarts[node.start.line] +
     node.start.column +
     remainder;
-  const deletedLength = deleteRange.endOffset - deleteRange.startOffset;
+  const deletedLength =
+    deleteRange.end.contentOffset - deleteRange.start.contentOffset;
   const localEndOffset = localStartOffset + deletedLength + 1;
   const {
     lineFeedCountBeforeNodeStart,
@@ -203,11 +203,11 @@ function updateNode(
  */
 export function deleteContent(
   page: PageContent,
-  deleteRange: ContentDelete,
+  deleteRange: ContentLocations,
 ): void {
   const oldNodeStartPosition = findNodeAtOffset(
     page.content,
-    deleteRange.startOffset,
+    deleteRange.start.contentOffset,
   );
   let oldNodeEndPosition: NodePositionOffset;
   const nodeBeforeContent = getNodeBeforeContent(
@@ -215,7 +215,8 @@ export function deleteContent(
     deleteRange,
     oldNodeStartPosition,
   );
-  const deleteLength = deleteRange.endOffset - deleteRange.startOffset;
+  const deleteLength =
+    deleteRange.end.contentOffset - deleteRange.start.contentOffset;
   let nodeAfterContent: ContentNode;
   if (
     oldNodeStartPosition.remainder + deleteLength <=
@@ -228,7 +229,10 @@ export function deleteContent(
     );
     oldNodeEndPosition = oldNodeStartPosition;
   } else {
-    oldNodeEndPosition = findNodeAtOffset(page.content, deleteRange.endOffset);
+    oldNodeEndPosition = findNodeAtOffset(
+      page.content,
+      deleteRange.end.contentOffset,
+    );
     nodeAfterContent = getNodeAfterContent(
       page,
       deleteRange,
@@ -245,13 +249,14 @@ export function deleteContent(
   ) {
     // delete from a point in the node to another point in the node
     page.content.nodes[oldNodeStartPosition.nodeIndex] = nodeBeforeContent;
-    insertNode(page.content, nodeAfterContent, deleteRange.startOffset);
+    insertNode(page.content, nodeAfterContent, deleteRange.start.contentOffset);
     fixInsert(page.content, page.content.nodes.length - 1);
   } else if (nodeBeforeContent.length > 0 && nodeAfterContent.length > 0) {
     // delete from a point in a node to the end of another node
     updateNode(page, oldNodeStartPosition.nodeIndex, nodeBeforeContent);
     updateNode(page, oldNodeEndPosition.nodeIndex, nodeAfterContent);
-    firstNodeToDelete = nextNode(page.content.nodes, firstNodeToDelete).index;
+    firstNodeToDelete = getNextNode(page.content.nodes, firstNodeToDelete)
+      .index;
   } else if (nodeBeforeContent.length > 0) {
     // delete from a point in the node to the end of the node
     page.content.nodes[oldNodeStartPosition.nodeIndex] = nodeBeforeContent;
@@ -259,7 +264,8 @@ export function deleteContent(
       // deleting from a point in a node to the end of the content
       deleteNode(page.content, oldNodeEndPosition.nodeIndex);
       nodeAfterLastNodeToDelete = SENTINEL_INDEX;
-      firstNodeToDelete = nextNode(page.content.nodes, firstNodeToDelete).index;
+      firstNodeToDelete = getNextNode(page.content.nodes, firstNodeToDelete)
+        .index;
     }
   } else if (nodeAfterContent.length > 0) {
     // delete from the start of the node to a point in the node
@@ -269,7 +275,7 @@ export function deleteContent(
     deleteNode(page.content, oldNodeStartPosition.nodeIndex);
   } else {
     // deleting up to and including the last node
-    nodeAfterLastNodeToDelete = nextNode(
+    nodeAfterLastNodeToDelete = getNextNode(
       page.content.nodes,
       nodeAfterLastNodeToDelete,
     ).index;
@@ -286,4 +292,74 @@ export function deleteContent(
     );
   }
   resetSentinel(page.content);
+}
+
+function getPrevStartNode(
+  page: PageContent,
+  nodeIndex: number,
+): NodePosition<StructureNode> {
+  let prev = getPrevNode(page.structure.nodes, nodeIndex);
+  while (prev.node.tagType === TagType.EndTag) {
+    prev = getPrevNode(page.structure.nodes, nodeIndex);
+  }
+  return prev;
+}
+
+/**
+ * Deletes multiple characters prior to the selection.
+ * @param page The page/piece table to delete the content from.
+ * @param deleteRange The start and end offset of the content to delete.
+ */
+export function deletePrior(
+  page: PageContent,
+  deleteRange: ContentLocations,
+): void {
+  if (deleteRange.start.structureNodeContentOffset === undefined) {
+    return;
+  }
+
+  deleteRange.start.contentOffset -= 1;
+  deleteContent(page, deleteRange);
+
+  // the following are local to the given structure node
+  const localDeleteStart =
+    deleteRange.start.contentOffset -
+    deleteRange.start.structureNodeContentOffset;
+
+  // Gets previous nodes until the last one isn't going to be completely deleted
+  let currentNodeIndex = deleteRange.start.structureNodeIndex;
+  let currentNodeStart = deleteRange.start.structureNodeContentOffset;
+  let currentDeleteStart = localDeleteStart;
+  let currentNode: StructureNode;
+
+  if (localDeleteStart < 0) {
+    ({ index: currentNodeIndex, node: currentNode } = getPrevStartNode(
+      page,
+      currentNodeIndex,
+    ));
+    currentNodeStart -= currentNode.length;
+    currentDeleteStart = currentNodeStart - localDeleteStart;
+
+    while (currentDeleteStart < 0) {
+      const oldNodeIndex = currentNodeIndex;
+      ({ index: currentNodeIndex, node: currentNode } = getPrevStartNode(
+        page,
+        currentNodeIndex,
+      ));
+      deleteStructureNode(page, oldNodeIndex);
+      currentNodeStart -= currentNode.length;
+      currentDeleteStart = currentNodeStart - localDeleteStart;
+    }
+  }
+
+  page.structure.nodes[currentNodeIndex].length -= 1;
+}
+
+export function deleteAfter(): void {
+  // deletes multiple characters after the selection
+}
+
+export function deleteRange(): void {
+  // deletes the characters selected
+  // should utilise deletePrior and deleteAfter as necessary
 }

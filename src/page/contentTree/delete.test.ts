@@ -98,8 +98,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 7,
-          startOffset: 5,
+          end: { contentOffset: 7,
+          }, start: { contentOffset: 5,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -194,8 +194,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 2,
-          startOffset: 0,
+          end: { contentOffset: 2,
+          }, start: { contentOffset: 0, }
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -290,8 +290,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 5,
-          startOffset: 0,
+          end: { contentOffset: 5,
+          }, start: { contentOffset: 0, }
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -386,8 +386,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 7,
-          startOffset: 2,
+          end: { contentOffset: 7,
+          }, start: { contentOffset: 2, }
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -484,8 +484,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 4,
-          startOffset: 0,
+          end: { contentOffset: 4,
+          }, start: { contentOffset: 0, }
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -580,8 +580,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 6,
-          startOffset: 2,
+          end: { contentOffset: 6,
+          }, start: { contentOffset: 2,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -676,8 +676,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 5,
-          startOffset: 2,
+          end: { contentOffset: 5,
+          }, start: { contentOffset: 2,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -772,8 +772,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 4,
-          startOffset: 2,
+          end: { contentOffset: 4,
+          }, start: { contentOffset: 2,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -868,8 +868,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 6,
-          startOffset: 5,
+          end: { contentOffset: 6,
+          }, start: { contentOffset: 5,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -964,8 +964,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 1,
-          startOffset: 0,
+          end: { contentOffset: 1,
+          }, start: { contentOffset: 0,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -1062,8 +1062,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 5,
-          startOffset: 2,
+          end: { contentOffset: 5,
+          }, start: { contentOffset: 2,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -1158,8 +1158,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 5,
-          startOffset: 3,
+          end: { contentOffset: 5,
+          }, start: { contentOffset: 3,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -1254,8 +1254,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 5,
-          startOffset: 4,
+          end: { contentOffset: 5,
+          }, start: { contentOffset: 4,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -1350,8 +1350,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 6,
-          startOffset: 5,
+          end: { contentOffset: 6,
+          }, start: { contentOffset: 5,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -1446,8 +1446,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 7,
-          startOffset: 4,
+          end: { contentOffset: 7,
+          }, start: { contentOffset: 4,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -1542,8 +1542,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 7,
-          startOffset: 6,
+          end: { contentOffset: 7,
+          }, start: { contentOffset: 6,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -1638,8 +1638,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 2,
-          startOffset: 1,
+          end: { contentOffset: 2,
+          }, start: { contentOffset: 1,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -1749,8 +1749,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 4,
-          startOffset: 2,
+          end: { contentOffset: 4,
+          }, start: { contentOffset: 2,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -1858,8 +1858,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 4,
-          startOffset: 3,
+          end: { contentOffset: 4,
+          }, start: { contentOffset: 3,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -1967,8 +1967,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 3,
-          startOffset: 2,
+          end: { contentOffset: 3,
+          }, start: { contentOffset: 2,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -2076,8 +2076,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 6,
-          startOffset: 4,
+          end: { contentOffset: 6,
+          }, start: { contentOffset: 4,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -2185,8 +2185,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 5,
-          startOffset: 4,
+          end: { contentOffset: 5,
+          }, start: { contentOffset: 4,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -2294,8 +2294,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 8,
-          startOffset: 6,
+          end: { contentOffset: 8,
+          }, start: { contentOffset: 6,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -2403,8 +2403,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 3,
-          startOffset: 1,
+          end: { contentOffset: 3,
+          }, start: { contentOffset: 1,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -2595,8 +2595,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 94,
-          startOffset: 66,
+          end: { contentOffset: 94,
+          }, start: { contentOffset: 66,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -2783,8 +2783,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 94,
-          startOffset: 65,
+          end: { contentOffset: 94,
+          }, start: { contentOffset: 65,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -2971,8 +2971,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 94,
-          startOffset: 0,
+          end: { contentOffset: 94,
+          }, start: { contentOffset: 0,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -3159,8 +3159,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 88,
-          startOffset: 83,
+          end: { contentOffset: 88,
+          }, start: { contentOffset: 83,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -3347,8 +3347,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 127,
-          startOffset: 83,
+          end: { contentOffset: 127,
+          }, start: { contentOffset: 83,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -3535,8 +3535,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 127,
-          startOffset: 93,
+          end: { contentOffset: 127,
+          }, start: { contentOffset: 93,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -3723,8 +3723,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 80,
-          startOffset: 0,
+          end: { contentOffset: 80,
+          }, start: { contentOffset: 0,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -3911,8 +3911,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 85,
-          startOffset: 80,
+          end: { contentOffset: 85,
+          }, start: { contentOffset: 80,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -4101,8 +4101,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 90,
-          startOffset: 66,
+          end: { contentOffset: 90,
+          }, start: { contentOffset: 66,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -4285,8 +4285,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 84,
-          startOffset: 0,
+          end: { contentOffset: 84,
+          }, start: { contentOffset: 0,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -4473,8 +4473,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 70,
-          startOffset: 65,
+          end: { contentOffset: 70,
+          }, start: { contentOffset: 65,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -4661,8 +4661,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 90,
-          startOffset: 87,
+          end: { contentOffset: 90,
+          }, start: { contentOffset: 87,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -4851,8 +4851,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 66,
-          startOffset: 31,
+          end: { contentOffset: 66,
+          }, start: { contentOffset: 31,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -5039,8 +5039,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 85,
-          startOffset: 81,
+          end: { contentOffset: 85,
+          }, start: { contentOffset: 81,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -5227,8 +5227,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 87,
-          startOffset: 84,
+          end: { contentOffset: 87,
+          }, start: { contentOffset: 84,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -5415,8 +5415,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 127,
-          startOffset: 120,
+          end: { contentOffset: 127,
+          }, start: { contentOffset: 120,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -5603,8 +5603,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 127,
-          startOffset: 90,
+          end: { contentOffset: 127,
+          }, start: { contentOffset: 90,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -5791,8 +5791,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 127,
-          startOffset: 60,
+          end: { contentOffset: 127,
+          }, start: { contentOffset: 60,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -5981,8 +5981,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 70,
-          startOffset: 60,
+          end: { contentOffset: 70,
+          }, start: { contentOffset: 60,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -6169,8 +6169,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 70,
-          startOffset: 30,
+          end: { contentOffset: 70,
+          }, start: { contentOffset: 30,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -6357,8 +6357,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 89,
-          startOffset: 84,
+          end: { contentOffset: 89,
+          }, start: { contentOffset: 84,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -6545,8 +6545,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 86,
-          startOffset: 81,
+          end: { contentOffset: 86,
+          }, start: { contentOffset: 81,}
         });
         expect(page).toStrictEqual(expectedPage);
       });
@@ -6733,8 +6733,8 @@ describe("delete content", () => {
           structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
         };
         deleteContent(page, {
-          endOffset: 100,
-          startOffset: 89,
+          end: { contentOffset: 100,
+          }, start: { contentOffset: 89,}
         });
         expect(page).toStrictEqual(expectedPage);
       });

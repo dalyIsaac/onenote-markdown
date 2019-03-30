@@ -7,7 +7,7 @@ import {
   REPLACE_CONTENT,
   ReplaceContentAction,
 } from "./contentTree/actions";
-import { deleteContent } from "./contentTree/delete";
+import { deleteContent, deletePrior } from "./contentTree/delete";
 import { insertContent } from "./contentTree/insert";
 import { MAX_BUFFER_LENGTH } from "./contentTree/tree";
 import { PageContent, StatePages } from "./pageModel";
@@ -60,55 +60,32 @@ function handleInsertContent(
 
 function handleDeleteContent(
   state: StatePages,
-  {
-    pageId,
-    contentLocations: {
-      start: {
-        contentOffset: startOffset,
-        // structureNodeIndex: startStructureNodeIndex,
-      },
-      end: {
-        contentOffset: endOffset,
-        // structureNodeIndex: endStructureNodeIndex,
-      },
-    },
-  }: DeleteContentAction,
+  { pageId, contentLocations: deleteRange, deletionType }: DeleteContentAction,
 ): StatePages {
-  deleteContent(state[pageId] as PageContent, {
-    endOffset: endOffset,
-    startOffset: startOffset,
-  });
+  switch (deletionType) {
+    case "Backspace":
+      deletePrior(state[pageId] as PageContent, deleteRange);
+      break;
+
+    default:
+      // deleteContent(state[pageId] as PageContent, deleteRange);
+      break;
+  }
   return state;
 }
 
 function handleReplaceContent(
   state: StatePages,
-  {
-    pageId,
-    content,
-    contentLocations: {
-      start: {
-        contentOffset: startOffset,
-        structureNodeIndex: startStructureNodeIndex,
-      },
-      end: {
-        contentOffset: endOffset,
-        // structureNodeIndex: endStructureNodeIndex,
-      },
-    },
-  }: ReplaceContentAction,
+  { pageId, content, contentLocations }: ReplaceContentAction,
 ): StatePages {
-  deleteContent(state[pageId] as PageContent, {
-    endOffset: endOffset,
-    startOffset: startOffset,
-  });
+  deleteContent(state[pageId] as PageContent, contentLocations);
   insertContent(
     state[pageId] as PageContent,
     {
       content: content,
-      offset: startOffset,
+      offset: contentLocations.start.contentOffset,
     },
-    startStructureNodeIndex,
+    contentLocations.start.structureNodeIndex,
     MAX_BUFFER_LENGTH,
   );
   return state;
