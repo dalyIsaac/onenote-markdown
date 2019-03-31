@@ -5,15 +5,13 @@ import {
   SENTINEL_INDEX,
   recomputeTreeMetadata,
   resetSentinel,
-  getPrevNode,
-  NodePosition,
 } from "../tree/tree";
 import { ContentNode } from "./contentModel";
 import { insertNode, fixInsert } from "../tree/insert";
 import { findNodeAtOffset, NodePositionOffset } from "./tree";
-import { StructureNode, TagType } from "../structureTree/structureModel";
 import { deleteStructureNode } from "../structureTree/delete";
 import { ContentLocations } from "./actions";
+import { getPrevStartNode } from "../structureTree/tree";
 
 /**
  * Gets the number of line feeds before, between, and after a start and end
@@ -294,21 +292,16 @@ export function deleteContent(
   resetSentinel(page.content);
 }
 
-function getPrevStartNode(
-  page: PageContent,
-  nodeIndex: number,
-): NodePosition<StructureNode> {
-  let prev = getPrevNode(page.structure.nodes, nodeIndex);
-  while (prev.node.tagType === TagType.EndTag) {
-    prev = getPrevNode(page.structure.nodes, prev.index);
-  }
-  return prev;
-}
-
 function deletePriorAtStructureNodeStart(
   page: PageContent,
   deleteRange: ContentLocations,
 ): void {
+  // Checks if the node is a <br /> tag
+  if (page.structure.nodes[deleteRange.start.structureNodeIndex].tag === "br") {
+    deleteStructureNode(page, deleteRange.start.structureNodeIndex);
+    return;
+  }
+
   const { index: startNodeIndex, node: startNode } = getPrevStartNode(
     page,
     deleteRange.start.structureNodeIndex,
@@ -363,12 +356,10 @@ export function deletePrior(
 ): void {
   if (
     deleteRange.start.structureNodeContentOffset === undefined ||
-    deleteRange.start.contentOffset === 0
+    deleteRange.start.structureNodeContentOffset === 0
   ) {
     return;
   }
-
-  deleteRange.start.contentOffset -= 1;
 
   // the following are local to the given structure node
   const localDeleteStart =

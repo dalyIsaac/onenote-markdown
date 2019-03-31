@@ -32,6 +32,7 @@ import {
   splitStructureNode,
 } from "../../page/structureTree/actions";
 import { is } from "ts-type-guards";
+import { getPrevStartNode } from "../../page/structureTree/tree";
 
 /**
  * Definition for items which reside on the stack of elements to be rendered.
@@ -343,6 +344,18 @@ export function MarkdownEditorComponent(
           end,
           offsetsAreEqual(startOffsets, endOffsets) ? deletionType : undefined,
         );
+
+        const isBreak = parentElement.attributes.getNamedItem(IS_BREAK);
+        if (isBreak && isBreak.value === "true") {
+          const { index, node } = getPrevStartNode(
+            props.page,
+            structureNodeIndexValue,
+          );
+          cursorSelection = {
+            nodeIndex: index,
+            selectionOffset: node.length,
+          };
+        }
       }
     }
   }

@@ -4,6 +4,7 @@ import {
   inorderTreeTraversal,
   NodePosition,
   getNextNode,
+  getPrevNode,
 } from "../tree/tree";
 import { StructureNode, TagType } from "./structureModel";
 import { alea } from "seedrandom";
@@ -126,4 +127,21 @@ export function updateNodePairTag(
   if (endNodePosition) {
     endNodePosition.node.tag = newTag;
   }
+}
+
+/**
+ * Gets the previous `StartTag` or `StartEndTag` from the page.
+ * @param page The page which contains the `StructureNode`s.
+ * @param nodeIndex The index of the node, from whom the previous start node
+ * will be retrieved.
+ */
+export function getPrevStartNode(
+  page: PageContent,
+  nodeIndex: number,
+): NodePosition<StructureNode> {
+  let prev = getPrevNode(page.structure.nodes, nodeIndex);
+  while (prev.node.tagType === TagType.EndTag) {
+    prev = getPrevNode(page.structure.nodes, prev.index);
+  }
+  return prev;
 }
