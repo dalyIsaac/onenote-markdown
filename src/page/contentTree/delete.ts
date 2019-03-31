@@ -354,9 +354,13 @@ export function deletePrior(
   page: PageContent,
   deleteRange: ContentLocations,
 ): void {
+  if (deleteRange.start.structureNodeContentOffset === undefined) {
+    return;
+  }
+
   if (
-    deleteRange.start.structureNodeContentOffset === undefined ||
-    deleteRange.start.structureNodeContentOffset === 0
+    deleteRange.start.structureNodeContentOffset === 0 &&
+    deleteRange.start.contentOffset === 0
   ) {
     return;
   }
@@ -364,11 +368,13 @@ export function deletePrior(
   // the following are local to the given structure node
   const localDeleteStart =
     deleteRange.start.contentOffset -
-    deleteRange.start.structureNodeContentOffset;
+    deleteRange.start.structureNodeContentOffset -
+    1;
 
   if (localDeleteStart < 0) {
     deletePriorAtStructureNodeStart(page, deleteRange);
   } else {
+    deleteRange.start.contentOffset -= 1;
     deleteContent(page, deleteRange);
     page.structure.nodes[deleteRange.start.structureNodeIndex].length -= 1;
   }
