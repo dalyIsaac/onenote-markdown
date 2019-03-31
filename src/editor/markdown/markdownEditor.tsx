@@ -338,24 +338,40 @@ export function MarkdownEditorComponent(
           structureNodeIndex: structureNodeIndexValue,
         };
 
+        const isBreak = parentElement.attributes.getNamedItem(IS_BREAK);
+        if (deletionType === "Backspace") {
+          const localDeleteStart =
+            start.contentOffset - start.structureNodeContentOffset! - 1;
+          const { index: prevNodeIndex, node: prevNode } = getPrevStartNode(
+            props.page,
+            structureNodeIndexValue,
+          );
+          if (isBreak && isBreak.value === "true") {
+            cursorSelection = {
+              nodeIndex: prevNodeIndex,
+              selectionOffset: prevNode.length,
+            };
+          } else if (localDeleteStart < 0) {
+            cursorSelection = {
+              nodeIndex: props.page.structure.nodes.length,
+              selectionOffset: prevNode.length,
+            };
+          } else {
+            cursorSelection = {
+              nodeIndex: structureNodeIndexValue,
+              selectionOffset: localDeleteStart,
+            };
+          }
+        } else if (deletionType === "Delete") {
+          // TODO
+        }
+
         props.deleteContent(
           props.pageId,
           start,
           end,
           offsetsAreEqual(startOffsets, endOffsets) ? deletionType : undefined,
         );
-
-        const isBreak = parentElement.attributes.getNamedItem(IS_BREAK);
-        if (isBreak && isBreak.value === "true") {
-          const { index, node } = getPrevStartNode(
-            props.page,
-            structureNodeIndexValue,
-          );
-          cursorSelection = {
-            nodeIndex: index,
-            selectionOffset: node.length,
-          };
-        }
       }
     }
   }
