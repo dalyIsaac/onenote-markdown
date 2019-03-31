@@ -300,9 +300,56 @@ function getPrevStartNode(
 ): NodePosition<StructureNode> {
   let prev = getPrevNode(page.structure.nodes, nodeIndex);
   while (prev.node.tagType === TagType.EndTag) {
-    prev = getPrevNode(page.structure.nodes, nodeIndex);
+    prev = getPrevNode(page.structure.nodes, prev.index);
   }
   return prev;
+}
+
+function deletePriorAtStructureNodeStart(
+  page: PageContent,
+  deleteRange: ContentLocations,
+): void {
+  const { index: startNodeIndex, node: startNode } = getPrevStartNode(
+    page,
+    deleteRange.start.structureNodeIndex,
+  );
+
+  // Merges the two nodes.
+  // First, insert the start and end node.
+  // Second, delete the existing nodes.
+  const endNode = page.structure.nodes[deleteRange.end.structureNodeIndex];
+  insertNode(
+    page.structure,
+    {
+      ...startNode,
+      length: startNode.length + endNode.length,
+      color: Color.Red,
+      leftSubTreeLength: 0,
+      left: SENTINEL_INDEX,
+      parent: SENTINEL_INDEX,
+      right: SENTINEL_INDEX,
+    },
+    deleteRange.end.contentOffset,
+    startNodeIndex,
+  );
+  insertNode(
+    page.structure,
+    {
+      ...page.structure.nodes[startNodeIndex + 1],
+      color: Color.Red,
+      leftSubTreeLength: 0,
+      left: SENTINEL_INDEX,
+      parent: SENTINEL_INDEX,
+      right: SENTINEL_INDEX,
+    },
+    deleteRange.end.contentOffset,
+    page.structure.nodes.length - 1,
+  );
+
+  deleteStructureNode(page, startNodeIndex);
+  deleteStructureNode(page, startNodeIndex + 1);
+  deleteStructureNode(page, deleteRange.end.structureNodeIndex);
+  deleteStructureNode(page, deleteRange.end.structureNodeIndex + 1);
 }
 
 /**
@@ -314,45 +361,26 @@ export function deletePrior(
   page: PageContent,
   deleteRange: ContentLocations,
 ): void {
-  if (deleteRange.start.structureNodeContentOffset === undefined) {
+  if (
+    deleteRange.start.structureNodeContentOffset === undefined ||
+    deleteRange.start.contentOffset === 0
+  ) {
     return;
   }
 
   deleteRange.start.contentOffset -= 1;
-  deleteContent(page, deleteRange);
 
   // the following are local to the given structure node
   const localDeleteStart =
     deleteRange.start.contentOffset -
     deleteRange.start.structureNodeContentOffset;
 
-  // Gets previous nodes until the last one isn't going to be completely deleted
-  let currentNodeIndex = deleteRange.start.structureNodeIndex;
-  let currentNodeStart = deleteRange.start.structureNodeContentOffset;
-  let currentDeleteStart = localDeleteStart;
-  let currentNode: StructureNode;
-
   if (localDeleteStart < 0) {
-    ({ index: currentNodeIndex, node: currentNode } = getPrevStartNode(
-      page,
-      currentNodeIndex,
-    ));
-    currentNodeStart -= currentNode.length;
-    currentDeleteStart = currentNodeStart - localDeleteStart;
-
-    while (currentDeleteStart < 0) {
-      const oldNodeIndex = currentNodeIndex;
-      ({ index: currentNodeIndex, node: currentNode } = getPrevStartNode(
-        page,
-        currentNodeIndex,
-      ));
-      deleteStructureNode(page, oldNodeIndex);
-      currentNodeStart -= currentNode.length;
-      currentDeleteStart = currentNodeStart - localDeleteStart;
-    }
+    deletePriorAtStructureNodeStart(page, deleteRange);
+  } else {
+    deleteContent(page, deleteRange);
+    page.structure.nodes[deleteRange.start.structureNodeIndex].length -= 1;
   }
-
-  page.structure.nodes[currentNodeIndex].length -= 1;
 }
 
 export function deleteAfter(): void {

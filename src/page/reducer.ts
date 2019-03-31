@@ -68,7 +68,7 @@ function handleDeleteContent(
       break;
 
     default:
-      // deleteContent(state[pageId] as PageContent, deleteRange);
+      deleteContent(state[pageId] as PageContent, deleteRange);
       break;
   }
   return state;
