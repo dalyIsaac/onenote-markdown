@@ -6,6 +6,10 @@ This is a new prototype for building a markdown editor for OneNote, starting wit
 
 Documentation: https://github.com/dalyIsaac/onenote-markdown/wiki
 
+Deployed web app: https://onenote-markdown.azurewebsites.net/
+
+NOTE: NOT READY FOR USE
+
 ## Why a new project?
 
 The main reason is that the previous attempt wasn't written with full code coverage, and going back to rectify that was painful. There were also some fundamentally bad architectural decisions - like sending multitudes of unnecessary requests to the Microsoft Graph at once.
