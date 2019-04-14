@@ -14,7 +14,7 @@ import {
 } from "../editorBase";
 import React from "react";
 import { getContentBetweenOffsets } from "../../page/contentTree/tree";
-import { selectionProps } from "./markdownEditor";
+import { selectionProps } from "./selection";
 
 /**
  * Definition for items which reside on the stack of elements to be rendered.

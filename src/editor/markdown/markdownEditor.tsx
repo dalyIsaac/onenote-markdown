@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 import EditorBase, {
   BeforeInputType,
-  CONTENT_OFFSET,
-  IS_BREAK,
-  NODE_INDEX,
-  getSelectionSafe,
+  getStructureNodeIndex,
+  getContentOffset,
+  getIsBreak,
 } from "../editorBase";
 import styles from "./markdownEditor.module.css";
 import { connect } from "react-redux";
@@ -25,21 +24,15 @@ import {
 } from "../../page/structureTree/actions";
 import { is } from "ts-type-guards";
 import { getPrevStartNode } from "../../page/structureTree/tree";
-import { SelectionOffset, offsetsAreEqual, getOffsets } from "./selection";
+import {
+  SelectionOffset,
+  offsetsAreEqual,
+  getOffsets,
+  updateCursorSelection,
+  selectionProps,
+  getSelectionSafe,
+} from "./selection";
 import { getPage } from "./stack";
-
-type CursorSelection = {
-  nodeIndex: number;
-  selectionOffset: number;
-} | null;
-
-export const selectionProps: {
-  cursorSelection: CursorSelection;
-  ref: React.RefObject<{}>;
-} = {
-  cursorSelection: null,
-  ref: React.createRef(),
-};
 
 function isBreak(
   element: Element,
@@ -52,9 +45,9 @@ function isBreak(
   }
 
   if (currentElement) {
-    const breakAttr = currentElement.attributes.getNamedItem(IS_BREAK);
-    if (breakAttr && breakAttr.value === true.toString()) {
-      return { element: currentElement, result: true };
+    const isBreak = getIsBreak(currentElement);
+    if (isBreak !== null) {
+      return { element: currentElement, result: isBreak };
     }
   }
   return { element: currentElement, result: false };
@@ -64,96 +57,77 @@ export function MarkdownEditorComponent(
   props: MarkdownEditorStateProps & MarkdownEditorDispatchProps,
 ): JSX.Element {
   function insertContent(
-    parentElement: Element | null,
+    element: Element,
     anchorOffset: number,
     content: string,
     startOffsets: SelectionOffset,
   ): void {
-    if (parentElement) {
-      const structureNodeIndex = parentElement.attributes.getNamedItem(
-        NODE_INDEX,
-      );
-      const contentOffset = parentElement.attributes.getNamedItem(
-        CONTENT_OFFSET,
-      );
-      if (structureNodeIndex && contentOffset) {
-        const structureNodeIndexValue = Number(structureNodeIndex.value);
-        const contentOffsetValue = Number(contentOffset.value);
-        if (content === "\n") {
-          selectionProps.cursorSelection = {
-            nodeIndex: props.page.structure.nodes.length,
-            selectionOffset: 0,
-          };
-          props.splitStructureNode(
-            props.pageId,
-            structureNodeIndexValue,
-            startOffsets.selectionOffset,
-            anchorOffset,
-          );
-        } else {
-          selectionProps.cursorSelection = {
-            nodeIndex: structureNodeIndexValue,
-            selectionOffset: anchorOffset + content.length,
-          };
-          props.insertContent(
-            props.pageId,
-            content,
-            startOffsets.selectionOffset,
-            structureNodeIndexValue,
-            contentOffsetValue,
-          );
-        }
+    const structureNodeIndex = getStructureNodeIndex(element);
+    const contentOffset = getContentOffset(element);
+    if (structureNodeIndex !== null && contentOffset !== null) {
+      if (content === "\n") {
+        selectionProps.cursorSelection = {
+          nodeIndex: props.page.structure.nodes.length,
+          selectionOffset: 0,
+        };
+        props.splitStructureNode(
+          props.pageId,
+          structureNodeIndex,
+          startOffsets.selectionOffset,
+          anchorOffset,
+        );
+      } else {
+        selectionProps.cursorSelection = {
+          nodeIndex: structureNodeIndex,
+          selectionOffset: anchorOffset + content.length,
+        };
+        props.insertContent(
+          props.pageId,
+          content,
+          startOffsets.selectionOffset,
+          structureNodeIndex,
+          contentOffset,
+        );
       }
     }
   }
 
   function deleteContent(
-    parentElement: Element,
+    element: Element,
     startOffsets: SelectionOffset,
     endOffsets: SelectionOffset,
     deletionType?: DeletionType,
   ): void {
-    const structureNodeIndex = parentElement.attributes.getNamedItem(
-      NODE_INDEX,
-    );
-    if (structureNodeIndex) {
-      const structureNodeIndexValue = Number(structureNodeIndex.value);
-      const structureNodeContentOffset = Number(
-        parentElement.attributes.getNamedItem(CONTENT_OFFSET)!.value,
-      );
+    const structureNodeIndex = getStructureNodeIndex(element);
+    const structureNodeContentOffset = getContentOffset(element);
+    if (structureNodeIndex !== null && structureNodeContentOffset !== null) {
       const start: Location = {
         contentOffset: startOffsets.selectionOffset,
         structureNodeContentOffset,
-        structureNodeIndex: structureNodeIndexValue,
+        structureNodeIndex,
       };
       const end: Location = {
         contentOffset: endOffsets.selectionOffset,
-        structureNodeIndex: structureNodeIndexValue,
+        structureNodeIndex,
       };
 
-      const isBreak = parentElement.attributes.getNamedItem(IS_BREAK);
+      const isBreak = getIsBreak(element);
       if (deletionType === "Backspace") {
         const localDeleteStart =
           start.contentOffset - start.structureNodeContentOffset! - 1;
         const { index: prevNodeIndex, node: prevNode } = getPrevStartNode(
           props.page,
-          structureNodeIndexValue,
+          structureNodeIndex,
         );
-        if (isBreak && isBreak.value === "true") {
-          selectionProps.cursorSelection = {
-            nodeIndex: prevNodeIndex,
-            selectionOffset: prevNode.length,
-          };
+        if (isBreak === true) {
+          updateCursorSelection(prevNodeIndex, prevNode.length);
         } else if (localDeleteStart < 0) {
-          selectionProps.cursorSelection = {
-            nodeIndex: props.page.structure.nodes.length,
-            selectionOffset: prevNode.length,
-          };
+          updateCursorSelection(
+            props.page.structure.nodes.length,
+            prevNode.length,
+          );
         } else {
-          selectionProps.cursorSelection = {
-            nodeIndex: structureNodeIndexValue,
-            selectionOffset: localDeleteStart,
-          };
+          updateCursorSelection(structureNodeIndex, localDeleteStart);
         }
       } else if (deletionType === "Delete") {
         // TODO
@@ -192,33 +166,25 @@ export function MarkdownEditorComponent(
   }
 
   function inputOnBreak(element: Element, content: string): void {
-    const structureNodeIndex = element.attributes.getNamedItem(NODE_INDEX);
-    const contentOffset = element.attributes.getNamedItem(CONTENT_OFFSET);
-    if (structureNodeIndex && contentOffset) {
-      const structureNodeIndexValue = Number(structureNodeIndex.value);
-      const contentOffsetValue = Number(contentOffset.value);
+    const structureNodeIndex = getStructureNodeIndex(element);
+    const contentOffset = getContentOffset(element);
+    if (structureNodeIndex !== null && contentOffset !== null) {
       if (content === "\n") {
-        selectionProps.cursorSelection = {
-          nodeIndex: props.page.structure.nodes.length,
-          selectionOffset: 0,
-        };
+        updateCursorSelection(props.page.structure.nodes.length, 0);
         props.splitStructureNode(
           props.pageId,
-          structureNodeIndexValue,
-          contentOffsetValue,
+          structureNodeIndex,
+          contentOffset,
           0,
         );
       } else {
-        selectionProps.cursorSelection = {
-          nodeIndex: structureNodeIndexValue,
-          selectionOffset: content.length,
-        };
+        updateCursorSelection(structureNodeIndex, content.length);
         props.insertContent(
           props.pageId,
           content,
-          contentOffsetValue,
-          structureNodeIndexValue,
-          contentOffsetValue,
+          contentOffset,
+          structureNodeIndex,
+          contentOffset,
         );
       }
     }
@@ -238,10 +204,10 @@ export function MarkdownEditorComponent(
     if (offsetsAreEqual(startOffsets, endOffsets)) {
       if (is(Element)(anchorNode)) {
         const { result, element } = isBreak(anchorNode);
-        if (result && element) {
+        if (result === true && element !== null) {
           inputOnBreak(element, e.data);
         }
-      } else {
+      } else if (anchorNode.parentElement) {
         insertContent(
           anchorNode.parentElement,
           anchorOffset,

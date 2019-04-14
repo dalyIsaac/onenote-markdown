@@ -48,26 +48,63 @@ export const CONTENT_OFFSET = "contentoffset";
 export const IS_BREAK = "isbreak";
 export const NODE_INDEX = "nodeindex";
 
+function getAttribute(element: Element, name: string): string | null {
+  const item = element.attributes.getNamedItem(name);
+  if (item === null) {
+    return null;
+  }
+  return item.value;
+}
+
+function getNumberAttribute(element: Element, name: string): number | null {
+  const strValue = getAttribute(element, name);
+  if (strValue === null) {
+    return null;
+  }
+
+  const value = Number(strValue);
+  if (isFinite(value)) {
+    return value;
+  }
+  return null;
+}
+
+function getBooleanAttribute(element: Element, name: string): boolean | null {
+  const strValue = getAttribute(element, name);
+  if (strValue === null) {
+    return null;
+  }
+
+  if (strValue === "true") {
+    return true;
+  } else if (strValue === "false") {
+    return false;
+  }
+  return null;
+}
+
 /**
- * Returns the current selection, given that nothing is null.
+ * Gets the value for the structure node index, for the given element.
+ * @param element
  */
-export function getSelectionSafe(): {
-  anchorNode: Node;
-  anchorOffset: number;
-  focusNode: Node;
-  focusOffset: number;
-} {
-  const selection = window.getSelection();
-  if (selection === null) {
-    throw new Error("Selection is null");
-  }
-  const { anchorNode, anchorOffset, focusNode, focusOffset } = selection;
-  if (anchorNode === null) {
-    throw new Error("Anchor node is null");
-  } else if (focusNode === null) {
-    throw new Error("Focus node is null");
-  }
-  return { anchorNode, anchorOffset, focusNode, focusOffset };
+export function getStructureNodeIndex(element: Element): number | null {
+  return getNumberAttribute(element, NODE_INDEX);
+}
+
+/**
+ * Gets the value for the content offset, for the given element.
+ * @param element
+ */
+export function getContentOffset(element: Element): number | null {
+  return getNumberAttribute(element, CONTENT_OFFSET);
+}
+
+/**
+ * Gets the value for the is break attribute, for the given element.
+ * @param element
+ */
+export function getIsBreak(element: Element): boolean | null {
+  return getBooleanAttribute(element, IS_BREAK);
 }
 
 /**

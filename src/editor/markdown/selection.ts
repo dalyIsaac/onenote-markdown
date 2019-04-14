@@ -1,5 +1,6 @@
 import { CONTENT_OFFSET, IS_BREAK } from "../editorBase";
 import { is } from "ts-type-guards";
+import React from "react";
 
 export interface SelectionOffset {
   /**
@@ -16,6 +17,39 @@ export interface SelectionOffset {
    * The offset of the end of the node, in terms of the page's content.
    */
   endOffset: number;
+}
+
+type CursorSelection = {
+  nodeIndex: number;
+  selectionOffset: number;
+} | null;
+
+export const selectionProps: {
+  cursorSelection: CursorSelection;
+  ref: React.RefObject<{}>;
+} = {
+  cursorSelection: null,
+  ref: React.createRef(),
+};
+
+/**
+ * Updates the current cursor selection with the node index and selection
+ * offset.
+ * @param nodeIndex
+ * @param selectionOffset
+ */
+export function updateCursorSelection(
+  nodeIndex: number,
+  selectionOffset: number,
+): void {
+  selectionProps.cursorSelection = { nodeIndex, selectionOffset };
+}
+
+/**
+ * Sets to null the cursor selection.
+ */
+export function wipeCursorSelection(): void {
+  selectionProps.cursorSelection = null;
 }
 
 /**
@@ -72,4 +106,26 @@ export function offsetsAreEqual(
     firstOffset.selectionOffset === secondOffset.selectionOffset &&
     firstOffset.endOffset === secondOffset.endOffset
   );
+}
+
+/**
+ * Returns the current selection, given that nothing is null.
+ */
+export function getSelectionSafe(): {
+  anchorNode: Node;
+  anchorOffset: number;
+  focusNode: Node;
+  focusOffset: number;
+} {
+  const selection = window.getSelection();
+  if (selection === null) {
+    throw new Error("Selection is null");
+  }
+  const { anchorNode, anchorOffset, focusNode, focusOffset } = selection;
+  if (anchorNode === null) {
+    throw new Error("Anchor node is null");
+  } else if (focusNode === null) {
+    throw new Error("Focus node is null");
+  }
+  return { anchorNode, anchorOffset, focusNode, focusOffset };
 }
