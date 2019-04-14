@@ -7,6 +7,7 @@ import EditorBase, {
   CONTENT_OFFSET,
   IS_BREAK,
   NODE_INDEX,
+  getSelectionSafe,
 } from "../editorBase";
 import styles from "./markdownEditor.module.css";
 import { connect } from "react-redux";
@@ -384,7 +385,7 @@ export function MarkdownEditorComponent(
         anchorOffset,
         focusNode,
         focusOffset,
-      } = window.getSelection();
+      } = getSelectionSafe();
       const startOffsets = getOffsets(anchorNode, anchorOffset);
       const endOffsets = getOffsets(focusNode, focusOffset);
 
@@ -432,7 +433,7 @@ export function MarkdownEditorComponent(
       anchorOffset,
       focusNode,
       focusOffset,
-    } = window.getSelection();
+    } = getSelectionSafe();
     const startOffsets = getOffsets(anchorNode, anchorOffset);
     const endOffsets = getOffsets(focusNode, focusOffset);
 
@@ -453,15 +454,20 @@ export function MarkdownEditorComponent(
     }
   }
 
-  window.getSelection().empty();
+  const selection = window.getSelection();
+  if (selection) {
+    selection.empty();
+  }
   useEffect(() => {
     if (cursorSelection) {
       const selection = window.getSelection();
-      selection.empty();
-      const range = document.createRange();
-      const node = (selectionRef.current as HTMLSpanElement).firstChild;
-      range.setStart(node!, cursorSelection.selectionOffset);
-      selection.addRange(range);
+      if (selection) {
+        selection.empty();
+        const range = document.createRange();
+        const node = (selectionRef.current as HTMLSpanElement).firstChild;
+        range.setStart(node!, cursorSelection.selectionOffset);
+        selection.addRange(range);
+      }
     }
   });
 

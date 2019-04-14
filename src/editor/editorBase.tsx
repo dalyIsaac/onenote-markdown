@@ -49,6 +49,28 @@ export const IS_BREAK = "isbreak";
 export const NODE_INDEX = "nodeindex";
 
 /**
+ * Returns the current selection, given that nothing is null.
+ */
+export function getSelectionSafe(): {
+  anchorNode: Node;
+  anchorOffset: number;
+  focusNode: Node;
+  focusOffset: number;
+} {
+  const selection = window.getSelection();
+  if (selection === null) {
+    throw new Error("Selection is null");
+  }
+  const { anchorNode, anchorOffset, focusNode, focusOffset } = selection;
+  if (anchorNode === null) {
+    throw new Error("Anchor node is null");
+  } else if (focusNode === null) {
+    throw new Error("Focus node is null");
+  }
+  return { anchorNode, anchorOffset, focusNode, focusOffset };
+}
+
+/**
  * Gets the last item on the stack where the `TagType` is `TagType.StartTag`.
  */
 export function getLastStartItem<T extends { node: BasicNode }>(
