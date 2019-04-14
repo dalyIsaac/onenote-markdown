@@ -2,6 +2,29 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "edge",
+      "request": "launch",
+      "version": "canary",
+      "name": "Launch to Microsoft Edge (Chromium)",
+      "url": "localhost:3000",
+      "port": 2015,
+      "webRoot": "${workspaceFolder}",
+      "windows": {
+        "program": "{$env:APPDATA}/Local/Microsoft/Edge SxS/Application/msedge.exe"
+      }
+    },
+    {
+      "type": "edge",
+      "request": "attach",
+      "name": "Attach to Microsoft Edge (Chromium)",
+      "url": "localhost:3000",
+      "port": 2015,
+      "webRoot": "${workspaceFolder}",
+      "windows": {
+        "program": "{$env:APPDATA}/Local/Microsoft/Edge SxS/Application/msedge.exe"
+      }
+    },
+    {
       "type": "chrome",
       "request": "launch",
       "name": "Launch Chrome Dev against localhost",
