@@ -465,8 +465,10 @@ export function MarkdownEditorComponent(
         selection.empty();
         const range = document.createRange();
         const node = (selectionRef.current as HTMLSpanElement).firstChild;
-        range.setStart(node!, cursorSelection.selectionOffset);
-        selection.addRange(range);
+        if (node) {
+          range.setStart(node!, cursorSelection.selectionOffset);
+          selection.addRange(range);
+        }
       }
     }
   });
