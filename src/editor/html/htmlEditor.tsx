@@ -3,7 +3,7 @@ import EditorBase from "../editorBase";
 import { PageContent } from "../../page/pageModel";
 import { connect } from "react-redux";
 import { State } from "../../reducer";
-import { renderPage } from "./renderPage";
+import renderPage from "./renderPage";
 
 /**
  * Props for the `HtmlEditorComponent`

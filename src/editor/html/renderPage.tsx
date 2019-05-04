@@ -255,7 +255,7 @@ function addStartEndTag<T>(
  * Returns a `JSX.Element[]` of the OneNote page.
  * @param page The page to render.
  */
-export function renderPage(page: PageContent): JSX.Element[] {
+export default function renderPage(page: PageContent): JSX.Element[] {
   let stack: Stack<StructureStackItem> = [];
   let contentOffset = 0;
   for (const { children, node } of getHtmlContentElementsFromPage(page)) {

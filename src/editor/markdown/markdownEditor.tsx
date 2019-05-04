@@ -13,7 +13,7 @@ import {
   SplitStructureAction,
   splitStructureNode,
 } from "../../page/structureTree/actions";
-import { renderPage } from "./renderPage";
+import renderPage from "./renderPage";
 
 export function MarkdownEditorComponent(
   props: MarkdownEditorStateProps & MarkdownEditorDispatchProps,
