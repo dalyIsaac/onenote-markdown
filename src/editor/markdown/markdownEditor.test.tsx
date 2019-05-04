@@ -9,10 +9,12 @@ import EditorBaseComponent from "../editorBase";
 configure({ adapter: new Adapter() });
 // TODO: Redo when writing tests for the GUI.
 window.getSelection = jest.fn();
-(window.getSelection as jest.Mock).mockReturnValue({ empty: () => undefined });
+(window.getSelection as jest.Mock).mockReturnValue({
+  empty: (): void => undefined,
+});
 
-describe("Markdown output", () => {
-  test("Basic text", () => {
+describe("Markdown output", (): void => {
+  test("Basic text", (): void => {
     const sampleTextHtml =
       `<html lang="en-NZ">` +
       `<head>` +
@@ -169,7 +171,7 @@ describe("Markdown output", () => {
       },
     ];
     expectedChildren.forEach(
-      ({ children, contentoffset, key, ...expectedProps }) => {
+      ({ children, contentoffset, key, ...expectedProps }): void => {
         expect(editor.find({ contentoffset }).props()).toStrictEqual({
           children,
           contentoffset,

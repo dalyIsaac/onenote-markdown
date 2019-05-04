@@ -15,7 +15,7 @@ export type BeforeInputType = React.FormEvent<HTMLDivElement> & {
  */
 interface EditorBaseProps {
   page?: PageContent;
-  getPage?: (page: PageContent) => JSX.Element[];
+  renderPage?: (page: PageContent) => JSX.Element[];
   onBeforeInput?: (e: BeforeInputType) => void;
 }
 
@@ -65,8 +65,8 @@ export function getLastStartItem<T extends { node: BasicNode }>(
 export default function EditorBaseComponent(
   props: EditorBaseProps,
 ): JSX.Element {
-  if (props.page && props.getPage) {
-    props.getPage(props.page);
+  if (props.page && props.renderPage) {
+    props.renderPage(props.page);
     const editable = props.onBeforeInput ? true : false;
     return (
       <div
@@ -75,7 +75,7 @@ export default function EditorBaseComponent(
         suppressContentEditableWarning={editable}
         onBeforeInput={props.onBeforeInput ? props.onBeforeInput : undefined}
       >
-        {props.getPage(props.page)}
+        {props.renderPage(props.page)}
       </div>
     );
   }
