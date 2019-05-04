@@ -179,7 +179,10 @@ export function recomputeTreeMetadata<T extends Node>(
     tree.nodes[x].leftSubTreeLength += lengthDelta;
   }
 
-  if (length !== undefined && !(lengthDelta !== 0 || lineFeedDelta !== 0)) {
+  if (
+    lengthDelta !== undefined &&
+    !(lengthDelta !== 0 || lineFeedDelta !== 0)
+  ) {
     return;
   }
 
