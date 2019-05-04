@@ -148,6 +148,8 @@ export default function renderPage(page: PageContent): JSX.Element[] {
         addStartEndTag(stack, node, index, contentOffset);
         break;
       }
+      default:
+        break;
     }
   }
   return stack as JSX.Element[];

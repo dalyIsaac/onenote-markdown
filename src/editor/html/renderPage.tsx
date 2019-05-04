@@ -169,6 +169,8 @@ function createChildElements(children: Element[]): JSX.Element[] {
         case TagType.StartEndTag: {
           break;
         }
+        default:
+          break;
       }
     } else {
       stack.push(child);
@@ -284,6 +286,8 @@ export default function renderPage(page: PageContent): JSX.Element[] {
         addStartEndTag(stack, node, contentOffset);
         break;
       }
+      default:
+        break;
     }
   }
   return stack as JSX.Element[];
