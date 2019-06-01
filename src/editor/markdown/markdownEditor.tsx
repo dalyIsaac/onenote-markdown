@@ -1,5 +1,5 @@
 import React from "react";
-import EditorBase from "../editorBase";
+import EditorBase, { BeforeInputType } from "../editorBase";
 import styles from "./markdownEditor.module.css";
 import { connect } from "react-redux";
 import { PageContent } from "../../page/pageModel";
@@ -14,13 +14,23 @@ import {
   splitStructureNode,
 } from "../../page/structureTree/actions";
 import renderPage from "./renderPage";
+import getEditorSelection from "./selection";
+
+function onBeforeInput(e: BeforeInputType): void {
+  const selection = getEditorSelection();
+  console.log(selection);
+}
 
 export function MarkdownEditorComponent(
   props: MarkdownEditorStateProps & MarkdownEditorDispatchProps,
 ): JSX.Element {
   return (
     <div className={styles.editor}>
-      <EditorBase renderPage={renderPage} page={props.page} />
+      <EditorBase
+        renderPage={renderPage}
+        page={props.page}
+        onBeforeInput={onBeforeInput}
+      />
     </div>
   );
 }

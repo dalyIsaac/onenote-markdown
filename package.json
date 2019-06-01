@@ -39,6 +39,7 @@
     "eslint-plugin-sort-keys-fix": "^1.0.1",
     "jest-junit": "^6.4.0",
     "lodash.isstring": "^4.0.1",
+    "prettier": "^1.17.1",
     "pretty-quick": "^1.10.0",
     "redux-devtools-extension": "^2.13.8",
     "typescript": "^3.4.5",
