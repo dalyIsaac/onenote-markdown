@@ -45,7 +45,7 @@ export type LastStartNode<T> = T & {
 
 export const CONTENT_OFFSET = "contentoffset";
 export const IS_BREAK = "isbreak";
-export const NODE_INDEX = "nodeindex";
+export const STRUCTURE_NODE_INDEX = "structurenodeindex";
 
 /**
  * Gets the last item on the stack where the `TagType` is `TagType.StartTag`.

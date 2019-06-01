@@ -4,7 +4,7 @@ import {
   LastStartNode,
   getLastStartItem,
   CONTENT_OFFSET,
-  NODE_INDEX,
+  STRUCTURE_NODE_INDEX,
 } from "../editorBase";
 import { PageContent } from "../../page/pageModel";
 import {
@@ -26,7 +26,7 @@ interface StackItem {
   /**
    * The index of the `node` inside the array `structure.nodes`.
    */
-  index: number;
+  structureNodeIndex: number;
 }
 
 const cursorSelection: {
@@ -47,7 +47,12 @@ const selectionRef = React.createRef();
 function updateItem(
   page: PageContent,
   stack: Stack<StackItem>,
-  { contentOffset, index, node, stackIndex }: LastStartNode<StackItem>,
+  {
+    contentOffset,
+    structureNodeIndex: index,
+    node,
+    stackIndex,
+  }: LastStartNode<StackItem>,
 ): Stack<StackItem> {
   const newStack = stack.slice(0, stackIndex);
   let children: Stack<StackItem> | string;
@@ -67,7 +72,7 @@ function updateItem(
     {
       ...node.attributes,
       [CONTENT_OFFSET]: contentOffset,
-      [NODE_INDEX]: index,
+      [STRUCTURE_NODE_INDEX]: index,
       key: node.id,
       ref,
     },
@@ -112,7 +117,7 @@ function addStartEndTag<T>(
           ? selectionRef
           : null;
       const props = {
-        [NODE_INDEX]: nodeIndex,
+        [STRUCTURE_NODE_INDEX]: nodeIndex,
         contentoffset: contentOffset,
         isbreak: "true",
         key: node.id,
@@ -136,7 +141,7 @@ export default function renderPage(page: PageContent): JSX.Element[] {
   for (const { index, node } of inorderTreeTraversal(page.structure)) {
     switch (node.tagType) {
       case TagType.StartTag: {
-        stack.push({ contentOffset, index, node });
+        stack.push({ contentOffset, node, structureNodeIndex: index });
         contentOffset += node.length;
         break;
       }

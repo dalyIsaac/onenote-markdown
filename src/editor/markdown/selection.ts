@@ -1,6 +1,8 @@
+import { STRUCTURE_NODE_INDEX } from "../editorBase";
+
 interface StructureNodeProperties {
   contentOffset: number;
-  nodeIndex: number;
+  structureNodeIndex: number;
   isBreak: boolean;
 }
 
@@ -21,8 +23,8 @@ function getContentOffset(map: NamedNodeMap): number | null {
   return parseInt(attr.value);
 }
 
-function getNodeIndex(map: NamedNodeMap): number | null {
-  const attr = map.getNamedItem("nodeindex");
+function getStructureNodeIndex(map: NamedNodeMap): number | null {
+  const attr = map.getNamedItem(STRUCTURE_NODE_INDEX);
   if (attr === null) {
     return null;
   }
@@ -41,17 +43,17 @@ function getStructureNodeProperties(
   map: NamedNodeMap,
 ): StructureNodeProperties | null {
   const contentoffset = getContentOffset(map);
-  const nodeindex = getNodeIndex(map);
+  const structureNodeIndex = getStructureNodeIndex(map);
   const isbreak = getIsBreak(map);
 
-  if (contentoffset === null || nodeindex === null) {
+  if (contentoffset === null || structureNodeIndex === null) {
     return null;
   }
 
   return {
     contentOffset: contentoffset,
     isBreak: isbreak,
-    nodeIndex: nodeindex,
+    structureNodeIndex: structureNodeIndex,
   };
 }
 
