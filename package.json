@@ -65,6 +65,9 @@
     "coverageReporters": [
       "html",
       "cobertura"
+    ],
+    "watchPathIgnorePatterns": [
+      "node_modules"
     ]
   }
 }
