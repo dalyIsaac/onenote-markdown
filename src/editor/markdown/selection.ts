@@ -1,4 +1,4 @@
-import { STRUCTURE_NODE_INDEX } from "../editorBase";
+import { STRUCTURE_NODE_INDEX, IS_BREAK } from "../editorBase";
 
 interface StructureNodeProperties {
   contentOffset: number;
@@ -32,7 +32,7 @@ function getStructureNodeIndex(map: NamedNodeMap): number | null {
 }
 
 function getIsBreak(map: NamedNodeMap): boolean {
-  const attr = map.getNamedItem("isbreak");
+  const attr = map.getNamedItem(IS_BREAK);
   if (attr === null) {
     return false;
   }
@@ -64,7 +64,9 @@ function getAttributes(
     return null;
   } else if (isElement(node)) {
     return getStructureNodeProperties(node.attributes);
-  } else if (node.parentElement === null) {
+  } 
+  
+  if (node.parentElement === null) {
     return null;
   } else {
     return getStructureNodeProperties(node.parentElement.attributes);
