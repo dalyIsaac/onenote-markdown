@@ -13,6 +13,7 @@ import {
 } from "../../page/structureTree/structureModel";
 import { inorderTreeTraversal } from "../../page/tree/tree";
 import { getContentBetweenOffsets } from "../../page/contentTree/tree";
+import { cursor } from "./markdownEditor";
 
 /**
  * Definition for items which reside on the stack of elements to be rendered.
@@ -28,13 +29,6 @@ interface StackItem {
    */
   structureNodeIndex: number;
 }
-
-const cursorSelection: {
-  nodeIndex: number;
-  selectionOffset: number;
-} | null = null;
-
-const selectionRef = React.createRef();
 
 /**
  * Updates the stack by compiling the last `StackItem` which has a
@@ -63,10 +57,6 @@ function updateItem(
   } else {
     children = stack.slice(stackIndex);
   }
-  const ref =
-    cursorSelection && cursorSelection.nodeIndex === index
-      ? selectionRef
-      : null;
   const element = React.createElement(
     "p",
     {
@@ -74,7 +64,7 @@ function updateItem(
       [CONTENT_OFFSET]: contentOffset,
       [STRUCTURE_NODE_INDEX]: index,
       key: node.id,
-      ref,
+      ref: cursor.createRef(node, contentOffset),
     },
     children,
   );
@@ -112,16 +102,12 @@ function addStartEndTag<T>(
 ): void {
   switch (node.tag) {
     case "br": {
-      const ref =
-        cursorSelection && cursorSelection.nodeIndex === nodeIndex
-          ? selectionRef
-          : null;
       const props = {
         [STRUCTURE_NODE_INDEX]: nodeIndex,
         contentoffset: contentOffset,
         isbreak: "true",
         key: node.id,
-        ref,
+        ref: cursor.createRef(node, contentOffset),
       };
       stack.push(React.createElement("p", props, <br />));
       break;

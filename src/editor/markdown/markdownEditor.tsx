@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import EditorBase, { BeforeInputType } from "../editorBase";
 import styles from "./markdownEditor.module.css";
 import { connect } from "react-redux";
@@ -15,10 +15,37 @@ import {
 } from "../../page/structureTree/actions";
 import renderPage from "./renderPage";
 import getEditorSelection from "./selection";
+import { Cursor } from "../cursor";
+
+export const cursor = new Cursor();
 
 export function MarkdownEditorComponent(
   props: MarkdownEditorStateProps & MarkdownEditorDispatchProps,
 ): JSX.Element {
+  function updateSelection(): void {
+    if (cursor.start !== null && cursor.start.ref !== null) {
+      const selection = window.getSelection();
+      if (selection) {
+        selection.empty();
+        const range = document.createRange();
+        const start = cursor.getStartFirstChild();
+        if (start) {
+          range.setStart(start.node, start.localOffset);
+
+          const end = cursor.getEndFirstChild();
+          if (end) {
+            range.setEnd(end.node, end.localOffset);
+          }
+          selection.addRange(range);
+        }
+      }
+    }
+  }
+
+  useEffect((): void => {
+    updateSelection();
+  });
+
   function onBeforeInput(e: BeforeInputType): void {
     e.preventDefault();
     const selection = getEditorSelection();
@@ -32,13 +59,16 @@ export function MarkdownEditorComponent(
     if (content === "\n") {
       // TODO: split
     } else {
+      const globalOffset = start.nodeOffset + start.localOffset;
       props.insertContent(
         props.pageId,
         content,
-        start.nodeOffset + start.localOffset,
+        globalOffset,
         start.structureNodeIndex,
         start.nodeOffset,
       );
+      cursor.setStartOffset(globalOffset + 1);
+      updateSelection();
     }
   }
 
