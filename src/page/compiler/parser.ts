@@ -69,7 +69,7 @@ const rules: Array<[RuleNames, RegExp]> = [
 /**
  * Scans delimiters based, and indicates whether the token can be an open
  * and/or closing tag.
-` * Based on https://github.com/markdown-it/markdown-it/blob/1ad3aec2041cd2defa7e299543cc1e42184b680d/lib/rules_inline/state_inline.js#L69
+ * Based on https://git.io/fjrK5
  * @param md The `MarkdownIt` instance.
  * @param src The markdown source/content.
  * @param start The index of the starting location to scan.
@@ -226,7 +226,7 @@ function handleMatch(
   tokens.pop();
   tokens = tokens.concat(
     [tokenBefore, matchedToken, tokenAfter].reduce(
-      (acc, curr) => {
+      (acc, curr): Token[] => {
         if (
           curr.content ||
           (curr.attrs && curr.attrGet(ruleName)) ||
@@ -322,7 +322,7 @@ function customSyntax(state: StateCore, token: Token): Token[] {
  * @param inlineTokens The array to which the new tags are to be appended to.
  */
 function closeTags(inlineTokens: Token[]): void {
-  delimStack.forEach(() => {
+  delimStack.forEach((): void => {
     const newToken = new Token("unfinishedEnd", "span", -1);
     newToken.children = [];
     inlineTokens.push(newToken);
@@ -334,7 +334,7 @@ function closeTags(inlineTokens: Token[]): void {
  * text tags.
  */
 function revertUnclosedTags(): void {
-  delimStack.forEach((token) => {
+  delimStack.forEach((token): void => {
     token.type = "text";
     token.content = token.markup;
     token.markup = "";
@@ -345,10 +345,10 @@ function revertUnclosedTags(): void {
 }
 
 function rule(state: StateCore, closeOpenTags = false): void {
-  state.tokens.forEach((token) => {
+  state.tokens.forEach((token): void => {
     if (token.type === "inline") {
       let inlineTokens: Token[] = [];
-      token.children.forEach((currentToken) => {
+      token.children.forEach((currentToken): void => {
         inlineTokens = inlineTokens.concat(customSyntax(state, currentToken));
       });
 

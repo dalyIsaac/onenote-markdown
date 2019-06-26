@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+
 import { Color, PageContent } from "../pageModel";
 import { getStartPage } from "../reducer.test";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
@@ -5,10 +7,10 @@ import { SENTINEL_INDEX } from "../tree/tree";
 import { deleteContent } from "./delete";
 import { SENTINEL_CONTENT } from "./tree";
 
-describe("delete content", () => {
-  describe("Scenario 1", () => {
-    describe("Scenario 1a: delete the content from an entire node", () => {
-      test("Scenario 1a: Test 1", () => {
+describe("delete content", (): void => {
+  describe("Scenario 1", (): void => {
+    describe("Scenario 1a: delete the content from an entire node", (): void => {
+      test("Scenario 1a: Test 1", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -104,7 +106,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1a: Test 2", () => {
+      test("Scenario 1a: Test 2", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -200,7 +202,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1a: Test 3", () => {
+      test("Scenario 1a: Test 3", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -296,7 +298,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1a: Test 4", () => {
+      test("Scenario 1a: Test 4", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -393,8 +395,8 @@ describe("delete content", () => {
       });
     });
 
-    describe("Scenario 1b: delete from the start of a node to a point in the node", () => {
-      test("Scenario 1b: Test 1", () => {
+    describe("Scenario 1b: delete from the start of a node to a point in the node", (): void => {
+      test("Scenario 1b: Test 1", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -490,7 +492,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1b: Test 2", () => {
+      test("Scenario 1b: Test 2", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -586,7 +588,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1b: Test 3", () => {
+      test("Scenario 1b: Test 3", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -682,7 +684,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1b: Test 4", () => {
+      test("Scenario 1b: Test 4", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -778,7 +780,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1b: Test 5", () => {
+      test("Scenario 1b: Test 5", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -874,7 +876,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1b: Test 6", () => {
+      test("Scenario 1b: Test 6", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -971,8 +973,8 @@ describe("delete content", () => {
       });
     });
 
-    describe("Scenario 1c: delete from a point in a node to the end of the node", () => {
-      test("Scenario 1c: Test 1", () => {
+    describe("Scenario 1c: delete from a point in a node to the end of the node", (): void => {
+      test("Scenario 1c: Test 1", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -1068,7 +1070,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1c: Test 2", () => {
+      test("Scenario 1c: Test 2", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -1164,7 +1166,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1c: Test 3", () => {
+      test("Scenario 1c: Test 3", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -1260,7 +1262,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1c: Test 4", () => {
+      test("Scenario 1c: Test 4", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -1356,7 +1358,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1c: Test 5", () => {
+      test("Scenario 1c: Test 5", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -1452,7 +1454,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1c: Test 6", () => {
+      test("Scenario 1c: Test 6", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -1548,7 +1550,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1c: Test 7", () => {
+      test("Scenario 1c: Test 7", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -1645,8 +1647,8 @@ describe("delete content", () => {
       });
     });
 
-    describe("Scenario 1d: delete from a point in a node to another point in the node", () => {
-      test("Scenario 1d: Test 1", () => {
+    describe("Scenario 1d: delete from a point in a node to another point in the node", (): void => {
+      test("Scenario 1d: Test 1", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -1755,7 +1757,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1d: Test 2", () => {
+      test("Scenario 1d: Test 2", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -1864,7 +1866,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1d: Test 3", () => {
+      test("Scenario 1d: Test 3", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -1973,7 +1975,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1d: Test 4", () => {
+      test("Scenario 1d: Test 4", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -2082,7 +2084,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1d: Test 5", () => {
+      test("Scenario 1d: Test 5", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -2191,7 +2193,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1d: Test 6", () => {
+      test("Scenario 1d: Test 6", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -2300,7 +2302,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 1d: Test 7", () => {
+      test("Scenario 1d: Test 7", (): void => {
         const page: PageContent = {
           buffers: [
             {
@@ -2411,9 +2413,9 @@ describe("delete content", () => {
     });
   });
 
-  describe("Scenario 2", () => {
-    describe("Scenario 2a: delete from the start of a node to the end of another node", () => {
-      test("Scenario 2a: Test 1", () => {
+  describe("Scenario 2", (): void => {
+    describe("Scenario 2a: delete from the start of a node to the end of another node", (): void => {
+      test("Scenario 2a: Test 1", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -2601,7 +2603,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2a: Test 2", () => {
+      test("Scenario 2a: Test 2", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -2789,7 +2791,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2a: Test 3", () => {
+      test("Scenario 2a: Test 3", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -2977,7 +2979,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2a: Test 4", () => {
+      test("Scenario 2a: Test 4", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -3165,7 +3167,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2a: Test 5", () => {
+      test("Scenario 2a: Test 5", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -3353,7 +3355,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2a: Test 6", () => {
+      test("Scenario 2a: Test 6", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -3541,7 +3543,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2a: Test 7", () => {
+      test("Scenario 2a: Test 7", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -3729,7 +3731,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2a: Test 8", () => {
+      test("Scenario 2a: Test 8", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -3918,8 +3920,8 @@ describe("delete content", () => {
       });
     });
 
-    describe("Scenario 2b: delete from the start of a node to a point in another node", () => {
-      test("Scenario 2b: Test 1", () => {
+    describe("Scenario 2b: delete from the start of a node to a point in another node", (): void => {
+      test("Scenario 2b: Test 1", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -4107,7 +4109,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2b: Test 2", () => {
+      test("Scenario 2b: Test 2", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -4291,7 +4293,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2b: Test 3", () => {
+      test("Scenario 2b: Test 3", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -4479,7 +4481,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2b: Test 4", () => {
+      test("Scenario 2b: Test 4", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -4668,8 +4670,8 @@ describe("delete content", () => {
       });
     });
 
-    describe("Scenario 2c: delete from a point in a node to the end of another node", () => {
-      test("Scenario 2c: Test 1", () => {
+    describe("Scenario 2c: delete from a point in a node to the end of another node", (): void => {
+      test("Scenario 2c: Test 1", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -4857,7 +4859,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2c: Test 2", () => {
+      test("Scenario 2c: Test 2", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -5045,7 +5047,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2c: Test 3", () => {
+      test("Scenario 2c: Test 3", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -5233,7 +5235,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2c: Test 4", () => {
+      test("Scenario 2c: Test 4", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -5421,7 +5423,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2c: Test 5", () => {
+      test("Scenario 2c: Test 5", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -5609,7 +5611,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2c: Test 6", () => {
+      test("Scenario 2c: Test 6", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -5798,8 +5800,8 @@ describe("delete content", () => {
       });
     });
 
-    describe("Scenario 2d: delete from a point in a node to a point in another node", () => {
-      test("Scenario 2d: Test 1", () => {
+    describe("Scenario 2d: delete from a point in a node to a point in another node", (): void => {
+      test("Scenario 2d: Test 1", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -5987,7 +5989,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2d: Test 2", () => {
+      test("Scenario 2d: Test 2", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -6175,7 +6177,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2d: Test 3", () => {
+      test("Scenario 2d: Test 3", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -6363,7 +6365,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2d: Test 4", () => {
+      test("Scenario 2d: Test 4", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [
@@ -6551,7 +6553,7 @@ describe("delete content", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Scenario 2d: Test 5", () => {
+      test("Scenario 2d: Test 5", (): void => {
         const page = getStartPage();
         const expectedPage: PageContent = {
           buffers: [

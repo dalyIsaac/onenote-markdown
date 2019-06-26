@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 import getEditorSelection from "./selection";
@@ -60,13 +61,13 @@ const createElement = (show?: ShowItems) => {
   return { attributes };
 };
 
-describe("markdown selection", () => {
-  test("empty selection", () => {
+describe("markdown selection", (): void => {
+  test("empty selection", (): void => {
     window.getSelection = jest.fn().mockReturnValue(null);
     expect(getEditorSelection()).toEqual(null);
   });
 
-  test("selection with null anchorNode", () => {
+  test("selection with null anchorNode", (): void => {
     window.getSelection = jest.fn().mockReturnValue({
       anchorNode: null,
       focusNode: null,
@@ -74,7 +75,7 @@ describe("markdown selection", () => {
     expect(getEditorSelection()).toEqual(null);
   });
 
-  test("selection with null focusNode", () => {
+  test("selection with null focusNode", (): void => {
     window.getSelection = jest.fn().mockReturnValue({
       anchorNode: createElement(),
       focusNode: null,
@@ -82,7 +83,7 @@ describe("markdown selection", () => {
     expect(getEditorSelection()).toEqual(null);
   });
 
-  test("selection with elements which have break indicators", () => {
+  test("selection with elements which have break indicators", (): void => {
     window.getSelection = jest.fn().mockReturnValue({
       anchorNode: createElement(),
       anchorOffset: 10,
@@ -105,7 +106,7 @@ describe("markdown selection", () => {
     });
   });
 
-  test("selection with elements which don't have break indicators", () => {
+  test("selection with elements which don't have break indicators", (): void => {
     window.getSelection = jest.fn().mockReturnValue({
       anchorNode: createElement({ isbreak: false }),
       anchorOffset: 10,
@@ -128,7 +129,7 @@ describe("markdown selection", () => {
     });
   });
 
-  test("selection with elements which don't have contentoffset", () => {
+  test("selection with elements which don't have contentoffset", (): void => {
     window.getSelection = jest.fn().mockReturnValue({
       anchorNode: createElement({ [CONTENT_OFFSET]: false }),
       anchorOffset: 10,
@@ -138,7 +139,7 @@ describe("markdown selection", () => {
     expect(getEditorSelection()).toEqual(null);
   });
 
-  test("selection with elements which don't have structurenodeindex", () => {
+  test("selection with elements which don't have structurenodeindex", (): void => {
     window.getSelection = jest.fn().mockReturnValue({
       anchorNode: createElement({ [STRUCTURE_NODE_INDEX]: false }),
       anchorOffset: 10,
@@ -148,7 +149,7 @@ describe("markdown selection", () => {
     expect(getEditorSelection()).toEqual(null);
   });
 
-  test("selection with no parent nodes", () => {
+  test("selection with no parent nodes", (): void => {
     window.getSelection = jest.fn().mockReturnValue({
       anchorNode: { parentElement: null },
       anchorOffset: 10,
@@ -158,7 +159,7 @@ describe("markdown selection", () => {
     expect(getEditorSelection()).toEqual(null);
   });
 
-  test("selection with nodes", () => {
+  test("selection with nodes", (): void => {
     window.getSelection = jest.fn().mockReturnValue({
       anchorNode: { parentElement: createElement() },
       anchorOffset: 10,

@@ -11,8 +11,8 @@ import { getStartPage } from "../reducer.test";
 import { getBigTree } from "../structureTree/insert.test";
 import { StructureNode } from "../structureTree/structureModel";
 
-describe("Common tree operations", () => {
-  test("nextNode", () => {
+describe("Common tree operations", (): void => {
+  test("nextNode", (): void => {
     const page = getPage();
 
     expect(nextNode(getPage().content.nodes, 1)).toStrictEqual({
@@ -45,7 +45,7 @@ describe("Common tree operations", () => {
     });
   });
 
-  test("prevNode", () => {
+  test("prevNode", (): void => {
     const page = getPage();
 
     expect(prevNode(getPage().content.nodes, 7)).toStrictEqual({
@@ -78,13 +78,13 @@ describe("Common tree operations", () => {
     });
   });
 
-  test("Recompute tree metadata: add a node to the end", () => {
+  test("Recompute tree metadata: add a node to the end", (): void => {
     const page = getPage(); // hypothetically added the last node
     recomputeTreeMetadata(page.content, 7);
     expect(page).toStrictEqual(getPage());
   });
 
-  test("Recompute tree metadata: add a node in the middle", () => {
+  test("Recompute tree metadata: add a node in the middle", (): void => {
     const page = getPage(); // hypothetically added node 5
     (page.content.nodes[6] as ContentNode).leftCharCount = 12;
     (page.content.nodes[5] as ContentNode).lineFeedCount = 5;
@@ -96,9 +96,9 @@ describe("Common tree operations", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  describe("inOrderTreeTraversal", () => {
-    describe("Content nodes", () => {
-      test("Tree which is already in order", () => {
+  describe("inOrderTreeTraversal", (): void => {
+    describe("Content nodes", (): void => {
+      test("Tree which is already in order", (): void => {
         const page = getPage();
         let i = 1;
         let offset = 0;
@@ -113,7 +113,7 @@ describe("Common tree operations", () => {
         }
       });
 
-      test("Big tree which is already in order", () => {
+      test("Big tree which is already in order", (): void => {
         const page = getStartPage();
         let i = 1;
         let offset = 0;
@@ -128,7 +128,7 @@ describe("Common tree operations", () => {
         }
       });
 
-      test("Big tree which has its order adjusted", () => {
+      test("Big tree which has its order adjusted", (): void => {
         const page = getStartPage();
         (page.content.nodes[7] as ContentNode).parent = 3;
         (page.content.nodes[8] as ContentNode).left = 0;
@@ -157,8 +157,8 @@ describe("Common tree operations", () => {
       });
     });
 
-    describe("Structure nodes", () => {
-      test("Big tree", () => {
+    describe("Structure nodes", (): void => {
+      test("Big tree", (): void => {
         const page = getBigTree();
         const expectedResult: Array<NodePosition<StructureNode>> = [
           { index: 1, node: page.structure.nodes[1] },

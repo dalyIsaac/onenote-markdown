@@ -27,8 +27,8 @@ import { StructureNode, TagType } from "../structureTree/structureModel";
 
 type Without<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
 
-describe("Custom markdown syntax", () => {
-  test("Bold, italics, and color", () => {
+describe("Custom markdown syntax", (): void => {
+  test("Bold, italics, and color", (): void => {
     const content =
       "**Bold1 *italics1*** {color:red}**Bold2 *italics2***{color:red} text after";
     const expectedHtml =
@@ -71,7 +71,7 @@ describe("Custom markdown syntax", () => {
     }
   }
 
-  test("Test 1.01 HTML", () => {
+  test("Test 1.01 HTML", (): void => {
     const page = parse(test_01_html);
     const expected = [
       {
@@ -102,7 +102,7 @@ describe("Custom markdown syntax", () => {
     testbed(page, expected);
   });
 
-  test("Test 1.03 HTML", () => {
+  test("Test 1.03 HTML", (): void => {
     const page = parse(test_03_html);
     const expected = [
       {
@@ -138,7 +138,7 @@ describe("Custom markdown syntax", () => {
     testbed(page, expected);
   });
 
-  test("Test 1.04 HTML", () => {
+  test("Test 1.04 HTML", (): void => {
     const page = parse(test_04_html);
     const expected = [
       {
@@ -176,7 +176,7 @@ describe("Custom markdown syntax", () => {
     testbed(page, expected);
   });
 
-  test("Test 1.05 HTML", () => {
+  test("Test 1.05 HTML", (): void => {
     const page = parse(test_05_html);
     const expected = [
       {
@@ -207,7 +207,7 @@ describe("Custom markdown syntax", () => {
     testbed(page, expected);
   });
 
-  test("Test 1.06 HTML", () => {
+  test("Test 1.06 HTML", (): void => {
     const page = parse(test_06_html);
     const expected: Expected[] = [
       {
@@ -265,7 +265,7 @@ describe("Custom markdown syntax", () => {
     testbed(page, expected);
   });
 
-  test("Test 1.07 HTML", () => {
+  test("Test 1.07 HTML", (): void => {
     const page = parse(test_07_html);
     const expected = [
       {
@@ -296,7 +296,7 @@ describe("Custom markdown syntax", () => {
     testbed(page, expected);
   });
 
-  test("Test 1.08 HTML", () => {
+  test("Test 1.08 HTML", (): void => {
     const page = parse(test_08_html);
     const expected = [
       {
@@ -327,7 +327,7 @@ describe("Custom markdown syntax", () => {
     testbed(page, expected);
   });
 
-  test("Test 1.09 HTML", () => {
+  test("Test 1.09 HTML", (): void => {
     const page = parse(test_09_html);
     const expected = [
       {
@@ -360,7 +360,7 @@ describe("Custom markdown syntax", () => {
     testbed(page, expected);
   });
 
-  test("Test 1.10 HTML", () => {
+  test("Test 1.10 HTML", (): void => {
     const page = parse(test_10_html);
     const expected = [
       {
@@ -393,7 +393,7 @@ describe("Custom markdown syntax", () => {
     testbed(page, expected);
   });
 
-  test("Test 1.11 HTML", () => {
+  test("Test 1.11 HTML", (): void => {
     const page = parse(test_11_html);
     const expected = [
       {
@@ -426,7 +426,7 @@ describe("Custom markdown syntax", () => {
     testbed(page, expected);
   });
 
-  test("Test 1.12 HTML", () => {
+  test("Test 1.12 HTML", (): void => {
     const page = parse(test_12_html);
     const expected = [
       {
@@ -460,7 +460,7 @@ describe("Custom markdown syntax", () => {
     testbed(page, expected);
   });
 
-  test("Test 1.13 HTML", () => {
+  test("Test 1.13 HTML", (): void => {
     const page = parse(test_13_html);
     const expected = [
       {
@@ -492,7 +492,7 @@ describe("Custom markdown syntax", () => {
     testbed(page, expected);
   });
 
-  test("Test 1.14 HTML", () => {
+  test("Test 1.14 HTML", (): void => {
     const page = parse(test_14_html);
     const expected = [
       {
@@ -525,7 +525,7 @@ describe("Custom markdown syntax", () => {
     testbed(page, expected);
   });
 
-  test("Test 1.15 HTML", () => {
+  test("Test 1.15 HTML", (): void => {
     const page = parse(test_15_html);
     const expected = [
       {
@@ -556,7 +556,7 @@ describe("Custom markdown syntax", () => {
     testbed(page, expected);
   });
 
-  test("Test 1.16 HTML", () => {
+  test("Test 1.16 HTML", (): void => {
     const page = parse(test_16_html);
     const expected = [
       {
@@ -587,7 +587,7 @@ describe("Custom markdown syntax", () => {
     testbed(page, expected);
   });
 
-  test("Test 1.17 HTML", () => {
+  test("Test 1.17 HTML", (): void => {
     const page = parse(test_17_html);
     const expected = [
       {
@@ -617,7 +617,7 @@ describe("Custom markdown syntax", () => {
     testbed(page, expected);
   });
 
-  test("Underlined and crossed out edge case 1", () => {
+  test("Underlined and crossed out edge case 1", (): void => {
     const md =
       "{text-decoration:underline line-through}Hello, world!{text-decoration:underline line-through}";
     const expectedHtml = `<span style="text-decoration:underline line-through">Hello, world!</span>`;
@@ -625,7 +625,7 @@ describe("Custom markdown syntax", () => {
     expect(html).toBe(expectedHtml);
   });
 
-  test("Underlined and crossed out edge case 2", () => {
+  test("Underlined and crossed out edge case 2", (): void => {
     const md =
       "{text-decoration:underline line-through}Hello, world!{text-decoration:line-through underline}";
     const expectedHtml = `<span style="text-decoration:underline line-through">Hello, world!</span>`;
@@ -633,27 +633,27 @@ describe("Custom markdown syntax", () => {
     expect(html).toBe(expectedHtml);
   });
 
-  test("Autoclosing unterminated tags", () => {
+  test("Autoclosing unterminated tags", (): void => {
     const md = "{color:red}Hello{color:green}Hello";
     const expectedHtml = `<span style="color:red">Hello<span style="color:green">Hello</span></span>`;
     const html = compile(md, true);
     expect(html).toBe(expectedHtml);
   });
 
-  test("Not autoclosing unterminated tags", () => {
+  test("Not autoclosing unterminated tags", (): void => {
     const md = "{color:red}Hello{color:green}Hello";
     const html = compile(md);
     expect(html).toBe(md);
   });
 
-  test("Checks that start and end tags with different cases can end eachother", () => {
+  test("Checks that start and end tags with different cases can end eachother", (): void => {
     const md = "{color:red}Red{color:Red} text{color:red}";
     const expectedHtml = `<span style="color:red">Red</span> text{color:red}`;
     const html = compile(md);
     expect(html).toBe(expectedHtml);
   });
 
-  test("Checks that the order of the custom syntax tags is respected", () => {
+  test("Checks that the order of the custom syntax tags is respected", (): void => {
     const md =
       "{background-color:yellow}High{background-color:yellow}lighted{background-color:yellow}";
     const expectedHtml = `<span style="background-color:yellow">High</span>lighted{background-color:yellow}`;
@@ -661,7 +661,7 @@ describe("Custom markdown syntax", () => {
     expect(html).toBe(expectedHtml);
   });
 
-  test("Tests that new inline `StructureNode` syntax inside a line is ignored.", () => {
+  test("Tests that new inline `StructureNode` syntax inside a line is ignored.", (): void => {
     const md = "{!cite} Citat{!cite} ion";
     const expectedHtml = `Citat{!cite} ion`;
     const html = compile(md);

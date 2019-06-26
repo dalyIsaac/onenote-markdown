@@ -8,7 +8,9 @@ import { KeyValueStr } from "../../page/structureTree/structureModel";
 import isStringLodash from "lodash.isstring";
 import EditorBaseComponent from "../editorBase";
 
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 jest.mock("seedrandom", () => ({
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   alea: () => jest.fn().mockReturnValue(1234567890),
 }));
 
@@ -26,8 +28,8 @@ interface ChildType {
 
 type EditorChild = { key: string } & ChildType;
 
-describe("HTML output", () => {
-  test("Basic text", () => {
+describe("HTML output", (): void => {
+  test("Basic text", (): void => {
     const sampleTextHtml =
       `<html lang="en-NZ">` +
       `<head>` +
@@ -303,7 +305,7 @@ describe("HTML output", () => {
           expectedChild.style,
         );
         expect((wrapper as ReactWrapper).name()).toEqual(expectedChild.tag);
-        expectedChild.children.forEach((x, i) => {
+        expectedChild.children.forEach((x, i): void => {
           const child = (wrapper as ReactWrapper).childAt(0);
           if (child.length === 0) {
             childTest(wrapper, x as ChildType);
@@ -314,7 +316,7 @@ describe("HTML output", () => {
       }
     }
 
-    expectedChildren.forEach((child, currentIndex) => {
+    expectedChildren.forEach((child, currentIndex): void => {
       const wrapper = editor.childAt(currentIndex);
       const props = wrapper.props() as EditorChild;
 
@@ -323,7 +325,7 @@ describe("HTML output", () => {
       expect(props.style).toEqual(child.style);
 
       let fixNumber = 0;
-      child.children.forEach((current, index) => {
+      child.children.forEach((current, index): void => {
         if (isString(wrapper.props().children[index])) {
           childTest(wrapper.props().children[index], current);
           fixNumber++;

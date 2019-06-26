@@ -250,8 +250,8 @@ const expectedPage_1_2_2 = (): PageContent => ({
   title: "This is the title",
 });
 
-describe("Tests for splitting `StructureNode`s.", () => {
-  test("1.1.1 Split the final `StructureNode`.", () => {
+describe("Tests for splitting `StructureNode`s.", (): void => {
+  test("1.1.1 Split the final `StructureNode`.", (): void => {
     const page = parse(test_06_html);
     const expectedPage: PageContent = {
       buffers: [
@@ -396,7 +396,7 @@ describe("Tests for splitting `StructureNode`s.", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.1.2 Split the first `StructureNode`.", () => {
+  test("1.1.2 Split the first `StructureNode`.", (): void => {
     const page = parse(test_06_html);
     const expectedPage: PageContent = {
       buffers: [
@@ -541,7 +541,7 @@ describe("Tests for splitting `StructureNode`s.", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.2.1 Create a new `StructureNode` after the final `StructureNode`.", () => {
+  test("1.2.1 Create a new `StructureNode` after the final `StructureNode`.", (): void => {
     const page = parse(test_06_html);
     const action: SplitStructureAction = {
       localContentOffset: 16,
@@ -554,7 +554,7 @@ describe("Tests for splitting `StructureNode`s.", () => {
     expect(page).toStrictEqual(expectedPage_1_2_1());
   });
 
-  test("1.2.2 Create a new `StructureNode` after the first `StructureNode`.", () => {
+  test("1.2.2 Create a new `StructureNode` after the first `StructureNode`.", (): void => {
     const page = parse(test_06_html);
     const action: SplitStructureAction = {
       localContentOffset: 102,
@@ -567,7 +567,7 @@ describe("Tests for splitting `StructureNode`s.", () => {
     expect(page).toStrictEqual(expectedPage_1_2_2());
   });
 
-  test("1.3.1 Inserts an empty `<br />` tag after the existing `<br />` tag", () => {
+  test("1.3.1 Inserts an empty `<br />` tag after the existing `<br />` tag", (): void => {
     const page = expectedPage_1_2_1();
     const expectedPage: PageContent = {
       buffers: [
@@ -708,7 +708,7 @@ describe("Tests for splitting `StructureNode`s.", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.3.2 Inserts an empty `<br />` tag after the existing `<br />` tag", () => {
+  test("1.3.2 Inserts an empty `<br />` tag after the existing `<br />` tag", (): void => {
     const page = expectedPage_1_2_2();
     const expectedPage: PageContent = {
       buffers: [
@@ -849,7 +849,7 @@ describe("Tests for splitting `StructureNode`s.", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.4 Reducer test", () => {
+  test("1.4 Reducer test", (): void => {
     const state: StatePages = {
       pageId: parse(test_06_html),
     };

@@ -103,8 +103,10 @@ function HeaderComponent(props: HeaderProps): JSX.Element {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch): HeaderProps => ({
-  loadSampleContent: () => dispatch(storePage("pageId", sampleTextHtml)),
-  loadSamplePageId: () => dispatch(updateSelectedPage("pageId")),
+  loadSampleContent: (): StorePageAction =>
+    dispatch(storePage("pageId", sampleTextHtml)),
+  loadSamplePageId: (): UpdateSelectedPageAction =>
+    dispatch(updateSelectedPage("pageId")),
 });
 
 export default connect(

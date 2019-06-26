@@ -225,8 +225,8 @@ export const test_17_html =
   `</body>` +
   `</html>`;
 
-describe("Parser tests", () => {
-  test("1.01 Tests that the reducer works for parsing content.", () => {
+describe("Parser tests", (): void => {
+  test("1.01 Tests that the reducer works for parsing content.", (): void => {
     const action: StorePageAction = {
       content: test_01_html,
       pageId: "pageId",
@@ -313,7 +313,7 @@ describe("Parser tests", () => {
     expect(state).toStrictEqual(expectedState);
   });
 
-  test("1.02 Ensures that the parser can correctly parse the HTML head data.", () => {
+  test("1.02 Ensures that the parser can correctly parse the HTML head data.", (): void => {
     const page = parse(test_02_html);
     const expectedPage: PageContent = {
       buffers: [],
@@ -329,7 +329,7 @@ describe("Parser tests", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.03 Tests paragraph tags can be handled, with bold, italics, and underline styling.", () => {
+  test("1.03 Tests paragraph tags can be handled, with bold, italics, and underline styling.", (): void => {
     const page = parse(test_03_html);
     const expectedPage: PageContent = {
       buffers: [
@@ -406,7 +406,7 @@ describe("Parser tests", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.04 Multiple styles inside a single tag.", () => {
+  test("1.04 Multiple styles inside a single tag.", (): void => {
     const page = parse(test_04_html);
     const expectedPage: PageContent = {
       buffers: [
@@ -483,7 +483,7 @@ describe("Parser tests", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.05 Paragraph with quotes.", () => {
+  test("1.05 Paragraph with quotes.", (): void => {
     const page = parse(test_05_html);
     const expectedPage: PageContent = {
       buffers: [
@@ -559,7 +559,7 @@ describe("Parser tests", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.06 Multiple text tags.", () => {
+  test("1.06 Multiple text tags.", (): void => {
     const page = parse(test_06_html);
     const expectedPage: PageContent = {
       buffers: [
@@ -664,7 +664,7 @@ describe("Parser tests", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.07 Highlighted text.", () => {
+  test("1.07 Highlighted text.", (): void => {
     const page = parse(test_07_html);
     const expectedPage: PageContent = {
       buffers: [
@@ -741,7 +741,7 @@ describe("Parser tests", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.08 Colored text.", () => {
+  test("1.08 Colored text.", (): void => {
     const page = parse(test_08_html);
     const expectedPage: PageContent = {
       buffers: [
@@ -817,7 +817,7 @@ describe("Parser tests", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.09 h1", () => {
+  test("1.09 h1", (): void => {
     const page = parse(test_09_html);
     const expectedPage: PageContent = {
       buffers: [
@@ -895,7 +895,7 @@ describe("Parser tests", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.10 h2", () => {
+  test("1.10 h2", (): void => {
     const page = parse(test_10_html);
     const expectedPage: PageContent = {
       buffers: [
@@ -974,7 +974,7 @@ describe("Parser tests", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.11 h3", () => {
+  test("1.11 h3", (): void => {
     const page = parse(test_11_html);
     const expectedPage: PageContent = {
       buffers: [
@@ -1053,7 +1053,7 @@ describe("Parser tests", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.12 h4", () => {
+  test("1.12 h4", (): void => {
     const page = parse(test_12_html);
     const expectedPage: PageContent = {
       buffers: [
@@ -1132,7 +1132,7 @@ describe("Parser tests", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.13 h5", () => {
+  test("1.13 h5", (): void => {
     const page = parse(test_13_html);
     const expectedPage: PageContent = {
       buffers: [
@@ -1210,7 +1210,7 @@ describe("Parser tests", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.14 h6", () => {
+  test("1.14 h6", (): void => {
     const page = parse(test_14_html);
     const expectedPage: PageContent = {
       buffers: [
@@ -1288,7 +1288,7 @@ describe("Parser tests", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.15 Superscript", () => {
+  test("1.15 Superscript", (): void => {
     const page = parse(test_15_html);
     const expectedPage: PageContent = {
       buffers: [
@@ -1364,7 +1364,7 @@ describe("Parser tests", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.16 Subscript", () => {
+  test("1.16 Subscript", (): void => {
     const page = parse(test_16_html);
     const expectedPage: PageContent = {
       buffers: [
@@ -1440,7 +1440,7 @@ describe("Parser tests", () => {
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("1.17 Line through and underline", () => {
+  test("1.17 Line through and underline", (): void => {
     const page = parse(test_17_html);
     const expectedPage: PageContent = {
       buffers: [

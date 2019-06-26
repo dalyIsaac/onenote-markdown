@@ -1,8 +1,6 @@
-import {
-  Color,
-  PageContent,
-  StatePages,
-} from "../pageModel";
+/* eslint-disable max-len */
+
+import { Color, PageContent, StatePages } from "../pageModel";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { SENTINEL_INDEX, EMPTY_TREE_ROOT } from "../tree/tree";
 import { Buffer, ContentNode } from "./contentModel";
@@ -12,8 +10,8 @@ import pageReducer from "../reducer";
 import { insertContent as InsertContentActionCreator } from "./actions";
 import { TagType } from "../structureTree/structureModel";
 
-describe("Functions for inserting content into the piece table/red-black tree.", () => {
-  test("Scenario 1: insert at the end of the previously inserted node", () => {
+describe("Functions for inserting content into the piece table/red-black tree.", (): void => {
+  test("Scenario 1: insert at the end of the previously inserted node", (): void => {
     const getPage = (): PageContent => ({
       buffers: [
         {
@@ -71,7 +69,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 2: insert at the end of the previously inserted node", () => {
+  test("Scenario 2: insert at the end of the previously inserted node", (): void => {
     const getPage = (): PageContent => ({
       buffers: [
         {
@@ -116,8 +114,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       isReadOnly: false,
       lineStarts: [0],
     });
-    ((expectedPage.content
-      .nodes[1] as ContentNode) as ContentNode).right = 2;
+    ((expectedPage.content.nodes[1] as ContentNode) as ContentNode).right = 2;
     expectedPage.content.nodes.push({
       bufferIndex: 1,
       color: Color.Red,
@@ -149,7 +146,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 3: insert at the end of a node (test 1)", () => {
+  test("Scenario 3: insert at the end of a node (test 1)", (): void => {
     const getPage = (): PageContent => ({
       buffers: [
         {
@@ -221,8 +218,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     });
     const page = getPage();
     const expectedPage = getPage();
-    ((expectedPage.buffers[1] as Buffer) as Buffer).content +=
-      "ij\nk";
+    ((expectedPage.buffers[1] as Buffer) as Buffer).content += "ij\nk";
     (expectedPage.buffers[1] as Buffer).lineStarts.push(7);
     (expectedPage.content.nodes[1] as ContentNode).leftCharCount = 6;
     (expectedPage.content.nodes[1] as ContentNode).leftLineFeedCount = 1;
@@ -253,7 +249,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 3: insert at the end of a node (test 2)", () => {
+  test("Scenario 3: insert at the end of a node (test 2)", (): void => {
     const getPage = (): PageContent => ({
       buffers: [
         {
@@ -354,7 +350,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 4: insert at the end of a node (test 1)", () => {
+  test("Scenario 4: insert at the end of a node (test 1)", (): void => {
     const getPage = (): PageContent => ({
       buffers: [
         {
@@ -460,7 +456,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 4: insert at the end of a node (test 2)", () => {
+  test("Scenario 4: insert at the end of a node (test 2)", (): void => {
     const getPage = (): PageContent => ({
       buffers: [
         {
@@ -531,7 +527,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 5: insert at the start of the content", () => {
+  test("Scenario 5: insert at the start of the content", (): void => {
     const page: PageContent = {
       buffers: [
         {
@@ -671,7 +667,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 6: insert at the start of the content (test 1)", () => {
+  test("Scenario 6: insert at the start of the content (test 1)", (): void => {
     const page: PageContent = {
       buffers: [
         {
@@ -806,7 +802,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 6: insert at the start of the content (test 2)", () => {
+  test("Scenario 6: insert at the start of the content (test 2)", (): void => {
     const page: PageContent = {
       buffers: [
         {
@@ -916,7 +912,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 7: insert inside a node's content", () => {
+  test("Scenario 7: insert inside a node's content", (): void => {
     const page: PageContent = {
       buffers: [
         {
@@ -1073,7 +1069,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 8: insert inside a node's content (test 1)", () => {
+  test("Scenario 8: insert inside a node's content (test 1)", (): void => {
     const page: PageContent = {
       buffers: [
         {
@@ -1235,7 +1231,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 8: insert inside a node's content (test 2", () => {
+  test("Scenario 8: insert inside a node's content (test 2", (): void => {
     const page: PageContent = {
       buffers: [
         {
@@ -1346,7 +1342,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 9: insert a node into an empty tree.", () => {
+  test("Scenario 9: insert a node into an empty tree.", (): void => {
     const state: StatePages = {
       pageId: {
         buffers: [],
@@ -1398,7 +1394,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(resultState).toStrictEqual(expectedState);
   });
 
-  test("Ensures that the parent structure node's length gets increased", () => {
+  test("Ensures that the parent structure node's length gets increased", (): void => {
     const page: PageContent = {
       buffers: [
         {

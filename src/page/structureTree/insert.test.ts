@@ -191,8 +191,8 @@ export const getBigTree = (): PageContent => ({
   },
 });
 
-describe("structureTree insert tests", () => {
-  test("Less than insertion - left side", () => {
+describe("structureTree insert tests", (): void => {
+  test("Less than insertion - left side", (): void => {
     const page: PageContent = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
@@ -377,7 +377,7 @@ describe("structureTree insert tests", () => {
     expect(resultState).toStrictEqual(expectedState);
   });
 
-  test("Less than insertion - right side", () => {
+  test("Less than insertion - right side", (): void => {
     const page: PageContent = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
@@ -752,7 +752,7 @@ describe("structureTree insert tests", () => {
     expect(resultState).toStrictEqual(expectedState);
   });
 
-  test("Greater than insertion", () => {
+  test("Greater than insertion", (): void => {
     const page: PageContent = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
@@ -1118,7 +1118,7 @@ describe("structureTree insert tests", () => {
     expect(resultState).toStrictEqual(expectedState);
   });
 
-  test("Insert the root of the tree", () => {
+  test("Insert the root of the tree", (): void => {
     const state: StatePages = {
       pageId: {
         buffers: [],

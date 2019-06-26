@@ -32,18 +32,20 @@ export function getAttributeName(
   name: string,
   isStyleProperty = false,
 ): string {
-  const newName = name.split("-").reduce((acc: string, curr: string) => {
-    if (isStyleProperty) {
-      if (acc) {
-        acc += curr[0].toUpperCase() + curr.slice(1);
+  const newName = name
+    .split("-")
+    .reduce((acc: string, curr: string): string => {
+      if (isStyleProperty) {
+        if (acc) {
+          acc += curr[0].toUpperCase() + curr.slice(1);
+        } else {
+          acc = curr;
+        }
+        return acc;
       } else {
-        acc = curr;
+        return acc + curr;
       }
-      return acc;
-    } else {
-      return acc + curr;
-    }
-  }, "");
+    }, "");
   return newName;
 }
 
@@ -229,7 +231,7 @@ export default function parse(content: string): PageContent {
   function spanEnd(): string {
     consumeUpToType("tag-end");
     const forwardsContent = markdownStack.pop()!;
-    return forwardsContent.reduce((acc, curr) => {
+    return forwardsContent.reduce((acc, curr): string => {
       return curr + acc;
     }, "");
   }
@@ -376,7 +378,7 @@ export default function parse(content: string): PageContent {
   while (!stream.done) {
     start();
   }
-  page.buffers.forEach((x) => {
+  page.buffers.forEach((x): void => {
     x.isReadOnly = true;
   });
   return page as PageContent;

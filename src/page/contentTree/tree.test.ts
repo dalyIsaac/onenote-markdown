@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+
 import { Color, PageContent } from "../pageModel";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { SENTINEL_INDEX } from "../tree/tree";
@@ -128,8 +130,8 @@ export const getPage = (): PageContent => ({
   structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
 });
 
-describe("Functions for common tree operations on the piece table/content red-black tree.", () => {
-  test("findNodeAtOffset", () => {
+describe("Functions for common tree operations on the piece table/content red-black tree.", (): void => {
+  test("findNodeAtOffset", (): void => {
     const { nodes, root } = getFinalTree();
 
     expect(findNodeAtOffset({ nodes, root }, -1)).toStrictEqual({
@@ -253,17 +255,17 @@ describe("Functions for common tree operations on the piece table/content red-bl
     });
   });
 
-  test("Calculate line feed count", () => {
+  test("Calculate line feed count", (): void => {
     const page = getPage();
     expect(calculateLineFeedCount(page.content, page.content.root)).toBe(2);
   });
 
-  test("Calculate character count", () => {
+  test("Calculate character count", (): void => {
     const page = getPage();
     expect(calculateCharCount(page.content, page.content.root)).toBe(121);
   });
 
-  test("getNodeContent", () => {
+  test("getNodeContent", (): void => {
     const page = getStartPage();
 
     expect(getNodeContent(page, 1)).toBe(
@@ -281,31 +283,31 @@ describe("Functions for common tree operations on the piece table/content red-bl
     expect(getNodeContent(page, 11)).toBe(".");
   });
 
-  describe("getContentBetweenOffset", () => {
+  describe("getContentBetweenOffset", (): void => {
     const page = getStartPage();
 
-    test("Inside a single node", () => {
+    test("Inside a single node", (): void => {
       expect(getContentBetweenOffsets(page, 3, 50)).toBe(
         "not go gentle into that good night,\nOld age sho",
       );
     });
 
-    test("An entire single node", () => {
+    test("An entire single node", (): void => {
       expect(getContentBetweenOffsets(page, 0, 65)).toBe(
         "Do not go gentle into that good night,\nOld age should burn and ra",
       );
     });
 
-    test("Across two nodes", () => {
+    test("Across two nodes", (): void => {
       expect(getContentBetweenOffsets(page, 63, 66)).toBe("rav");
       expect(getContentBetweenOffsets(page, 70, 82)).toBe(" close of da");
     });
 
-    test("Across two nodes to the end of the second node", () => {
+    test("Across two nodes to the end of the second node", (): void => {
       expect(getContentBetweenOffsets(page, 70, 83)).toBe(" close of day");
     });
 
-    test("Across multiple nodes", () => {
+    test("Across multiple nodes", (): void => {
       expect(getContentBetweenOffsets(page, 60, 83)).toBe(
         "nd rave at close of day",
       );
