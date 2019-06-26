@@ -17,18 +17,41 @@ class NamedNodeMapMock {
   }
 }
 
-const createElement = (includeBreak = true) => {
+interface ShowItems {
+  [IS_BREAK]?: boolean;
+  [CONTENT_OFFSET]?: boolean;
+  [STRUCTURE_NODE_INDEX]?: boolean;
+}
+
+const checkProperty = (
+  show: ShowItems | undefined,
+  name: keyof ShowItems,
+): boolean => {
+  if (show === undefined) {
+    return true;
+  } else if (show[name] === undefined) {
+    return true;
+  } else {
+    return show[name] || false;
+  }
+};
+
+const createElement = (show?: ShowItems) => {
   const attributes = new NamedNodeMapMock();
 
-  const contentoffset = document.createAttribute(CONTENT_OFFSET);
-  contentoffset.value = "10";
-  attributes.setNamedItem(contentoffset);
+  if (checkProperty(show, CONTENT_OFFSET)) {
+    const contentoffset = document.createAttribute(CONTENT_OFFSET);
+    contentoffset.value = "10";
+    attributes.setNamedItem(contentoffset);
+  }
 
-  const structurenodeindex = document.createAttribute(STRUCTURE_NODE_INDEX);
-  structurenodeindex.value = "2";
-  attributes.setNamedItem(structurenodeindex);
+  if (checkProperty(show, STRUCTURE_NODE_INDEX)) {
+    const structurenodeindex = document.createAttribute(STRUCTURE_NODE_INDEX);
+    structurenodeindex.value = "2";
+    attributes.setNamedItem(structurenodeindex);
+  }
 
-  if (includeBreak) {
+  if (checkProperty(show, IS_BREAK)) {
     const isbreak = document.createAttribute(IS_BREAK);
     isbreak.value = "true";
     attributes.setNamedItem(isbreak);
@@ -84,9 +107,9 @@ describe("markdown selection", () => {
 
   test("selection with elements which don't have break indicators", () => {
     window.getSelection = jest.fn().mockReturnValue({
-      anchorNode: createElement(false),
+      anchorNode: createElement({ isbreak: false }),
       anchorOffset: 10,
-      focusNode: createElement(false),
+      focusNode: createElement({ isbreak: false }),
       focusOffset: 11,
     });
     expect(getEditorSelection()).toEqual({
@@ -103,6 +126,26 @@ describe("markdown selection", () => {
         structureNodeIndex: 2,
       },
     });
+  });
+
+  test("selection with elements which don't have contentoffset", () => {
+    window.getSelection = jest.fn().mockReturnValue({
+      anchorNode: createElement({ [CONTENT_OFFSET]: false }),
+      anchorOffset: 10,
+      focusNode: createElement({ [CONTENT_OFFSET]: false }),
+      focusOffset: 11,
+    });
+    expect(getEditorSelection()).toEqual(null);
+  });
+
+  test("selection with elements which don't have structurenodeindex", () => {
+    window.getSelection = jest.fn().mockReturnValue({
+      anchorNode: createElement({ [STRUCTURE_NODE_INDEX]: false }),
+      anchorOffset: 10,
+      focusNode: createElement({ [STRUCTURE_NODE_INDEX]: false }),
+      focusOffset: 11,
+    });
+    expect(getEditorSelection()).toEqual(null);
   });
 
   test("selection with no parent nodes", () => {
