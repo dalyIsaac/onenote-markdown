@@ -296,7 +296,7 @@ export default function parse(content: string): PageContent {
 
     insertContent(
       page,
-      { content, offset: contentOffset },
+      { content, globalOffset: contentOffset },
       SENTINEL_INDEX, // because the length has already been set
       MAX_BUFFER_LENGTH,
     );

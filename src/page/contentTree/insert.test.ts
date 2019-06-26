@@ -63,7 +63,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     const page = getPage();
     const content: ContentInsert = {
       content: "b",
-      offset: 1,
+      globalOffset: 1,
     };
     insertContent(page, content, SENTINEL_INDEX, MAX_BUFFER_LENGTH);
     expect(page).toStrictEqual(expectedPage);
@@ -139,7 +139,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     const page = getPage();
     const content: ContentInsert = {
       content: "ef",
-      offset: 5,
+      globalOffset: 5,
     };
     const maxBufferLength = 5;
     insertContent(page, content, SENTINEL_INDEX, maxBufferLength);
@@ -242,7 +242,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expectedPage.previouslyInsertedContentNodeOffset = 2;
     const content: ContentInsert = {
       content: "ij\nk",
-      offset: 2,
+      globalOffset: 2,
     };
     const maxBufferLength = 8;
     insertContent(page, content, SENTINEL_INDEX, maxBufferLength);
@@ -343,7 +343,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expectedPage.previouslyInsertedContentNodeOffset = 9;
     const content: ContentInsert = {
       content: "ij\nk",
-      offset: 9,
+      globalOffset: 9,
     };
     const maxBufferLength = 8;
     insertContent(page, content, SENTINEL_INDEX, maxBufferLength);
@@ -449,7 +449,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expectedPage.previouslyInsertedContentNodeOffset = 2;
     const content: ContentInsert = {
       content: "ij\nkl",
-      offset: 2,
+      globalOffset: 2,
     };
     const maxBufferLength = 8;
     insertContent(page, content, SENTINEL_INDEX, maxBufferLength);
@@ -518,7 +518,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     const page = getPage();
     const content: ContentInsert = {
       content: "ef",
-      offset: 5,
+      globalOffset: 5,
     };
     expectedPage.previouslyInsertedContentNodeIndex = 2;
     expectedPage.previouslyInsertedContentNodeOffset = 5;
@@ -655,7 +655,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     };
     const content: ContentInsert = {
       content: "gh\nij",
-      offset: 0,
+      globalOffset: 0,
     };
     const maxBufferLength = 8;
     insertContent(
@@ -790,7 +790,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     };
     const content: ContentInsert = {
       content: "gh\nij",
-      offset: 0,
+      globalOffset: 0,
     };
     const maxBufferLength = 8;
     insertContent(
@@ -900,7 +900,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     };
     const content: ContentInsert = {
       content: "ef",
-      offset: 0,
+      globalOffset: 0,
     };
     const maxBufferLength = 8;
     insertContent(
@@ -1057,7 +1057,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     };
     const content: ContentInsert = {
       content: "ij\nkl",
-      offset: 5,
+      globalOffset: 5,
     };
     const maxBufferLength = 16;
     insertContent(
@@ -1219,7 +1219,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     };
     const content: ContentInsert = {
       content: "ij\nkl\nmn",
-      offset: 8,
+      globalOffset: 8,
     };
     const maxBufferLength = 16;
     insertContent(
@@ -1330,7 +1330,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     };
     const content: ContentInsert = {
       content: "ef",
-      offset: 1,
+      globalOffset: 1,
     };
     const maxBufferLength = 8;
     insertContent(
@@ -1600,7 +1600,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     };
     const content: ContentInsert = {
       content: "ij\nk",
-      offset: 2,
+      globalOffset: 2,
     };
     const maxBufferLength = 8;
     insertContent(page, content, 1, maxBufferLength);

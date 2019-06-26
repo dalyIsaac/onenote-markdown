@@ -78,20 +78,16 @@ function insertNewBreak(
  */
 export function splitStructureNode(
   page: PageContent,
-  {
-    nodeIndex: startNodeIndex,
-    localContentOffset,
-    nodeContentOffset,
-  }: Omit<SplitStructureAction, "pageId">,
+  { nodeIndex, localOffset, nodeOffset }: Omit<SplitStructureAction, "pageId">,
 ): void {
-  const startNode: StructureNode = page.structure.nodes[startNodeIndex];
+  const startNode: StructureNode = page.structure.nodes[nodeIndex];
 
   if (startNode.tag === "br" && startNode.tagType === TagType.StartEndTag) {
-    insertNewBreak(page, nodeContentOffset, startNodeIndex);
+    insertNewBreak(page, nodeOffset, nodeIndex);
     return;
   }
 
-  const endTag = findEndNode(page.structure, startNode.id, startNodeIndex);
+  const endTag = findEndNode(page.structure, startNode.id, nodeIndex);
   if (endTag === null) {
     throw new RangeError(
       `Could not find the expected node whose id is ${startNode.id}`,
@@ -99,16 +95,10 @@ export function splitStructureNode(
   }
   const { index: endIndex } = endTag;
 
-  if (startNode.length === localContentOffset) {
-    insertNewBreak(page, nodeContentOffset, endIndex);
+  if (startNode.length === localOffset) {
+    insertNewBreak(page, nodeOffset, endIndex);
   } else {
-    page.structure.nodes[startNodeIndex] = startNode;
-    splitPopulatedNode(
-      page,
-      startNode,
-      localContentOffset,
-      nodeContentOffset,
-      endIndex,
-    );
+    page.structure.nodes[nodeIndex] = startNode;
+    splitPopulatedNode(page, startNode, localOffset, nodeOffset, endIndex);
   }
 }

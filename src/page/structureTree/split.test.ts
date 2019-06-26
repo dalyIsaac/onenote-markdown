@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable max-len */
 /* eslint-disable @typescript-eslint/camelcase */
+
 import { test_06_html } from "../parser/parser.test";
 import parse from "../parser/parser";
 import { PageContent, Color, StatePages } from "../pageModel";
@@ -386,9 +388,9 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
       title: "This is the title",
     };
     const action: SplitStructureAction = {
-      localContentOffset: 13,
-      nodeContentOffset: 115,
+      localOffset: 13,
       nodeIndex: 3,
+      nodeOffset: 115,
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };
@@ -531,9 +533,9 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
       title: "This is the title",
     };
     const action: SplitStructureAction = {
-      localContentOffset: 19,
-      nodeContentOffset: 19,
+      localOffset: 19,
       nodeIndex: 1,
+      nodeOffset: 19,
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };
@@ -544,9 +546,9 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
   test("1.2.1 Create a new `StructureNode` after the final `StructureNode`.", (): void => {
     const page = parse(test_06_html);
     const action: SplitStructureAction = {
-      localContentOffset: 16,
-      nodeContentOffset: 115,
+      localOffset: 16,
       nodeIndex: 3,
+      nodeOffset: 115,
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };
@@ -557,9 +559,9 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
   test("1.2.2 Create a new `StructureNode` after the first `StructureNode`.", (): void => {
     const page = parse(test_06_html);
     const action: SplitStructureAction = {
-      localContentOffset: 102,
-      nodeContentOffset: 0,
+      localOffset: 102,
       nodeIndex: 1,
+      nodeOffset: 0,
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };
@@ -698,9 +700,9 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
       title: "This is the title",
     };
     const action: SplitStructureAction = {
-      localContentOffset: 0,
-      nodeContentOffset: 118,
+      localOffset: 0,
       nodeIndex: 5,
+      nodeOffset: 118,
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };
@@ -839,9 +841,9 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
       title: "This is the title",
     };
     const action: SplitStructureAction = {
-      localContentOffset: 0,
-      nodeContentOffset: 102,
+      localOffset: 0,
       nodeIndex: 5,
+      nodeOffset: 102,
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };

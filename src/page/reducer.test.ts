@@ -224,9 +224,9 @@ describe("page/reducer", (): void => {
   test("Insertion", (): void => {
     const action: InsertContentAction = {
       content: "Hello world",
-      offset: 127,
+      globalOffset: 127,
+      nodeIndex: SENTINEL_INDEX,
       pageId: PAGE_ID,
-      structureNodeIndex: SENTINEL_INDEX,
       type: INSERT_CONTENT,
     };
 

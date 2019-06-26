@@ -47,15 +47,15 @@ interface MarkdownEditorDispatchProps {
   insertContent: (
     pageId: string,
     content: string,
-    offset: number,
-    structureNodeIndex: number,
-    structureNodeOffset: number,
+    globalOffset: number,
+    nodeIndex: number,
+    nodeOffset: number,
   ) => InsertContentAction;
   splitStructureNode: (
     pageId: string,
     nodeIndex: number,
-    nodeContentOffset: number,
-    localContentOffset: number,
+    nodeOffset: number,
+    localOffset: number,
   ) => SplitStructureAction;
 }
 
@@ -71,32 +71,17 @@ const mapDispatchToProps = (
     pageId,
     content,
     offset,
-    structureNodeIndex,
-    structureNodeOffset,
+    nodeIndex,
+    nodeOffset,
   ): InsertContentAction =>
-    dispatch(
-      insertContent(
-        pageId,
-        content,
-        offset,
-        structureNodeIndex,
-        structureNodeOffset,
-      ),
-    ),
+    dispatch(insertContent(pageId, content, offset, nodeIndex, nodeOffset)),
   splitStructureNode: (
     pageId: string,
     nodeIndex: number,
-    nodeContentOffset: number,
-    localContentOffset: number,
+    nodeOffset: number,
+    localOffset: number,
   ): SplitStructureAction =>
-    dispatch(
-      splitStructureNode(
-        pageId,
-        nodeIndex,
-        nodeContentOffset,
-        localContentOffset,
-      ),
-    ),
+    dispatch(splitStructureNode(pageId, nodeIndex, nodeOffset, localOffset)),
 });
 
 export default connect(
