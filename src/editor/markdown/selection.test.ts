@@ -41,9 +41,9 @@ const createElement = (show?: ShowItems) => {
   const attributes = new NamedNodeMapMock();
 
   if (checkProperty(show, CONTENT_OFFSET)) {
-    const contentoffset = document.createAttribute(CONTENT_OFFSET);
-    contentoffset.value = "10";
-    attributes.setNamedItem(contentoffset);
+    const nodeOffset = document.createAttribute(CONTENT_OFFSET);
+    nodeOffset.value = "10";
+    attributes.setNamedItem(nodeOffset);
   }
 
   if (checkProperty(show, STRUCTURE_NODE_INDEX)) {
@@ -92,15 +92,15 @@ describe("markdown selection", (): void => {
     });
     expect(getEditorSelection()).toEqual({
       end: {
-        contentOffset: 10,
         isBreak: true,
         localOffset: 11,
+        nodeOffset: 10,
         structureNodeIndex: 2,
       },
       start: {
-        contentOffset: 10,
         isBreak: true,
         localOffset: 10,
+        nodeOffset: 10,
         structureNodeIndex: 2,
       },
     });
@@ -115,21 +115,21 @@ describe("markdown selection", (): void => {
     });
     expect(getEditorSelection()).toEqual({
       end: {
-        contentOffset: 10,
         isBreak: false,
         localOffset: 11,
+        nodeOffset: 10,
         structureNodeIndex: 2,
       },
       start: {
-        contentOffset: 10,
         isBreak: false,
         localOffset: 10,
+        nodeOffset: 10,
         structureNodeIndex: 2,
       },
     });
   });
 
-  test("selection with elements which don't have contentoffset", (): void => {
+  test("selection with elements which don't have nodeOffset", (): void => {
     window.getSelection = jest.fn().mockReturnValue({
       anchorNode: createElement({ [CONTENT_OFFSET]: false }),
       anchorOffset: 10,
@@ -168,15 +168,15 @@ describe("markdown selection", (): void => {
     });
     expect(getEditorSelection()).toEqual({
       end: {
-        contentOffset: 10,
         isBreak: true,
         localOffset: 11,
+        nodeOffset: 10,
         structureNodeIndex: 2,
       },
       start: {
-        contentOffset: 10,
         isBreak: true,
         localOffset: 10,
+        nodeOffset: 10,
         structureNodeIndex: 2,
       },
     });

@@ -1,14 +1,18 @@
 import { STRUCTURE_NODE_INDEX, IS_BREAK } from "../editorBase";
 
 interface StructureNodeProperties {
-  contentOffset: number;
+  nodeOffset: number;
   structureNodeIndex: number;
   isBreak: boolean;
 }
 
+interface SelectionBoundary extends StructureNodeProperties {
+  localOffset: number;
+}
+
 export interface EditorSelection {
-  start: { localOffset: number } | StructureNodeProperties;
-  end: { localOffset: number } | StructureNodeProperties;
+  start: SelectionBoundary;
+  end: SelectionBoundary;
 }
 
 function isElement(item: Node | Element): item is Element {
@@ -51,8 +55,8 @@ function getStructureNodeProperties(
   }
 
   return {
-    contentOffset: contentoffset,
     isBreak: isbreak,
+    nodeOffset: contentoffset,
     structureNodeIndex: structureNodeIndex,
   };
 }
@@ -64,8 +68,8 @@ function getAttributes(
     return null;
   } else if (isElement(node)) {
     return getStructureNodeProperties(node.attributes);
-  } 
-  
+  }
+
   if (node.parentElement === null) {
     return null;
   } else {

@@ -16,14 +16,32 @@ import {
 import renderPage from "./renderPage";
 import getEditorSelection from "./selection";
 
-function onBeforeInput(e: BeforeInputType): void {
-  const selection = getEditorSelection();
-  console.log(selection);
-}
-
 export function MarkdownEditorComponent(
   props: MarkdownEditorStateProps & MarkdownEditorDispatchProps,
 ): JSX.Element {
+  function onBeforeInput(e: BeforeInputType): void {
+    e.preventDefault();
+    const selection = getEditorSelection();
+    if (selection === null) {
+      return;
+    }
+
+    const content = e.data;
+    const { start, end } = selection;
+
+    if (content === "\n") {
+      // TODO: split
+    } else {
+      props.insertContent(
+        props.pageId,
+        content,
+        start.nodeOffset + start.localOffset,
+        start.structureNodeIndex,
+        start.nodeOffset,
+      );
+    }
+  }
+
   return (
     <div className={styles.editor}>
       <EditorBase

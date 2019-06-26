@@ -7,7 +7,7 @@
       "version": "canary",
       "name": "Launch Microsoft Edge (Chromium) against localhost",
       "url": "localhost:3000",
-      "port": 2015,
+      "port": 9222,
       "webRoot": "${workspaceFolder}",
       "windows": {
         "program": "{$env:APPDATA}/Local/Microsoft/Edge SxS/Application/msedge.exe"
@@ -18,7 +18,7 @@
       "request": "attach",
       "name": "Attach Microsoft Edge (Chromium) against localhost",
       "url": "localhost:3000",
-      "port": 2015,
+      "port": 9222,
       "webRoot": "${workspaceFolder}",
       "windows": {
         "program": "{$env:APPDATA}/Local/Microsoft/Edge SxS/Application/msedge.exe"
