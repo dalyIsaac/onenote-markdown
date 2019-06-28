@@ -19,6 +19,8 @@ import { Cursor } from "../cursor";
 import ContentEditable, { ContentEditableEvent } from "./contentEditable";
 
 export const cursor = new Cursor();
+const ContentEditableComponent1 = ContentEditable();
+const ContentEditableComponent2 = ContentEditable();
 
 export function MarkdownEditorComponent(
   props: MarkdownEditorStateProps & MarkdownEditorDispatchProps,
@@ -85,7 +87,16 @@ export function MarkdownEditorComponent(
         page={props.page}
         onBeforeInput={onBeforeInput}
       /> */}
-      <ContentEditable tagName="pre" html={text} onChange={handleChange} />
+      <ContentEditableComponent1
+        tagName="p"
+        html={text}
+        onChange={handleChange}
+      />
+      <ContentEditableComponent2
+        tagName="p"
+        html={text}
+        onChange={handleChange}
+      />
     </div>
   );
 }

@@ -1,5 +1,13 @@
-import { Component, createRef, createElement, SyntheticEvent } from "react";
+import {
+  Component,
+  createRef,
+  createElement,
+  SyntheticEvent,
+  useEffect,
+  useRef,
+} from "react";
 import deepEqual from "fast-deep-equal";
+import React from "react";
 
 export type ContentEditableEvent = React.FormEvent<HTMLParagraphElement> & {
   target: { value: string };
@@ -7,7 +15,8 @@ export type ContentEditableEvent = React.FormEvent<HTMLParagraphElement> & {
 
 export interface ContentEditableProps {
   html: string;
-  onChange?: (e: ContentEditableEvent) => void;
+  onChange?: Function;
+  // onChange?: (e: ContentEditableEvent) => void;
   onBlur?: Function;
   onKeyUp?: Function;
   onKeyDown?: Function;
@@ -53,86 +62,75 @@ function replaceCaret(el: HTMLElement): void {
   }
 }
 
-/**
- * A simple component for an html element with editable contents.
- */
-export default class ContentEditable extends Component<ContentEditableProps> {
-  private lastHtml: string = this.props.html;
+export default function(): React.MemoExoticComponent<
+(props: ContentEditableProps) => JSX.Element
+> {
+  let lastHtml = "";
 
-  private el = createRef<HTMLElement>();
+  function ContentEditableComponent(props: ContentEditableProps): JSX.Element {
+    const el = React.createRef<HTMLElement>();
 
-  public render(): JSX.Element {
-    const { tagName, html, ...props } = this.props;
+    // emitChange
+    function emitChange(): void {
+      if (!el || !el.current) {
+        return;
+      }
+
+      const html = el.current.innerHTML;
+      if (props.onChange && html !== lastHtml) {
+        props.onChange({
+          target: { value: html },
+        });
+        lastHtml = html;
+      }
+    }
+
+    // componentDidUpdate
+    useEffect((): void => {
+      if (!el || !el.current) {
+        return;
+      }
+
+      if (props.html !== el.current.innerText) {
+        el.current.innerText = lastHtml = props.html;
+      }
+      replaceCaret(el.current);
+    });
+
+    const { tagName, html, ...otherProps } = props;
 
     return createElement(
       tagName || "div",
       {
-        ...props,
-        ref: this.el,
-        onInput: this.emitChange,
-        onBlur: this.props.onBlur || this.emitChange,
-        onKeyUp: this.props.onKeyUp || this.emitChange,
-        onKeyDown: this.props.onKeyDown || this.emitChange,
-        contentEditable: !this.props.disabled,
+        ...otherProps,
+        ref: el,
+        onInput: emitChange,
+        onBlur: props.onBlur || emitChange,
+        onKeyUp: props.onKeyUp || emitChange,
+        onKeyDown: props.onKeyDown || emitChange,
+        contentEditable: !props.disabled,
       },
       html,
     );
   }
 
-  public shouldComponentUpdate(nextProps: ContentEditableProps): boolean {
-    const { props } = this;
-    const el = this.el.current;
-
-    // We do not need to rerender if the change of props simply reflects the
-    // user's edits.
-    // Rerendering in this case would make the cursor/caret jump.
-
-    // Rerender if there is no element yet... (somehow?)
-    if (!el) return true;
-
-    // ...or if html really changed... (programmatically, not by user edit)
-    if (normalizeHtml(nextProps.html) !== normalizeHtml(el.innerHTML)) {
-      return true;
+  function areEqual(
+    prevProps: ContentEditableProps,
+    nextProps: ContentEditableProps,
+  ): boolean {
+    // if html really changed... (programmatically, not by user edit)
+    if (normalizeHtml(nextProps.html) !== normalizeHtml(lastHtml)) {
+      return false;
     }
 
     // Handle additional properties
     return (
-      props.disabled !== nextProps.disabled ||
-      props.tagName !== nextProps.tagName ||
-      props.className !== nextProps.className ||
-      !deepEqual(props.style, nextProps.style)
+      prevProps.disabled === nextProps.disabled &&
+      prevProps.tagName === nextProps.tagName &&
+      prevProps.className === nextProps.className &&
+      deepEqual(prevProps.style, nextProps.style)
     );
   }
 
-  public componentDidUpdate(): void {
-    const el = this.el.current;
-    if (!el) {
-      return;
-    }
-
-    // Perhaps React (whose VDOM gets outdated because we often prevent
-    // rerendering) did not update the DOM. So we update it manually now.
-    if (this.props.html !== el.innerHTML) {
-      el.innerHTML = this.lastHtml = this.props.html;
-    }
-    replaceCaret(el);
-  }
-
-  private emitChange = (
-    originalEvent: SyntheticEvent<HTMLParagraphElement>,
-  ): void => {
-    const el = this.el.current;
-    if (!el) {
-      return;
-    }
-
-    const html = el.innerHTML;
-    if (this.props.onChange && html !== this.lastHtml) {
-      this.props.onChange({
-        ...originalEvent,
-        target: { ...originalEvent.target, value: html },
-      });
-      this.lastHtml = html;
-    }
-  };
+  return React.memo(ContentEditableComponent, areEqual);
 }

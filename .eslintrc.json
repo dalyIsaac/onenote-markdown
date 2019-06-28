@@ -18,9 +18,11 @@
     "eqeqeq": ["error", "always"],
     "prefer-const": "error",
     "max-len": "warn",
-    "max-depth": "error"
+    "max-depth": "error",
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
   },
-  "plugins": ["sort-keys-fix", "@typescript-eslint"],
+  "plugins": ["sort-keys-fix", "@typescript-eslint", "react-hooks"],
   "parserOptions": {
     "sourceType": "module"
   },
