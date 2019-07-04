@@ -1,5 +1,4 @@
-import React, { useEffect, useState, FormEvent } from "react";
-import EditorBase, { BeforeInputType } from "../editorBase";
+import React from "react";
 import styles from "./markdownEditor.module.css";
 import { connect } from "react-redux";
 import { PageContent } from "../../page/pageModel";
@@ -13,92 +12,11 @@ import {
   SplitStructureAction,
   splitStructureNode,
 } from "../../page/structureTree/actions";
-import renderPage from "./renderPage";
-import getEditorSelection from "./selection";
-import { Cursor } from "../cursor";
-import ContentEditable, { ContentEditableEvent } from "./contentEditable";
-
-export const cursor = new Cursor();
-const ContentEditableComponent1 = ContentEditable();
-const ContentEditableComponent2 = ContentEditable();
 
 export function MarkdownEditorComponent(
   props: MarkdownEditorStateProps & MarkdownEditorDispatchProps,
 ): JSX.Element {
-  // function updateSelection(): void {
-  //   if (cursor.start !== null && cursor.start.ref !== null) {
-  //     const selection = window.getSelection();
-  //     if (selection) {
-  //       selection.empty();
-  //       const range = document.createRange();
-  //       const start = cursor.getStartFirstChild();
-  //       if (start) {
-  //         range.setStart(start.node, start.localOffset);
-
-  //         const end = cursor.getEndFirstChild();
-  //         if (end) {
-  //           range.setEnd(end.node, end.localOffset);
-  //         }
-  //         selection.addRange(range);
-  //       }
-  //     }
-  //   }
-  // }
-
-  // useEffect((): void => {
-  //   updateSelection();
-  // });
-
-  // function onBeforeInput(e: BeforeInputType): void {
-  //   e.preventDefault();
-  //   const selection = getEditorSelection();
-  //   if (selection === null) {
-  //     return;
-  //   }
-
-  //   const content = e.data;
-  //   const { start, end } = selection;
-
-  //   if (content === "\n") {
-  //     // TODO: split
-  //   } else {
-  //     const globalOffset = start.nodeOffset + start.localOffset;
-  //     props.insertContent(
-  //       props.pageId,
-  //       content,
-  //       globalOffset,
-  //       start.structureNodeIndex,
-  //       start.nodeOffset,
-  //     );
-  //     cursor.setStartOffset(globalOffset + 1);
-  //   }
-  // }
-
-  const [text, setText] = useState("Hello, world!");
-
-  function handleChange(e: ContentEditableEvent): void {
-    setText(e.target.value);
-  }
-
-  return (
-    <div className={styles.editor}>
-      {/* <EditorBase
-        renderPage={renderPage}
-        page={props.page}
-        onBeforeInput={onBeforeInput}
-      /> */}
-      <ContentEditableComponent1
-        tagName="p"
-        html={text}
-        onChange={handleChange}
-      />
-      <ContentEditableComponent2
-        tagName="p"
-        html={text}
-        onChange={handleChange}
-      />
-    </div>
-  );
+  return <div className={styles.editor}>Markdown Editor React Component</div>;
 }
 
 /**
