@@ -1,5 +1,9 @@
 {
   "parser": "@typescript-eslint/parser",
+  "plugins": ["sort-keys-fix", "@typescript-eslint", "react-hooks"],
+  "parserOptions": {
+    "sourceType": "module"
+  },
   "rules": {
     "sort-keys-fix/sort-keys-fix": 2,
     "@typescript-eslint/indent": ["error", 2],
@@ -21,10 +25,6 @@
     "max-depth": "error",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn"
-  },
-  "plugins": ["sort-keys-fix", "@typescript-eslint", "react-hooks"],
-  "parserOptions": {
-    "sourceType": "module"
   },
   "extends": [
     "eslint:recommended",

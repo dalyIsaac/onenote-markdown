@@ -2,6 +2,7 @@ import React from "react";
 import { PageContent } from "../../page/pageModel";
 import { connect } from "react-redux";
 import { State } from "../../reducer";
+import "./htmlEditorComponent";
 
 /**
  * Props for the `HtmlEditorComponent`
@@ -12,7 +13,12 @@ interface HtmlEditorProps {
 }
 
 export function HtmlEditorComponent(props: HtmlEditorProps): JSX.Element {
-  return <div>HTML Editor React Component</div>;
+  return (
+    <div>
+      HTML Editor React Component
+      <html-editor></html-editor>
+    </div>
+  );
 }
 
 const mapStateToProps = (state: State): HtmlEditorProps => ({

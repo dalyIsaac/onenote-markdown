@@ -12,11 +12,17 @@ import {
   SplitStructureAction,
   splitStructureNode,
 } from "../../page/structureTree/actions";
+import "./markdownEditorComponent";
 
 export function MarkdownEditorComponent(
   props: MarkdownEditorStateProps & MarkdownEditorDispatchProps,
 ): JSX.Element {
-  return <div className={styles.editor}>Markdown Editor React Component</div>;
+  return (
+    <div className={styles.editor}>
+      Markdown Editor React Component
+      <markdown-editor></markdown-editor>
+    </div>
+  );
 }
 
 /**
