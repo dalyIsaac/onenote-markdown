@@ -1,6 +1,0 @@
-.editor {
-  height: calc(100vh - 40px);
-  grid-row: 2;
-  white-space: pre-wrap;
-  padding-left: 4px;
-}
