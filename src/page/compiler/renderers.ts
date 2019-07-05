@@ -5,6 +5,7 @@ import { TagType } from "../structureTree/structureModel";
 import { Attributes } from "./parser";
 import { getCompiler } from "./compiler";
 import { Style } from "../../editor/render";
+import { paramCase } from "change-case";
 
 /**
  * Type guard for `TagItem`.
@@ -46,13 +47,6 @@ let elements: CompilerElement[] = [];
 let getJSX = false;
 
 /**
- * Converts the value from camelCase to kebab-case.
- */
-function camelToKebab(val: string): string {
-  return val.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
-}
-
-/**
  * Renderer for the custom markdown syntax.
  * @param tokens Array of tokens.
  * @param index The index of the token with the custom markdown syntax.
@@ -89,7 +83,7 @@ function renderer(tokens: Token[], index: number, type: Attributes): string {
     }
   } else {
     if (token.nesting === 1) {
-      return `<span style="${camelToKebab(type)}:${token.attrGet(type)}">`;
+      return `<span style="${paramCase(type)}:${token.attrGet(type)}">`;
     } else if (token.nesting === -1) {
       return "</span>";
     } else {
@@ -159,7 +153,7 @@ function builtInRendererOverrides(attribute: string, value: string): string {
     });
     return "";
   } else {
-    return `<span style="${camelToKebab(attribute)}:${value}">`;
+    return `<span style="${paramCase(attribute)}:${value}">`;
   }
 }
 
