@@ -1,11 +1,13 @@
 import { StructureNode, TagType } from "../page/structureTree/structureModel";
 import { NodePosition } from "../page/tree/tree";
+import { TagItem } from "../page/compiler/renderers";
 
-interface StartTagStackItem extends NodePosition<StructureNode> {
+export interface StackItemBase extends NodePosition<StructureNode> {
   contentOffset: number;
+  node: StructureNode;
 }
 
-export type StackItem = StartTagStackItem | Element;
+export type StackItem<T extends StackItemBase = StackItemBase> = T | Element;
 
 export const STRUCTURE_NODE_INDEX = "STRUCTURE_NODE_INDEX";
 
@@ -39,22 +41,25 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(
 /**
  * The type returned by the function `getLastStartItem`.
  */
-export interface LastStartNode extends NodePosition<StructureNode> {
+export interface LastStartNode<K extends TagItem = TagItem> {
   stackIndex: number;
-  contentOffset: number;
+  node: K;
+}
+
+interface StackStartItemBase<K extends TagItem = TagItem> {
+  node: K;
 }
 
 /**
  * Gets the last item on the stack where the `TagType` is `TagType.StartTag`.
  */
-export function getLastStartItem(stack: StackItem[]): LastStartNode | null {
+export function getLastStartItem<
+  T extends StackStartItemBase<K>,
+  K extends TagItem = TagItem
+>(stack: Array<T | string | Element>): LastStartNode<K> & T | null {
   for (let stackIndex = stack.length - 1; stackIndex >= 0; stackIndex--) {
-    const result = stack[stackIndex];
-    if (
-      !(result instanceof Element) &&
-      result.node &&
-      result.node.tagType === TagType.StartTag
-    ) {
+    const result = stack[stackIndex] as T;
+    if (result.node && result.node.tagType === TagType.StartTag) {
       return { stackIndex, ...result };
     }
   }

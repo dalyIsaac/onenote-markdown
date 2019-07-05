@@ -1,9 +1,6 @@
 import { store } from "..";
 import { inorderTreeTraversal } from "../page/tree/tree";
-import {
-  StructureNode,
-  TagType,
-} from "../page/structureTree/structureModel";
+import { StructureNode, TagType } from "../page/structureTree/structureModel";
 import { PageContent } from "../page/pageModel";
 import {
   createElement,
@@ -101,7 +98,10 @@ export class MarkdownEditorComponent extends HTMLElement {
    * `tagType === TagType.StartTag` is compiled, with all the elements on the
    * stack after the last start tag being children.
    */
-  private updateStack(page: PageContent, stack: StackItem[]): StackItem[] {
+  private updateStack(
+    page: PageContent,
+    stack: StackItem[],
+  ): StackItem[] {
     const lastStartStackItem = getLastStartItem(stack);
     if (lastStartStackItem) {
       return this.updateItem(page, stack, lastStartStackItem);

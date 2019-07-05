@@ -8,8 +8,11 @@ import { getCompiler } from "./compiler";
 /**
  * Type guard for `TagItem`.
  */
-export function isTagItem(val: Element): val is TagItem {
-  if ((val as TagItem).tag) {
+export function isTagItem(val: CompilerElement): val is TagItem {
+  if (
+    (val as TagItem).tag !== undefined &&
+    (val as TagItem).tagType !== undefined
+  ) {
     return true;
   }
   return false;
@@ -27,13 +30,13 @@ export interface TagItem {
 /**
  * Definition of items elements inside the `elements` array.
  */
-export type Element = TagItem | string;
+export type CompilerElement = TagItem | string;
 
 /**
  * When `getJSX` is set to true, then `elements` is populated with items for
  * use in `HtmlEditorComponent`.
  */
-let elements: Element[] = [];
+let elements: CompilerElement[] = [];
 
 /**
  * Set to true when `getElements` is called, so that `elements` is populated
@@ -205,7 +208,7 @@ export function text(tokens: Token[], index: number): string {
 /**
  * Gets all the elements from the OneNote page given content.
  */
-export function getElements(content: string): Element[] {
+export function getElements(content: string): CompilerElement[] {
   getJSX = true;
   getCompiler().render(content);
   const outElements = elements; // reassigning for the garbage collector
