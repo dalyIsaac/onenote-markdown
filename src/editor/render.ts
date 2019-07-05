@@ -11,16 +11,34 @@ export type StackItem<T extends StackItemBase = StackItemBase> = T | Element;
 
 export const STRUCTURE_NODE_INDEX = "STRUCTURE_NODE_INDEX";
 
+export type Style = Partial<CSSStyleDeclaration>;
+
+export interface Props {
+  [key: string]: string | number | boolean | undefined;
+}
+
 export function createElement<K extends keyof HTMLElementTagNameMap>(
   tagName: K,
-  props?: { [key: string]: string | number },
+  style?: Style,
+  props?: Props,
   children?: Element | Element[] | string,
 ): HTMLElementTagNameMap[K] {
   const el = document.createElement(tagName);
-  for (const key in props) {
-    if (props.hasOwnProperty(key)) {
+  if (style) {
+    for (const key in style) {
+      const value = style[key];
+      if (style.hasOwnProperty(key) && value !== undefined) {
+        el.style.setProperty(key, value);
+      }
+    }
+  }
+
+  if (props) {
+    for (const key in props) {
       const value = props[key];
-      el.setAttribute(key, String(value));
+      if (props.hasOwnProperty(key) && value !== undefined) {
+        el.setAttribute(key, String(value));
+      }
     }
   }
 

@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/camelcase */
 
 import Token from "markdown-it/lib/token";
-import { KeyValueStr, TagType } from "../structureTree/structureModel";
+import { TagType } from "../structureTree/structureModel";
 import { Attributes } from "./parser";
 import { getCompiler } from "./compiler";
+import { Style } from "../../editor/render";
 
 /**
  * Type guard for `TagItem`.
@@ -22,9 +23,9 @@ export function isTagItem(val: CompilerElement): val is TagItem {
  * Definition of tags inside the tag items inside the `elements` array.
  */
 export interface TagItem {
-  tag: string;
+  tag: keyof HTMLElementTagNameMap;
   tagType: TagType;
-  style?: KeyValueStr;
+  style?: Style;
 }
 
 /**
@@ -60,7 +61,7 @@ function camelToKebab(val: string): string {
 function renderer(tokens: Token[], index: number, type: Attributes): string {
   const token = tokens[index];
   if (getJSX) {
-    const tag = tokens[index].tag;
+    const tag = tokens[index].tag as keyof HTMLElementTagNameMap;
     if (token.nesting === 1) {
       elements.push({
         style: {
@@ -117,7 +118,7 @@ function inlineTagsRenderer(tokens: Token[], index: number): string {
   const tagType = token.nesting === 1 ? TagType.StartTag : TagType.EndTag;
   if (getJSX) {
     elements.push({
-      tag: token.tag,
+      tag: token.tag as keyof HTMLElementTagNameMap,
       tagType,
     });
     return "";

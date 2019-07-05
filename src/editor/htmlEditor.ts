@@ -16,7 +16,6 @@ import {
   TagItem,
 } from "../page/compiler/renderers";
 
-
 declare global {
   namespace JSX {
     interface IntrinsicElements {
@@ -58,7 +57,7 @@ export class HtmlEditorComponent extends HTMLElement {
           stack = this.updateStack(stack);
           if (node.tag === "cite") {
             stack.push(
-              createElement("br", {
+              createElement("br", undefined, {
                 contentoffset: contentOffset,
                 ignoreinsync: "true",
                 isbreak: "true",
@@ -140,11 +139,11 @@ export class HtmlEditorComponent extends HTMLElement {
     const childElements = this.createChildElements(children);
     const element = createElement(
       node.tag,
+      node.style,
       {
         ...node.attributes,
         contentoffset: contentOffset,
         key: node.id,
-        style: node.style,
       },
       childElements,
     );
@@ -222,8 +221,7 @@ export class HtmlEditorComponent extends HTMLElement {
   ): Array<ChildStackItem | Element | string> {
     const newStack = stack.slice(0, stackIndex);
     const children = stack.slice(stackIndex + 1) as Element[];
-    const props = node.style ? { style: node.style } : {};
-    const element = createElement(node.tag, props, children);
+    const element = createElement(node.tag, node.style, undefined, children);
     newStack.push(element);
     return newStack;
   }

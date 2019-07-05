@@ -85,7 +85,9 @@ export class MarkdownEditorComponent extends HTMLElement {
   ): void {
     switch (node.tag) {
       case "br": {
-        stack.push(createElement("br", { [STRUCTURE_NODE_INDEX]: index }));
+        stack.push(
+          createElement("br", undefined, { [STRUCTURE_NODE_INDEX]: index }),
+        );
         break;
       }
       default:
@@ -98,10 +100,7 @@ export class MarkdownEditorComponent extends HTMLElement {
    * `tagType === TagType.StartTag` is compiled, with all the elements on the
    * stack after the last start tag being children.
    */
-  private updateStack(
-    page: PageContent,
-    stack: StackItem[],
-  ): StackItem[] {
+  private updateStack(page: PageContent, stack: StackItem[]): StackItem[] {
     const lastStartStackItem = getLastStartItem(stack);
     if (lastStartStackItem) {
       return this.updateItem(page, stack, lastStartStackItem);
@@ -136,10 +135,10 @@ export class MarkdownEditorComponent extends HTMLElement {
     }
     const element = createElement(
       "p",
+      { margin: "0", padding: "0" },
       {
         ...node.attributes,
         [STRUCTURE_NODE_INDEX]: index,
-        style: `margin: 0; padding: 0;`,
       },
       children,
     );
