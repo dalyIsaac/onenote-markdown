@@ -1,18 +1,18 @@
-import { store } from "../..";
-import { inorderTreeTraversal } from "../../page/tree/tree";
+import { store } from "..";
+import { inorderTreeTraversal } from "../page/tree/tree";
 import {
   StructureNode,
   TagType,
-} from "../../page/structureTree/structureModel";
-import { PageContent } from "../../page/pageModel";
+} from "../page/structureTree/structureModel";
+import { PageContent } from "../page/pageModel";
 import {
   createElement,
   STRUCTURE_NODE_INDEX,
   StackItem,
   getLastStartItem,
   LastStartNode,
-} from "../render";
-import { getContentBetweenOffsets } from "../../page/contentTree/tree";
+} from "./render";
+import { getContentBetweenOffsets } from "../page/contentTree/tree";
 
 /* eslint-disable @typescript-eslint/no-namespace */
 
