@@ -34,7 +34,7 @@ export class MarkdownEditorComponent extends HTMLElement {
     parent.setAttribute(
       "style",
       `border-right: solid rgb(127, 127, 127) 1px;
-       padding: 4px;
+       padding-left: 4px;
        white-space: pre-wrap;
        height: 100%;
     `,
