@@ -16,7 +16,8 @@ export const SENTINEL_STRUCTURE: StructureNode = {
   length: 0,
   parent: SENTINEL_INDEX,
   right: SENTINEL_INDEX,
-  tag: "",
+  // The empty string is cast only for the sentinal structure node
+  tag: "" as keyof HTMLElementTagNameMap,
   tagType: TagType.StartEndTag,
 };
 
@@ -53,7 +54,8 @@ export function resetSentinelStructure(
   SENTINEL_STRUCTURE.leftSubTreeLength = 0;
   SENTINEL_STRUCTURE.parent = SENTINEL_INDEX;
   SENTINEL_STRUCTURE.right = SENTINEL_INDEX;
-  SENTINEL_STRUCTURE.tag = "";
+  // The empty string is cast only for the sentinal structure node
+  SENTINEL_STRUCTURE.tag = "" as keyof HTMLElementTagNameMap;
   SENTINEL_STRUCTURE.tagType = TagType.StartEndTag;
   tree.nodes[0] = SENTINEL_STRUCTURE;
 }
@@ -118,7 +120,7 @@ export function generateNewId(): string {
 export function updateNodePairTag(
   page: PageContent,
   nodeIndex: number,
-  newTag: string,
+  newTag: keyof HTMLElementTagNameMap,
 ): void {
   const startNode = page.structure.nodes[nodeIndex];
   startNode.tag = newTag;

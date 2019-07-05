@@ -11,7 +11,7 @@ export type StackItem<T extends StackItemBase = StackItemBase> = T | Element;
 
 export const STRUCTURE_NODE_INDEX = "STRUCTURE_NODE_INDEX";
 
-export type Style = Partial<CSSStyleDeclaration>;
+export type Style = Partial<{ [key in keyof CSSStyleDeclaration]: string }>;
 
 export interface Props {
   [key: string]: string | number | boolean | undefined;
@@ -21,7 +21,7 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(
   tagName: K,
   style?: Style,
   props?: Props,
-  children?: Element | Element[] | string,
+  children?: Element | string | Array<Element | Text>,
 ): HTMLElementTagNameMap[K] {
   const el = document.createElement(tagName);
   if (style) {
@@ -74,7 +74,7 @@ interface StackStartItemBase<K extends TagItem = TagItem> {
 export function getLastStartItem<
   T extends StackStartItemBase<K>,
   K extends TagItem = TagItem
->(stack: Array<T | string | Element>): LastStartNode<K> & T | null {
+>(stack: Array<T | string | Element | Text>): LastStartNode<K> & T | null {
   for (let stackIndex = stack.length - 1; stackIndex >= 0; stackIndex--) {
     const result = stack[stackIndex] as T;
     if (result.node && result.node.tagType === TagType.StartTag) {

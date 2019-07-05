@@ -145,7 +145,7 @@ export class HtmlEditorComponent extends HTMLElement {
         contentoffset: contentOffset,
         key: node.id,
       },
-      childElements,
+      childElements as Array<Element | Text>,
     );
     newStack.push(element);
     return newStack;
@@ -161,7 +161,7 @@ export class HtmlEditorComponent extends HTMLElement {
   private createChildElements(
     children: CompilerElement[],
   ): Array<Element | string> {
-    let stack: Array<ChildStackItem | string | Element> = [];
+    let stack: Array<ChildStackItem | Text | string | Element> = [];
     for (const child of children) {
       if (isTagItem(child)) {
         switch (child.tagType) {
@@ -182,7 +182,7 @@ export class HtmlEditorComponent extends HTMLElement {
             break;
         }
       } else {
-        stack.push(child);
+        stack.push(document.createTextNode(child));
       }
     }
     return stack as Array<Element | string>;
@@ -195,8 +195,8 @@ export class HtmlEditorComponent extends HTMLElement {
    * @param stack The stack of `ChildStackItem`s.
    */
   private updateChildStack(
-    stack: Array<ChildStackItem | Element | string>,
-  ): Array<ChildStackItem | Element | string> {
+    stack: Array<ChildStackItem | Element | Text | string>,
+  ): Array<ChildStackItem | Element | Text | string> {
     const lastStart = getLastStartItem(stack);
     if (lastStart) {
       return this.updateChildItem(stack, lastStart);
@@ -216,9 +216,9 @@ export class HtmlEditorComponent extends HTMLElement {
    * `tagType === TagType.StartTag`.
    */
   private updateChildItem(
-    stack: Array<ChildStackItem | Element | string>,
+    stack: Array<ChildStackItem | Element | Text | string>,
     { stackIndex, node }: LastStartNode,
-  ): Array<ChildStackItem | Element | string> {
+  ): Array<ChildStackItem | Element | Text | string> {
     const newStack = stack.slice(0, stackIndex);
     const children = stack.slice(stackIndex + 1) as Element[];
     const element = createElement(node.tag, node.style, undefined, children);

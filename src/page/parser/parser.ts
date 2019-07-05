@@ -304,7 +304,7 @@ export default function parse(content: string): PageContent {
     consumeUpToType("tag-end");
   }
 
-  function text(tag: string): void {
+  function text(tag: keyof HTMLElementTagNameMap): void {
     const { id, style: styleStr, ...attributes } = getAttributes();
     lastTextNode = {
       id,

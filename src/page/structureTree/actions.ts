@@ -6,7 +6,7 @@ import { UpdateStructureValues } from "./update";
 export const INSERT_STRUCTURE_NODE = "INSERT_STRUCTURE_NODE";
 
 export interface InsertStructureProps {
-  tag: string;
+  tag: keyof HTMLElementTagNameMap;
   tagType: TagType;
   id: string;
   style?: KeyValueStr;
@@ -16,7 +16,7 @@ export interface InsertStructureProps {
 }
 
 export interface InsertStructureAction extends PageActionPartial {
-  tag: string;
+  tag: keyof HTMLElementTagNameMap;
   tagType: TagType;
   id: string;
   style?: KeyValueStr;
@@ -32,7 +32,7 @@ export const insertStructure = (
   pageId: string,
   offset: number,
   length: number,
-  tag: string,
+  tag: keyof HTMLElementTagNameMap,
   tagType: TagType,
   id: string,
   style?: KeyValueStr,

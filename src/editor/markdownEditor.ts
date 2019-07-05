@@ -7,7 +7,6 @@ import {
   STRUCTURE_NODE_INDEX,
   StackItem,
   getLastStartItem,
-  LastStartNode,
 } from "./render";
 import { getContentBetweenOffsets } from "../page/contentTree/tree";
 
@@ -19,6 +18,13 @@ declare global {
       "markdown-editor": {};
     }
   }
+}
+
+interface MarkdownLastStartNode {
+  stackIndex: number;
+  node: StructureNode;
+  index: number;
+  contentOffset: number;
 }
 
 export class MarkdownEditorComponent extends HTMLElement {
@@ -122,7 +128,7 @@ export class MarkdownEditorComponent extends HTMLElement {
   private updateItem(
     page: PageContent,
     stack: StackItem[],
-    { contentOffset, index, node, stackIndex }: LastStartNode,
+    { contentOffset, index, node, stackIndex }: MarkdownLastStartNode,
   ): StackItem[] {
     const newStack = stack.slice(0, stackIndex);
     let children: Element[] | string;
