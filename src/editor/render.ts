@@ -1,6 +1,7 @@
 import { StructureNode, TagType } from "../page/structureTree/structureModel";
 import { NodePosition } from "../page/tree/tree";
 import { TagItem } from "../page/compiler/renderers";
+import { paramCase } from "change-case";
 
 export interface StackItemBase extends NodePosition<StructureNode> {
   contentOffset: number;
@@ -28,7 +29,7 @@ export function createElement<K extends keyof HTMLElementTagNameMap>(
     for (const key in style) {
       const value = style[key];
       if (style.hasOwnProperty(key) && value !== undefined) {
-        el.style.setProperty(key, value);
+        el.style.setProperty(paramCase(key), value);
       }
     }
   }

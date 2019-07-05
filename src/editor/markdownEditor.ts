@@ -28,8 +28,6 @@ interface MarkdownLastStartNode {
 }
 
 export class MarkdownEditorComponent extends HTMLElement {
-  private pageId: string;
-
   public constructor() {
     super();
     const parent = document.createElement("div");
@@ -44,8 +42,7 @@ export class MarkdownEditorComponent extends HTMLElement {
     );
 
     const state = store.getState();
-    this.pageId = state.selectedPage;
-    const page = state.pages[this.pageId];
+    const page = state.pages[state.selectedPage];
 
     for (const item of this.render(page)) {
       parent.appendChild(item);

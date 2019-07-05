@@ -15,6 +15,7 @@ import {
   CompilerElement,
   TagItem,
 } from "../page/compiler/renderers";
+import { store } from "..";
 
 declare global {
   namespace JSX {
@@ -35,9 +36,16 @@ interface ChildStackItem {
 export class HtmlEditorComponent extends HTMLElement {
   public constructor() {
     super();
-    const shadow = this.attachShadow({ mode: "open" });
-
     const parent = document.createElement("div");
+
+    const state = store.getState();
+    const page = state.pages[state.selectedPage];
+
+    for (const item of this.render(page)) {
+      parent.appendChild(item);
+    }
+
+    const shadow = this.attachShadow({ mode: "open" });
     shadow.appendChild(parent);
   }
 
@@ -139,7 +147,7 @@ export class HtmlEditorComponent extends HTMLElement {
     const childElements = this.createChildElements(children);
     const element = createElement(
       node.tag,
-      node.style,
+      { margin: "0", padding: "0", ...node.style },
       {
         ...node.attributes,
         contentoffset: contentOffset,
@@ -170,8 +178,6 @@ export class HtmlEditorComponent extends HTMLElement {
             break;
           }
           case TagType.EndTag: {
-            // Not comfortable with the below casting, as it relies on
-            // strings being ignored.
             stack = this.updateChildStack(stack);
             break;
           }
