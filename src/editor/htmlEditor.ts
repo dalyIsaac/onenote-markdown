@@ -36,7 +36,7 @@ interface ChildStackItem {
 type Stack = Array<StackItem<HTMLStackItem>>;
 type ChildStack = Array<ChildStackItem | Element | Text | string>;
 
-export class HtmlEditorComponent extends HTMLElement {
+export class HtmlEditor extends HTMLElement {
   public constructor() {
     super();
     const parent = document.createElement("div");
@@ -232,4 +232,4 @@ export class HtmlEditorComponent extends HTMLElement {
   }
 }
 
-customElements.define("html-editor", HtmlEditorComponent);
+customElements.define("html-editor", HtmlEditor);

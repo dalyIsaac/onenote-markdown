@@ -27,7 +27,7 @@ interface MarkdownLastStartNode {
   contentOffset: number;
 }
 
-export class MarkdownEditorComponent extends HTMLElement {
+export class MarkdownEditor extends HTMLElement {
   public constructor() {
     super();
     const parent = document.createElement("div");
@@ -150,4 +150,4 @@ export class MarkdownEditorComponent extends HTMLElement {
   }
 }
 
-customElements.define("markdown-editor", MarkdownEditorComponent);
+customElements.define("markdown-editor", MarkdownEditor);
