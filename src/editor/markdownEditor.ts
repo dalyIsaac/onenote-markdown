@@ -7,6 +7,10 @@ import {
   STRUCTURE_NODE_INDEX,
   StackItem,
   getLastStartItem,
+  CONTENT_NODE_END_INDEX,
+  CONTENT_NODE_END_OFFSET,
+  CONTENT_NODE_START_INDEX,
+  CONTENT_NODE_START_OFFSET,
 } from "./render";
 import { getContentBetweenOffsets } from "../page/contentTree/tree";
 import getEditorSelection from "./selection";
@@ -65,7 +69,6 @@ export class MarkdownEditor extends HTMLElement {
       case "insertText":
         this.insertText(e);
         break;
-
       default: {
         if (e.cancelable) {
           e.preventDefault();
@@ -160,11 +163,18 @@ export class MarkdownEditor extends HTMLElement {
   ): StackItem[] {
     const newStack = stack.slice(0, stackIndex);
     let children: Element[] | string;
+    let contentBoundaries = {};
     if (stackIndex === stack.length - 1) {
       const startOffset = contentOffset;
       const endOffset = contentOffset + node.length;
-      // TODO: replace with getContentBetweenOffsets which returns content nodes
-      children = getContentBetweenOffsets(page, startOffset, endOffset).content;
+      const content = getContentBetweenOffsets(page, startOffset, endOffset);
+      children = content.content;
+      contentBoundaries = {
+        [CONTENT_NODE_END_INDEX]: content.end.nodeIndex,
+        [CONTENT_NODE_END_OFFSET]: content.end.nodeStartOffset,
+        [CONTENT_NODE_START_INDEX]: content.start.nodeIndex,
+        [CONTENT_NODE_START_OFFSET]: content.start.nodeStartOffset,
+      };
     } else {
       children = stack.slice(stackIndex) as Element[];
     }
@@ -172,6 +182,7 @@ export class MarkdownEditor extends HTMLElement {
       "p",
       { margin: "0", padding: "0" },
       {
+        ...contentBoundaries,
         ...node.attributes,
         [STRUCTURE_NODE_INDEX]: index,
       },
