@@ -15,7 +15,7 @@ function splitPopulatedNode(
 ): void {
   const secondStartNode: StructureNode = {
     color: Color.Red,
-    id: generateNewId(),
+    id: generateNewId("p"),
     left: SENTINEL_INDEX,
     leftSubTreeLength: 0,
     length: startNode.length - localContentOffset,
@@ -60,7 +60,7 @@ function insertNewBreak(
 ): void {
   const newNode: StructureNode = {
     color: Color.Red,
-    id: generateNewId(),
+    id: generateNewId("p"),
     left: SENTINEL_INDEX,
     leftSubTreeLength: 0,
     length: 0,

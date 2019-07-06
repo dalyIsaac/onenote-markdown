@@ -14,9 +14,7 @@ import { splitStructureNode } from "./split";
 import pageReducer from "../reducer";
 import { splitStructureNode as splitStructureNodeActionCreator } from "./actions";
 
-jest.mock("seedrandom", () => ({
-  alea: () => jest.fn().mockReturnValue(1234567890),
-}));
+Date.now = jest.fn().mockReturnValue(1234567890);
 
 const expectedPage_1_2_1 = (): PageContent => ({
   buffers: [
@@ -120,7 +118,7 @@ const expectedPage_1_2_1 = (): PageContent => ({
       {
         // 5
         color: Color.Red,
-        id: "{!localGeneratedId}1234567890",
+        id: "local:p:{1234567890}",
         left: SENTINEL_INDEX,
         leftSubTreeLength: 0,
         length: 0,
@@ -237,7 +235,7 @@ const expectedPage_1_2_2 = (): PageContent => ({
       {
         // 5
         color: Color.Red,
-        id: "{!localGeneratedId}1234567890",
+        id: "local:p:{1234567890}",
         left: SENTINEL_INDEX,
         leftSubTreeLength: 0,
         length: 0,
@@ -357,7 +355,7 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
           {
             // 5
             color: Color.Black,
-            id: "{!localGeneratedId}1234567890",
+            id: "local:p:{1234567890}",
             left: SENTINEL_INDEX,
             leftSubTreeLength: 0,
             length: 3,
@@ -373,7 +371,7 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
           {
             // 6
             color: Color.Red,
-            id: "{!localGeneratedId}1234567890",
+            id: "local:p:{1234567890}",
             left: SENTINEL_INDEX,
             leftSubTreeLength: 0,
             length: 0,
@@ -502,7 +500,7 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
           {
             // 5
             color: Color.Black,
-            id: "{!localGeneratedId}1234567890",
+            id: "local:p:{1234567890}",
             left: SENTINEL_INDEX,
             leftSubTreeLength: 0,
             length: 83,
@@ -518,7 +516,7 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
           {
             // 6
             color: Color.Red,
-            id: "{!localGeneratedId}1234567890",
+            id: "local:p:{1234567890}",
             left: SENTINEL_INDEX,
             leftSubTreeLength: 0,
             length: 0,
@@ -673,7 +671,7 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
           {
             // 5
             color: Color.Black,
-            id: "{!localGeneratedId}1234567890",
+            id: "local:p:{1234567890}",
             left: SENTINEL_INDEX,
             leftSubTreeLength: 0,
             length: 0,
@@ -685,7 +683,7 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
           {
             // 6
             color: Color.Red,
-            id: "{!localGeneratedId}1234567890",
+            id: "local:p:{1234567890}",
             left: SENTINEL_INDEX,
             leftSubTreeLength: 0,
             length: 0,
@@ -814,7 +812,7 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
           {
             // 5
             color: Color.Black,
-            id: "{!localGeneratedId}1234567890",
+            id: "local:p:{1234567890}",
             left: SENTINEL_INDEX,
             leftSubTreeLength: 0,
             length: 0,
@@ -826,7 +824,7 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
           {
             // 6
             color: Color.Red,
-            id: "{!localGeneratedId}1234567890",
+            id: "local:p:{1234567890}",
             left: SENTINEL_INDEX,
             leftSubTreeLength: 0,
             length: 0,

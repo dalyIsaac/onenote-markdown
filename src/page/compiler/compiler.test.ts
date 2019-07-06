@@ -73,7 +73,7 @@ describe("Custom markdown syntax", (): void => {
 
   test("Test 1.01 HTML", (): void => {
     const page = parse(test_01_html);
-    const expected = [
+    const expected: Expected[] = [
       {
         expectedHtml: `<span style="font-weight:bold">Bold</span> text which has <span style="font-style:italic">italics</span> and <span style="text-decoration:underline">underlines</span>`,
         node: {
@@ -104,7 +104,7 @@ describe("Custom markdown syntax", (): void => {
 
   test("Test 1.03 HTML", (): void => {
     const page = parse(test_03_html);
-    const expected = [
+    const expected: Expected[] = [
       {
         expectedHtml:
           `<span style="font-weight:bold">Bold</span>` +
@@ -140,7 +140,7 @@ describe("Custom markdown syntax", (): void => {
 
   test("Test 1.04 HTML", (): void => {
     const page = parse(test_04_html);
-    const expected = [
+    const expected: Expected[] = [
       {
         expectedHtml:
           `<span style="font-weight:bold">` +
@@ -178,7 +178,7 @@ describe("Custom markdown syntax", (): void => {
 
   test("Test 1.05 HTML", (): void => {
     const page = parse(test_05_html);
-    const expected = [
+    const expected: Expected[] = [
       {
         expectedHtml: `<span style="font-weight:bold">&quot;this is bold and in quotes&quot;</span>`,
         node: {
@@ -267,7 +267,7 @@ describe("Custom markdown syntax", (): void => {
 
   test("Test 1.07 HTML", (): void => {
     const page = parse(test_07_html);
-    const expected = [
+    const expected: Expected[] = [
       {
         expectedHtml: `<span style="background-color:yellow">Highlighted</span>`,
         node: {
@@ -298,7 +298,7 @@ describe("Custom markdown syntax", (): void => {
 
   test("Test 1.08 HTML", (): void => {
     const page = parse(test_08_html);
-    const expected = [
+    const expected: Expected[] = [
       {
         expectedHtml: `<span style="color:red">Red text</span>`,
         node: {
@@ -329,7 +329,7 @@ describe("Custom markdown syntax", (): void => {
 
   test("Test 1.09 HTML", (): void => {
     const page = parse(test_09_html);
-    const expected = [
+    const expected: Expected[] = [
       {
         expectedHtml: `This is <span style="font-weight:bold">heading</span> 1`,
         node: {
@@ -362,7 +362,7 @@ describe("Custom markdown syntax", (): void => {
 
   test("Test 1.10 HTML", (): void => {
     const page = parse(test_10_html);
-    const expected = [
+    const expected: Expected[] = [
       {
         expectedHtml: `This is <span style="text-decoration:underline">heading</span> 2`,
         node: {
@@ -395,7 +395,7 @@ describe("Custom markdown syntax", (): void => {
 
   test("Test 1.11 HTML", (): void => {
     const page = parse(test_11_html);
-    const expected = [
+    const expected: Expected[] = [
       {
         expectedHtml: `This is <span style="text-decoration:line-through">heading</span> 3`,
         node: {
@@ -428,7 +428,7 @@ describe("Custom markdown syntax", (): void => {
 
   test("Test 1.12 HTML", (): void => {
     const page = parse(test_12_html);
-    const expected = [
+    const expected: Expected[] = [
       {
         expectedHtml: `This is heading 4`,
         node: {
@@ -462,7 +462,7 @@ describe("Custom markdown syntax", (): void => {
 
   test("Test 1.13 HTML", (): void => {
     const page = parse(test_13_html);
-    const expected = [
+    const expected: Expected[] = [
       {
         expectedHtml: `This is <span style="font-weight:bold"><span style="font-style:italic"><span style="text-decoration:line-through">heading</span></span></span> 5`,
         node: {
@@ -494,7 +494,7 @@ describe("Custom markdown syntax", (): void => {
 
   test("Test 1.14 HTML", (): void => {
     const page = parse(test_14_html);
-    const expected = [
+    const expected: Expected[] = [
       {
         expectedHtml: `This is heading 6`,
         node: {
@@ -527,7 +527,7 @@ describe("Custom markdown syntax", (): void => {
 
   test("Test 1.15 HTML", (): void => {
     const page = parse(test_15_html);
-    const expected = [
+    const expected: Expected[] = [
       {
         expectedHtml: `Superscript x<sup>2</sup>`,
         node: {
@@ -558,7 +558,7 @@ describe("Custom markdown syntax", (): void => {
 
   test("Test 1.16 HTML", (): void => {
     const page = parse(test_16_html);
-    const expected = [
+    const expected: Expected[] = [
       {
         expectedHtml: `Subscript x<sub>2</sub>`,
         node: {
@@ -589,7 +589,7 @@ describe("Custom markdown syntax", (): void => {
 
   test("Test 1.17 HTML", (): void => {
     const page = parse(test_17_html);
-    const expected = [
+    const expected: Expected[] = [
       {
         expectedHtml: `<span style="text-decoration:line-through underline">Underlined and crossed out</span>`,
         node: {
