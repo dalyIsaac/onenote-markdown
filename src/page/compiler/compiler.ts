@@ -99,7 +99,8 @@ export function* getHtmlContentFromPage(
   for (const { node } of inorderTreeTraversal(page.structure)) {
     yield {
       content: compile(
-        getContentBetweenOffsets(page, startOffset, startOffset + node.length),
+        getContentBetweenOffsets(page, startOffset, startOffset + node.length)
+          .content,
       ),
       node,
     };
@@ -124,7 +125,7 @@ export function* getHtmlContentElementsFromPage(
       page,
       startOffset,
       startOffset + node.length,
-    );
+    ).content;
     const children = getElements(content);
     yield { children, index, node };
     startOffset += node.length;

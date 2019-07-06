@@ -363,7 +363,7 @@ export function insertContent(
         page,
         structureNodeOffset,
         structureNodeOffset + structureNode.length,
-      ),
+      ).content,
     );
     if (hasStart) {
       updateNodePairTag(page, structureNodeIndex, hasStart.tag);

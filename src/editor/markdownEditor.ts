@@ -163,8 +163,8 @@ export class MarkdownEditor extends HTMLElement {
     if (stackIndex === stack.length - 1) {
       const startOffset = contentOffset;
       const endOffset = contentOffset + node.length;
-      // TODO: replace with getContentBetweenNodeAndOffsets
-      children = getContentBetweenOffsets(page, startOffset, endOffset);
+      // TODO: replace with getContentBetweenOffsets which returns content nodes
+      children = getContentBetweenOffsets(page, startOffset, endOffset).content;
     } else {
       children = stack.slice(stackIndex) as Element[];
     }

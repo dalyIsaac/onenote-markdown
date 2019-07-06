@@ -288,30 +288,49 @@ describe("Functions for common tree operations on the piece table/content red-bl
     const page = getStartPage();
 
     test("Inside a single node", (): void => {
-      expect(getContentBetweenOffsets(page, 3, 50)).toBe(
-        "not go gentle into that good night,\nOld age sho",
-      );
+      expect(getContentBetweenOffsets(page, 3, 50)).toStrictEqual({
+        content: "not go gentle into that good night,\nOld age sho",
+        end: { nodeIndex: 1, nodeStartOffset: 50 },
+        start: { nodeIndex: 1, nodeStartOffset: 3 },
+      });
     });
 
     test("An entire single node", (): void => {
-      expect(getContentBetweenOffsets(page, 0, 65)).toBe(
-        "Do not go gentle into that good night,\nOld age should burn and ra",
-      );
+      expect(getContentBetweenOffsets(page, 0, 65)).toStrictEqual({
+        content:
+          "Do not go gentle into that good night,\nOld age should burn and ra",
+        end: { nodeIndex: 1, nodeStartOffset: 65 },
+        start: { nodeIndex: 1, nodeStartOffset: 0 },
+      });
     });
 
     test("Across two nodes", (): void => {
-      expect(getContentBetweenOffsets(page, 63, 66)).toBe("rav");
-      expect(getContentBetweenOffsets(page, 70, 82)).toBe(" close of da");
+      expect(getContentBetweenOffsets(page, 63, 66)).toStrictEqual({
+        content: "rav",
+        end: { nodeIndex: 2, nodeStartOffset: 1 },
+        start: { nodeIndex: 1, nodeStartOffset: 63 },
+      });
+      expect(getContentBetweenOffsets(page, 70, 82)).toStrictEqual({
+        content: " close of da",
+        end: { nodeIndex: 4, nodeStartOffset: 2 },
+        start: { nodeIndex: 3, nodeStartOffset: 4 },
+      });
     });
 
     test("Across two nodes to the end of the second node", (): void => {
-      expect(getContentBetweenOffsets(page, 70, 83)).toBe(" close of day");
+      expect(getContentBetweenOffsets(page, 70, 83)).toStrictEqual({
+        content: " close of day",
+        end: { nodeIndex: 4, nodeStartOffset: 3 },
+        start: { nodeIndex: 3, nodeStartOffset: 4 },
+      });
     });
 
     test("Across multiple nodes", (): void => {
-      expect(getContentBetweenOffsets(page, 60, 83)).toBe(
-        "nd rave at close of day",
-      );
+      expect(getContentBetweenOffsets(page, 60, 83)).toStrictEqual({
+        content: "nd rave at close of day",
+        end: { nodeIndex: 4, nodeStartOffset: 3 },
+        start: { nodeIndex: 1, nodeStartOffset: 60 },
+      });
     });
   });
 

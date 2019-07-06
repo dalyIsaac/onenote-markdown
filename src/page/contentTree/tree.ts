@@ -269,26 +269,44 @@ export function getContentBetweenOffsets(
   page: PageContent,
   startOffset: number,
   endOffset: number,
-): string {
+): { content: string; start: ContentBoundary; end: ContentBoundary } {
   const position = findNodeAtOffset(page.content, startOffset);
   const length = endOffset - startOffset;
+  const startContentIndex = startOffset - position.nodeStartOffset;
   let content = getNodeContent(page, position.nodeIndex).slice(
-    startOffset - position.nodeStartOffset,
+    startContentIndex,
   );
+  let end: ContentBoundary;
   if (length <= content.length) {
     content = content.slice(0, length);
+    end = {
+      nodeIndex: position.nodeIndex,
+      nodeStartOffset: startContentIndex + length,
+    };
   } else {
-    let offset = startOffset;
-    const { nodeIndex } = position;
-    let next = nextNode(page.content.nodes, nodeIndex);
-    while (offset <= endOffset) {
+    let offset = startOffset + content.length;
+    let next = nextNode(page.content.nodes, position.nodeIndex);
+    let prev = next;
+    while (offset < endOffset) {
       content += getNodeContent(page, next.index);
-      offset += (next.node as ContentNode).length;
+      offset += next.node.length;
+      prev = next;
       next = nextNode(page.content.nodes, next.index);
     }
     content = content.slice(0, length);
+    end = {
+      nodeIndex: prev.index,
+      nodeStartOffset: prev.node.length - (offset - (startOffset + length)),
+    };
   }
-  return content;
+  return {
+    content,
+    end,
+    start: {
+      nodeIndex: position.nodeIndex,
+      nodeStartOffset: startContentIndex,
+    },
+  };
 }
 
 export function getContentBetweenNodeAndOffsets(
