@@ -1,7 +1,7 @@
 import { StructureNode, TagType } from "../page/structureTree/structureModel";
 import { NodePosition } from "../page/tree/tree";
 import { TagItem } from "../page/compiler/renderers";
-import { paramCase } from "change-case";
+import paramCase from "param-case";
 
 export interface StackItemBase extends NodePosition<StructureNode> {
   contentOffset: number;

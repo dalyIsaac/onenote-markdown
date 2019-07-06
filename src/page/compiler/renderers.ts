@@ -5,7 +5,7 @@ import { TagType } from "../structureTree/structureModel";
 import { Attributes } from "./parser";
 import { getCompiler } from "./compiler";
 import { Style } from "../../editor/render";
-import { paramCase } from "change-case";
+import paramCase from "param-case";
 
 /**
  * Type guard for `TagItem`.
