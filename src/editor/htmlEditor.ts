@@ -33,6 +33,9 @@ interface ChildStackItem {
   node: TagItem;
 }
 
+type Stack = Array<StackItem<HTMLStackItem>>;
+type ChildStack = Array<ChildStackItem | Element | Text | string>;
+
 export class HtmlEditorComponent extends HTMLElement {
   public constructor() {
     super();
@@ -50,7 +53,7 @@ export class HtmlEditorComponent extends HTMLElement {
   }
 
   private render(page: PageContent): Element[] {
-    let stack: Array<StackItem<HTMLStackItem>> = [];
+    let stack: Stack = [];
     let contentOffset = 0;
     for (const { children, node, index } of getHtmlContentElementsFromPage(
       page,
@@ -113,9 +116,7 @@ export class HtmlEditorComponent extends HTMLElement {
    * `tagType === TagType.StartTag` is compiled, with all the elements on the
    * stack after the last start tag being children.
    */
-  private updateStack(
-    stack: Array<StackItem<HTMLStackItem>>,
-  ): Array<StackItem<HTMLStackItem>> {
+  private updateStack(stack: Stack): Stack {
     const lastStartStackItem = getLastStartItem(stack as HTMLStackItem[]);
     if (lastStartStackItem) {
       return this.updateItem(stack, lastStartStackItem);
@@ -135,14 +136,14 @@ export class HtmlEditorComponent extends HTMLElement {
    * `tagType === TagType.StartTag`.
    */
   private updateItem(
-    stack: Array<StackItem<HTMLStackItem>>,
+    stack: Stack,
     {
       children,
       contentOffset,
       node,
       stackIndex,
     }: LastStartNode & HTMLStackItem,
-  ): Array<StackItem<HTMLStackItem>> {
+  ): Stack {
     const newStack = stack.slice(0, stackIndex);
     const childElements = this.createChildElements(children);
     const element = createElement(
@@ -169,7 +170,7 @@ export class HtmlEditorComponent extends HTMLElement {
   private createChildElements(
     children: CompilerElement[],
   ): Array<Element | string> {
-    let stack: Array<ChildStackItem | Text | string | Element> = [];
+    let stack: ChildStack = [];
     for (const child of children) {
       if (isTagItem(child)) {
         switch (child.tagType) {
@@ -200,9 +201,7 @@ export class HtmlEditorComponent extends HTMLElement {
    * stack after the last start tag being children.
    * @param stack The stack of `ChildStackItem`s.
    */
-  private updateChildStack(
-    stack: Array<ChildStackItem | Element | Text | string>,
-  ): Array<ChildStackItem | Element | Text | string> {
+  private updateChildStack(stack: ChildStack): ChildStack {
     const lastStart = getLastStartItem(stack);
     if (lastStart) {
       return this.updateChildItem(stack, lastStart);
@@ -222,9 +221,9 @@ export class HtmlEditorComponent extends HTMLElement {
    * `tagType === TagType.StartTag`.
    */
   private updateChildItem(
-    stack: Array<ChildStackItem | Element | Text | string>,
+    stack: ChildStack,
     { stackIndex, node }: LastStartNode,
-  ): Array<ChildStackItem | Element | Text | string> {
+  ): ChildStack {
     const newStack = stack.slice(0, stackIndex);
     const children = stack.slice(stackIndex + 1) as Element[];
     const element = createElement(node.tag, node.style, undefined, children);
