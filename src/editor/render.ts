@@ -10,7 +10,7 @@ export interface StackItemBase extends NodePosition<StructureNode> {
 
 export type StackItem<T extends StackItemBase = StackItemBase> = T | Element;
 
-export const STRUCTURE_NODE_INDEX = "STRUCTURE_NODE_INDEX";
+export const STRUCTURE_NODE_INDEX = "nodeindex";
 
 export type Style = Partial<{ [key in keyof CSSStyleDeclaration]: string }>;
 

@@ -18,6 +18,7 @@
   },
   "devDependencies": {
     "@microsoft/microsoft-graph-types": "^1.9.0",
+    "@types/dom-inputevent": "^1.0.5",
     "@types/enzyme": "^3.9.3",
     "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/he": "^1.1.0",

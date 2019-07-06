@@ -9,6 +9,7 @@ import {
   getLastStartItem,
 } from "./render";
 import { getContentBetweenOffsets } from "../page/contentTree/tree";
+import getEditorSelection from "./selection";
 
 /* eslint-disable @typescript-eslint/no-namespace */
 
@@ -50,6 +51,36 @@ export class MarkdownEditor extends HTMLElement {
 
     const shadow = this.attachShadow({ mode: "open" });
     shadow.appendChild(parent);
+  }
+
+  public connectedCallback(): void {
+    // casting since `InputEvent` isn't added to lib.dom.d.ts yet
+    this.addEventListener("beforeinput", this.onBeforeInput as (
+      e: Event,
+    ) => void);
+  }
+
+  private onBeforeInput(e: InputEvent): void {
+    switch (e.inputType) {
+      case "insertText":
+        this.insertText(e);
+        break;
+
+      default: {
+        if (e.cancelable) {
+          e.preventDefault();
+        }
+        break;
+      }
+    }
+  }
+
+  private insertText(e: InputEvent): void {
+    console.log(e);
+    if (this.shadowRoot) {
+      const selection = getEditorSelection(this.shadowRoot);
+      console.log(selection);
+    }
   }
 
   private render(page: PageContent): Element[] {

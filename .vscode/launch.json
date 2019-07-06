@@ -29,6 +29,7 @@
       "request": "launch",
       "name": "Launch Firefox Developer Edition against localhost",
       "url": "localhost:3000",
+      "webRoot": "${workspaceFolder}",
       "windows": {
         "firefoxExecutable": "C:\\Program Files\\Firefox Developer Edition\\firefox.exe"
       }
