@@ -11,6 +11,7 @@ import {
   SENTINEL_CONTENT,
   getNodeContent,
   getContentBetweenOffsets,
+  getContentBetweenNodeAndOffsets,
 } from "./tree";
 import { getStartPage } from "../reducer.test";
 
@@ -311,6 +312,69 @@ describe("Functions for common tree operations on the piece table/content red-bl
       expect(getContentBetweenOffsets(page, 60, 83)).toBe(
         "nd rave at close of day",
       );
+    });
+  });
+
+  describe("getContentBetweenNodeAndOffsets", (): void => {
+    const page = getStartPage();
+
+    test("Inside a single node", (): void => {
+      expect(
+        getContentBetweenNodeAndOffsets(
+          page,
+          { nodeIndex: 1, nodeStartOffset: 3 },
+          { nodeIndex: 1, nodeStartOffset: 50 },
+        ),
+      ).toBe("not go gentle into that good night,\nOld age sho");
+    });
+
+    test("An entire single node", (): void => {
+      expect(
+        getContentBetweenNodeAndOffsets(
+          page,
+          { nodeIndex: 1, nodeStartOffset: 0 },
+          { nodeIndex: 1, nodeStartOffset: 65 },
+        ),
+      ).toBe(
+        "Do not go gentle into that good night,\nOld age should burn and ra",
+      );
+    });
+
+    test("Across two nodes", (): void => {
+      expect(
+        getContentBetweenNodeAndOffsets(
+          page,
+          { nodeIndex: 1, nodeStartOffset: 63 },
+          { nodeIndex: 2, nodeStartOffset: 1 },
+        ),
+      ).toBe("rav");
+      expect(
+        getContentBetweenNodeAndOffsets(
+          page,
+          { nodeIndex: 3, nodeStartOffset: 4 },
+          { nodeIndex: 4, nodeStartOffset: 2 },
+        ),
+      ).toBe(" close of da");
+    });
+
+    test("Across two nodes to the end of the second node", (): void => {
+      expect(
+        getContentBetweenNodeAndOffsets(
+          page,
+          { nodeIndex: 3, nodeStartOffset: 4 },
+          { nodeIndex: 4, nodeStartOffset: 3 },
+        ),
+      ).toBe(" close of day");
+    });
+
+    test("Across multiple nodes", (): void => {
+      expect(
+        getContentBetweenNodeAndOffsets(
+          page,
+          { nodeIndex: 1, nodeStartOffset: 60 },
+          { nodeIndex: 4, nodeStartOffset: 3 },
+        ),
+      ).toBe("nd rave at close of day");
     });
   });
 });

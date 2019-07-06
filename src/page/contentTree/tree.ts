@@ -28,30 +28,32 @@ export const SENTINEL_CONTENT: ContentNode = {
   start: { column: 0, line: 0 },
 };
 
-/**
- * The returned object from `findNodeAtOffset`.
- */
-export interface NodePositionOffset {
-  /**
-   * Piece Index
-   */
-  node: ContentNode;
-
+export interface ContentBoundary {
   /**
    * The index of the node inside the array.
    */
   nodeIndex: number;
 
   /**
+   * The offset of the node against the start of the content.
+   */
+  nodeStartOffset: number;
+}
+
+/**
+ * The returned object from `findNodeAtOffset`.
+ */
+export interface NodePositionOffset extends ContentBoundary {
+  /**
+   * Piece Index
+   */
+  node: ContentNode;
+
+  /**
    * The remainder between the offset and the character count of the left
    * subtree.
    */
   remainder: number;
-
-  /**
-   * The offset of the node against the start of the content.
-   */
-  nodeStartOffset: number;
 }
 
 /**
@@ -286,5 +288,28 @@ export function getContentBetweenOffsets(
     }
     content = content.slice(0, length);
   }
+  return content;
+}
+
+export function getContentBetweenNodeAndOffsets(
+  page: PageContent,
+  start: ContentBoundary,
+  end: ContentBoundary,
+): string {
+  let content = getNodeContent(page, start.nodeIndex);
+
+  if (start.nodeIndex === end.nodeIndex) {
+    content = content.slice(start.nodeStartOffset, end.nodeStartOffset);
+    return content;
+  }
+
+  content = content.slice(start.nodeStartOffset);
+  let next = nextNode(page.content.nodes, start.nodeIndex);
+  while (next.index !== end.nodeIndex) {
+    content += getNodeContent(page, next.index);
+    next = nextNode(page.content.nodes, next.index);
+  }
+
+  content += getNodeContent(page, next.index).slice(0, end.nodeStartOffset);
   return content;
 }
