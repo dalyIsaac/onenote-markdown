@@ -4,11 +4,11 @@ import { Color, PageContent, StatePages } from "../pageModel";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { SENTINEL_INDEX, EMPTY_TREE_ROOT } from "../tree/tree";
 import { Buffer, ContentNode } from "./contentModel";
-import { insertContent } from "./insert.dom";
+import { insertContentDOM } from "./insert.dom";
 import { MAX_BUFFER_LENGTH, SENTINEL_CONTENT } from "./tree";
 import pageReducer from "../reducer";
 import {
-  insertContent as InsertContentActionCreator,
+  insertContentDOM as InsertContentDOMActionCreator,
   InsertContentDOM,
 } from "./actions";
 import { TagType } from "../structureTree/structureModel";
@@ -77,7 +77,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       },
       structureNodeIndex: 0,
     };
-    insertContent(page, action, MAX_BUFFER_LENGTH);
+    insertContentDOM(page, action, MAX_BUFFER_LENGTH);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -163,7 +163,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 5;
-    insertContent(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -274,7 +274,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 8;
-    insertContent(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -383,7 +383,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 8;
-    insertContent(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -497,7 +497,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 8;
-    insertContent(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -577,7 +577,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expectedPage.previouslyInsertedContentNodeIndex = 2;
     expectedPage.previouslyInsertedContentNodeOffset = 2;
     const maxBufferLength = 8;
-    insertContent(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -719,7 +719,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 8;
-    insertContent(page as PageContent, action, maxBufferLength);
+    insertContentDOM(page as PageContent, action, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -856,7 +856,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 8;
-    insertContent(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -967,7 +967,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 8;
-    insertContent(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -1131,7 +1131,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 16;
-    insertContent(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -1300,7 +1300,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 16;
-    insertContent(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -1412,272 +1412,292 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 8;
-    insertContent(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
-  // test("Scenario 9: insert a node into an empty tree.", (): void => {
-  //   const state: StatePages = {
-  //     pageId: {
-  //       buffers: [],
-  //       content: { nodes: [SENTINEL_CONTENT], root: EMPTY_TREE_ROOT },
-  //       previouslyInsertedContentNodeIndex: null,
-  //       previouslyInsertedContentNodeOffset: null,
-  //       structure: { nodes: [SENTINEL_STRUCTURE], root: EMPTY_TREE_ROOT },
-  //     },
-  //   };
+  test("Scenario 9: insert a node into an empty tree.", (): void => {
+    const state: StatePages = {
+      pageId: {
+        buffers: [],
+        content: { nodes: [SENTINEL_CONTENT], root: EMPTY_TREE_ROOT },
+        previouslyInsertedContentNodeIndex: null,
+        previouslyInsertedContentNodeOffset: null,
+        structure: { nodes: [SENTINEL_STRUCTURE], root: EMPTY_TREE_ROOT },
+      },
+    };
 
-  //   const expectedState: StatePages = {
-  //     pageId: {
-  //       buffers: [
-  //         {
-  //           content: "Hello\nWorld",
-  //           isReadOnly: false,
-  //           lineStarts: [0, 6],
-  //         },
-  //       ],
-  //       content: {
-  //         nodes: [
-  //           SENTINEL_CONTENT,
-  //           {
-  //             bufferIndex: 0,
-  //             color: Color.Black,
-  //             end: { column: 5, line: 1 },
-  //             left: SENTINEL_INDEX,
-  //             leftCharCount: 0,
-  //             leftLineFeedCount: 0,
-  //             length: 11,
-  //             lineFeedCount: 1,
-  //             parent: SENTINEL_INDEX,
-  //             right: SENTINEL_INDEX,
-  //             start: { column: 0, line: 0 },
-  //           },
-  //         ],
-  //         root: 1,
-  //       },
-  //       previouslyInsertedContentNodeIndex: 1,
-  //       previouslyInsertedContentNodeOffset: 0,
-  //       structure: { nodes: [SENTINEL_STRUCTURE], root: EMPTY_TREE_ROOT },
-  //     },
-  //   };
+    const expectedState: StatePages = {
+      pageId: {
+        buffers: [
+          {
+            content: "Hello\nWorld",
+            isReadOnly: false,
+            lineStarts: [0, 6],
+          },
+        ],
+        content: {
+          nodes: [
+            SENTINEL_CONTENT,
+            {
+              bufferIndex: 0,
+              color: Color.Black,
+              end: { column: 5, line: 1 },
+              left: SENTINEL_INDEX,
+              leftCharCount: 0,
+              leftLineFeedCount: 0,
+              length: 11,
+              lineFeedCount: 1,
+              parent: SENTINEL_INDEX,
+              right: SENTINEL_INDEX,
+              start: { column: 0, line: 0 },
+            },
+          ],
+          root: 1,
+        },
+        previouslyInsertedContentNodeIndex: 1,
+        previouslyInsertedContentNodeOffset: 11,
+        structure: { nodes: [SENTINEL_STRUCTURE], root: EMPTY_TREE_ROOT },
+      },
+    };
 
-  //   const resultState = pageReducer(
-  //     state,
-  //     InsertContentActionCreator("pageId", "Hello\nWorld", 0, 0),
-  //   );
-  //   expect(resultState).toStrictEqual(expectedState);
-  // });
+    const resultState = pageReducer(
+      state,
+      InsertContentDOMActionCreator("pageId", "Hello\nWorld", {
+        end: {
+          nodeIndex: 0,
+          nodeStartOffset: 0,
+        },
+        localOffset: 0,
+        start: {
+          nodeIndex: 0,
+          nodeStartOffset: 0,
+        },
+        structureNodeIndex: 0,
+      }),
+    );
+    expect(resultState).toStrictEqual(expectedState);
+  });
 
-  // test("Ensures that the parent structure node's length gets increased", (): void => {
-  //   const page: PageContent = {
-  //     buffers: [
-  //       {
-  //         content: "abc\nd",
-  //         isReadOnly: true,
-  //         lineStarts: [0, 4],
-  //       },
-  //       {
-  //         content: "efgh",
-  //         isReadOnly: false,
-  //         lineStarts: [0],
-  //       },
-  //     ],
-  //     content: {
-  //       nodes: [
-  //         SENTINEL_CONTENT,
-  //         {
-  //           bufferIndex: 0,
-  //           color: Color.Black,
-  //           end: {
-  //             column: 1,
-  //             line: 1,
-  //           },
-  //           left: 2,
-  //           leftCharCount: 2,
-  //           leftLineFeedCount: 0,
-  //           length: 5,
-  //           lineFeedCount: 1,
-  //           parent: SENTINEL_INDEX,
-  //           right: 3,
-  //           start: {
-  //             column: 0,
-  //             line: 0,
-  //           },
-  //         },
-  //         {
-  //           bufferIndex: 1,
-  //           color: Color.Red,
-  //           end: { column: 2, line: 0 },
-  //           left: SENTINEL_INDEX,
-  //           leftCharCount: 0,
-  //           leftLineFeedCount: 0,
-  //           length: 2,
-  //           lineFeedCount: 0,
-  //           parent: 1,
-  //           right: SENTINEL_INDEX,
-  //           start: { column: 0, line: 0 },
-  //         },
-  //         {
-  //           bufferIndex: 1,
-  //           color: Color.Red,
-  //           end: { column: 4, line: 0 },
-  //           left: SENTINEL_INDEX,
-  //           leftCharCount: 0,
-  //           leftLineFeedCount: 0,
-  //           length: 2,
-  //           lineFeedCount: 1,
-  //           parent: 1,
-  //           right: SENTINEL_INDEX,
-  //           start: { column: 2, line: 0 },
-  //         },
-  //       ],
-  //       root: 1,
-  //     },
-  //     previouslyInsertedContentNodeIndex: 3,
-  //     previouslyInsertedContentNodeOffset: 5,
-  //     structure: {
-  //       nodes: [
-  //         SENTINEL_STRUCTURE,
-  //         {
-  //           color: Color.Red,
-  //           id: "first",
-  //           left: SENTINEL_INDEX,
-  //           leftSubTreeLength: 0,
-  //           length: 9,
-  //           parent: SENTINEL_INDEX,
-  //           right: SENTINEL_INDEX,
-  //           tag: "p",
-  //           tagType: TagType.StartTag,
-  //         },
-  //         {
-  //           color: Color.Black,
-  //           id: "first",
-  //           left: 1,
-  //           leftSubTreeLength: 1,
-  //           length: 0,
-  //           parent: SENTINEL_INDEX,
-  //           right: SENTINEL_INDEX,
-  //           tag: "p",
-  //           tagType: TagType.StartTag,
-  //         },
-  //       ],
-  //       root: 2,
-  //     },
-  //   };
-  //   const expectedPage: PageContent = {
-  //     buffers: [
-  //       {
-  //         content: "abc\nd",
-  //         isReadOnly: true,
-  //         lineStarts: [0, 4],
-  //       },
-  //       {
-  //         content: "efghij\nk",
-  //         isReadOnly: false,
-  //         lineStarts: [0, 7],
-  //       },
-  //     ],
-  //     content: {
-  //       nodes: [
-  //         SENTINEL_CONTENT,
-  //         {
-  //           bufferIndex: 0,
-  //           color: Color.Black,
-  //           end: {
-  //             column: 1,
-  //             line: 1,
-  //           },
-  //           left: 2,
-  //           leftCharCount: 6,
-  //           leftLineFeedCount: 1,
-  //           length: 5,
-  //           lineFeedCount: 1,
-  //           parent: SENTINEL_INDEX,
-  //           right: 3,
-  //           start: {
-  //             column: 0,
-  //             line: 0,
-  //           },
-  //         },
-  //         {
-  //           bufferIndex: 1,
-  //           color: Color.Black,
-  //           end: { column: 2, line: 0 },
-  //           left: SENTINEL_INDEX,
-  //           leftCharCount: 0,
-  //           leftLineFeedCount: 0,
-  //           length: 2,
-  //           lineFeedCount: 0,
-  //           parent: 1,
-  //           right: 4,
-  //           start: { column: 0, line: 0 },
-  //         },
-  //         {
-  //           bufferIndex: 1,
-  //           color: Color.Black,
-  //           end: { column: 4, line: 0 },
-  //           left: SENTINEL_INDEX,
-  //           leftCharCount: 0,
-  //           leftLineFeedCount: 0,
-  //           length: 2,
-  //           lineFeedCount: 1,
-  //           parent: 1,
-  //           right: SENTINEL_INDEX,
-  //           start: { column: 2, line: 0 },
-  //         },
-  //         {
-  //           bufferIndex: 1,
-  //           color: Color.Red,
-  //           end: { column: 1, line: 1 },
-  //           left: SENTINEL_INDEX,
-  //           leftCharCount: 0,
-  //           leftLineFeedCount: 0,
-  //           length: 4,
-  //           lineFeedCount: 1,
-  //           parent: 2,
-  //           right: SENTINEL_INDEX,
-  //           start: { column: 4, line: 0 },
-  //         },
-  //       ],
-  //       root: 1,
-  //     },
-  //     previouslyInsertedContentNodeIndex: 4,
-  //     previouslyInsertedContentNodeOffset: 2,
-  //     structure: {
-  //       nodes: [
-  //         SENTINEL_STRUCTURE,
-  //         {
-  //           color: Color.Red,
-  //           id: "first",
-  //           left: SENTINEL_INDEX,
-  //           leftSubTreeLength: 0,
-  //           length: 13,
-  //           parent: SENTINEL_INDEX,
-  //           right: SENTINEL_INDEX,
-  //           tag: "p",
-  //           tagType: TagType.StartTag,
-  //         },
-  //         {
-  //           color: Color.Black,
-  //           id: "first",
-  //           left: 1,
-  //           leftSubTreeLength: 1,
-  //           length: 0,
-  //           parent: SENTINEL_INDEX,
-  //           right: SENTINEL_INDEX,
-  //           tag: "p",
-  //           tagType: TagType.StartTag,
-  //         },
-  //       ],
-  //       root: 2,
-  //     },
-  //   };
-  //   const action: InsertContentDOM = {
-  //     content: "ij\nk",
-  //     globalOffset: 2,
-  //   };
-  //   const maxBufferLength = 8;
-  //   insertContent(page, action, 1, maxBufferLength);
-  //   expect(page).toStrictEqual(expectedPage);
-  // });
+  test("Ensures that the parent structure node's length gets increased", (): void => {
+    const page: PageContent = {
+      buffers: [
+        {
+          content: "abc\nd",
+          isReadOnly: true,
+          lineStarts: [0, 4],
+        },
+        {
+          content: "efgh",
+          isReadOnly: false,
+          lineStarts: [0],
+        },
+      ],
+      content: {
+        nodes: [
+          SENTINEL_CONTENT,
+          {
+            bufferIndex: 0,
+            color: Color.Black,
+            end: {
+              column: 1,
+              line: 1,
+            },
+            left: 2,
+            leftCharCount: 2,
+            leftLineFeedCount: 0,
+            length: 5,
+            lineFeedCount: 1,
+            parent: SENTINEL_INDEX,
+            right: 3,
+            start: {
+              column: 0,
+              line: 0,
+            },
+          },
+          {
+            bufferIndex: 1,
+            color: Color.Red,
+            end: { column: 2, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 0,
+            parent: 1,
+            right: SENTINEL_INDEX,
+            start: { column: 0, line: 0 },
+          },
+          {
+            bufferIndex: 1,
+            color: Color.Red,
+            end: { column: 4, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 1,
+            parent: 1,
+            right: SENTINEL_INDEX,
+            start: { column: 2, line: 0 },
+          },
+        ],
+        root: 1,
+      },
+      previouslyInsertedContentNodeIndex: 3,
+      previouslyInsertedContentNodeOffset: 5,
+      structure: {
+        nodes: [
+          SENTINEL_STRUCTURE,
+          {
+            color: Color.Red,
+            id: "first",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 9,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            tag: "p",
+            tagType: TagType.StartTag,
+          },
+          {
+            color: Color.Black,
+            id: "first",
+            left: 1,
+            leftSubTreeLength: 1,
+            length: 0,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            tag: "p",
+            tagType: TagType.StartTag,
+          },
+        ],
+        root: 2,
+      },
+    };
+    const expectedPage: PageContent = {
+      buffers: [
+        {
+          content: "abc\nd",
+          isReadOnly: true,
+          lineStarts: [0, 4],
+        },
+        {
+          content: "efghij\nk",
+          isReadOnly: false,
+          lineStarts: [0, 7],
+        },
+      ],
+      content: {
+        nodes: [
+          SENTINEL_CONTENT,
+          {
+            bufferIndex: 0,
+            color: Color.Black,
+            end: {
+              column: 1,
+              line: 1,
+            },
+            left: 2,
+            leftCharCount: 6,
+            leftLineFeedCount: 1,
+            length: 5,
+            lineFeedCount: 1,
+            parent: SENTINEL_INDEX,
+            right: 3,
+            start: {
+              column: 0,
+              line: 0,
+            },
+          },
+          {
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 2, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 0,
+            parent: 1,
+            right: 4,
+            start: { column: 0, line: 0 },
+          },
+          {
+            bufferIndex: 1,
+            color: Color.Black,
+            end: { column: 4, line: 0 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 2,
+            lineFeedCount: 1,
+            parent: 1,
+            right: SENTINEL_INDEX,
+            start: { column: 2, line: 0 },
+          },
+          {
+            bufferIndex: 1,
+            color: Color.Red,
+            end: { column: 1, line: 1 },
+            left: SENTINEL_INDEX,
+            leftCharCount: 0,
+            leftLineFeedCount: 0,
+            length: 4,
+            lineFeedCount: 1,
+            parent: 2,
+            right: SENTINEL_INDEX,
+            start: { column: 4, line: 0 },
+          },
+        ],
+        root: 1,
+      },
+      previouslyInsertedContentNodeIndex: 4,
+      previouslyInsertedContentNodeOffset: 4,
+      structure: {
+        nodes: [
+          SENTINEL_STRUCTURE,
+          {
+            color: Color.Red,
+            id: "first",
+            left: SENTINEL_INDEX,
+            leftSubTreeLength: 0,
+            length: 13,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            tag: "p",
+            tagType: TagType.StartTag,
+          },
+          {
+            color: Color.Black,
+            id: "first",
+            left: 1,
+            leftSubTreeLength: 1,
+            length: 0,
+            parent: SENTINEL_INDEX,
+            right: SENTINEL_INDEX,
+            tag: "p",
+            tagType: TagType.StartTag,
+          },
+        ],
+        root: 2,
+      },
+    };
+    const action: InsertContentDOM = {
+      content: "ij\nk",
+      end: {
+        nodeIndex: 2,
+        nodeStartOffset: 2,
+      },
+      localOffset: 2,
+      start: {
+        nodeIndex: 2,
+        nodeStartOffset: 0,
+      },
+      structureNodeIndex: 1,
+    };
+    const maxBufferLength = 8;
+    insertContentDOM(page, action, maxBufferLength);
+    expect(page).toStrictEqual(expectedPage);
+  });
 });

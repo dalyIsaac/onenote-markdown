@@ -275,7 +275,7 @@ function insertAtEndPreviouslyInsertedNode(
  * @param page The page to insert the content into.
  * @param maxBufferLength The maximum length of a buffer's content/string.
  */
-export function insertContent(
+export function insertContentDOM(
   page: PageContent,
   action: InsertContentDOM,
   maxBufferLength: number,

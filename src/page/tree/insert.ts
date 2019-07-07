@@ -132,7 +132,10 @@ export function insertBeforeNode<T extends Node>(
   indexToInsertBefore: number,
 ): void {
   tree.nodes.push(newNode);
-  if (tree.nodes[indexToInsertBefore].left === SENTINEL_INDEX) {
+  if (indexToInsertBefore === SENTINEL_INDEX) {
+    tree.root = tree.nodes.length - 1;
+    newNode.color = Color.Black;
+  } else if (tree.nodes[indexToInsertBefore].left === SENTINEL_INDEX) {
     tree.nodes[indexToInsertBefore].left = tree.nodes.length - 1;
     newNode.parent = indexToInsertBefore;
   } else {
