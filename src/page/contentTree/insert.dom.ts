@@ -6,10 +6,7 @@ import {
   getLineStarts,
   getNodeContent,
   updateContentTreeMetadata,
-  getContentBetweenOffsets,
 } from "./tree";
-import { hasStartTag } from "../compiler/parser";
-import { updateNodePairTag } from "../structureTree/tree";
 import { InsertContentDOM } from "./actions";
 
 /**

@@ -1146,7 +1146,7 @@ describe("structureTree insert tests", (): void => {
               length: 0,
               parent: SENTINEL_INDEX,
               right: SENTINEL_INDEX,
-              tag: "tag",
+              tag: "p",
               tagType: TagType.StartEndTag,
             },
           ],
@@ -1157,7 +1157,7 @@ describe("structureTree insert tests", (): void => {
 
     const resultState = pageReducer(
       state,
-      insertStructure("pageId", 1, 0, "tag", TagType.StartEndTag, "id"),
+      insertStructure("pageId", 1, 0, "p", TagType.StartEndTag, "id"),
     );
     expect(resultState).toStrictEqual(expectedState);
   });

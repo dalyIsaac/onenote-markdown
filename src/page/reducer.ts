@@ -12,7 +12,7 @@ import {
 import { deleteContent } from "./contentTree/delete";
 import { insertContent } from "./contentTree/insert";
 import { MAX_BUFFER_LENGTH } from "./contentTree/tree";
-import { PageContent, StatePages } from "./pageModel";
+import { StatePages } from "./pageModel";
 import {
   INSERT_STRUCTURE_NODE,
   InsertStructureAction,

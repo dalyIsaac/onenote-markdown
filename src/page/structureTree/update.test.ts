@@ -26,7 +26,7 @@ describe("Update a structure node", (): void => {
           length: 0,
           parent: 2,
           right: SENTINEL_INDEX,
-          tag: "id",
+          tag: "p",
           tagType: TagType.StartEndTag,
         },
         {
@@ -39,7 +39,7 @@ describe("Update a structure node", (): void => {
           length: 0,
           parent: 3,
           right: SENTINEL_INDEX,
-          tag: "id",
+          tag: "p",
           tagType: TagType.StartEndTag,
         },
         {
@@ -51,7 +51,7 @@ describe("Update a structure node", (): void => {
           length: 0,
           parent: SENTINEL_INDEX,
           right: 4,
-          tag: "id",
+          tag: "p",
           tagType: TagType.StartEndTag,
         },
         {
@@ -63,7 +63,7 @@ describe("Update a structure node", (): void => {
           length: 0,
           parent: 3,
           right: SENTINEL_INDEX,
-          tag: "id",
+          tag: "p",
           tagType: TagType.StartEndTag,
         },
       ],
@@ -90,7 +90,7 @@ describe("Update a structure node", (): void => {
           length: 0,
           parent: 2,
           right: SENTINEL_INDEX,
-          tag: "id",
+          tag: "p",
           tagType: TagType.StartEndTag,
         },
         {
@@ -103,7 +103,7 @@ describe("Update a structure node", (): void => {
           length: 0,
           parent: 3,
           right: SENTINEL_INDEX,
-          tag: "id",
+          tag: "p",
           tagType: TagType.StartEndTag,
         },
         {
@@ -115,7 +115,7 @@ describe("Update a structure node", (): void => {
           length: 0,
           parent: SENTINEL_INDEX,
           right: 4,
-          tag: "id",
+          tag: "p",
           tagType: TagType.StartEndTag,
         },
         {
@@ -128,8 +128,8 @@ describe("Update a structure node", (): void => {
           length: 1,
           parent: 3,
           right: SENTINEL_INDEX,
-          style: { camelLength: "2" },
-          tag: "id",
+          style: { height: "2" },
+          tag: "p",
           tagType: TagType.StartEndTag,
         },
       ],
@@ -145,7 +145,7 @@ describe("Update a structure node", (): void => {
     const action = updateStructure("pageId", 4, {
       attributes: { smelliness: "excessive" },
       length: 1,
-      style: { camelLength: "2" },
+      style: { height: "2" },
     });
 
     const result = pageReducer(state, action);
@@ -166,7 +166,7 @@ describe("Update a structure node", (): void => {
     const action = updateStructure("pageId", 4, {
       attributes: { smelliness: "excessive" },
       length: 1,
-      style: { camelLength: "2" },
+      style: { height: "2" },
     });
     const result = pageReducer(state, action);
     expect(result).toStrictEqual(expectedState);
