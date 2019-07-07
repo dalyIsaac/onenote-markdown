@@ -1,5 +1,6 @@
 import { ContentInsert } from "./insert";
 import { PageActionPartial } from "../actions";
+import { SelectionBoundary } from "../../editor/selection";
 
 //#region Insert content
 export const INSERT_CONTENT = "INSERT_CONTENT";
@@ -8,6 +9,14 @@ export interface InsertContentAction extends PageActionPartial, ContentInsert {
   nodeIndex: number;
   nodeOffset?: number;
 }
+
+export interface InsertContentDOM extends SelectionBoundary {
+  content: string;
+}
+
+export interface InsertContentDOMAction
+  extends InsertContentDOM,
+  PageActionPartial {}
 
 export const insertContent = (
   pageId: string,

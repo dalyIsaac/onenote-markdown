@@ -4,6 +4,7 @@ import {
   recomputeTreeMetadata,
   EMPTY_TREE_ROOT,
   nextNode,
+  prevNode,
 } from "./tree";
 import { isContentNode } from "../contentTree/contentModel";
 import { leftRotate, rightRotate } from "./rotate";
@@ -101,7 +102,7 @@ function getRHSValue(currentNode: Node): number {
   }
 }
 
-function insertAfterNode<T extends Node>(
+function insertAfterNodeWithoutInserting<T extends Node>(
   tree: RedBlackTree<T>,
   newNode: T,
   indexToInsertAfter: number,
@@ -113,6 +114,31 @@ function insertAfterNode<T extends Node>(
     const next = nextNode(tree.nodes, indexToInsertAfter);
     tree.nodes[next.index].left = tree.nodes.length - 1;
     newNode.parent = next.index;
+  }
+}
+
+export function insertAfterNode<T extends Node>(
+  tree: RedBlackTree<T>,
+  newNode: T,
+  indexToInsertAfter: number,
+): void {
+  tree.nodes.push(newNode);
+  insertAfterNodeWithoutInserting(tree, newNode, indexToInsertAfter);
+}
+
+export function insertBeforeNode<T extends Node>(
+  tree: RedBlackTree<T>,
+  newNode: T,
+  indexToInsertBefore: number,
+): void {
+  tree.nodes.push(newNode);
+  if (tree.nodes[indexToInsertBefore].left === SENTINEL_INDEX) {
+    tree.nodes[indexToInsertBefore].left = tree.nodes.length - 1;
+    newNode.parent = indexToInsertBefore;
+  } else {
+    const prev = prevNode(tree.nodes, indexToInsertBefore);
+    tree.nodes[prev.index].right = tree.nodes.length - 1;
+    newNode.parent = prev.index;
   }
 }
 
@@ -134,7 +160,7 @@ export function insertNodeWithoutInserting<T extends Node>(
   indexToInsertAfter?: number,
 ): void {
   if (indexToInsertAfter) {
-    insertAfterNode(tree, newNode, indexToInsertAfter);
+    insertAfterNodeWithoutInserting(tree, newNode, indexToInsertAfter);
     return;
   }
 

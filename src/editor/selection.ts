@@ -20,7 +20,7 @@ interface StructureNodeProperties {
 /**
  * Describes a boundary for selection within the context of a `StructureNode`.
  */
-interface SelectionBoundary extends StructureNodeProperties {
+export interface SelectionBoundary extends StructureNodeProperties {
   localOffset: number;
 }
 
