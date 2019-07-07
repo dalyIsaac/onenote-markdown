@@ -171,9 +171,9 @@ export class MarkdownEditor extends HTMLElement {
       children = content.content;
       contentBoundaries = {
         [CONTENT_NODE_END_INDEX]: content.end.nodeIndex,
-        [CONTENT_NODE_END_OFFSET]: content.end.nodeStartOffset,
+        [CONTENT_NODE_END_OFFSET]: content.end.nodeLocalOffset,
         [CONTENT_NODE_START_INDEX]: content.start.nodeIndex,
-        [CONTENT_NODE_START_OFFSET]: content.start.nodeStartOffset,
+        [CONTENT_NODE_START_OFFSET]: content.start.nodeLocalOffset,
       };
     } else {
       children = stack.slice(stackIndex) as Element[];

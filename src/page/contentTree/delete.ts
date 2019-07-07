@@ -21,7 +21,7 @@ export interface ContentDelete {
 /**
  * Gets the number of line feeds before, between, and after a start and end
  * offset.
- * Returns `-1` if nodePosition.remainder === nodePosition.nodeStartOffset.
+ * Returns `-1` if nodePosition.remainder === nodePosition.nodeLocalOffset.
  * @param page The page/piece table.
  * @param nodePosition The position of the node which contains the offset.
  * @param startLocalOffset The logical offset inside the entire piece table.
@@ -39,7 +39,7 @@ function getLineFeedCountsForOffsets(
     lineFeedCountAfterEnd: number;
   } {
   const buffer = page.buffers[nodePosition.node.bufferIndex];
-  const nodeStartOffset =
+  const nodeLocalOffset =
     page.buffers[nodePosition.node.bufferIndex].lineStarts[
       nodePosition.node.start.line
     ] + nodePosition.node.start.column;
@@ -50,9 +50,9 @@ function getLineFeedCountsForOffsets(
 
   for (let i = 1; i < buffer.lineStarts.length; i++) {
     const el = buffer.lineStarts[i];
-    if (el < nodeStartOffset) {
+    if (el < nodeLocalOffset) {
       lineFeedCountBeforeNodeStart++;
-    } else if (nodeStartOffset <= el && el < startLocalOffset) {
+    } else if (nodeLocalOffset <= el && el < startLocalOffset) {
       lineFeedCountAfterNodeStartBeforeStart++;
     } else if (startLocalOffset <= el && el < endLocalOffset) {
       lineFeedCountBetweenOffset++;
@@ -86,13 +86,13 @@ function getNodeAfterContent(
     ] + nodePosition.node.start.column;
   const deletedLength = deleteRange.endOffset - deleteRange.startOffset;
 
-  const firstSection = nodePosition.nodeStartOffset - deleteRange.startOffset;
+  const firstSection = nodePosition.nodeLocalOffset - deleteRange.startOffset;
   const secondSection = deletedLength - firstSection;
   // localEndOffset is the offset of the content after the deleted content
   const localEndOffset = localStartOffset + secondSection + 1;
 
   const length =
-    nodePosition.nodeStartOffset +
+    nodePosition.nodeLocalOffset +
     nodePosition.node.length -
     deleteRange.endOffset;
   const {
@@ -139,7 +139,7 @@ function getNodeAfterContent(
 function getNodeBeforeContent(
   page: PageContent,
   deleteRange: ContentDelete,
-  { node, nodeIndex, nodeStartOffset, remainder }: NodePositionOffset,
+  { node, nodeIndex, nodeLocalOffset, remainder }: NodePositionOffset,
 ): ContentNode {
   // "local" offsets refer to local within the buffer
   const localStartOffset =
@@ -153,7 +153,7 @@ function getNodeBeforeContent(
     lineFeedCountAfterNodeStartBeforeStart,
   } = getLineFeedCountsForOffsets(
     page,
-    { node, nodeIndex, nodeStartOffset, remainder },
+    { node, nodeIndex, nodeLocalOffset, remainder },
     localStartOffset,
     localEndOffset,
   );

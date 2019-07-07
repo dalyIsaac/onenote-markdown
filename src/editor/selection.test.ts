@@ -135,18 +135,18 @@ describe("markdown selection", (): void => {
     });
     expect(getEditorSelection(shadowRoot)).toEqual({
       anchor: {
-        end: { nodeIndex: 5, nodeStartOffset: 6 },
+        end: { nodeIndex: 5, nodeLocalOffset: 6 },
         localOffset: 10,
-        start: { nodeIndex: 3, nodeStartOffset: 4 },
+        start: { nodeIndex: 3, nodeLocalOffset: 4 },
         structureNodeIndex: 2,
       },
       focus: {
         end: {
           nodeIndex: 5,
-          nodeStartOffset: 6,
+          nodeLocalOffset: 6,
         },
         localOffset: 11,
-        start: { nodeIndex: 3, nodeStartOffset: 4 },
+        start: { nodeIndex: 3, nodeLocalOffset: 4 },
         structureNodeIndex: 2,
       },
     });

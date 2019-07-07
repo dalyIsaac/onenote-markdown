@@ -178,11 +178,11 @@ export function insertNodeWithoutInserting<T extends Node>(
 
   let currentNode = tree.nodes[currentIndex];
 
-  let nodeStartOffset = 0;
+  let nodeLocalOffset = 0;
 
   while (currentIndex !== SENTINEL_INDEX) {
     prevIndex = currentIndex;
-    if (offset <= nodeStartOffset + getLHSValue(currentNode)) {
+    if (offset <= nodeLocalOffset + getLHSValue(currentNode)) {
       // left
       currentIndex = currentNode.left;
       if (currentIndex === SENTINEL_INDEX) {
@@ -191,9 +191,9 @@ export function insertNodeWithoutInserting<T extends Node>(
         return;
       }
       currentNode = tree.nodes[currentIndex];
-    } else if (offset >= nodeStartOffset + getRHSValue(currentNode)) {
+    } else if (offset >= nodeLocalOffset + getRHSValue(currentNode)) {
       // right
-      nodeStartOffset += getRHSValue(currentNode);
+      nodeLocalOffset += getRHSValue(currentNode);
       currentIndex = currentNode.right;
       if (currentIndex === SENTINEL_INDEX) {
         tree.nodes[prevIndex].right = nodeIndex;

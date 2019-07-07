@@ -42,7 +42,7 @@ export interface ContentBoundary {
    * The offset of the boundary of the `StructureNode` in regards to the
    * `ContentNode`.
    */
-  nodeStartOffset: number;
+  nodeLocalOffset: number;
 }
 
 /**
@@ -71,7 +71,7 @@ export function findNodeAtOffset(
   offset: number,
 ): NodePositionOffset {
   let x = tree.root;
-  let nodeStartOffset = 0;
+  let nodeLocalOffset = 0;
 
   while (x !== SENTINEL_INDEX) {
     if (tree.nodes[x].leftCharCount > offset) {
@@ -82,23 +82,23 @@ export function findNodeAtOffset(
         return {
           node: tree.nodes[x],
           nodeIndex: oldXIndex,
-          nodeStartOffset,
+          nodeLocalOffset,
           remainder: 0,
         };
       }
     } else if (tree.nodes[x].leftCharCount + tree.nodes[x].length > offset) {
       // note, the vscode nodeAt function uses >= instead of >
-      nodeStartOffset += tree.nodes[x].leftCharCount;
+      nodeLocalOffset += tree.nodes[x].leftCharCount;
       return {
         node: tree.nodes[x],
         nodeIndex: x,
-        nodeStartOffset,
+        nodeLocalOffset,
         remainder: offset - tree.nodes[x].leftCharCount,
       };
     } else {
       offset -= tree.nodes[x].leftCharCount + tree.nodes[x].length;
-      const oldNodeStartOffset = nodeStartOffset;
-      nodeStartOffset += tree.nodes[x].leftCharCount + tree.nodes[x].length;
+      const oldnodeLocalOffset = nodeLocalOffset;
+      nodeLocalOffset += tree.nodes[x].leftCharCount + tree.nodes[x].length;
 
       const oldXIndex = x;
       x = tree.nodes[x].right;
@@ -107,7 +107,7 @@ export function findNodeAtOffset(
         return {
           node: tree.nodes[oldXIndex],
           nodeIndex: oldXIndex,
-          nodeStartOffset: oldNodeStartOffset,
+          nodeLocalOffset: oldnodeLocalOffset,
           remainder: tree.nodes[oldXIndex].length,
         };
       }
@@ -121,7 +121,7 @@ export function findNodeAtOffset(
   return {
     node: SENTINEL_CONTENT,
     nodeIndex: SENTINEL_INDEX,
-    nodeStartOffset: 0,
+    nodeLocalOffset: 0,
     remainder: 0,
   };
 }
@@ -277,7 +277,7 @@ export function getContentBetweenOffsets(
 ): { content: string; start: ContentBoundary; end: ContentBoundary } {
   const position = findNodeAtOffset(page.content, startOffset);
   const length = endOffset - startOffset;
-  const startContentIndex = startOffset - position.nodeStartOffset;
+  const startContentIndex = startOffset - position.nodeLocalOffset;
   let content = getNodeContent(page, position.nodeIndex).slice(
     startContentIndex,
   );
@@ -286,7 +286,7 @@ export function getContentBetweenOffsets(
     content = content.slice(0, length);
     end = {
       nodeIndex: position.nodeIndex,
-      nodeStartOffset: startContentIndex + length,
+      nodeLocalOffset: startContentIndex + length,
     };
   } else {
     let offset = startOffset + content.length;
@@ -301,7 +301,7 @@ export function getContentBetweenOffsets(
     content = content.slice(0, length);
     end = {
       nodeIndex: prev.index,
-      nodeStartOffset: prev.node.length - (offset - (startOffset + length)),
+      nodeLocalOffset: prev.node.length - (offset - (startOffset + length)),
     };
   }
   return {
@@ -309,7 +309,7 @@ export function getContentBetweenOffsets(
     end,
     start: {
       nodeIndex: position.nodeIndex,
-      nodeStartOffset: startContentIndex,
+      nodeLocalOffset: startContentIndex,
     },
   };
 }
@@ -322,17 +322,17 @@ export function getContentBetweenNodeAndOffsets(
   let content = getNodeContent(page, start.nodeIndex);
 
   if (start.nodeIndex === end.nodeIndex) {
-    content = content.slice(start.nodeStartOffset, end.nodeStartOffset);
+    content = content.slice(start.nodeLocalOffset, end.nodeLocalOffset);
     return content;
   }
 
-  content = content.slice(start.nodeStartOffset);
+  content = content.slice(start.nodeLocalOffset);
   let next = nextNode(page.content.nodes, start.nodeIndex);
   while (next.index !== end.nodeIndex) {
     content += getNodeContent(page, next.index);
     next = nextNode(page.content.nodes, next.index);
   }
 
-  content += getNodeContent(page, next.index).slice(0, end.nodeStartOffset);
+  content += getNodeContent(page, next.index).slice(0, end.nodeLocalOffset);
   return content;
 }

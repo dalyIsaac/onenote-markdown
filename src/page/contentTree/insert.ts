@@ -341,9 +341,9 @@ export function insertContent(
   } else {
     const nodePosition = findNodeAtOffset(page.content, content.globalOffset);
     if (
-      nodePosition.nodeStartOffset < content.globalOffset &&
+      nodePosition.nodeLocalOffset < content.globalOffset &&
       content.globalOffset <
-        nodePosition.nodeStartOffset + nodePosition.node.length
+        nodePosition.nodeLocalOffset + nodePosition.node.length
     ) {
       insertInsideNode(content, page, maxBufferLength, nodePosition);
     } else {

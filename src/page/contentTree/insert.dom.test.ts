@@ -68,12 +68,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       content: "b",
       end: {
         nodeIndex: 1,
-        nodeStartOffset: 1,
+        nodeLocalOffset: 1,
       },
       localOffset: 1,
       start: {
         nodeIndex: 1,
-        nodeStartOffset: 0,
+        nodeLocalOffset: 0,
       },
       structureNodeIndex: 0,
     };
@@ -153,12 +153,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       content: "ef",
       end: {
         nodeIndex: 1,
-        nodeStartOffset: 5,
+        nodeLocalOffset: 5,
       },
       localOffset: 5,
       start: {
         nodeIndex: 1,
-        nodeStartOffset: 0,
+        nodeLocalOffset: 0,
       },
       structureNodeIndex: 0,
     };
@@ -264,12 +264,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       content: "ij\nk",
       end: {
         nodeIndex: 2,
-        nodeStartOffset: 2,
+        nodeLocalOffset: 2,
       },
       localOffset: 2,
       start: {
         nodeIndex: 2,
-        nodeStartOffset: 0,
+        nodeLocalOffset: 0,
       },
       structureNodeIndex: 0,
     };
@@ -373,12 +373,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       content: "ij\nk",
       end: {
         nodeIndex: 2,
-        nodeStartOffset: 2,
+        nodeLocalOffset: 2,
       },
       localOffset: 2,
       start: {
         nodeIndex: 2,
-        nodeStartOffset: 0,
+        nodeLocalOffset: 0,
       },
       structureNodeIndex: 0,
     };
@@ -487,12 +487,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       content: "ij\nkl",
       end: {
         nodeIndex: 2,
-        nodeStartOffset: 2,
+        nodeLocalOffset: 2,
       },
       localOffset: 2,
       start: {
         nodeIndex: 2,
-        nodeStartOffset: 0,
+        nodeLocalOffset: 0,
       },
       structureNodeIndex: 0,
     };
@@ -565,12 +565,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       content: "ef",
       end: {
         nodeIndex: 1,
-        nodeStartOffset: 5,
+        nodeLocalOffset: 5,
       },
       localOffset: 5,
       start: {
         nodeIndex: 1,
-        nodeStartOffset: 0,
+        nodeLocalOffset: 0,
       },
       structureNodeIndex: 0,
     };
@@ -709,12 +709,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       content: "gh\nij",
       end: {
         nodeIndex: 2,
-        nodeStartOffset: 2,
+        nodeLocalOffset: 2,
       },
       localOffset: 0,
       start: {
         nodeIndex: 2,
-        nodeStartOffset: 0,
+        nodeLocalOffset: 0,
       },
       structureNodeIndex: 0,
     };
@@ -846,12 +846,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       content: "gh\nij",
       end: {
         nodeIndex: 2,
-        nodeStartOffset: 2,
+        nodeLocalOffset: 2,
       },
       localOffset: 0,
       start: {
         nodeIndex: 2,
-        nodeStartOffset: 0,
+        nodeLocalOffset: 0,
       },
       structureNodeIndex: 0,
     };
@@ -957,12 +957,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       content: "ef",
       end: {
         nodeIndex: 1,
-        nodeStartOffset: 5,
+        nodeLocalOffset: 5,
       },
       localOffset: 0,
       start: {
         nodeIndex: 1,
-        nodeStartOffset: 0,
+        nodeLocalOffset: 0,
       },
       structureNodeIndex: 0,
     };
@@ -1121,12 +1121,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       content: "ij\nkl",
       end: {
         nodeIndex: 1,
-        nodeStartOffset: 5,
+        nodeLocalOffset: 5,
       },
       localOffset: 3,
       start: {
         nodeIndex: 1,
-        nodeStartOffset: 0,
+        nodeLocalOffset: 0,
       },
       structureNodeIndex: 0,
     };
@@ -1290,12 +1290,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       content: "ij\nkl\nmn",
       end: {
         nodeIndex: 3,
-        nodeStartOffset: 2,
+        nodeLocalOffset: 2,
       },
       localOffset: 1,
       start: {
         nodeIndex: 3,
-        nodeStartOffset: 0,
+        nodeLocalOffset: 0,
       },
       structureNodeIndex: 0,
     };
@@ -1402,12 +1402,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       content: "ef",
       end: {
         nodeIndex: 1,
-        nodeStartOffset: 5,
+        nodeLocalOffset: 5,
       },
       localOffset: 1,
       start: {
         nodeIndex: 1,
-        nodeStartOffset: 0,
+        nodeLocalOffset: 0,
       },
       structureNodeIndex: 0,
     };
@@ -1466,12 +1466,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       InsertContentDOMActionCreator("pageId", "Hello\nWorld", {
         end: {
           nodeIndex: 0,
-          nodeStartOffset: 0,
+          nodeLocalOffset: 0,
         },
         localOffset: 0,
         start: {
           nodeIndex: 0,
-          nodeStartOffset: 0,
+          nodeLocalOffset: 0,
         },
         structureNodeIndex: 0,
       }),
@@ -1687,12 +1687,12 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       content: "ij\nk",
       end: {
         nodeIndex: 2,
-        nodeStartOffset: 2,
+        nodeLocalOffset: 2,
       },
       localOffset: 2,
       start: {
         nodeIndex: 2,
-        nodeStartOffset: 0,
+        nodeLocalOffset: 0,
       },
       structureNodeIndex: 1,
     };
