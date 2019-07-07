@@ -1,15 +1,20 @@
 /* eslint-disable @typescript-eslint/camelcase */
 
 import Token from "markdown-it/lib/token";
-import { KeyValueStr, TagType } from "../structureTree/structureModel";
+import { TagType } from "../structureTree/structureModel";
 import { Attributes } from "./parser";
 import { getCompiler } from "./compiler";
+import { Style } from "../../editor/render";
+import paramCase from "param-case";
 
 /**
  * Type guard for `TagItem`.
  */
-export function isTagItem(val: Element): val is TagItem {
-  if ((val as TagItem).tag) {
+export function isTagItem(val: CompilerElement): val is TagItem {
+  if (
+    (val as TagItem).tag !== undefined &&
+    (val as TagItem).tagType !== undefined
+  ) {
     return true;
   }
   return false;
@@ -19,34 +24,27 @@ export function isTagItem(val: Element): val is TagItem {
  * Definition of tags inside the tag items inside the `elements` array.
  */
 export interface TagItem {
-  tag: string;
+  tag: keyof HTMLElementTagNameMap;
   tagType: TagType;
-  style?: KeyValueStr;
+  style?: Style;
 }
 
 /**
  * Definition of items elements inside the `elements` array.
  */
-export type Element = TagItem | string;
+export type CompilerElement = TagItem | string;
 
 /**
  * When `getJSX` is set to true, then `elements` is populated with items for
  * use in `HtmlEditorComponent`.
  */
-let elements: Element[] = [];
+let elements: CompilerElement[] = [];
 
 /**
  * Set to true when `getElements` is called, so that `elements` is populated
  * with items for use in `HtmlEditorComponent`.
  */
 let getJSX = false;
-
-/**
- * Converts the value from camelCase to kebab-case.
- */
-function camelToKebab(val: string): string {
-  return val.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
-}
 
 /**
  * Renderer for the custom markdown syntax.
@@ -57,7 +55,7 @@ function camelToKebab(val: string): string {
 function renderer(tokens: Token[], index: number, type: Attributes): string {
   const token = tokens[index];
   if (getJSX) {
-    const tag = tokens[index].tag;
+    const tag = tokens[index].tag as keyof HTMLElementTagNameMap;
     if (token.nesting === 1) {
       elements.push({
         style: {
@@ -85,7 +83,7 @@ function renderer(tokens: Token[], index: number, type: Attributes): string {
     }
   } else {
     if (token.nesting === 1) {
-      return `<span style="${camelToKebab(type)}:${token.attrGet(type)}">`;
+      return `<span style="${paramCase(type)}:${token.attrGet(type)}">`;
     } else if (token.nesting === -1) {
       return "</span>";
     } else {
@@ -114,7 +112,7 @@ function inlineTagsRenderer(tokens: Token[], index: number): string {
   const tagType = token.nesting === 1 ? TagType.StartTag : TagType.EndTag;
   if (getJSX) {
     elements.push({
-      tag: token.tag,
+      tag: token.tag as keyof HTMLElementTagNameMap,
       tagType,
     });
     return "";
@@ -155,7 +153,7 @@ function builtInRendererOverrides(attribute: string, value: string): string {
     });
     return "";
   } else {
-    return `<span style="${camelToKebab(attribute)}:${value}">`;
+    return `<span style="${paramCase(attribute)}:${value}">`;
   }
 }
 
@@ -205,7 +203,7 @@ export function text(tokens: Token[], index: number): string {
 /**
  * Gets all the elements from the OneNote page given content.
  */
-export function getElements(content: string): Element[] {
+export function getElements(content: string): CompilerElement[] {
   getJSX = true;
   getCompiler().render(content);
   const outElements = elements; // reassigning for the garbage collector

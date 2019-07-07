@@ -1,4 +1,6 @@
 {
+  "include": ["src"],
+  "exclude": ["./node_modules/@types/react/global.d.ts"],
   "compilerOptions": {
     "target": "es2018",
     "allowJs": false,
@@ -13,13 +15,6 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "preserve",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ]
-  },
-  "include": [
-    "src"
-  ]
+    "lib": ["dom", "dom.iterable", "esnext"]
+  }
 }

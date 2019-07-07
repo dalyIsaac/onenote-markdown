@@ -43,14 +43,14 @@ function handleInsertContent(
   {
     pageId,
     content,
-    offset,
-    structureNodeIndex,
-    structureNodeOffset,
+    globalOffset: offset,
+    nodeIndex: structureNodeIndex,
+    nodeOffset: structureNodeOffset,
   }: InsertContentAction,
 ): StatePages {
   insertContent(
     state[pageId] as PageContent,
-    { content: content, offset: offset },
+    { content: content, globalOffset: offset },
     structureNodeIndex,
     MAX_BUFFER_LENGTH,
     structureNodeOffset,
@@ -106,7 +106,7 @@ function handleReplaceContent(
     state[pageId] as PageContent,
     {
       content: content,
-      offset: startOffset,
+      globalOffset: startOffset,
     },
     startStructureNodeIndex,
     MAX_BUFFER_LENGTH,
@@ -155,55 +155,61 @@ export const pageReducer = (
   state: StatePages = {},
   action: PageActionPartial,
 ): StatePages =>
-  produce(state, (draftState) => {
-    if (!action.hasOwnProperty("pageId")) {
-      return draftState;
-    } else if (!draftState.hasOwnProperty(action.pageId)) {
-      if (action.type === STORE_PAGE) {
-        return handleStorePage(draftState, action as StorePageAction);
-      } else {
+  produce(
+    state,
+    (draftState): StatePages => {
+      if (!action.hasOwnProperty("pageId")) {
         return draftState;
+      } else if (!draftState.hasOwnProperty(action.pageId)) {
+        if (action.type === STORE_PAGE) {
+          return handleStorePage(draftState, action as StorePageAction);
+        } else {
+          return draftState;
+        }
       }
-    }
 
-    switch (action.type) {
-      case INSERT_CONTENT: {
-        return handleInsertContent(draftState, action as InsertContentAction);
+      switch (action.type) {
+        case INSERT_CONTENT: {
+          return handleInsertContent(draftState, action as InsertContentAction);
+        }
+        case DELETE_CONTENT: {
+          return handleDeleteContent(draftState, action as DeleteContentAction);
+        }
+        case REPLACE_CONTENT: {
+          return handleReplaceContent(
+            draftState,
+            action as ReplaceContentAction,
+          );
+        }
+        case INSERT_STRUCTURE_NODE: {
+          return handleInsertStructureNode(
+            draftState,
+            action as InsertStructureAction,
+          );
+        }
+        case DELETE_STRUCTURE_NODE: {
+          return handleDeleteStructureNode(
+            draftState,
+            action as DeleteStructureAction,
+          );
+        }
+        case UPDATE_STRUCTURE_NODE: {
+          return handleUpdateStructureNode(
+            draftState,
+            action as UpdateStructureAction,
+          );
+        }
+        case SPLIT_STRUCTURE_NODE: {
+          return handleSplitStructureNode(
+            draftState,
+            action as SplitStructureAction,
+          );
+        }
+        default: {
+          return draftState;
+        }
       }
-      case DELETE_CONTENT: {
-        return handleDeleteContent(draftState, action as DeleteContentAction);
-      }
-      case REPLACE_CONTENT: {
-        return handleReplaceContent(draftState, action as ReplaceContentAction);
-      }
-      case INSERT_STRUCTURE_NODE: {
-        return handleInsertStructureNode(
-          draftState,
-          action as InsertStructureAction,
-        );
-      }
-      case DELETE_STRUCTURE_NODE: {
-        return handleDeleteStructureNode(
-          draftState,
-          action as DeleteStructureAction,
-        );
-      }
-      case UPDATE_STRUCTURE_NODE: {
-        return handleUpdateStructureNode(
-          draftState,
-          action as UpdateStructureAction,
-        );
-      }
-      case SPLIT_STRUCTURE_NODE: {
-        return handleSplitStructureNode(
-          draftState,
-          action as SplitStructureAction,
-        );
-      }
-      default: {
-        return draftState;
-      }
-    }
-  });
+    },
+  );
 
 export default pageReducer;

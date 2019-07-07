@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+
 import { PageActionPartial } from "./actions";
 import {
   DELETE_CONTENT,
@@ -8,11 +10,7 @@ import {
   ReplaceContentAction,
 } from "./contentTree/actions";
 import { SENTINEL_CONTENT } from "./contentTree/tree";
-import {
-  Color,
-  PageContent,
-  StatePages,
-} from "./pageModel";
+import { Color, PageContent, StatePages } from "./pageModel";
 import pageReducer from "./reducer";
 import { SENTINEL_STRUCTURE } from "./structureTree/tree";
 import { SENTINEL_INDEX } from "./tree/tree";
@@ -201,7 +199,7 @@ export const getStartPage = (): PageContent => ({
 
 const PAGE_ID = "pageId";
 
-describe("page/reducer", () => {
+describe("page/reducer", (): void => {
   const getState = (): StatePages => {
     const state: StatePages = {
       [PAGE_ID]: getStartPage(),
@@ -209,26 +207,26 @@ describe("page/reducer", () => {
     return state;
   };
 
-  test("Invalid action types returns the state with no changes", () => {
+  test("Invalid action types returns the state with no changes", (): void => {
     const action: PageActionPartial = { pageId: "", type: "HELLO_WORLD" };
     const state = getState();
     expect(pageReducer(state, action)).toBe(state);
     expect(pageReducer(state, action)).toStrictEqual(state);
   });
 
-  test("Invalid page id", () => {
+  test("Invalid page id", (): void => {
     const action: PageActionPartial = { pageId: "", type: INSERT_CONTENT };
     const state = getState();
     expect(pageReducer(state, action)).toBe(state);
     expect(pageReducer(state, action)).toStrictEqual(state);
   });
 
-  test("Insertion", () => {
+  test("Insertion", (): void => {
     const action: InsertContentAction = {
       content: "Hello world",
-      offset: 127,
+      globalOffset: 127,
+      nodeIndex: SENTINEL_INDEX,
       pageId: PAGE_ID,
-      structureNodeIndex: SENTINEL_INDEX,
       type: INSERT_CONTENT,
     };
 
@@ -438,7 +436,7 @@ describe("page/reducer", () => {
     expect(result).not.toBe(state);
   });
 
-  test("Deletion", () => {
+  test("Deletion", (): void => {
     const action: DeleteContentAction = {
       contentLocations: {
         end: {
@@ -643,7 +641,7 @@ describe("page/reducer", () => {
     expect(result).not.toBe(state);
   });
 
-  test("Replacement", () => {
+  test("Replacement", (): void => {
     const action: ReplaceContentAction = {
       content: "Hello world",
       contentLocations: {
@@ -864,7 +862,7 @@ describe("page/reducer", () => {
     expect(result).not.toBe(state);
   });
 
-  test("Delete structure node", () => {
+  test("Delete structure node", (): void => {
     const page: PageContent = {
       buffers: [],
       content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },

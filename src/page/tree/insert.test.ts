@@ -5,9 +5,9 @@ import { ContentNode } from "../contentTree/contentModel";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { fixInsert } from "./insert";
 
-describe("fix insert function", () => {
-  describe("black uncle cases", () => {
-    test("Scenario 1: Left left case", () => {
+describe("fix insert function", (): void => {
+  describe("black uncle cases", (): void => {
+    test("Scenario 1: Left left case", (): void => {
       const page: PageContent = {
         buffers: [],
         content: {
@@ -240,7 +240,7 @@ describe("fix insert function", () => {
       expect(page).toStrictEqual(expectedPage);
     });
 
-    test("Scenario 2: Left right case", () => {
+    test("Scenario 2: Left right case", (): void => {
       const page: PageContent = {
         buffers: [],
         content: {
@@ -471,7 +471,7 @@ describe("fix insert function", () => {
       expect(page).toStrictEqual(expectedPage);
     });
 
-    test("Scenario 3: Right right case", () => {
+    test("Scenario 3: Right right case", (): void => {
       const page: PageContent = {
         buffers: [],
         content: {
@@ -702,7 +702,7 @@ describe("fix insert function", () => {
       expect(page).toStrictEqual(expectedPage);
     });
 
-    test("Scenario 4: Right left case", () => {
+    test("Scenario 4: Right left case", (): void => {
       const page: PageContent = {
         buffers: [],
         content: {
@@ -934,8 +934,8 @@ describe("fix insert function", () => {
     });
   });
 
-  describe("red uncle cases", () => {
-    test("Right red uncle", () => {
+  describe("red uncle cases", (): void => {
+    test("Right red uncle", (): void => {
       const page: PageContent = {
         buffers: [],
         content: {
@@ -1128,7 +1128,7 @@ describe("fix insert function", () => {
       expect(page).toStrictEqual(expectedPage);
     });
 
-    test("Left red uncle", () => {
+    test("Left red uncle", (): void => {
       const page: PageContent = {
         buffers: [],
         content: {
@@ -1322,7 +1322,7 @@ describe("fix insert function", () => {
     });
   });
 
-  test("Inserted node is root", () => {
+  test("Inserted node is root", (): void => {
     const getPage = (): PageContent => ({
       buffers: [
         {

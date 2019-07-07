@@ -6,7 +6,7 @@ import { TagType } from "./structureModel";
 import pageReducer from "../reducer";
 import { updateStructure } from "./actions";
 
-describe("Update a structure node", () => {
+describe("Update a structure node", (): void => {
   const getPage = (): PageContent => ({
     buffers: [],
     content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
@@ -137,7 +137,7 @@ describe("Update a structure node", () => {
     },
   });
 
-  test("Ensures that the references are different", () => {
+  test("Ensures that the references are different", (): void => {
     const state: StatePages = {
       pageId: getPage(),
     };
@@ -154,7 +154,7 @@ describe("Update a structure node", () => {
     );
   });
 
-  test("Ensures that the update occurs successfully", () => {
+  test("Ensures that the update occurs successfully", (): void => {
     const state: StatePages = {
       pageId: getPage(),
     };

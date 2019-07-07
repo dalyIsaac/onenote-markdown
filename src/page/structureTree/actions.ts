@@ -6,7 +6,7 @@ import { UpdateStructureValues } from "./update";
 export const INSERT_STRUCTURE_NODE = "INSERT_STRUCTURE_NODE";
 
 export interface InsertStructureProps {
-  tag: string;
+  tag: keyof HTMLElementTagNameMap;
   tagType: TagType;
   id: string;
   style?: KeyValueStr;
@@ -16,7 +16,7 @@ export interface InsertStructureProps {
 }
 
 export interface InsertStructureAction extends PageActionPartial {
-  tag: string;
+  tag: keyof HTMLElementTagNameMap;
   tagType: TagType;
   id: string;
   style?: KeyValueStr;
@@ -32,7 +32,7 @@ export const insertStructure = (
   pageId: string,
   offset: number,
   length: number,
-  tag: string,
+  tag: keyof HTMLElementTagNameMap,
   tagType: TagType,
   id: string,
   style?: KeyValueStr,
@@ -92,27 +92,19 @@ export const SPLIT_STRUCTURE_NODE = "SPLIT_STRUCTURE_NODE";
 
 export interface SplitStructureAction extends PageActionPartial {
   nodeIndex: number;
-
-  /**
-   * The local content offset inside the `StructureNode` where the s
-   */
-  localContentOffset: number;
-
-  /**
-   * The content offset of the start of the node.
-   */
-  nodeContentOffset: number;
+  localOffset: number;
+  nodeOffset: number;
 }
 
 export const splitStructureNode = (
   pageId: string,
   nodeIndex: number,
-  nodeContentOffset: number,
-  localContentOffset: number,
+  nodeOffset: number,
+  localOffset: number,
 ): SplitStructureAction => ({
-  localContentOffset,
-  nodeContentOffset,
+  localOffset,
   nodeIndex,
+  nodeOffset,
   pageId,
   type: SPLIT_STRUCTURE_NODE,
 });

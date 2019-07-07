@@ -24,7 +24,11 @@ import { updateNodePairTag } from "../structureTree/tree";
  */
 export interface ContentInsert {
   content: string;
-  offset: number;
+
+  /**
+   * Offset of the content to insert in terms of the entire document.
+   */
+  globalOffset: number;
 }
 
 /**
@@ -62,9 +66,9 @@ function createNodeCreateBuffer(
     start: { column: 0, line: 0 },
   };
   page.previouslyInsertedContentNodeIndex = page.content.nodes.length;
-  page.previouslyInsertedContentNodeOffset = content.offset;
+  page.previouslyInsertedContentNodeOffset = content.globalOffset;
   page.buffers.push(newBuffer);
-  insertNode(page.content, newNode, content.offset, indexToInsertAfter);
+  insertNode(page.content, newNode, content.globalOffset, indexToInsertAfter);
 }
 
 /**
@@ -112,8 +116,8 @@ function createNodeAppendToBuffer(
 
   page.buffers[page.buffers.length - 1] = updatedBuffer;
   page.previouslyInsertedContentNodeIndex = page.content.nodes.length;
-  page.previouslyInsertedContentNodeOffset = content.offset;
-  insertNode(page.content, newNode, content.offset, indexToInsertAfter);
+  page.previouslyInsertedContentNodeOffset = content.globalOffset;
+  insertNode(page.content, newNode, content.globalOffset, indexToInsertAfter);
 }
 
 /**
@@ -210,11 +214,11 @@ function insertInsideNode(
     -secondPartNode.lineFeedCount,
   );
 
-  insertNode(page.content, secondPartNode, content.offset);
+  insertNode(page.content, secondPartNode, content.globalOffset);
   fixInsert(page.content, page.content.nodes.length - 1);
   insertAtNodeExtremity(content, page, maxBufferLength);
   page.previouslyInsertedContentNodeIndex = page.content.nodes.length - 1;
-  page.previouslyInsertedContentNodeOffset = content.offset;
+  page.previouslyInsertedContentNodeOffset = content.globalOffset;
 }
 
 /**
@@ -308,7 +312,11 @@ export function insertContent(
 ): void {
   const structureNode = page.structure.nodes[structureNodeIndex];
   if (structureNode.tag === "br") {
-    convertBreakToParagraph(page.structure, content.offset, structureNodeIndex);
+    convertBreakToParagraph(
+      page.structure,
+      content.globalOffset,
+      structureNodeIndex,
+    );
   }
   if (page.content.root === EMPTY_TREE_ROOT) {
     createNodeCreateBuffer(content, page);
@@ -326,15 +334,16 @@ export function insertContent(
 
   if (
     previouslyInsertedNode !== undefined &&
-    content.offset ===
+    content.globalOffset ===
       page.previouslyInsertedContentNodeOffset! + previouslyInsertedNode.length
   ) {
     insertAtEndPreviouslyInsertedNode(content, page, maxBufferLength);
   } else {
-    const nodePosition = findNodeAtOffset(page.content, content.offset);
+    const nodePosition = findNodeAtOffset(page.content, content.globalOffset);
     if (
-      nodePosition.nodeStartOffset < content.offset &&
-      content.offset < nodePosition.nodeStartOffset + nodePosition.node.length
+      nodePosition.nodeStartOffset < content.globalOffset &&
+      content.globalOffset <
+        nodePosition.nodeStartOffset + nodePosition.node.length
     ) {
       insertInsideNode(content, page, maxBufferLength, nodePosition);
     } else {
@@ -354,7 +363,7 @@ export function insertContent(
         page,
         structureNodeOffset,
         structureNodeOffset + structureNode.length,
-      ),
+      ).content,
     );
     if (hasStart) {
       updateNodePairTag(page, structureNodeIndex, hasStart.tag);

@@ -1,4 +1,5 @@
 import { Node, RedBlackTree } from "../pageModel";
+import { Style } from "../../editor/render";
 
 export interface KeyValueStr {
   [key: string]: string;
@@ -25,7 +26,7 @@ export interface StructureNode extends Node {
   id: string;
   leftSubTreeLength: number;
   length: number;
-  style?: KeyValueStr;
-  tag: string;
+  style?: Style;
+  tag: keyof HTMLElementTagNameMap;
   tagType: TagType;
 }

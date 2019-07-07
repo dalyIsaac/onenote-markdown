@@ -5,6 +5,6 @@ p {
 
 .wrapper {
   display: grid;
-  grid-template-rows: 40px auto;
+  grid-template-rows: 40px calc(100vh - 40px);
   grid-template-columns: 50% 50%;
 }

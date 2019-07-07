@@ -7,8 +7,8 @@ import { leftRotate, rightRotate } from "./rotate";
 import { SENTINEL_CONTENT } from "../contentTree/tree";
 import { StructureNode, TagType } from "../structureTree/structureModel";
 
-describe("Functions for performing rotations on the piece table/red-black tree.", () => {
-  describe("Content nodes", () => {
+describe("Functions for performing rotations on the piece table/red-black tree.", (): void => {
+  describe("Content nodes", (): void => {
     const constructSimplePieceTableBeforeLeftRotate = (): PageContent => {
       const nodes: ContentNode[] = [
         SENTINEL_CONTENT,
@@ -593,14 +593,14 @@ describe("Functions for performing rotations on the piece table/red-black tree."
       previouslyInsertedContentNodeOffset: 0,
       structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
     });
-    describe("left rotate", () => {
-      test("One node case", () => {
+    describe("left rotate", (): void => {
+      test("One node case", (): void => {
         const pieceTable = constructOneNodePieceTable();
         leftRotate(pieceTable.content, 1);
         expect(pieceTable).toStrictEqual(constructOneNodePieceTable());
       });
 
-      test("Simple case", () => {
+      test("Simple case", (): void => {
         const pieceTable = constructSimplePieceTableBeforeLeftRotate();
         leftRotate(pieceTable.content, 2);
         expect(pieceTable).toStrictEqual(
@@ -608,7 +608,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
         );
       });
 
-      test("Complex case", () => {
+      test("Complex case", (): void => {
         const pieceTable = constructComplexPieceTableBeforeLeftRotate();
         leftRotate(pieceTable.content, 7);
         expect(pieceTable).toStrictEqual(
@@ -617,14 +617,14 @@ describe("Functions for performing rotations on the piece table/red-black tree."
       });
     });
 
-    describe("right rotate", () => {
-      test("One node case", () => {
+    describe("right rotate", (): void => {
+      test("One node case", (): void => {
         const pieceTable = constructOneNodePieceTable();
         rightRotate(pieceTable.content, 1);
         expect(pieceTable).toStrictEqual(constructOneNodePieceTable());
       });
 
-      test("Simple case", () => {
+      test("Simple case", (): void => {
         const pieceTable = constructSimplePieceTableBeforeRightRotate();
         rightRotate(pieceTable.content, 4);
         expect(pieceTable).toStrictEqual(
@@ -632,7 +632,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
         );
       });
 
-      test("Complex case", () => {
+      test("Complex case", (): void => {
         const pieceTable = constructComplexPieceTableBeforeRightRotate();
         rightRotate(pieceTable.content, 11);
         expect(pieceTable).toStrictEqual(
@@ -642,7 +642,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
     });
   });
 
-  describe("Structure nodes", () => {
+  describe("Structure nodes", (): void => {
     const constructComplexPieceTableBeforeLeftRotate = (): PageContent => {
       const nodes: StructureNode[] = [
         SENTINEL_STRUCTURE,
@@ -1011,7 +1011,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
     };
     const constructComplexPieceTableBeforeRightRotate = constructComplexPieceTableAfterLeftRotate;
 
-    test("Structure left rotate complex case", () => {
+    test("Structure left rotate complex case", (): void => {
       const pieceTable = constructComplexPieceTableBeforeLeftRotate();
       leftRotate(pieceTable.structure, 7);
       expect(pieceTable).toStrictEqual(
@@ -1019,7 +1019,7 @@ describe("Functions for performing rotations on the piece table/red-black tree."
       );
     });
 
-    test("Structure right rotate complex case", () => {
+    test("Structure right rotate complex case", (): void => {
       const pieceTable = constructComplexPieceTableBeforeRightRotate();
       rightRotate(pieceTable.structure, 11);
       expect(pieceTable).toStrictEqual(

@@ -3,8 +3,8 @@ pool:
 
 steps:
 
-- script: npm install --only=dev
-  displayName: 'Install dev dependencies'
+# - script: npm install --only=dev
+#   displayName: 'Install dev dependencies'
 
 - script: npm install
   displayName: 'Install dependencies'

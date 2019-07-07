@@ -6,7 +6,6 @@ import {
   nextNode,
 } from "../tree/tree";
 import { StructureNode, TagType } from "./structureModel";
-import { alea } from "seedrandom";
 
 export const SENTINEL_STRUCTURE: StructureNode = {
   color: Color.Black,
@@ -16,7 +15,8 @@ export const SENTINEL_STRUCTURE: StructureNode = {
   length: 0,
   parent: SENTINEL_INDEX,
   right: SENTINEL_INDEX,
-  tag: "",
+  // The empty string is cast only for the sentinal structure node
+  tag: "" as keyof HTMLElementTagNameMap,
   tagType: TagType.StartEndTag,
 };
 
@@ -53,7 +53,8 @@ export function resetSentinelStructure(
   SENTINEL_STRUCTURE.leftSubTreeLength = 0;
   SENTINEL_STRUCTURE.parent = SENTINEL_INDEX;
   SENTINEL_STRUCTURE.right = SENTINEL_INDEX;
-  SENTINEL_STRUCTURE.tag = "";
+  // The empty string is cast only for the sentinal structure node
+  SENTINEL_STRUCTURE.tag = "" as keyof HTMLElementTagNameMap;
   SENTINEL_STRUCTURE.tagType = TagType.StartEndTag;
   tree.nodes[0] = SENTINEL_STRUCTURE;
 }
@@ -99,16 +100,13 @@ export function findEndNode(
   return null;
 }
 
-const aleaGen = alea(Date.now().toString());
-
 /**
  * Generates a new `id` for a `StructureNode`. This is only to be used
  * locally, and will not be synced to the Microsoft Graph.
  */
-export function generateNewId(): string {
-  return `{!localGeneratedId}${aleaGen()}`;
+export function generateNewId(tag: keyof HTMLElementTagNameMap): string {
+  return `local:${tag}:{${Date.now()}}`;
 }
-
 /**
  * Updates the start node, with the new tag, and the end node if it exists.
  * @param page The page.
@@ -118,7 +116,7 @@ export function generateNewId(): string {
 export function updateNodePairTag(
   page: PageContent,
   nodeIndex: number,
-  newTag: string,
+  newTag: keyof HTMLElementTagNameMap,
 ): void {
   const startNode = page.structure.nodes[nodeIndex];
   startNode.tag = newTag;

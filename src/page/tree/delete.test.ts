@@ -6,9 +6,9 @@ import { SENTINEL_INDEX } from "./tree";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { deleteNode } from "../tree/delete";
 
-describe("delete node", () => {
-  describe("Content nodes", () => {
-    test("Content: Scenario 1: Simple case", () => {
+describe("delete node", (): void => {
+  describe("Content nodes", (): void => {
+    test("Content: Scenario 1: Simple case", (): void => {
       const page: PageContent = {
         buffers: [],
         content: {
@@ -195,8 +195,8 @@ describe("delete node", () => {
       expect(page).toStrictEqual(expectedPage);
     });
 
-    describe("Sibling s is black and at least one of s's children is red", () => {
-      test("Content: Scenario 2: Right right case", () => {
+    describe("Sibling s is black and at least one of s's children is red", (): void => {
+      test("Content: Scenario 2: Right right case", (): void => {
         const page: PageContent = {
           buffers: [],
           content: {
@@ -417,7 +417,7 @@ describe("delete node", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Content: Scenario 3: Right left case", () => {
+      test("Content: Scenario 3: Right left case", (): void => {
         const page: PageContent = {
           buffers: [],
           content: {
@@ -602,7 +602,7 @@ describe("delete node", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Content: Scenario 4: Left left case", () => {
+      test("Content: Scenario 4: Left left case", (): void => {
         const page: PageContent = {
           buffers: [],
           content: {
@@ -823,7 +823,7 @@ describe("delete node", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Content: Scenario 5: Left right case", () => {
+      test("Content: Scenario 5: Left right case", (): void => {
         const page: PageContent = {
           buffers: [],
           content: {
@@ -1007,7 +1007,7 @@ describe("delete node", () => {
       });
     });
 
-    test("Content: Scenario 6: Sibling s is black, and both its children are black", () => {
+    test("Content: Scenario 6: Sibling s is black, and both its children are black", (): void => {
       const page: PageContent = {
         buffers: [],
         content: {
@@ -1152,8 +1152,8 @@ describe("delete node", () => {
       expect(page).toStrictEqual(expectedPage);
     });
 
-    describe("Sibling s is red", () => {
-      test("Content: Scenario 7: sibling s is right child of its parent", () => {
+    describe("Sibling s is red", (): void => {
+      test("Content: Scenario 7: sibling s is right child of its parent", (): void => {
         const page: PageContent = {
           buffers: [],
           content: {
@@ -1374,7 +1374,7 @@ describe("delete node", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Content: Scenario 8: sibling s is left child of its parent", () => {
+      test("Content: Scenario 8: sibling s is left child of its parent", (): void => {
         const page: PageContent = {
           buffers: [],
           content: {
@@ -1596,7 +1596,7 @@ describe("delete node", () => {
       });
     });
 
-    test("Content: Scenario 9: delete root", () => {
+    test("Content: Scenario 9: delete root", (): void => {
       const page: PageContent = {
         buffers: [],
         content: {
@@ -1666,8 +1666,8 @@ describe("delete node", () => {
     });
   });
 
-  describe("Structure nodes", () => {
-    test("Structure: Scenario 1: Simple case", () => {
+  describe("Structure nodes", (): void => {
+    test("Structure: Scenario 1: Simple case", (): void => {
       const page: PageContent = {
         buffers: [],
         content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
@@ -1798,8 +1798,8 @@ describe("delete node", () => {
       expect(page).toStrictEqual(expectedPage);
     });
 
-    describe("Sibling s is black and at least one of s's children is red", () => {
-      test("Structure: Scenario 2: Right right case", () => {
+    describe("Sibling s is black and at least one of s's children is red", (): void => {
+      test("Structure: Scenario 2: Right right case", (): void => {
         const page: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
@@ -1950,7 +1950,7 @@ describe("delete node", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Structure: Scenario 3: Right left case", () => {
+      test("Structure: Scenario 3: Right left case", (): void => {
         const page: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
@@ -2079,7 +2079,7 @@ describe("delete node", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Structure: Scenario 4: Left left case", () => {
+      test("Structure: Scenario 4: Left left case", (): void => {
         const page: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
@@ -2230,7 +2230,7 @@ describe("delete node", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Structure: Scenario 5: Left right case", () => {
+      test("Structure: Scenario 5: Left right case", (): void => {
         const page: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
@@ -2358,7 +2358,7 @@ describe("delete node", () => {
       });
     });
 
-    test("Structure: Scenario 6: Sibling s is black, and both its children are black", () => {
+    test("Structure: Scenario 6: Sibling s is black, and both its children are black", (): void => {
       const page: PageContent = {
         buffers: [],
         content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
@@ -2461,8 +2461,8 @@ describe("delete node", () => {
       expect(page).toStrictEqual(expectedPage);
     });
 
-    describe("Sibling s is red", () => {
-      test("Structure: Scenario 7: sibling s is right child of its parent", () => {
+    describe("Sibling s is red", (): void => {
+      test("Structure: Scenario 7: sibling s is right child of its parent", (): void => {
         const page: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
@@ -2613,7 +2613,7 @@ describe("delete node", () => {
         expect(page).toStrictEqual(expectedPage);
       });
 
-      test("Structure: Scenario 8: sibling s is left child of its parent", () => {
+      test("Structure: Scenario 8: sibling s is left child of its parent", (): void => {
         const page: PageContent = {
           buffers: [],
           content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },
@@ -2765,7 +2765,7 @@ describe("delete node", () => {
       });
     });
 
-    test("Structure: Scenario 9: delete root", () => {
+    test("Structure: Scenario 9: delete root", (): void => {
       const page: PageContent = {
         buffers: [],
         content: { nodes: [SENTINEL_CONTENT], root: SENTINEL_INDEX },

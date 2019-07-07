@@ -29,29 +29,36 @@ export const SENTINEL_CONTENT: ContentNode = {
 };
 
 /**
+ * A boundary of a `StructureNode`, in regards to its constituent
+ * `ContentNode`s.
+ */
+export interface ContentBoundary {
+  /**
+   * The index of the `ContentNode` inside the `RedBlackTree`.
+   */
+  nodeIndex: number;
+
+  /**
+   * The offset of the boundary of the `StructureNode` in regards to the
+   * `ContentNode`.
+   */
+  nodeStartOffset: number;
+}
+
+/**
  * The returned object from `findNodeAtOffset`.
  */
-export interface NodePositionOffset {
+export interface NodePositionOffset extends ContentBoundary {
   /**
    * Piece Index
    */
   node: ContentNode;
 
   /**
-   * The index of the node inside the array.
-   */
-  nodeIndex: number;
-
-  /**
    * The remainder between the offset and the character count of the left
    * subtree.
    */
   remainder: number;
-
-  /**
-   * The offset of the node against the start of the content.
-   */
-  nodeStartOffset: number;
 }
 
 /**
@@ -267,24 +274,65 @@ export function getContentBetweenOffsets(
   page: PageContent,
   startOffset: number,
   endOffset: number,
-): string {
+): { content: string; start: ContentBoundary; end: ContentBoundary } {
   const position = findNodeAtOffset(page.content, startOffset);
   const length = endOffset - startOffset;
+  const startContentIndex = startOffset - position.nodeStartOffset;
   let content = getNodeContent(page, position.nodeIndex).slice(
-    startOffset - position.nodeStartOffset,
+    startContentIndex,
   );
+  let end: ContentBoundary;
   if (length <= content.length) {
     content = content.slice(0, length);
+    end = {
+      nodeIndex: position.nodeIndex,
+      nodeStartOffset: startContentIndex + length,
+    };
   } else {
-    let offset = startOffset;
-    const { nodeIndex } = position;
-    let next = nextNode(page.content.nodes, nodeIndex);
-    while (offset <= endOffset) {
+    let offset = startOffset + content.length;
+    let next = nextNode(page.content.nodes, position.nodeIndex);
+    let prev = next;
+    while (offset < endOffset) {
       content += getNodeContent(page, next.index);
-      offset += (next.node as ContentNode).length;
+      offset += next.node.length;
+      prev = next;
       next = nextNode(page.content.nodes, next.index);
     }
     content = content.slice(0, length);
+    end = {
+      nodeIndex: prev.index,
+      nodeStartOffset: prev.node.length - (offset - (startOffset + length)),
+    };
   }
+  return {
+    content,
+    end,
+    start: {
+      nodeIndex: position.nodeIndex,
+      nodeStartOffset: startContentIndex,
+    },
+  };
+}
+
+export function getContentBetweenNodeAndOffsets(
+  page: PageContent,
+  start: ContentBoundary,
+  end: ContentBoundary,
+): string {
+  let content = getNodeContent(page, start.nodeIndex);
+
+  if (start.nodeIndex === end.nodeIndex) {
+    content = content.slice(start.nodeStartOffset, end.nodeStartOffset);
+    return content;
+  }
+
+  content = content.slice(start.nodeStartOffset);
+  let next = nextNode(page.content.nodes, start.nodeIndex);
+  while (next.index !== end.nodeIndex) {
+    content += getNodeContent(page, next.index);
+    next = nextNode(page.content.nodes, next.index);
+  }
+
+  content += getNodeContent(page, next.index).slice(0, end.nodeStartOffset);
   return content;
 }

@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { PageContent } from "../pageModel";
-import { inorderTreeTraversal } from "../tree/tree";
+import { inorderTreeTraversal, NodePosition } from "../tree/tree";
 import { getContentBetweenOffsets } from "../contentTree/tree";
 import { StructureNode } from "../structureTree/structureModel";
 import MarkdownIt from "markdown-it";
 import {
-  Element,
+  CompilerElement,
   getElements,
   colorRenderer,
   textDecorationRenderer,
@@ -99,7 +99,8 @@ export function* getHtmlContentFromPage(
   for (const { node } of inorderTreeTraversal(page.structure)) {
     yield {
       content: compile(
-        getContentBetweenOffsets(page, startOffset, startOffset + node.length),
+        getContentBetweenOffsets(page, startOffset, startOffset + node.length)
+          .content,
       ),
       node,
     };
@@ -115,16 +116,18 @@ export function* getHtmlContentFromPage(
  */
 export function* getHtmlContentElementsFromPage(
   page: PageContent,
-): IterableIterator<{ node: StructureNode; children: Element[] }> {
+): IterableIterator<
+  NodePosition<StructureNode> & { children: CompilerElement[] }
+  > {
   let startOffset = 0;
-  for (const { node } of inorderTreeTraversal(page.structure)) {
+  for (const { node, index } of inorderTreeTraversal(page.structure)) {
     const content = getContentBetweenOffsets(
       page,
       startOffset,
       startOffset + node.length,
-    );
+    ).content;
     const children = getElements(content);
-    yield { children, node };
+    yield { children, index, node };
     startOffset += node.length;
   }
 }

@@ -5,22 +5,22 @@ import { PageActionPartial } from "../actions";
 export const INSERT_CONTENT = "INSERT_CONTENT";
 
 export interface InsertContentAction extends PageActionPartial, ContentInsert {
-  structureNodeIndex: number;
-  structureNodeOffset?: number;
+  nodeIndex: number;
+  nodeOffset?: number;
 }
 
 export const insertContent = (
   pageId: string,
   content: string,
-  offset: number,
-  structureNodeIndex: number,
-  structureNodeOffset?: number,
+  globalOffset: number,
+  nodeIndex: number,
+  nodeOffset?: number,
 ): InsertContentAction => ({
   content,
-  offset,
+  globalOffset,
+  nodeIndex,
+  nodeOffset,
   pageId,
-  structureNodeIndex,
-  structureNodeOffset,
   type: INSERT_CONTENT,
 });
 //#endregion

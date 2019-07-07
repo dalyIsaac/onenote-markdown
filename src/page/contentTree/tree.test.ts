@@ -1,3 +1,5 @@
+/* eslint-disable max-len */
+
 import { Color, PageContent } from "../pageModel";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { SENTINEL_INDEX } from "../tree/tree";
@@ -9,6 +11,7 @@ import {
   SENTINEL_CONTENT,
   getNodeContent,
   getContentBetweenOffsets,
+  getContentBetweenNodeAndOffsets,
 } from "./tree";
 import { getStartPage } from "../reducer.test";
 
@@ -128,8 +131,8 @@ export const getPage = (): PageContent => ({
   structure: { nodes: [SENTINEL_STRUCTURE], root: SENTINEL_INDEX },
 });
 
-describe("Functions for common tree operations on the piece table/content red-black tree.", () => {
-  test("findNodeAtOffset", () => {
+describe("Functions for common tree operations on the piece table/content red-black tree.", (): void => {
+  test("findNodeAtOffset", (): void => {
     const { nodes, root } = getFinalTree();
 
     expect(findNodeAtOffset({ nodes, root }, -1)).toStrictEqual({
@@ -253,17 +256,17 @@ describe("Functions for common tree operations on the piece table/content red-bl
     });
   });
 
-  test("Calculate line feed count", () => {
+  test("Calculate line feed count", (): void => {
     const page = getPage();
     expect(calculateLineFeedCount(page.content, page.content.root)).toBe(2);
   });
 
-  test("Calculate character count", () => {
+  test("Calculate character count", (): void => {
     const page = getPage();
     expect(calculateCharCount(page.content, page.content.root)).toBe(121);
   });
 
-  test("getNodeContent", () => {
+  test("getNodeContent", (): void => {
     const page = getStartPage();
 
     expect(getNodeContent(page, 1)).toBe(
@@ -281,34 +284,116 @@ describe("Functions for common tree operations on the piece table/content red-bl
     expect(getNodeContent(page, 11)).toBe(".");
   });
 
-  describe("getContentBetweenOffset", () => {
+  describe("getContentBetweenOffset", (): void => {
     const page = getStartPage();
 
-    test("Inside a single node", () => {
-      expect(getContentBetweenOffsets(page, 3, 50)).toBe(
-        "not go gentle into that good night,\nOld age sho",
-      );
+    test("Inside a single node", (): void => {
+      expect(getContentBetweenOffsets(page, 3, 50)).toStrictEqual({
+        content: "not go gentle into that good night,\nOld age sho",
+        end: { nodeIndex: 1, nodeStartOffset: 50 },
+        start: { nodeIndex: 1, nodeStartOffset: 3 },
+      });
     });
 
-    test("An entire single node", () => {
-      expect(getContentBetweenOffsets(page, 0, 65)).toBe(
+    test("An entire single node", (): void => {
+      expect(getContentBetweenOffsets(page, 0, 65)).toStrictEqual({
+        content:
+          "Do not go gentle into that good night,\nOld age should burn and ra",
+        end: { nodeIndex: 1, nodeStartOffset: 65 },
+        start: { nodeIndex: 1, nodeStartOffset: 0 },
+      });
+    });
+
+    test("Across two nodes", (): void => {
+      expect(getContentBetweenOffsets(page, 63, 66)).toStrictEqual({
+        content: "rav",
+        end: { nodeIndex: 2, nodeStartOffset: 1 },
+        start: { nodeIndex: 1, nodeStartOffset: 63 },
+      });
+      expect(getContentBetweenOffsets(page, 70, 82)).toStrictEqual({
+        content: " close of da",
+        end: { nodeIndex: 4, nodeStartOffset: 2 },
+        start: { nodeIndex: 3, nodeStartOffset: 4 },
+      });
+    });
+
+    test("Across two nodes to the end of the second node", (): void => {
+      expect(getContentBetweenOffsets(page, 70, 83)).toStrictEqual({
+        content: " close of day",
+        end: { nodeIndex: 4, nodeStartOffset: 3 },
+        start: { nodeIndex: 3, nodeStartOffset: 4 },
+      });
+    });
+
+    test("Across multiple nodes", (): void => {
+      expect(getContentBetweenOffsets(page, 60, 83)).toStrictEqual({
+        content: "nd rave at close of day",
+        end: { nodeIndex: 4, nodeStartOffset: 3 },
+        start: { nodeIndex: 1, nodeStartOffset: 60 },
+      });
+    });
+  });
+
+  describe("getContentBetweenNodeAndOffsets", (): void => {
+    const page = getStartPage();
+
+    test("Inside a single node", (): void => {
+      expect(
+        getContentBetweenNodeAndOffsets(
+          page,
+          { nodeIndex: 1, nodeStartOffset: 3 },
+          { nodeIndex: 1, nodeStartOffset: 50 },
+        ),
+      ).toBe("not go gentle into that good night,\nOld age sho");
+    });
+
+    test("An entire single node", (): void => {
+      expect(
+        getContentBetweenNodeAndOffsets(
+          page,
+          { nodeIndex: 1, nodeStartOffset: 0 },
+          { nodeIndex: 1, nodeStartOffset: 65 },
+        ),
+      ).toBe(
         "Do not go gentle into that good night,\nOld age should burn and ra",
       );
     });
 
-    test("Across two nodes", () => {
-      expect(getContentBetweenOffsets(page, 63, 66)).toBe("rav");
-      expect(getContentBetweenOffsets(page, 70, 82)).toBe(" close of da");
+    test("Across two nodes", (): void => {
+      expect(
+        getContentBetweenNodeAndOffsets(
+          page,
+          { nodeIndex: 1, nodeStartOffset: 63 },
+          { nodeIndex: 2, nodeStartOffset: 1 },
+        ),
+      ).toBe("rav");
+      expect(
+        getContentBetweenNodeAndOffsets(
+          page,
+          { nodeIndex: 3, nodeStartOffset: 4 },
+          { nodeIndex: 4, nodeStartOffset: 2 },
+        ),
+      ).toBe(" close of da");
     });
 
-    test("Across two nodes to the end of the second node", () => {
-      expect(getContentBetweenOffsets(page, 70, 83)).toBe(" close of day");
+    test("Across two nodes to the end of the second node", (): void => {
+      expect(
+        getContentBetweenNodeAndOffsets(
+          page,
+          { nodeIndex: 3, nodeStartOffset: 4 },
+          { nodeIndex: 4, nodeStartOffset: 3 },
+        ),
+      ).toBe(" close of day");
     });
 
-    test("Across multiple nodes", () => {
-      expect(getContentBetweenOffsets(page, 60, 83)).toBe(
-        "nd rave at close of day",
-      );
+    test("Across multiple nodes", (): void => {
+      expect(
+        getContentBetweenNodeAndOffsets(
+          page,
+          { nodeIndex: 1, nodeStartOffset: 60 },
+          { nodeIndex: 4, nodeStartOffset: 3 },
+        ),
+      ).toBe("nd rave at close of day");
     });
   });
 });

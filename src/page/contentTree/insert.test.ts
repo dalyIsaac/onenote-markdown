@@ -1,8 +1,6 @@
-import {
-  Color,
-  PageContent,
-  StatePages,
-} from "../pageModel";
+/* eslint-disable max-len */
+
+import { Color, PageContent, StatePages } from "../pageModel";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { SENTINEL_INDEX, EMPTY_TREE_ROOT } from "../tree/tree";
 import { Buffer, ContentNode } from "./contentModel";
@@ -12,8 +10,8 @@ import pageReducer from "../reducer";
 import { insertContent as InsertContentActionCreator } from "./actions";
 import { TagType } from "../structureTree/structureModel";
 
-describe("Functions for inserting content into the piece table/red-black tree.", () => {
-  test("Scenario 1: insert at the end of the previously inserted node", () => {
+describe("Functions for inserting content into the piece table/red-black tree.", (): void => {
+  test("Scenario 1: insert at the end of the previously inserted node", (): void => {
     const getPage = (): PageContent => ({
       buffers: [
         {
@@ -65,13 +63,13 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     const page = getPage();
     const content: ContentInsert = {
       content: "b",
-      offset: 1,
+      globalOffset: 1,
     };
     insertContent(page, content, SENTINEL_INDEX, MAX_BUFFER_LENGTH);
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 2: insert at the end of the previously inserted node", () => {
+  test("Scenario 2: insert at the end of the previously inserted node", (): void => {
     const getPage = (): PageContent => ({
       buffers: [
         {
@@ -116,8 +114,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       isReadOnly: false,
       lineStarts: [0],
     });
-    ((expectedPage.content
-      .nodes[1] as ContentNode) as ContentNode).right = 2;
+    ((expectedPage.content.nodes[1] as ContentNode) as ContentNode).right = 2;
     expectedPage.content.nodes.push({
       bufferIndex: 1,
       color: Color.Red,
@@ -142,14 +139,14 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     const page = getPage();
     const content: ContentInsert = {
       content: "ef",
-      offset: 5,
+      globalOffset: 5,
     };
     const maxBufferLength = 5;
     insertContent(page, content, SENTINEL_INDEX, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 3: insert at the end of a node (test 1)", () => {
+  test("Scenario 3: insert at the end of a node (test 1)", (): void => {
     const getPage = (): PageContent => ({
       buffers: [
         {
@@ -221,8 +218,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     });
     const page = getPage();
     const expectedPage = getPage();
-    ((expectedPage.buffers[1] as Buffer) as Buffer).content +=
-      "ij\nk";
+    ((expectedPage.buffers[1] as Buffer) as Buffer).content += "ij\nk";
     (expectedPage.buffers[1] as Buffer).lineStarts.push(7);
     (expectedPage.content.nodes[1] as ContentNode).leftCharCount = 6;
     (expectedPage.content.nodes[1] as ContentNode).leftLineFeedCount = 1;
@@ -246,14 +242,14 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expectedPage.previouslyInsertedContentNodeOffset = 2;
     const content: ContentInsert = {
       content: "ij\nk",
-      offset: 2,
+      globalOffset: 2,
     };
     const maxBufferLength = 8;
     insertContent(page, content, SENTINEL_INDEX, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 3: insert at the end of a node (test 2)", () => {
+  test("Scenario 3: insert at the end of a node (test 2)", (): void => {
     const getPage = (): PageContent => ({
       buffers: [
         {
@@ -347,14 +343,14 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expectedPage.previouslyInsertedContentNodeOffset = 9;
     const content: ContentInsert = {
       content: "ij\nk",
-      offset: 9,
+      globalOffset: 9,
     };
     const maxBufferLength = 8;
     insertContent(page, content, SENTINEL_INDEX, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 4: insert at the end of a node (test 1)", () => {
+  test("Scenario 4: insert at the end of a node (test 1)", (): void => {
     const getPage = (): PageContent => ({
       buffers: [
         {
@@ -453,14 +449,14 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expectedPage.previouslyInsertedContentNodeOffset = 2;
     const content: ContentInsert = {
       content: "ij\nkl",
-      offset: 2,
+      globalOffset: 2,
     };
     const maxBufferLength = 8;
     insertContent(page, content, SENTINEL_INDEX, maxBufferLength);
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 4: insert at the end of a node (test 2)", () => {
+  test("Scenario 4: insert at the end of a node (test 2)", (): void => {
     const getPage = (): PageContent => ({
       buffers: [
         {
@@ -522,7 +518,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     const page = getPage();
     const content: ContentInsert = {
       content: "ef",
-      offset: 5,
+      globalOffset: 5,
     };
     expectedPage.previouslyInsertedContentNodeIndex = 2;
     expectedPage.previouslyInsertedContentNodeOffset = 5;
@@ -531,7 +527,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 5: insert at the start of the content", () => {
+  test("Scenario 5: insert at the start of the content", (): void => {
     const page: PageContent = {
       buffers: [
         {
@@ -659,7 +655,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     };
     const content: ContentInsert = {
       content: "gh\nij",
-      offset: 0,
+      globalOffset: 0,
     };
     const maxBufferLength = 8;
     insertContent(
@@ -671,7 +667,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 6: insert at the start of the content (test 1)", () => {
+  test("Scenario 6: insert at the start of the content (test 1)", (): void => {
     const page: PageContent = {
       buffers: [
         {
@@ -794,7 +790,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     };
     const content: ContentInsert = {
       content: "gh\nij",
-      offset: 0,
+      globalOffset: 0,
     };
     const maxBufferLength = 8;
     insertContent(
@@ -806,7 +802,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 6: insert at the start of the content (test 2)", () => {
+  test("Scenario 6: insert at the start of the content (test 2)", (): void => {
     const page: PageContent = {
       buffers: [
         {
@@ -904,7 +900,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     };
     const content: ContentInsert = {
       content: "ef",
-      offset: 0,
+      globalOffset: 0,
     };
     const maxBufferLength = 8;
     insertContent(
@@ -916,7 +912,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 7: insert inside a node's content", () => {
+  test("Scenario 7: insert inside a node's content", (): void => {
     const page: PageContent = {
       buffers: [
         {
@@ -1061,7 +1057,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     };
     const content: ContentInsert = {
       content: "ij\nkl",
-      offset: 5,
+      globalOffset: 5,
     };
     const maxBufferLength = 16;
     insertContent(
@@ -1073,7 +1069,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 8: insert inside a node's content (test 1)", () => {
+  test("Scenario 8: insert inside a node's content (test 1)", (): void => {
     const page: PageContent = {
       buffers: [
         {
@@ -1223,7 +1219,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     };
     const content: ContentInsert = {
       content: "ij\nkl\nmn",
-      offset: 8,
+      globalOffset: 8,
     };
     const maxBufferLength = 16;
     insertContent(
@@ -1235,7 +1231,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 8: insert inside a node's content (test 2", () => {
+  test("Scenario 8: insert inside a node's content (test 2", (): void => {
     const page: PageContent = {
       buffers: [
         {
@@ -1334,7 +1330,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     };
     const content: ContentInsert = {
       content: "ef",
-      offset: 1,
+      globalOffset: 1,
     };
     const maxBufferLength = 8;
     insertContent(
@@ -1346,7 +1342,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(page).toStrictEqual(expectedPage);
   });
 
-  test("Scenario 9: insert a node into an empty tree.", () => {
+  test("Scenario 9: insert a node into an empty tree.", (): void => {
     const state: StatePages = {
       pageId: {
         buffers: [],
@@ -1398,7 +1394,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(resultState).toStrictEqual(expectedState);
   });
 
-  test("Ensures that the parent structure node's length gets increased", () => {
+  test("Ensures that the parent structure node's length gets increased", (): void => {
     const page: PageContent = {
       buffers: [
         {
@@ -1604,7 +1600,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     };
     const content: ContentInsert = {
       content: "ij\nk",
-      offset: 2,
+      globalOffset: 2,
     };
     const maxBufferLength = 8;
     insertContent(page, content, 1, maxBufferLength);
