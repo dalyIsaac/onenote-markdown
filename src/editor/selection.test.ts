@@ -2,7 +2,13 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 
 import getEditorSelection from "./selection";
-import { STRUCTURE_NODE_INDEX } from "./render";
+import {
+  STRUCTURE_NODE_INDEX,
+  CONTENT_NODE_START_INDEX,
+  CONTENT_NODE_START_OFFSET,
+  CONTENT_NODE_END_INDEX,
+  CONTENT_NODE_END_OFFSET,
+} from "./render";
 
 class NamedNodeMapMock {
   private dict: { [name: string]: Attr } = {};
@@ -18,13 +24,17 @@ class NamedNodeMapMock {
   }
 }
 
-interface ShowItems {
+interface StructureNodeAttributes {
   [STRUCTURE_NODE_INDEX]?: boolean;
+  [CONTENT_NODE_START_INDEX]?: boolean;
+  [CONTENT_NODE_START_OFFSET]?: boolean;
+  [CONTENT_NODE_END_INDEX]?: boolean;
+  [CONTENT_NODE_END_OFFSET]?: boolean;
 }
 
 const checkProperty = (
-  show: ShowItems | undefined,
-  name: keyof ShowItems,
+  show: StructureNodeAttributes | undefined,
+  name: keyof StructureNodeAttributes,
 ): boolean => {
   if (show === undefined) {
     return true;
@@ -35,22 +45,40 @@ const checkProperty = (
   }
 };
 
-const createElement = (show?: ShowItems) => {
-  const attributes = new NamedNodeMapMock();
+const createAttribute = (
+  map: NamedNodeMapMock,
+  name: string,
+  value: string,
+) => {
+  const attr = document.createAttribute(name);
+  attr.value = value;
+  map.setNamedItem(attr);
+};
+
+const createElement = (show?: StructureNodeAttributes) => {
+  const map = new NamedNodeMapMock();
 
   if (checkProperty(show, STRUCTURE_NODE_INDEX)) {
-    const structurenodeindex = document.createAttribute(STRUCTURE_NODE_INDEX);
-    structurenodeindex.value = "2";
-    attributes.setNamedItem(structurenodeindex);
+    createAttribute(map, STRUCTURE_NODE_INDEX, "2");
   }
 
-  //   if (checkProperty(show, IS_BREAK)) {
-  //     const isbreak = document.createAttribute(IS_BREAK);
-  //     isbreak.value = "true";
-  //     attributes.setNamedItem(isbreak);
-  //   }
+  if (checkProperty(show, CONTENT_NODE_START_INDEX)) {
+    createAttribute(map, CONTENT_NODE_START_INDEX, "3");
+  }
 
-  return { attributes };
+  if (checkProperty(show, CONTENT_NODE_START_OFFSET)) {
+    createAttribute(map, CONTENT_NODE_START_OFFSET, "4");
+  }
+
+  if (checkProperty(show, CONTENT_NODE_END_INDEX)) {
+    createAttribute(map, CONTENT_NODE_END_INDEX, "5");
+  }
+
+  if (checkProperty(show, CONTENT_NODE_END_OFFSET)) {
+    createAttribute(map, CONTENT_NODE_END_OFFSET, "6");
+  }
+
+  return { attributes: map };
 };
 
 describe("markdown selection", (): void => {
@@ -77,52 +105,6 @@ describe("markdown selection", (): void => {
     });
     expect(getEditorSelection(shadowRoot)).toEqual(null);
   });
-
-  //   test("selection with elements which have break indicators", (): void => {
-  //     shadowRoot.getSelection = jest.fn().mockReturnValue({
-  //       anchorNode: createElement(),
-  //       anchorOffset: 10,
-  //       focusNode: createElement(),
-  //       focusOffset: 11,
-  //     });
-  //     expect(getEditorSelection(shadowRoot)).toEqual({
-  //       end: {
-  //         isBreak: true,
-  //         localOffset: 11,
-  //         nodeOffset: 10,
-  //         structureNodeIndex: 2,
-  //       },
-  //       start: {
-  //         isBreak: true,
-  //         localOffset: 10,
-  //         nodeOffset: 10,
-  //         structureNodeIndex: 2,
-  //       },
-  //     });
-  //   });
-
-  //   test("selection with elements which don't have break indicators", (): void => {
-  //     shadowRoot.getSelection = jest.fn().mockReturnValue({
-  //       anchorNode: createElement({ isbreak: false }),
-  //       anchorOffset: 10,
-  //       focusNode: createElement({ isbreak: false }),
-  //       focusOffset: 11,
-  //     });
-  //     expect(getEditorSelection(shadowRoot)).toEqual({
-  //       end: {
-  //         isBreak: false,
-  //         localOffset: 11,
-  //         nodeOffset: 10,
-  //         structureNodeIndex: 2,
-  //       },
-  //       start: {
-  //         isBreak: false,
-  //         localOffset: 10,
-  //         nodeOffset: 10,
-  //         structureNodeIndex: 2,
-  //       },
-  //     });
-  //   });
 
   test("selection with elements which don't have structurenodeindex", (): void => {
     shadowRoot.getSelection = jest.fn().mockReturnValue({
@@ -152,14 +134,19 @@ describe("markdown selection", (): void => {
       focusOffset: 11,
     });
     expect(getEditorSelection(shadowRoot)).toEqual({
-      end: {
-        // isBreak: true,
-        localOffset: 11,
+      anchor: {
+        end: { nodeIndex: 5, nodeStartOffset: 6 },
+        localOffset: 10,
+        start: { nodeIndex: 3, nodeStartOffset: 4 },
         structureNodeIndex: 2,
       },
-      start: {
-        // isBreak: true,
-        localOffset: 10,
+      focus: {
+        end: {
+          nodeIndex: 5,
+          nodeStartOffset: 6,
+        },
+        localOffset: 11,
+        start: { nodeIndex: 3, nodeStartOffset: 4 },
         structureNodeIndex: 2,
       },
     });

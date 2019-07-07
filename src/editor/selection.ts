@@ -1,66 +1,74 @@
-import { STRUCTURE_NODE_INDEX } from "./render";
+import {
+  STRUCTURE_NODE_INDEX,
+  CONTENT_NODE_START_INDEX,
+  CONTENT_NODE_START_OFFSET,
+  CONTENT_NODE_END_OFFSET,
+  CONTENT_NODE_END_INDEX,
+} from "./render";
+import { ContentBoundary } from "../page/contentTree/tree";
 
+/**
+ * Describes a `StructureNode` in relation to its `RedBlackTree`, and its
+ * constituent `ContentNode`s.
+ */
 interface StructureNodeProperties {
   structureNodeIndex: number;
-  //   isBreak: boolean;
+  start: ContentBoundary;
+  end: ContentBoundary;
 }
 
+/**
+ * Describes a boundary for selection within the context of a `StructureNode`.
+ */
 interface SelectionBoundary extends StructureNodeProperties {
   localOffset: number;
 }
 
+/**
+ * Describes the current editor selection.
+ */
 export interface EditorSelection {
-  start: SelectionBoundary;
-  end: SelectionBoundary;
+  anchor: SelectionBoundary;
+  focus: SelectionBoundary;
 }
 
 function isElement(item: Node | Element): item is Element {
   return (item as Element).attributes !== undefined;
 }
 
-function getStructureNodeIndex(map: NamedNodeMap): number | null {
-  const attr = map.getNamedItem(STRUCTURE_NODE_INDEX);
+function getIntegerAttribute(name: string, map: NamedNodeMap): number {
+  const attr = map.getNamedItem(name);
   if (attr === null) {
-    return null;
+    throw new TypeError(`Could not find attribute "${name}"`);
   }
   return parseInt(attr.value);
 }
 
-// function getIsBreak(map: NamedNodeMap): boolean {
-//   const attr = map.getNamedItem(IS_BREAK);
-//   if (attr === null) {
-//     return false;
-//   }
-//   return Boolean(attr.value);
-// }
-
-function getStructureNodeProperties(
+const getStructureNodeProperties = (
   map: NamedNodeMap,
-): StructureNodeProperties | null {
-  const structureNodeIndex = getStructureNodeIndex(map);
-  //   const isbreak = getIsBreak(map);
+): StructureNodeProperties => ({
+  end: {
+    nodeIndex: getIntegerAttribute(CONTENT_NODE_END_INDEX, map),
+    nodeStartOffset: getIntegerAttribute(CONTENT_NODE_END_OFFSET, map),
+  },
+  start: {
+    nodeIndex: getIntegerAttribute(CONTENT_NODE_START_INDEX, map),
+    nodeStartOffset: getIntegerAttribute(CONTENT_NODE_START_OFFSET, map),
+  },
+  structureNodeIndex: getIntegerAttribute(STRUCTURE_NODE_INDEX, map),
+});
 
-  if (structureNodeIndex === null) {
-    return null;
-  }
-
-  return {
-    // isBreak: isbreak,
-    structureNodeIndex: structureNodeIndex,
-  };
-}
-
-function getAttributes(
+function getNodeAttributes(
   node: Node | Element | null,
-): StructureNodeProperties | null {
+): StructureNodeProperties {
   if (node === null) {
-    return null;
+    throw new TypeError("The given node was null");
   } else if (isElement(node)) {
     return getStructureNodeProperties(node.attributes);
   }
 
   if (node.parentElement === null) {
-    return null;
+    throw new TypeError("The given node did not have a parent element");
   } else {
     return getStructureNodeProperties(node.parentElement.attributes);
   }
@@ -76,22 +84,21 @@ export default function getEditorSelection(
 
   const { anchorNode, anchorOffset, focusNode, focusOffset } = selection;
 
-  const anchorAttr = getAttributes(anchorNode);
-  const focusAttr = getAttributes(focusNode);
+  try {
+    const anchorAttr = getNodeAttributes(anchorNode);
+    const focusAttr = getNodeAttributes(focusNode);
 
-  if (anchorAttr === null || focusAttr === null) {
+    return {
+      anchor: {
+        ...anchorAttr,
+        localOffset: anchorOffset,
+      },
+      focus: {
+        ...focusAttr,
+        localOffset: focusOffset,
+      },
+    };
+  } catch (error) {
     return null;
   }
-
-  const start = {
-    ...anchorAttr,
-    localOffset: anchorOffset,
-  };
-
-  const end = {
-    ...focusAttr,
-    localOffset: focusOffset,
-  };
-
-  return { end, start };
 }

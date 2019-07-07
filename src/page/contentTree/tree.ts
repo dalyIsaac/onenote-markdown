@@ -28,14 +28,19 @@ export const SENTINEL_CONTENT: ContentNode = {
   start: { column: 0, line: 0 },
 };
 
+/**
+ * A boundary of a `StructureNode`, in regards to its constituent
+ * `ContentNode`s.
+ */
 export interface ContentBoundary {
   /**
-   * The index of the node inside the array.
+   * The index of the `ContentNode` inside the `RedBlackTree`.
    */
   nodeIndex: number;
 
   /**
-   * The offset of the node against the start of the content.
+   * The offset of the boundary of the `StructureNode` in regards to the
+   * `ContentNode`.
    */
   nodeStartOffset: number;
 }

@@ -13,8 +13,8 @@ export type StackItem<T extends StackItemBase = StackItemBase> = T | Element;
 export const STRUCTURE_NODE_INDEX = "structure_node";
 export const CONTENT_NODE_START_INDEX = "content_node_start";
 export const CONTENT_NODE_END_INDEX = "content_node_end";
-export const CONTENT_NODE_START_OFFSET = "content_node_start_offset";
-export const CONTENT_NODE_END_OFFSET = "content_node_end_offset";
+export const CONTENT_NODE_START_OFFSET = "content_node_offset_start";
+export const CONTENT_NODE_END_OFFSET = "content_node_offset_end";
 
 export type Style = Partial<{ [key in keyof CSSStyleDeclaration]: string }>;
 
