@@ -13,6 +13,8 @@ import {
 } from "./actions";
 import { TagType } from "../structureTree/structureModel";
 
+Date.now = jest.fn().mockReturnValue(1234567890);
+
 describe("Functions for inserting content into the piece table/red-black tree.", (): void => {
   test("Scenario 1: insert at the end of the previously inserted node", (): void => {
     const getPage = (): PageContent => ({
@@ -1457,7 +1459,34 @@ describe("Functions for inserting content into the piece table/red-black tree.",
         },
         previouslyInsertedContentNodeIndex: 1,
         previouslyInsertedContentNodeOffset: 11,
-        structure: { nodes: [SENTINEL_STRUCTURE], root: EMPTY_TREE_ROOT },
+        structure: {
+          nodes: [
+            SENTINEL_STRUCTURE,
+            {
+              color: Color.Black,
+              id: "local:p:{1234567890}",
+              left: SENTINEL_INDEX,
+              leftSubTreeLength: 0,
+              length: 11,
+              parent: SENTINEL_INDEX,
+              right: 2,
+              tag: "p",
+              tagType: TagType.StartTag,
+            },
+            {
+              color: Color.Red,
+              id: "local:p:{1234567890}",
+              left: SENTINEL_INDEX,
+              leftSubTreeLength: 0,
+              length: 11,
+              parent: 1,
+              right: SENTINEL_INDEX,
+              tag: "p",
+              tagType: TagType.EndTag,
+            },
+          ],
+          root: 1,
+        },
       },
     };
 

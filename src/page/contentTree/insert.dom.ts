@@ -8,6 +8,9 @@ import {
   updateContentTreeMetadata,
 } from "./tree";
 import { InsertContentDOM } from "./actions";
+import { insertStructureNode } from "../structureTree/insert";
+import { TagType } from "../structureTree/structureModel";
+import { generateNewId } from "../structureTree/tree";
 
 /**
  * Creates a new node, and creates a new buffer to contain the new content.
@@ -277,9 +280,24 @@ export function insertContentDOM(
   action: InsertContentDOM,
   maxBufferLength: number,
 ): void {
-  const structureNode = page.structure.nodes[action.structureNodeIndex];
   if (page.content.root === EMPTY_TREE_ROOT) {
     createNodeCreateBuffer(action, page);
+    page.content.root = 1;
+    insertStructureNode(page, {
+      id: generateNewId("p"),
+      length: action.content.length,
+      offset: 0,
+      tag: "p",
+      tagType: TagType.StartTag,
+    });
+    insertStructureNode(page, {
+      id: generateNewId("p"),
+      insertAfterNode: page.content.root,
+      length: action.content.length,
+      offset: 0,
+      tag: "p",
+      tagType: TagType.EndTag,
+    });
     return;
   }
   let previouslyInsertedNode: ContentNode | undefined;
@@ -310,6 +328,8 @@ export function insertContentDOM(
   if (page) {
     fixInsert(page.content, page.content.nodes.length - 1);
   }
+
+  const structureNode = page.structure.nodes[action.structureNodeIndex];
   if (action.structureNodeIndex !== SENTINEL_INDEX) {
     structureNode.length += action.content.length;
   }
