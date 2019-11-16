@@ -2,12 +2,12 @@ import { PageContent } from "../pageModel";
 import { SENTINEL_CONTENT, MAX_BUFFER_LENGTH } from "../contentTree/tree";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { chunks, TokenType } from "tiny-html-lexer";
-import { EMPTY_TREE_ROOT, SENTINEL_INDEX } from "../tree/tree";
+import { EMPTY_TREE_ROOT } from "../tree/tree";
 import { KeyValueStr, TagType } from "../structureTree/structureModel";
 import { InsertStructureProps } from "../structureTree/actions";
 import he from "he";
-import { insertContent } from "../contentTree/insert";
 import { insertStructureNode } from "../structureTree/insert";
+import { insertContentDOM } from "../contentTree/insert.dom";
 
 interface Attributes {
   [key: string]: string;
@@ -282,7 +282,7 @@ export default function parse(content: string): PageContent {
       [type, chunk] = stream.next().value;
     }
 
-    lastTextNode.length = content.length;
+    // lastTextNode.length = content.length;
     insertStructureNode(page, { ...lastTextNode, offset: structureNodeOffset });
     structureNodeOffset += 1;
     insertStructureNode(page, {
@@ -294,10 +294,33 @@ export default function parse(content: string): PageContent {
     });
     structureNodeOffset += 1;
 
-    insertContent(
+    // insertContent(
+    //   page,
+    //   { content, globalOffset: contentOffset },
+    //   SENTINEL_INDEX, // because the length has already been set
+    //   MAX_BUFFER_LENGTH,
+    // );
+    const offset = page.content.nodes[page.content.nodes.length - 1].length;
+    insertContentDOM(
       page,
-      { content, globalOffset: contentOffset },
-      SENTINEL_INDEX, // because the length has already been set
+      {
+        content,
+        end: {
+          nodeIndex: 1,
+          nodeLocalOffset: offset,
+        },
+        localOffset: offset,
+        start: {
+          nodeIndex: 1,
+          nodeLocalOffset: 0,
+        },
+        structureNodeIndex:
+          page.structure.nodes.length -
+          (page.structure.nodes[page.structure.nodes.length - 1].tagType !==
+          TagType.EndTag
+            ? 1
+            : 2),
+      },
       MAX_BUFFER_LENGTH,
     );
     contentOffset += content.length;
