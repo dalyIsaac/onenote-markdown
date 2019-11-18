@@ -283,7 +283,11 @@ export default function parse(content: string): PageContent {
     }
 
     // lastTextNode.length = content.length;
-    insertStructureNode(page, { ...lastTextNode, offset: structureNodeOffset });
+    insertStructureNode(page, {
+      ...lastTextNode,
+      length: content.length,
+      offset: structureNodeOffset,
+    });
     structureNodeOffset += 1;
     insertStructureNode(page, {
       id: lastTextNode.id,
@@ -404,5 +408,6 @@ export default function parse(content: string): PageContent {
   page.buffers.forEach((x): void => {
     x.isReadOnly = true;
   });
-  return page as PageContent;
+  page.previouslyInsertedContentNodeOffset = 0;
+  return page;
 }

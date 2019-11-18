@@ -283,21 +283,11 @@ export function insertContentDOM(
   if (page.content.root === EMPTY_TREE_ROOT) {
     createNodeCreateBuffer(action, page);
     page.content.root = 1;
-    insertStructureNode(page, {
-      id: generateNewId("p"),
-      length: action.content.length,
-      offset: 0,
-      tag: "p",
-      tagType: TagType.StartTag,
-    });
-    insertStructureNode(page, {
-      id: generateNewId("p"),
-      insertAfterNode: page.content.root,
-      length: action.content.length,
-      offset: 0,
-      tag: "p",
-      tagType: TagType.EndTag,
-    });
+    const node = page.content.nodes[1];
+    node.color = Color.Black;
+    node.left = SENTINEL_INDEX;
+    node.parent = SENTINEL_INDEX;
+    node.right = SENTINEL_INDEX;
     return;
   }
   let previouslyInsertedNode: ContentNode | undefined;
