@@ -8,9 +8,6 @@ import {
   updateContentTreeMetadata,
 } from "./tree";
 import { InsertContentDOM } from "./actions";
-import { insertStructureNode } from "../structureTree/insert";
-import { TagType } from "../structureTree/structureModel";
-import { generateNewId } from "../structureTree/tree";
 
 /**
  * Creates a new node, and creates a new buffer to contain the new content.
@@ -318,11 +315,4 @@ export function insertContentDOM(
   if (page) {
     fixInsert(page.content, page.content.nodes.length - 1);
   }
-
-  const structureNode = page.structure.nodes[action.structureNodeIndex];
-  if (action.structureNodeIndex !== SENTINEL_INDEX) {
-    structureNode.length += action.content.length;
-  }
-  // eslint-disable-next-line max-len
-  // to updateNodePairTag, see https://github.com/dalyIsaac/onenote-markdown/blob/7d20ad3a33ee1c504559496bf6b05591a685704b/src/page/contentTree/insert.ts#L360
 }

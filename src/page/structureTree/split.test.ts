@@ -392,7 +392,7 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };
-    splitStructureNode(page as PageContent, action);
+    splitStructureNode(page, action);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -537,7 +537,7 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };
-    splitStructureNode(page as PageContent, action);
+    splitStructureNode(page, action);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -550,7 +550,7 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };
-    splitStructureNode(page as PageContent, action);
+    splitStructureNode(page, action);
     expect(page).toStrictEqual(expectedPage_1_2_1());
   });
 
@@ -563,7 +563,7 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };
-    splitStructureNode(page as PageContent, action);
+    splitStructureNode(page, action);
     expect(page).toStrictEqual(expectedPage_1_2_2());
   });
 
@@ -704,7 +704,7 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };
-    splitStructureNode(page as PageContent, action);
+    splitStructureNode(page, action);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -845,7 +845,7 @@ describe("Tests for splitting `StructureNode`s.", (): void => {
       pageId: "",
       type: SPLIT_STRUCTURE_NODE,
     };
-    splitStructureNode(page as PageContent, action);
+    splitStructureNode(page, action);
     expect(page).toStrictEqual(expectedPage);
   });
 

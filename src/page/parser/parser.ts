@@ -85,7 +85,6 @@ export default function parse(content: string): PageContent {
   const stream = chunks(content);
   let lastTextNode: InsertStructureProps;
   let structureNodeOffset = 1;
-  let contentOffset = 0;
   const markdownStack: string[][] = [];
   const charRef: Set<TokenType> = new Set([
     "charRef-decimal",
@@ -298,12 +297,6 @@ export default function parse(content: string): PageContent {
     });
     structureNodeOffset += 1;
 
-    // insertContent(
-    //   page,
-    //   { content, globalOffset: contentOffset },
-    //   SENTINEL_INDEX, // because the length has already been set
-    //   MAX_BUFFER_LENGTH,
-    // );
     const offset = page.content.nodes[page.content.nodes.length - 1].length;
     insertContentDOM(
       page,
@@ -327,7 +320,6 @@ export default function parse(content: string): PageContent {
       },
       MAX_BUFFER_LENGTH,
     );
-    contentOffset += content.length;
     consumeUpToType("tag-end");
   }
 
@@ -408,6 +400,8 @@ export default function parse(content: string): PageContent {
   page.buffers.forEach((x): void => {
     x.isReadOnly = true;
   });
-  page.previouslyInsertedContentNodeOffset = 0;
+  if (page.previouslyInsertedContentNodeOffset) {
+    page.previouslyInsertedContentNodeOffset = 0;
+  }
   return page;
 }
