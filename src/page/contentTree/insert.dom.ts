@@ -8,6 +8,9 @@ import {
   updateContentTreeMetadata,
 } from "./tree";
 import { InsertContentDOM } from "./actions";
+import { insertStructureNode } from "../structureTree/insert";
+import { generateNewId } from "../structureTree/tree";
+import { TagType } from "../structureTree/structureModel";
 
 /**
  * Creates a new node, and creates a new buffer to contain the new content.
@@ -271,20 +274,43 @@ function insertAtEndPreviouslyInsertedNode(
  * @param action The insert action.
  * @param page The page to insert the content into.
  * @param maxBufferLength The maximum length of a buffer's content/string.
+ * @param updateStructureNode If `true` when the
+ * `page.content.root === EMPTY_TREE_ROOT`, then inserts structure nodes.
+ * Otherwise, if `true`, the length of the corresponding structure is updated.
+ * This exists because some callers will alter the structure lengths or insert
+ * structure nodesthemselves.
  */
 export function insertContentDOM(
   page: PageContent,
   action: InsertContentDOM,
   maxBufferLength: number,
+  updateStructureNode = false,
 ): void {
   if (page.content.root === EMPTY_TREE_ROOT) {
     createNodeCreateBuffer(action, page);
     page.content.root = 1;
-    const node = page.content.nodes[1];
-    node.color = Color.Black;
-    node.left = SENTINEL_INDEX;
-    node.parent = SENTINEL_INDEX;
-    node.right = SENTINEL_INDEX;
+    const contentNode = page.content.nodes[1];
+    contentNode.color = Color.Black;
+    contentNode.left = SENTINEL_INDEX;
+    contentNode.parent = SENTINEL_INDEX;
+    contentNode.right = SENTINEL_INDEX;
+    if (updateStructureNode) {
+      insertStructureNode(page, {
+        id: generateNewId("p"),
+        length: action.content.length,
+        offset: 0,
+        tag: "p",
+        tagType: TagType.StartTag,
+      });
+      insertStructureNode(page, {
+        id: generateNewId("p"),
+        insertAfterNode: page.content.root,
+        length: action.content.length,
+        offset: 0,
+        tag: "p",
+        tagType: TagType.EndTag,
+      });
+    }
     return;
   }
   let previouslyInsertedNode: ContentNode | undefined;
@@ -311,8 +337,9 @@ export function insertContentDOM(
       insertAtNodeExtremity(action, page, maxBufferLength);
     }
   }
-
-  if (page) {
-    fixInsert(page.content, page.content.nodes.length - 1);
+  if (updateStructureNode && action.structureNodeIndex !== SENTINEL_INDEX) {
+    page.structure.nodes[action.structureNodeIndex].length +=
+      action.content.length;
   }
+  fixInsert(page.content, page.content.nodes.length - 1);
 }

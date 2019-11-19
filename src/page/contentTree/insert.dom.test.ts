@@ -79,7 +79,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       },
       structureNodeIndex: 0,
     };
-    insertContentDOM(page, action, MAX_BUFFER_LENGTH);
+    insertContentDOM(page, action, MAX_BUFFER_LENGTH, true);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -165,7 +165,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 5;
-    insertContentDOM(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength, true);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -276,7 +276,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 8;
-    insertContentDOM(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength, true);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -385,7 +385,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 8;
-    insertContentDOM(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength, true);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -499,7 +499,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 8;
-    insertContentDOM(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength, true);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -579,7 +579,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expectedPage.previouslyInsertedContentNodeIndex = 2;
     expectedPage.previouslyInsertedContentNodeOffset = 2;
     const maxBufferLength = 8;
-    insertContentDOM(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength, true);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -721,7 +721,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 8;
-    insertContentDOM(page as PageContent, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength, true);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -858,7 +858,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 8;
-    insertContentDOM(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength, true);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -969,7 +969,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 8;
-    insertContentDOM(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength, true);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -1133,7 +1133,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 16;
-    insertContentDOM(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength, true);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -1302,7 +1302,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 16;
-    insertContentDOM(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength, true);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -1414,7 +1414,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 0,
     };
     const maxBufferLength = 8;
-    insertContentDOM(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength, true);
     expect(page).toStrictEqual(expectedPage);
   });
 
@@ -1508,7 +1508,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
     expect(resultState).toStrictEqual(expectedState);
   });
 
-  test("Ensures that the parent structure node's length gets increased", (): void => {
+  test("Scenario 10: Ensures that the parent structure node's length gets increased", (): void => {
     const page: PageContent = {
       buffers: [
         {
@@ -1726,7 +1726,7 @@ describe("Functions for inserting content into the piece table/red-black tree.",
       structureNodeIndex: 1,
     };
     const maxBufferLength = 8;
-    insertContentDOM(page, action, maxBufferLength);
+    insertContentDOM(page, action, maxBufferLength, true);
     expect(page).toStrictEqual(expectedPage);
   });
 });

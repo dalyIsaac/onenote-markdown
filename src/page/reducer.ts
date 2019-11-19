@@ -64,7 +64,7 @@ function handleInsertContentDOM(
   state: StatePages,
   { type, pageId, ...action }: InsertContentDOMAction,
 ): StatePages {
-  insertContentDOM(state[pageId], action, MAX_BUFFER_LENGTH);
+  insertContentDOM(state[pageId], action, MAX_BUFFER_LENGTH, true);
   return state;
 }
 
