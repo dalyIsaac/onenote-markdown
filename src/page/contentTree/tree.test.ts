@@ -138,112 +138,112 @@ describe("Functions for common tree operations on the piece table/content red-bl
     expect(findNodeAtOffset({ nodes, root }, -1)).toStrictEqual({
       node: SENTINEL_CONTENT,
       nodeIndex: 1,
-      nodeStartOffset: 0,
+      nodeLocalOffset: 0,
       remainder: 0,
     });
 
     expect(findNodeAtOffset({ nodes, root }, 0)).toStrictEqual({
       node: nodes[1],
       nodeIndex: 1,
-      nodeStartOffset: 0,
+      nodeLocalOffset: 0,
       remainder: 0,
     });
 
     expect(findNodeAtOffset({ nodes, root }, 30)).toStrictEqual({
       node: nodes[1],
       nodeIndex: 1,
-      nodeStartOffset: 0,
+      nodeLocalOffset: 0,
       remainder: 30,
     });
 
     expect(findNodeAtOffset({ nodes, root }, 31)).toStrictEqual({
       node: nodes[2],
       nodeIndex: 2,
-      nodeStartOffset: 31,
+      nodeLocalOffset: 31,
       remainder: 0,
     });
 
     expect(findNodeAtOffset({ nodes, root }, 32)).toStrictEqual({
       node: nodes[2],
       nodeIndex: 2,
-      nodeStartOffset: 31,
+      nodeLocalOffset: 31,
       remainder: 1,
     });
 
     expect(findNodeAtOffset({ nodes, root }, 41)).toStrictEqual({
       node: nodes[2],
       nodeIndex: 2,
-      nodeStartOffset: 31,
+      nodeLocalOffset: 31,
       remainder: 10,
     });
 
     expect(findNodeAtOffset({ nodes, root }, 42)).toStrictEqual({
       node: nodes[3],
       nodeIndex: 3,
-      nodeStartOffset: 42,
+      nodeLocalOffset: 42,
       remainder: 0,
     });
 
     expect(findNodeAtOffset({ nodes, root }, 51)).toStrictEqual({
       node: nodes[3],
       nodeIndex: 3,
-      nodeStartOffset: 42,
+      nodeLocalOffset: 42,
       remainder: 9,
     });
 
     expect(findNodeAtOffset({ nodes, root }, 52)).toStrictEqual({
       node: nodes[4],
       nodeIndex: 4,
-      nodeStartOffset: 52,
+      nodeLocalOffset: 52,
       remainder: 0,
     });
 
     expect(findNodeAtOffset({ nodes, root }, 53)).toStrictEqual({
       node: nodes[4],
       nodeIndex: 4,
-      nodeStartOffset: 52,
+      nodeLocalOffset: 52,
       remainder: 1,
     });
 
     expect(findNodeAtOffset({ nodes, root }, 54)).toStrictEqual({
       node: nodes[5],
       nodeIndex: 5,
-      nodeStartOffset: 54,
+      nodeLocalOffset: 54,
       remainder: 0,
     });
 
     expect(findNodeAtOffset({ nodes, root }, 63)).toStrictEqual({
       node: nodes[5],
       nodeIndex: 5,
-      nodeStartOffset: 54,
+      nodeLocalOffset: 54,
       remainder: 9,
     });
 
     expect(findNodeAtOffset({ nodes, root }, 64)).toStrictEqual({
       node: nodes[6],
       nodeIndex: 6,
-      nodeStartOffset: 64,
+      nodeLocalOffset: 64,
       remainder: 0,
     });
 
     expect(findNodeAtOffset({ nodes, root }, 79)).toStrictEqual({
       node: nodes[6],
       nodeIndex: 6,
-      nodeStartOffset: 64,
+      nodeLocalOffset: 64,
       remainder: 15,
     });
 
     expect(findNodeAtOffset({ nodes, root }, 80)).toStrictEqual({
       node: nodes[7],
       nodeIndex: 7,
-      nodeStartOffset: 80,
+      nodeLocalOffset: 80,
       remainder: 0,
     });
 
     expect(findNodeAtOffset({ nodes, root }, 120)).toStrictEqual({
       node: nodes[7],
       nodeIndex: 7,
-      nodeStartOffset: 80,
+      nodeLocalOffset: 80,
       remainder: 40,
     });
 
@@ -251,7 +251,7 @@ describe("Functions for common tree operations on the piece table/content red-bl
     expect(findNodeAtOffset({ nodes, root }, 121)).toStrictEqual({
       node: nodes[7],
       nodeIndex: 7,
-      nodeStartOffset: 80,
+      nodeLocalOffset: 80,
       remainder: 41,
     });
   });
@@ -290,8 +290,8 @@ describe("Functions for common tree operations on the piece table/content red-bl
     test("Inside a single node", (): void => {
       expect(getContentBetweenOffsets(page, 3, 50)).toStrictEqual({
         content: "not go gentle into that good night,\nOld age sho",
-        end: { nodeIndex: 1, nodeStartOffset: 50 },
-        start: { nodeIndex: 1, nodeStartOffset: 3 },
+        end: { nodeIndex: 1, nodeLocalOffset: 50 },
+        start: { nodeIndex: 1, nodeLocalOffset: 3 },
       });
     });
 
@@ -299,37 +299,37 @@ describe("Functions for common tree operations on the piece table/content red-bl
       expect(getContentBetweenOffsets(page, 0, 65)).toStrictEqual({
         content:
           "Do not go gentle into that good night,\nOld age should burn and ra",
-        end: { nodeIndex: 1, nodeStartOffset: 65 },
-        start: { nodeIndex: 1, nodeStartOffset: 0 },
+        end: { nodeIndex: 1, nodeLocalOffset: 65 },
+        start: { nodeIndex: 1, nodeLocalOffset: 0 },
       });
     });
 
     test("Across two nodes", (): void => {
       expect(getContentBetweenOffsets(page, 63, 66)).toStrictEqual({
         content: "rav",
-        end: { nodeIndex: 2, nodeStartOffset: 1 },
-        start: { nodeIndex: 1, nodeStartOffset: 63 },
+        end: { nodeIndex: 2, nodeLocalOffset: 1 },
+        start: { nodeIndex: 1, nodeLocalOffset: 63 },
       });
       expect(getContentBetweenOffsets(page, 70, 82)).toStrictEqual({
         content: " close of da",
-        end: { nodeIndex: 4, nodeStartOffset: 2 },
-        start: { nodeIndex: 3, nodeStartOffset: 4 },
+        end: { nodeIndex: 4, nodeLocalOffset: 2 },
+        start: { nodeIndex: 3, nodeLocalOffset: 4 },
       });
     });
 
     test("Across two nodes to the end of the second node", (): void => {
       expect(getContentBetweenOffsets(page, 70, 83)).toStrictEqual({
         content: " close of day",
-        end: { nodeIndex: 4, nodeStartOffset: 3 },
-        start: { nodeIndex: 3, nodeStartOffset: 4 },
+        end: { nodeIndex: 4, nodeLocalOffset: 3 },
+        start: { nodeIndex: 3, nodeLocalOffset: 4 },
       });
     });
 
     test("Across multiple nodes", (): void => {
       expect(getContentBetweenOffsets(page, 60, 83)).toStrictEqual({
         content: "nd rave at close of day",
-        end: { nodeIndex: 4, nodeStartOffset: 3 },
-        start: { nodeIndex: 1, nodeStartOffset: 60 },
+        end: { nodeIndex: 4, nodeLocalOffset: 3 },
+        start: { nodeIndex: 1, nodeLocalOffset: 60 },
       });
     });
   });
@@ -341,8 +341,8 @@ describe("Functions for common tree operations on the piece table/content red-bl
       expect(
         getContentBetweenNodeAndOffsets(
           page,
-          { nodeIndex: 1, nodeStartOffset: 3 },
-          { nodeIndex: 1, nodeStartOffset: 50 },
+          { nodeIndex: 1, nodeLocalOffset: 3 },
+          { nodeIndex: 1, nodeLocalOffset: 50 },
         ),
       ).toBe("not go gentle into that good night,\nOld age sho");
     });
@@ -351,8 +351,8 @@ describe("Functions for common tree operations on the piece table/content red-bl
       expect(
         getContentBetweenNodeAndOffsets(
           page,
-          { nodeIndex: 1, nodeStartOffset: 0 },
-          { nodeIndex: 1, nodeStartOffset: 65 },
+          { nodeIndex: 1, nodeLocalOffset: 0 },
+          { nodeIndex: 1, nodeLocalOffset: 65 },
         ),
       ).toBe(
         "Do not go gentle into that good night,\nOld age should burn and ra",
@@ -363,15 +363,15 @@ describe("Functions for common tree operations on the piece table/content red-bl
       expect(
         getContentBetweenNodeAndOffsets(
           page,
-          { nodeIndex: 1, nodeStartOffset: 63 },
-          { nodeIndex: 2, nodeStartOffset: 1 },
+          { nodeIndex: 1, nodeLocalOffset: 63 },
+          { nodeIndex: 2, nodeLocalOffset: 1 },
         ),
       ).toBe("rav");
       expect(
         getContentBetweenNodeAndOffsets(
           page,
-          { nodeIndex: 3, nodeStartOffset: 4 },
-          { nodeIndex: 4, nodeStartOffset: 2 },
+          { nodeIndex: 3, nodeLocalOffset: 4 },
+          { nodeIndex: 4, nodeLocalOffset: 2 },
         ),
       ).toBe(" close of da");
     });
@@ -380,8 +380,8 @@ describe("Functions for common tree operations on the piece table/content red-bl
       expect(
         getContentBetweenNodeAndOffsets(
           page,
-          { nodeIndex: 3, nodeStartOffset: 4 },
-          { nodeIndex: 4, nodeStartOffset: 3 },
+          { nodeIndex: 3, nodeLocalOffset: 4 },
+          { nodeIndex: 4, nodeLocalOffset: 3 },
         ),
       ).toBe(" close of day");
     });
@@ -390,8 +390,8 @@ describe("Functions for common tree operations on the piece table/content red-bl
       expect(
         getContentBetweenNodeAndOffsets(
           page,
-          { nodeIndex: 1, nodeStartOffset: 60 },
-          { nodeIndex: 4, nodeStartOffset: 3 },
+          { nodeIndex: 1, nodeLocalOffset: 60 },
+          { nodeIndex: 4, nodeLocalOffset: 3 },
         ),
       ).toBe("nd rave at close of day");
     });

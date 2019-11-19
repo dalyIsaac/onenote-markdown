@@ -13,6 +13,7 @@ export interface InsertStructureProps {
   attributes?: KeyValueStr;
   offset: number;
   length: number;
+  insertAfterNode?: number;
 }
 
 export interface InsertStructureAction extends PageActionPartial {

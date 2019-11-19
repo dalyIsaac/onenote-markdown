@@ -6,11 +6,13 @@ import {
   InsertContentAction,
   REPLACE_CONTENT,
   ReplaceContentAction,
+  INSERT_CONTENT_DOM,
+  InsertContentDOMAction,
 } from "./contentTree/actions";
 import { deleteContent } from "./contentTree/delete";
 import { insertContent } from "./contentTree/insert";
 import { MAX_BUFFER_LENGTH } from "./contentTree/tree";
-import { PageContent, StatePages } from "./pageModel";
+import { StatePages } from "./pageModel";
 import {
   INSERT_STRUCTURE_NODE,
   InsertStructureAction,
@@ -28,6 +30,7 @@ import { STORE_PAGE, StorePageAction } from "./tree/actions";
 import parse from "./parser/parser";
 import { splitStructureNode } from "./structureTree/split";
 import produce from "immer";
+import { insertContentDOM } from "./contentTree/insert.dom";
 
 function handleStorePage(
   state: StatePages,
@@ -49,12 +52,19 @@ function handleInsertContent(
   }: InsertContentAction,
 ): StatePages {
   insertContent(
-    state[pageId] as PageContent,
+    state[pageId],
     { content: content, globalOffset: offset },
     structureNodeIndex,
     MAX_BUFFER_LENGTH,
     structureNodeOffset,
   );
+  return state;
+}
+function handleInsertContentDOM(
+  state: StatePages,
+  { type, pageId, ...action }: InsertContentDOMAction,
+): StatePages {
+  insertContentDOM(state[pageId], action, MAX_BUFFER_LENGTH, true);
   return state;
 }
 
@@ -74,7 +84,7 @@ function handleDeleteContent(
     },
   }: DeleteContentAction,
 ): StatePages {
-  deleteContent(state[pageId] as PageContent, {
+  deleteContent(state[pageId], {
     endOffset: endOffset,
     startOffset: startOffset,
   });
@@ -98,12 +108,12 @@ function handleReplaceContent(
     },
   }: ReplaceContentAction,
 ): StatePages {
-  deleteContent(state[pageId] as PageContent, {
+  deleteContent(state[pageId], {
     endOffset: endOffset,
     startOffset: startOffset,
   });
   insertContent(
-    state[pageId] as PageContent,
+    state[pageId],
     {
       content: content,
       globalOffset: startOffset,
@@ -118,7 +128,7 @@ function handleInsertStructureNode(
   state: StatePages,
   { pageId, ...props }: InsertStructureAction,
 ): StatePages {
-  insertStructureNode(state[pageId] as PageContent, props);
+  insertStructureNode(state[pageId], props);
   return state;
 }
 
@@ -126,7 +136,7 @@ function handleDeleteStructureNode(
   state: StatePages,
   { pageId, nodeIndex }: DeleteStructureAction,
 ): StatePages {
-  deleteStructureNode(state[pageId] as PageContent, nodeIndex);
+  deleteStructureNode(state[pageId], nodeIndex);
   return state;
 }
 
@@ -134,7 +144,7 @@ function handleUpdateStructureNode(
   state: StatePages,
   { pageId, nodeIndex, values }: UpdateStructureAction,
 ): StatePages {
-  updateStructureNode(state[pageId] as PageContent, nodeIndex, values);
+  updateStructureNode(state[pageId], nodeIndex, values);
   return state;
 }
 
@@ -142,7 +152,7 @@ function handleSplitStructureNode(
   state: StatePages,
   { pageId, ...action }: SplitStructureAction,
 ): StatePages {
-  splitStructureNode(state[pageId] as PageContent, action);
+  splitStructureNode(state[pageId], action);
   return state;
 }
 
@@ -171,6 +181,12 @@ export const pageReducer = (
       switch (action.type) {
         case INSERT_CONTENT: {
           return handleInsertContent(draftState, action as InsertContentAction);
+        }
+        case INSERT_CONTENT_DOM: {
+          return handleInsertContentDOM(
+            draftState,
+            action as InsertContentDOMAction,
+          );
         }
         case DELETE_CONTENT: {
           return handleDeleteContent(draftState, action as DeleteContentAction);

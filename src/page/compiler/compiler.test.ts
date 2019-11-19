@@ -230,7 +230,6 @@ describe("Custom markdown syntax", (): void => {
           id: "p:{6cb59116-8e61-03a9-39ef-edf64004790d}{62}",
           leftSubTreeLength: 1,
           length: 0,
-
           tag: "p",
           tagType: TagType.EndTag,
         },

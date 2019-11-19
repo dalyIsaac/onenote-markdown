@@ -20,7 +20,7 @@ interface StructureNodeProperties {
 /**
  * Describes a boundary for selection within the context of a `StructureNode`.
  */
-interface SelectionBoundary extends StructureNodeProperties {
+export interface SelectionBoundary extends StructureNodeProperties {
   localOffset: number;
 }
 
@@ -49,11 +49,11 @@ const getStructureNodeProperties = (
 ): StructureNodeProperties => ({
   end: {
     nodeIndex: getIntegerAttribute(CONTENT_NODE_END_INDEX, map),
-    nodeStartOffset: getIntegerAttribute(CONTENT_NODE_END_OFFSET, map),
+    nodeLocalOffset: getIntegerAttribute(CONTENT_NODE_END_OFFSET, map),
   },
   start: {
     nodeIndex: getIntegerAttribute(CONTENT_NODE_START_INDEX, map),
-    nodeStartOffset: getIntegerAttribute(CONTENT_NODE_START_OFFSET, map),
+    nodeLocalOffset: getIntegerAttribute(CONTENT_NODE_START_OFFSET, map),
   },
   structureNodeIndex: getIntegerAttribute(STRUCTURE_NODE_INDEX, map),
 });

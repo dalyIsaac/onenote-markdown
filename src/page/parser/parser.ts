@@ -2,12 +2,12 @@ import { PageContent } from "../pageModel";
 import { SENTINEL_CONTENT, MAX_BUFFER_LENGTH } from "../contentTree/tree";
 import { SENTINEL_STRUCTURE } from "../structureTree/tree";
 import { chunks, TokenType } from "tiny-html-lexer";
-import { EMPTY_TREE_ROOT, SENTINEL_INDEX } from "../tree/tree";
+import { EMPTY_TREE_ROOT } from "../tree/tree";
 import { KeyValueStr, TagType } from "../structureTree/structureModel";
 import { InsertStructureProps } from "../structureTree/actions";
 import he from "he";
-import { insertContent } from "../contentTree/insert";
 import { insertStructureNode } from "../structureTree/insert";
+import { insertContentDOM } from "../contentTree/insert.dom";
 
 interface Attributes {
   [key: string]: string;
@@ -85,7 +85,6 @@ export default function parse(content: string): PageContent {
   const stream = chunks(content);
   let lastTextNode: InsertStructureProps;
   let structureNodeOffset = 1;
-  let contentOffset = 0;
   const markdownStack: string[][] = [];
   const charRef: Set<TokenType> = new Set([
     "charRef-decimal",
@@ -282,8 +281,12 @@ export default function parse(content: string): PageContent {
       [type, chunk] = stream.next().value;
     }
 
-    lastTextNode.length = content.length;
-    insertStructureNode(page, { ...lastTextNode, offset: structureNodeOffset });
+    // lastTextNode.length = content.length;
+    insertStructureNode(page, {
+      ...lastTextNode,
+      length: content.length,
+      offset: structureNodeOffset,
+    });
     structureNodeOffset += 1;
     insertStructureNode(page, {
       id: lastTextNode.id,
@@ -294,13 +297,29 @@ export default function parse(content: string): PageContent {
     });
     structureNodeOffset += 1;
 
-    insertContent(
+    const offset = page.content.nodes[page.content.nodes.length - 1].length;
+    insertContentDOM(
       page,
-      { content, globalOffset: contentOffset },
-      SENTINEL_INDEX, // because the length has already been set
+      {
+        content,
+        end: {
+          nodeIndex: 1,
+          nodeLocalOffset: offset,
+        },
+        localOffset: offset,
+        start: {
+          nodeIndex: 1,
+          nodeLocalOffset: 0,
+        },
+        structureNodeIndex:
+          page.structure.nodes.length -
+          (page.structure.nodes[page.structure.nodes.length - 1].tagType !==
+          TagType.EndTag
+            ? 1
+            : 2),
+      },
       MAX_BUFFER_LENGTH,
     );
-    contentOffset += content.length;
     consumeUpToType("tag-end");
   }
 
@@ -381,5 +400,8 @@ export default function parse(content: string): PageContent {
   page.buffers.forEach((x): void => {
     x.isReadOnly = true;
   });
-  return page as PageContent;
+  if (page.previouslyInsertedContentNodeOffset) {
+    page.previouslyInsertedContentNodeOffset = 0;
+  }
+  return page;
 }

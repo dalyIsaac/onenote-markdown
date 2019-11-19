@@ -80,7 +80,7 @@ export function splitStructureNode(
   page: PageContent,
   { nodeIndex, localOffset, nodeOffset }: Omit<SplitStructureAction, "pageId">,
 ): void {
-  const startNode: StructureNode = page.structure.nodes[nodeIndex];
+  const startNode = page.structure.nodes[nodeIndex];
 
   if (startNode.tag === "br" && startNode.tagType === TagType.StartEndTag) {
     insertNewBreak(page, nodeOffset, nodeIndex);

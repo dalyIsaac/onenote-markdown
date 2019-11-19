@@ -21,6 +21,7 @@ export function insertStructureNode(
     tagType,
     offset,
     length,
+    insertAfterNode,
   } = insertStructureAction;
   const newNode: StructureNode = {
     color: Color.Red,
@@ -39,6 +40,6 @@ export function insertStructureNode(
   if (attributes) {
     newNode.attributes = attributes;
   }
-  insertNode(page.structure, newNode, offset);
+  insertNode(page.structure, newNode, offset, insertAfterNode);
   fixInsert(page.structure, page.structure.nodes.length - 1);
 }
