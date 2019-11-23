@@ -12,8 +12,19 @@ import { ContentBoundary } from "../page/contentTree/tree";
  * constituent `ContentNode`s.
  */
 interface StructureNodeProperties {
+  /**
+   * The index of the `StructureNode` in `page.structure.nodes`.
+   */
   structureNodeIndex: number;
+
+  /**
+   * The start of the `StructureNode` in terms of `ContentNode`s.
+   */
   start: ContentBoundary;
+
+  /**
+   * The end of the `StructureNode` in terms of `ContentNode`s.
+   */
   end: ContentBoundary;
 }
 
@@ -21,6 +32,9 @@ interface StructureNodeProperties {
  * Describes a boundary for selection within the context of a `StructureNode`.
  */
 export interface SelectionBoundary extends StructureNodeProperties {
+  /**
+   * The offset in relation to the `StructureNode`.
+   */
   localOffset: number;
 }
 
@@ -28,7 +42,14 @@ export interface SelectionBoundary extends StructureNodeProperties {
  * Describes the current editor selection.
  */
 export interface EditorSelection {
+  /**
+   * The start of the selection.
+   */
   anchor: SelectionBoundary;
+
+  /**
+   * The end of the selection
+   */
   focus: SelectionBoundary;
 }
 
