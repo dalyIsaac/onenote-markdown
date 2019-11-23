@@ -50,7 +50,7 @@ function createNodeCreateBuffer(
   if (action.localOffset === 0) {
     insertBeforeNode(page.content, newNode, action.start.nodeIndex);
   } else {
-    insertAfterNode(page.content, newNode, action.start.nodeIndex);
+    insertAfterNode(page.content, newNode, action.end.nodeIndex);
   }
 }
 
@@ -101,7 +101,7 @@ function createNodeAppendToBuffer(
   if (action.localOffset === 0) {
     insertBeforeNode(page.content, newNode, action.start.nodeIndex);
   } else {
-    insertAfterNode(page.content, newNode, action.start.nodeIndex);
+    insertAfterNode(page.content, newNode, action.end.nodeIndex);
   }
 }
 
@@ -189,7 +189,7 @@ function insertInsideNode(
     -secondPartNode.lineFeedCount,
   );
 
-  insertAfterNode(page.content, secondPartNode, action.start.nodeIndex);
+  insertAfterNode(page.content, secondPartNode, action.end.nodeIndex);
   fixInsert(page.content, page.content.nodes.length - 1);
   insertAtNodeExtremity(action, page, maxBufferLength);
   page.previouslyInsertedContentNodeIndex = page.content.nodes.length - 1;
