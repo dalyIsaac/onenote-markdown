@@ -5,7 +5,7 @@
   "dependencies": {
     "@webcomponents/webcomponentsjs": "^2.4.0",
     "he": "^1.2.0",
-    "immer": "^3.3.0",
+    "immer": "^8.0.1",
     "markdown-it": "^8.4.2",
     "param-case": "^2.1.1",
     "react": "^16.12.0",
